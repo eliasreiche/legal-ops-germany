@@ -4,8 +4,11 @@
 Prüft:
   * jedes SKILL.md trägt die Pflichtfelder aus P5 (rdg_einordnung,
     daten_hinweis, haftung) sowie name/status/welle/plugin,
-  * status ist exakt `getestet` oder `ungetestet` (binäres Label, D8),
-  * `getestet` setzt echte Testdateien in tests/ voraus (.gitkeep zählt nicht),
+  * status ist `ungetestet`, `beta` oder `getestet` (Reifegrad-Leiter, D8-Nachtrag):
+      - `beta`     = Tests gegen Testdaten/Orakel laufen grün in CI
+                     → setzt echte Testdateien in tests/ voraus (.gitkeep zählt nicht)
+      - `getestet` = zusätzlich händisch abgenommen
+                     → setzt außerdem `haendisch_getestet: <JJJJ-MM-TT>` im Frontmatter voraus,
   * name im Frontmatter == Verzeichnisname,
   * jedes Plugin hat .claude-plugin/plugin.json und README.md,
   * die Status-Tabelle im Repo-README ist synchron (--check, Default in CI);
@@ -24,7 +27,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 PFLICHTFELDER = ["name", "status", "welle", "plugin",
                  "rdg_einordnung", "daten_hinweis", "haftung"]
-STATUS_WERTE = {"getestet", "ungetestet"}
+STATUS_WERTE = {"ungetestet", "beta", "getestet"}
 TABELLE_START = "<!-- skill-status:start -->"
 TABELLE_ENDE = "<!-- skill-status:ende -->"
 
@@ -69,13 +72,19 @@ def pruefe_skill(skill: Path, fehler: list[str]) -> dict[str, str] | None:
     for feld in PFLICHTFELDER:
         if not fm.get(feld, "").strip():
             fehler.append(f"{ref}: Pflichtfeld `{feld}` fehlt oder ist leer (P5)")
-    if fm.get("status") not in STATUS_WERTE:
-        fehler.append(f"{ref}: status muss `getestet` oder `ungetestet` sein, "
-                      f"ist: `{fm.get('status')}` (D8)")
+    status = fm.get("status")
+    if status not in STATUS_WERTE:
+        fehler.append(f"{ref}: status muss `ungetestet`, `beta` oder `getestet` "
+                      f"sein, ist: `{status}` (D8-Nachtrag)")
     if fm.get("name") != skill.name:
         fehler.append(f"{ref}: name `{fm.get('name')}` != Verzeichnis `{skill.name}`")
-    if fm.get("status") == "getestet" and not hat_echte_tests(skill):
-        fehler.append(f"{ref}: status `getestet` ohne Testdateien in tests/ (P4)")
+    if status in ("beta", "getestet") and not hat_echte_tests(skill):
+        fehler.append(f"{ref}: status `{status}` ohne Testdateien in tests/ (P4)")
+    if status == "getestet" and not re.match(
+            r"^\d{4}-\d{2}-\d{2}$", fm.get("haendisch_getestet", "")):
+        fehler.append(f"{ref}: status `getestet` verlangt "
+                      f"`haendisch_getestet: <JJJJ-MM-TT>` im Frontmatter "
+                      f"(händische Abnahme, D8-Nachtrag)")
     return fm
 
 
@@ -97,7 +106,8 @@ def status_tabelle(skills: list[tuple[Path, dict[str, str]]]) -> str:
     for pfad, fm in sorted(skills, key=sortkey):
         rel = pfad.relative_to(REPO) / "SKILL.md"
         status = fm.get("status", "?")
-        badge = "✅ `getestet`" if status == "getestet" else "🚧 `ungetestet`"
+        badge = {"getestet": "✅ `getestet`",
+                 "beta": "🧪 `beta`"}.get(status, "🚧 `ungetestet`")
         zeilen.append(f"| [`{fm.get('name')}`]({rel}) | `{fm.get('plugin')}` "
                       f"| {fm.get('welle')} | {badge} |")
     return "\n".join(zeilen)

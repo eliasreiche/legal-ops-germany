@@ -11,6 +11,25 @@ und mehr. Funktionsweise ausschließlich nach deutschem Recht.
 > Abläufe der Kanzlei. Jedes Ergebnis unterliegt der Zweitkontrolle durch die Kanzlei;
 > Fristen- und Gebührenergebnisse ersetzen keine anwaltliche Kontrolle.
 
+## Zulässigkeit & Grenzen
+
+Diese Library ist **Beta und kein geprüftes Produkt** — es hat keine unabhängige
+juristische oder aufsichtsrechtliche Prüfung stattgefunden. Sie trifft **keine Aussage**
+zur Zulässigkeit eines Einsatzes im konkreten Mandat oder Unternehmen. Ob und wie die
+Skills produktiv genutzt werden dürfen, muss die Kanzlei vor dem Einsatz selbst prüfen —
+insbesondere im Hinblick auf:
+
+- **Berufsrecht & Mandatsgeheimnis** — §§ 203, 204 StGB, § 43a Abs. 2 / § 43e BRAO, § 2
+  BORA, §§ 53, 97, 160a StPO.
+- **Datenschutz** — DSGVO / BDSG, einschließlich **Drittlandtransfer** (Art. 44 ff. DSGVO)
+  und der Reichweite von **US Cloud Act / FISA** beim gewählten Modell- und Hosting-Anbieter.
+- **KI-Verordnung** — VO (EU) 2024/1689 (Risiko-Einstufung, Transparenz- und
+  Betreiberpflichten).
+
+**Mandantendaten gehören ausschließlich in Tools mit Auftragsverarbeitungsvertrag (AVV)
+und EU-Hosting.** Die optionalen Live-Adapter (Microsoft Graph, Sanktionslisten) geben
+Daten nach außen — Freigabe des jeweiligen Datenflusses ist Sache der Kanzlei.
+
 ## Wie es funktioniert
 
 - **Claude orchestriert, Python rechnet.** Alles mit Zahlen, Daten, Fristen oder Geld
@@ -19,8 +38,9 @@ und mehr. Funktionsweise ausschließlich nach deutschem Recht.
 - **Datei rein, Datei raus.** Jeder Skill arbeitet über Datei-Schnittstellen (CSV, PDF,
   EML, iCal, DATEV-EXTF, DOCX) — kompatibel mit dem Export/Import jeder Kanzleisoftware.
   Live-Adapter (Microsoft Graph, EU-/UN-Sanktionslisten) sind optional.
-- **Ehrliche Labels.** Jeder Skill trägt sichtbar `getestet` oder `ungetestet`. `getestet`
-  heißt: Tests und (bei Rechnern) Orakel-Fälle laufen grün in CI. Die Library ist **Beta**.
+- **Ehrliche Labels.** Jeder Skill trägt sichtbar seinen Reifegrad: 🚧 `ungetestet` →
+  🧪 `beta` (Tests gegen Testdaten/Orakel-Fälle laufen grün in CI) → ✅ `getestet`
+  (zusätzlich händisch abgenommen). Automatisierte Tests allein rechtfertigen höchstens `beta`.
 - **Berufsrechts-Gate.** Jeder Skill dokumentiert im Frontmatter seine RDG-Einordnung,
   Datenhinweise (§ 203 StGB, DSGVO/BRAO) und Haftungsgrenzen — vom Lint erzwungen.
 

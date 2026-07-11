@@ -25,31 +25,59 @@ def test_alle_skills_gefunden():
     assert len(struktur_lint.skill_dirs()) == 18
 
 
+def _skill(tmp_path, name, status, extra="", mit_tests=False):
+    skill = tmp_path / name
+    (skill / "tests").mkdir(parents=True)
+    (skill / "tests" / ".gitkeep").write_text("")
+    if mit_tests:
+        (skill / "tests" / "test_x.py").write_text("def test_x(): pass\n")
+    (skill / "SKILL.md").write_text(
+        f"---\nname: {name}\nstatus: {status}\nwelle: 1\nplugin: intake\n"
+        f'rdg_einordnung: "x"\ndaten_hinweis: "x"\nhaftung: "x"\n{extra}---\n# x\n',
+        encoding="utf-8")
+    return skill
+
+
 def test_pruefe_skill_meldet_fehlende_pflichtfelder(tmp_path):
     skill = tmp_path / "kaputter-skill"
     (skill / "tests").mkdir(parents=True)
     (skill / "SKILL.md").write_text(
-        "---\nname: kaputter-skill\nstatus: beta\n---\n# x\n", encoding="utf-8")
+        "---\nname: kaputter-skill\nstatus: stable\n---\n# x\n", encoding="utf-8")
     fehler: list[str] = []
     struktur_lint.pruefe_skill(skill, fehler)
     meldungen = "\n".join(fehler)
     assert "rdg_einordnung" in meldungen
     assert "daten_hinweis" in meldungen
     assert "haftung" in meldungen
-    assert "getestet` oder `ungetestet" in meldungen
+    assert "ungetestet`, `beta` oder `getestet" in meldungen
 
 
-def test_getestet_verlangt_echte_tests(tmp_path):
-    skill = tmp_path / "leerer-skill"
-    (skill / "tests").mkdir(parents=True)
-    (skill / "tests" / ".gitkeep").write_text("")
-    (skill / "SKILL.md").write_text(
-        "---\nname: leerer-skill\nstatus: getestet\nwelle: 1\nplugin: intake\n"
-        'rdg_einordnung: "x"\ndaten_hinweis: "x"\nhaftung: "x"\n---\n# x\n',
-        encoding="utf-8")
+def test_beta_verlangt_echte_tests(tmp_path):
     fehler: list[str] = []
-    struktur_lint.pruefe_skill(skill, fehler)
+    struktur_lint.pruefe_skill(_skill(tmp_path, "leerer-skill", "beta"), fehler)
     assert any("ohne Testdateien" in f for f in fehler)
+
+
+def test_beta_mit_tests_ist_sauber(tmp_path):
+    fehler: list[str] = []
+    struktur_lint.pruefe_skill(
+        _skill(tmp_path, "beta-skill", "beta", mit_tests=True), fehler)
+    assert fehler == []
+
+
+def test_getestet_verlangt_haendische_abnahme(tmp_path):
+    fehler: list[str] = []
+    struktur_lint.pruefe_skill(
+        _skill(tmp_path, "auto-skill", "getestet", mit_tests=True), fehler)
+    assert any("haendisch_getestet" in f for f in fehler)
+
+
+def test_getestet_mit_abnahme_und_tests_ist_sauber(tmp_path):
+    fehler: list[str] = []
+    struktur_lint.pruefe_skill(
+        _skill(tmp_path, "fertig-skill", "getestet",
+               extra="haendisch_getestet: 2026-07-11\n", mit_tests=True), fehler)
+    assert fehler == []
 
 
 def test_lint_laeuft_sauber_auf_dem_repo():

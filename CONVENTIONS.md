@@ -21,14 +21,26 @@ Der [Struktur-Lint](core/verify/struktur_lint.py) erzwingt die maschinenprüfbar
 ```yaml
 ---
 name: <verzeichnisname>            # muss dem Ordnernamen entsprechen
-status: getestet | ungetestet      # binäres Label (D8); getestet nur mit grünen tests/
+status: ungetestet | beta | getestet   # Reifegrad-Leiter, siehe unten
 welle: 1-5                         # Build-Reihenfolge
 plugin: <plugin> | querschnitt
 rdg_einordnung: "Warum keine Rechtsdienstleistung / wo die Grenze des Outputs liegt."
 daten_hinweis: "Welche Daten hinein dürfen; § 203 StGB / DSGVO / BRAO-konformer Modellzugang."
 haftung: "Zweitkontroll-Klausel; bei Fristen/Gebühren zwingend."
+haendisch_getestet: JJJJ-MM-TT     # nur bei status: getestet (Pflicht, Datum der Abnahme)
 ---
 ```
+
+### Reifegrad-Leiter
+
+| Status | Bedeutung | Lint-Voraussetzung |
+|---|---|---|
+| 🚧 `ungetestet` | Stub oder Implementierung ohne Absicherung | — |
+| 🧪 `beta` | Tests gegen Testdaten/Orakel-Fälle laufen grün in CI | echte Dateien in `tests/` |
+| ✅ `getestet` | zusätzlich **händisch abgenommen** (durch den Maintainer) | wie `beta` + `haendisch_getestet: <Datum>` |
+
+Ein Status wird nie übersprungen dokumentiert: `getestet` setzt inhaltlich voraus, dass
+die `beta`-Kriterien erfüllt sind. Automatisierte Tests allein rechtfertigen höchstens `beta`.
 
 ## Zitierdisziplin (3-Zustands-Marker)
 
