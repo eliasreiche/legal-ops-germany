@@ -1,0 +1,19 @@
+{
+  "_hinweis": "Liste bekannter deutscher/EU-Gesetzeskürzel für die reine Formatprüfung (P2/P3). Nicht abschließend — Erweiterung per Pull Request. Kein Ersatz für eine Normen-Registry (schema/beispiel-registry.json); diese Liste sagt nur, ob ein Kürzel *bekannt* ist, nicht ob ein Paragraph *existiert*.",
+  "stand": "2026-07-11",
+  "kuerzel": [
+    "AGB", "AktG", "AO", "ArbGG", "BBiG", "BDSG", "BeurkG", "BetrVG",
+    "BGB", "BNotO", "BORA", "BRAGO", "BRAO", "BRAK-Mitt", "DSGVO",
+    "EGBGB", "ErbStG", "EStG", "FamFG", "FGO", "GenG", "GewO", "GG",
+    "GGV", "GKG", "GmbHG", "GNotKG", "GVG", "GWB", "GwG", "HGB",
+    "InsO", "JGG", "JVEG", "KSchG", "KUG", "KWG", "MarkenG", "MiLoG",
+    "PartGG", "PatG", "ProdHaftG", "RDG", "RDGEG", "RVG", "SGB",
+    "SGB I", "SGB II", "SGB III", "SGB IV", "SGB V", "SGB VI",
+    "SGB VII", "SGB VIII", "SGB IX", "SGB X", "SGB XI", "SGB XII",
+    "StBerG", "StGB", "StPO", "StVG", "StVO", "StVollzG", "TKG",
+    "TMG", "TTDSG", "TVG", "UKlaG", "UmwG", "UrhG", "UStG", "UWG",
+    "VVG", "VwGO", "VwVfG", "VwZG", "WEG", "WpHG", "ZPO", "ZVG",
+    "AGG", "TzBfG", "EFZG", "BUrlG", "MuSchG", "BEEG", "AsylG",
+    "AufenthG", "BauGB", "EMRK", "AEUV", "EUV", "GRC", "FAO", "DS-GVO"
+  ]
+}

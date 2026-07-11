@@ -1,0 +1,8 @@
+{
+  "_hinweis": "Bekannte Gerichts-/Instanzkürzel für die Erkennung von Rechtsprechungs- und Fundstellenzitaten. Kürzel mit Ortszusatz (OLG, LG, AG, ArbG, LAG, FG, VG) werden im Executor per Regex mit optionalem Ortsnamen kombiniert (z. B. 'OLG München').",
+  "stand": "2026-07-11",
+  "oberste_bundesgerichte": ["BVerfG", "BGH", "BAG", "BFH", "BSG", "BVerwG"],
+  "europaeisch": ["EuGH", "EGMR", "EuG"],
+  "mit_ortszusatz": ["OLG", "LG", "AG", "ArbG", "LAG", "FG", "VG", "OVG", "VGH", "SG", "LSG", "AGH"],
+  "sonstige": ["KG", "BPatG"]
+}

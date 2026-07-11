@@ -55,7 +55,7 @@ Tabelle wird generiert von [`core/verify/struktur_lint.py`](core/verify/struktur
 | Skill | Plugin | Welle | Status |
 |---|---|---|---|
 | [`fristenrechner-de`](plugins/fristen-termine/skills/fristenrechner-de/SKILL.md) | `fristen-termine` | 1 | 🚧 `ungetestet` |
-| [`zitat-verifier-de`](core/verify/zitat-verifier-de/SKILL.md) | `querschnitt` | 1 | 🚧 `ungetestet` |
+| [`zitat-verifier-de`](core/verify/zitat-verifier-de/SKILL.md) | `querschnitt` | 1 | 🧪 `beta` |
 | [`rvg-gko-rechner`](plugins/zeit-abrechnung/skills/rvg-gko-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🚧 `ungetestet` |
 | [`gwg-risiko-check`](plugins/compliance/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🚧 `ungetestet` |
 | [`konflikt-check-offline`](plugins/compliance/skills/konflikt-check-offline/SKILL.md) | `compliance` | 2 | 🚧 `ungetestet` |

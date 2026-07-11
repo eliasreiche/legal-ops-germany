@@ -1,0 +1,14 @@
+{
+  "normen": [
+    {"kuerzel": "StGB", "paragraph": "203", "bezeichnung": "Verletzung von Privatgeheimnissen"},
+    {"kuerzel": "BRAO", "paragraph": "43a", "bezeichnung": "Grundpflichten des Rechtsanwalts"},
+    {"kuerzel": "StPO", "paragraph": "53", "bezeichnung": "Zeugnisverweigerungsrecht aus persönlichen Gründen"}
+  ],
+  "entscheidungen": [
+    {"gericht": "BGH", "aktenzeichen": "IX ZR 15/22", "datum": "2023-01-12",
+     "fundstelle": "NJW 2023, 1234"}
+  ],
+  "fundstellen": [
+    {"zeitschrift": "NJW", "jahr": 2020, "seite": 300, "gericht": "BVerfG"}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "_hinweis": "Bekannte Fundstellen-Zeitschriften (Kürzel) für die Erkennung von Fundstellenzitaten der Form 'ZEITSCHRIFT JAHR, SEITE'. Nicht abschließend.",
+  "stand": "2026-07-11",
+  "zeitschriften": [
+    "NJW-RR", "NJW", "NZA-RR", "NZA", "NZG", "NZM", "NZI", "NVwZ",
+    "MDR", "WM", "ZIP", "BB", "DB", "GRUR", "GRUR-RR", "K&R", "MMR",
+    "CR", "ZD", "BRAK-Mitt.", "FamRZ", "NStZ", "VersR", "ZEV", "AnwBl"
+  ]
+}
