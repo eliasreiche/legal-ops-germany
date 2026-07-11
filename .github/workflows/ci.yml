@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Struktur-Lint (P4/P5)
+        run: python3 core/verify/struktur_lint.py
+      - name: pytest
+        run: |
+          pip install pytest
+          pytest -q

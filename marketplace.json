@@ -1,0 +1,47 @@
+{
+  "name": "claude-for-legal-non-billable-germany",
+  "owner": {
+    "name": "Elias Reiche"
+  },
+  "metadata": {
+    "description": "Non-billable Workflows deutscher Kanzleien: Claude-Skills + deterministische Python-Executors. Keine Rechtsberatung.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "intake",
+      "source": "./plugins/intake",
+      "description": "Mandantenaufnahme und Aktenanlage"
+    },
+    {
+      "name": "compliance",
+      "source": "./plugins/compliance",
+      "description": "Konfliktprüfung, GwG/KYC"
+    },
+    {
+      "name": "fristen-termine",
+      "source": "./plugins/fristen-termine",
+      "description": "Fristen, Wiedervorlagen, Scheduling"
+    },
+    {
+      "name": "zeit-abrechnung",
+      "source": "./plugins/zeit-abrechnung",
+      "description": "Zeiterfassung, RVG-Billing-Vorbereitung, internes AR"
+    },
+    {
+      "name": "post-akte",
+      "source": "./plugins/post-akte",
+      "description": "Posteingang, E-Mail-Triage, e-Akte-Ablage"
+    },
+    {
+      "name": "kommunikation",
+      "source": "./plugins/kommunikation",
+      "description": "Status-Updates und Serienbriefe ohne Beratung"
+    },
+    {
+      "name": "wissen-qm",
+      "source": "./plugins/wissen-qm",
+      "description": "Precedents, SOPs, Buchhaltungsbrücke"
+    }
+  ]
+}

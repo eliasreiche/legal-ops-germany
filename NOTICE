@@ -1,0 +1,16 @@
+claude-for-legal-non-billable-germany
+Copyright 2026 Elias Reiche
+
+Licensed under the Apache License, Version 2.0.
+
+---
+
+Geplante Attributionen (werden mit Aufnahme der jeweiligen Inhalte wirksam):
+
+* Test-Fixtures (realistische Testakten) aus "Klotzkette German Legal Skills"
+  (Apache-2.0) — Attribution gilt ausschließlich für übernommene Testdaten,
+  nicht für Code oder Architektur dieses Repos.
+
+* Orakel-Testfälle werden gegen Ergebnisse von "borghei/AI-Skills-German-Law"
+  (legal_calc) verifiziert — es wird kein Code importiert, nur erwartete
+  Ergebniswerte als Testfälle referenziert.
