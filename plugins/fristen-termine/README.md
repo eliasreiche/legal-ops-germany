@@ -4,6 +4,6 @@ Fristen, Wiedervorlagen, Scheduling.
 
 | Skill | Welle | Status |
 |---|---|---|
-| [`fristenrechner-de`](skills/fristenrechner-de/SKILL.md) | 1 | `ungetestet` |
+| [`fristenrechner-de`](skills/fristenrechner-de/SKILL.md) | 1 | `beta` |
 | [`fristen-docketing-light`](skills/fristen-docketing-light/SKILL.md) | 4 | `ungetestet` |
 | [`scheduling-assistent-de`](skills/scheduling-assistent-de/SKILL.md) | 5 | `ungetestet` |

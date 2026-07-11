@@ -1,0 +1,138 @@
+{
+  "stand": "2026-07-11",
+  "hinweis": "Vordefinierte Fristarten als Daten (nicht in Logik hartkodiert). Dauer/Einheit/Fristtyp werden vom Executor gerechnet; die Normzitate sind Kurzangaben — die rechtliche Einordnung des fristauslösenden Ereignisses (z. B. wirksame Zustellung) bleibt Kanzleisache.",
+  "fristarten": [
+    {
+      "id": "berufung",
+      "bezeichnung": "Berufungsfrist",
+      "norm": "§ 517 ZPO",
+      "dauer": 1,
+      "einheit": "monate",
+      "fristtyp": "ereignis",
+      "ausloeser": "Zustellung des in vollständiger Form abgefassten Urteils",
+      "notfrist": true,
+      "verlaengerbar": false,
+      "hinweise": [
+        "Fristbeginn spätestens mit Ablauf von fünf Monaten nach Verkündung (§ 517 ZPO) — diese Alternative rechnet der Executor nicht mit; bei fehlender/später Zustellung gesondert prüfen."
+      ]
+    },
+    {
+      "id": "berufungsbegruendung",
+      "bezeichnung": "Berufungsbegründungsfrist",
+      "norm": "§ 520 Abs. 2 ZPO",
+      "dauer": 2,
+      "einheit": "monate",
+      "fristtyp": "ereignis",
+      "ausloeser": "Zustellung des in vollständiger Form abgefassten Urteils",
+      "notfrist": false,
+      "verlaengerbar": true,
+      "hinweise": [
+        "Auf Antrag verlängerbar (§ 520 Abs. 2 ZPO): mit Einwilligung des Gegners unbeschränkt, ohne Einwilligung um bis zu einen Monat.",
+        "Fristbeginn spätestens mit Ablauf von fünf Monaten nach Verkündung (§ 520 Abs. 2 ZPO)."
+      ]
+    },
+    {
+      "id": "einspruch_versaeumnisurteil",
+      "bezeichnung": "Einspruchsfrist gegen ein Versäumnisurteil",
+      "norm": "§ 339 Abs. 1 ZPO",
+      "dauer": 2,
+      "einheit": "wochen",
+      "fristtyp": "ereignis",
+      "ausloeser": "Zustellung des Versäumnisurteils",
+      "notfrist": true,
+      "verlaengerbar": false,
+      "hinweise": [
+        "Bei Zustellung im Ausland beträgt die Einspruchsfrist einen Monat (§ 339 Abs. 2 ZPO); bei öffentlicher Bekanntmachung bestimmt das Gericht die Frist (§ 339 Abs. 3 ZPO) — in beiden Fällen die Dauer frei eingeben."
+      ]
+    },
+    {
+      "id": "widerspruch_mahnbescheid",
+      "bezeichnung": "Widerspruchsfrist gegen einen Mahnbescheid",
+      "norm": "§ 692 Abs. 1 Nr. 3, § 694 ZPO",
+      "dauer": 2,
+      "einheit": "wochen",
+      "fristtyp": "ereignis",
+      "ausloeser": "Zustellung des Mahnbescheids",
+      "notfrist": false,
+      "verlaengerbar": false,
+      "kein_technisches_fristende": true,
+      "hinweise": [
+        "Kein Fristende im technischen Sinn: Widerspruch ist möglich, solange der Vollstreckungsbescheid nicht verfügt ist (§ 694 Abs. 1 ZPO); ein verspäteter Widerspruch wird als Einspruch behandelt (§ 694 Abs. 2 ZPO). Das berechnete Datum ist die Zwei-Wochen-Frist aus der Belehrung des Mahnbescheids (§ 692 Abs. 1 Nr. 3 ZPO), nach deren Ablauf ein Vollstreckungsbescheid ergehen kann."
+      ]
+    },
+    {
+      "id": "revision",
+      "bezeichnung": "Revisionsfrist",
+      "norm": "§ 548 ZPO",
+      "dauer": 1,
+      "einheit": "monate",
+      "fristtyp": "ereignis",
+      "ausloeser": "Zustellung des in vollständiger Form abgefassten Berufungsurteils",
+      "notfrist": true,
+      "verlaengerbar": false,
+      "hinweise": [
+        "Fristbeginn spätestens mit Ablauf von fünf Monaten nach Verkündung (§ 548 ZPO)."
+      ]
+    },
+    {
+      "id": "revisionsbegruendung",
+      "bezeichnung": "Revisionsbegründungsfrist",
+      "norm": "§ 551 Abs. 2 ZPO",
+      "dauer": 2,
+      "einheit": "monate",
+      "fristtyp": "ereignis",
+      "ausloeser": "Zustellung des in vollständiger Form abgefassten Berufungsurteils",
+      "notfrist": false,
+      "verlaengerbar": true,
+      "hinweise": [
+        "Auf Antrag verlängerbar (§ 551 Abs. 2 ZPO).",
+        "Fristbeginn spätestens mit Ablauf von fünf Monaten nach Verkündung (§ 551 Abs. 2 ZPO)."
+      ]
+    },
+    {
+      "id": "anhoerungsruege",
+      "bezeichnung": "Anhörungsrüge",
+      "norm": "§ 321a Abs. 2 ZPO",
+      "dauer": 2,
+      "einheit": "wochen",
+      "fristtyp": "ereignis",
+      "ausloeser": "Kenntnis von der Verletzung des Anspruchs auf rechtliches Gehör",
+      "notfrist": true,
+      "verlaengerbar": false,
+      "hinweise": [
+        "Der Zeitpunkt der Kenntniserlangung ist glaubhaft zu machen; nach Ablauf eines Jahres seit Bekanntgabe der angegriffenen Entscheidung ist die Rüge ausgeschlossen (§ 321a Abs. 2 ZPO)."
+      ]
+    },
+    {
+      "id": "wiedereinsetzung",
+      "bezeichnung": "Wiedereinsetzungsantrag (Regelfall)",
+      "norm": "§ 234 Abs. 1, 2 ZPO",
+      "dauer": 2,
+      "einheit": "wochen",
+      "fristtyp": "ereignis",
+      "ausloeser": "Behebung des Hindernisses (§ 234 Abs. 2 ZPO)",
+      "notfrist": false,
+      "verlaengerbar": false,
+      "hinweise": [
+        "Bei Versäumung der Frist zur Begründung der Berufung, Revision, Nichtzulassungsbeschwerde oder Rechtsbeschwerde beträgt die Frist einen Monat — dafür Fristart `wiedereinsetzung_begruendungsfrist` verwenden (§ 234 Abs. 1 ZPO).",
+        "Ausschluss: nach Ablauf eines Jahres seit dem Ende der versäumten Frist ist Wiedereinsetzung nicht mehr möglich (§ 234 Abs. 3 ZPO).",
+        "Innerhalb der Antragsfrist ist auch die versäumte Prozesshandlung nachzuholen (§ 236 Abs. 2 ZPO)."
+      ]
+    },
+    {
+      "id": "wiedereinsetzung_begruendungsfrist",
+      "bezeichnung": "Wiedereinsetzungsantrag (versäumte Begründungsfrist)",
+      "norm": "§ 234 Abs. 1, 2 ZPO",
+      "dauer": 1,
+      "einheit": "monate",
+      "fristtyp": "ereignis",
+      "ausloeser": "Behebung des Hindernisses (§ 234 Abs. 2 ZPO)",
+      "notfrist": false,
+      "verlaengerbar": false,
+      "hinweise": [
+        "Gilt für die versäumte Frist zur Begründung der Berufung, Revision, Nichtzulassungsbeschwerde oder Rechtsbeschwerde (§ 234 Abs. 1 ZPO).",
+        "Ausschluss: nach Ablauf eines Jahres seit dem Ende der versäumten Frist ist Wiedereinsetzung nicht mehr möglich (§ 234 Abs. 3 ZPO)."
+      ]
+    }
+  ]
+}
