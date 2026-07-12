@@ -63,6 +63,26 @@ Unmarkierte Zitate sind ein Lint-/Review-Fehler. Der Querschnitts-Skill
 
 `# <name>` → Zweck → Eingaben (Datei-Kontrakt) → Ablauf → Output-Format → Beispiele.
 
+## Review-Gate (unabhängig)
+
+Kein Skill geht ins Repo, ohne dass ein **unabhängiges zweites Augenpaar** die
+Änderung freigegeben hat (kod-decisions D12, präzisiert D9). Konkret:
+
+- Freigabe erteilt der Subagent [`.claude/agents/reviewer.md`](.claude/agents/reviewer.md),
+  **nicht** das Modell, das den Skill implementiert oder architektiert hat —
+  niemand gibt seine eigene Arbeit frei.
+- Der Reviewer ist **kontext-blind**: er bekommt nur Kontrakt (`SKILL.md`,
+  `schema/`, `core/`) und den Diff, nicht die Implementierungs-Begründung.
+- Er liefert genau ein Verdikt: **APPROVED** oder **REJECTED**. Ein `REJECTED`
+  trägt zu jedem Blocker einen **reproduzierbaren Fehler** (Kommando mit
+  erwartet/tatsächlich oder `datei:zeile`).
+- Er ist read-only, hebt **nie** einen Status an und bestätigt **nie**
+  `getestet` — das bleibt die händische Abnahme des Maintainers.
+
+Der Reviewer automatisiert damit die Gates dieses Dokuments (Struktur-Lint,
+Tests, P3/P5, Zitier- und Anti-Halluzinations-Disziplin) als Torwächter vor dem
+Commit.
+
 ## Was dieses Repo nicht ist
 
 Keine Rechtsberatung, keine Rechtsgebiets-Skills (Schriftsätze, Gutachten), kein Hosting,
