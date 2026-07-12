@@ -1,0 +1,90 @@
+{
+  "aktenkopf": {
+    "kurzrubrum": "Mustermann ./. Beispiel (Verkehrsunfall)",
+    "sachverhalt_kurz": "Gegnerisches Anspruchsschreiben nach Verkehrsunfall vom 12.02.2026 in Hamburg. Die Gegenseite fordert Schadensersatz und setzt eine Zahlungsfrist. Mandant Max Mustermann bestreitet die Haftung dem Grunde nach noch nicht schriftlich.",
+    "eingangsdatum": "2026-03-05"
+  },
+  "parteien": [
+    {
+      "rolle": "mandant",
+      "name": "Max Mustermann",
+      "typ": "natuerlich",
+      "anschrift": "Musterweg 3, 20099 Hamburg",
+      "kontakt": {},
+      "vertreten_durch": null
+    },
+    {
+      "rolle": "gegner",
+      "name": "Erika Beispiel",
+      "typ": "natuerlich",
+      "anschrift": "",
+      "kontakt": {},
+      "vertreten_durch": "Dr. Petra Gegner, Dr. Gegner & Kollegen Rechtsanwälte"
+    },
+    {
+      "rolle": "sonstige",
+      "name": "Dr. Gegner & Kollegen Rechtsanwälte",
+      "typ": "juristisch",
+      "anschrift": "Musterallee 100, 20095 Hamburg",
+      "kontakt": {
+        "email": "kanzlei@gegner-recht.example",
+        "telefon": "040 / 987 65 43",
+        "iban": "DE02 1203 0000 0000 2020 51"
+      },
+      "vertreten_durch": null
+    }
+  ],
+  "fristen_hinweise": [
+    {
+      "datum_im_text": "2026-02-12",
+      "originalschreibweise": "12.02.2026",
+      "quelle_zitat": "Bei dem Verkehrsunfall vom 12.02.2026 haben Sie das Fahrzeug unserer",
+      "vermutete_bedeutung": "Unfalltag — moeglicher Beginn der Verjaehrung, anwaltlich zu pruefen. Keine Fristberechnung durch diesen Skill."
+    },
+    {
+      "datum_im_text": "2026-03-20",
+      "originalschreibweise": "20.03.2026",
+      "quelle_zitat": "Wir fordern Sie auf, den vorgenannten Betrag bis zum 20.03.2026 auf folgendes",
+      "vermutete_bedeutung": "Von der Gegenseite gesetzte Zahlungsfrist (aussergerichtlich) — keine gesetzliche Notfrist. Fristberechnung nur ueber fristenrechner-de."
+    }
+  ],
+  "betraege": [
+    {
+      "betrag": "1.234,56 €",
+      "kontext": "Reparaturkosten laut Kostenvoranschlag",
+      "quelle_zitat": "Reparaturkosten laut Kostenvoranschlag: 1.234,56 €"
+    },
+    {
+      "betrag": "487,90 €",
+      "kontext": "Sachverstaendigenkosten",
+      "quelle_zitat": "Sachverstaendigenkosten: 487,90 €"
+    },
+    {
+      "betrag": "30,00 €",
+      "kontext": "Allgemeine Unkostenpauschale",
+      "quelle_zitat": "Allgemeine Unkostenpauschale: 30,00 €"
+    },
+    {
+      "betrag": "1.752,46 €",
+      "kontext": "Gesamtforderung der Gegenseite",
+      "quelle_zitat": "Die Gesamtforderung belaeuft sich damit auf 1.752,46 €."
+    }
+  ],
+  "aktenzeichen_fremd": [
+    {
+      "aktenzeichen": "045/26 K01",
+      "stelle": "Dr. Gegner & Kollegen Rechtsanwälte (Gegenseite)",
+      "quelle_zitat": "Unser Zeichen: 045/26 K01"
+    }
+  ],
+  "luecken": [
+    {
+      "feld": "parteien[1].anschrift",
+      "grund": "Anschrift der Geschaedigten (Gegnerin) fehlt im Schreiben — nur die Kanzlei-Anschrift ist genannt. Fuer Zustellungen und die Aktenanlage erforderlich."
+    },
+    {
+      "feld": "parteien[0].kontakt",
+      "grund": "Telefon/E-Mail des Mandanten sind im Dokument nicht enthalten — beim Erstkontakt zu erfragen."
+    }
+  ]
+}

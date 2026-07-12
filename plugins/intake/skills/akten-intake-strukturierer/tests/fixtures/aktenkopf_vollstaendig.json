@@ -1,0 +1,44 @@
+{
+  "aktenkopf": {
+    "kurzrubrum": "Mustermann ./. Testfall",
+    "sachverhalt_kurz": "Kurzer Testsachverhalt fuer die Fixtures — vollstaendig belegter Aktenkopf.",
+    "eingangsdatum": "2026-04-14"
+  },
+  "parteien": [
+    {
+      "rolle": "mandant",
+      "name": "Max Mustermann",
+      "typ": "natuerlich",
+      "anschrift": "Testweg 1, 10115 Berlin",
+      "kontakt": {
+        "email": "mandant@example.org",
+        "telefon": "030 12345678",
+        "iban": "DE02 1203 0000 0000 2020 51"
+      },
+      "vertreten_durch": null
+    }
+  ],
+  "fristen_hinweise": [
+    {
+      "datum_im_text": "2026-05-02",
+      "originalschreibweise": "2026-05-02",
+      "quelle_zitat": "Die Zahlung hat bis 2026-05-02 zu erfolgen.",
+      "vermutete_bedeutung": "Zahlungsfrist der Gegenseite — keine Fristberechnung durch diesen Skill."
+    }
+  ],
+  "betraege": [
+    {
+      "betrag": "1.234,56 €",
+      "kontext": "Hauptforderung",
+      "quelle_zitat": "wir machen eine Forderung in Höhe von 1234,56 EUR geltend."
+    }
+  ],
+  "aktenzeichen_fremd": [
+    {
+      "aktenzeichen": "12 O 345/26",
+      "stelle": "Gegenseite",
+      "quelle_zitat": "Unser Zeichen: 12 O 345/26"
+    }
+  ],
+  "luecken": []
+}
