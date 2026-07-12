@@ -1,0 +1,120 @@
+{
+  "bezeichnung": "Wertgebührentabelle § 34 Abs. 1 GKG (Anlage 2 GKG)",
+  "hinweis": "Grundbetrag + Stufenzuschläge, wörtlich aus § 34 Abs. 1 GKG übernommen (nicht aus Anlage 2 abgetippt) — die Formel reproduziert Anlage 2 exakt, gegen die Stützpunkte in `pruefpunkte_anlage_2` gegengetestet.",
+  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/gkg_2004/__34.html (aktuelle Fassung) und einen Wayback-Machine-Schnappschuss (2025-01) für die Vorfassung; Geltungszeiträume gegengeprüft gegen den Fassungsvergleich auf buzer.de/34_GKG.htm (mWv-Daten 01.01.2021 und 01.06.2025).",
+  "streitwert_hoechstgrenze": "30000000.00",
+  "streitwert_hoechstgrenze_norm": "§ 39 Abs. 2 GKG",
+  "streitwert_hoechstgrenze_hinweis": "Kappungsgrenze, keine Zulässigkeitsgrenze: Streitwerte über 30 Mio. € werden für die Gebührenberechnung auf 30 Mio. € gekappt und die Kappung wird in Rechenkette und Warnungen ausgewiesen (§ 39 Abs. 2 GKG: 'Der Streitwert beträgt höchstens 30 Millionen Euro, soweit kein niedrigerer Höchstwert bestimmt ist.').",
+  "staende": [
+    {
+      "id": "kostraeg_2021",
+      "bezeichnung": "KostRÄG 2021 (Kostenrechtsänderungsgesetz 2021)",
+      "gueltig_ab": "2021-01-01",
+      "gueltig_bis": "2025-05-31",
+      "fundstelle": "Art. 1 KostRÄG 2021, G. v. 21.12.2020, BGBl. I S. 3229; Anlage 2 GKG in dieser Fassung: BGBl. I 2020, 3233",
+      "grundbetrag": "38.00",
+      "grundbetrag_bis_wert": "500.00",
+      "stufen": [
+        {
+          "bis_wert": "2000.00",
+          "schritt": "500.00",
+          "zuschlag": "20.00"
+        },
+        {
+          "bis_wert": "10000.00",
+          "schritt": "1000.00",
+          "zuschlag": "21.00"
+        },
+        {
+          "bis_wert": "25000.00",
+          "schritt": "3000.00",
+          "zuschlag": "29.00"
+        },
+        {
+          "bis_wert": "50000.00",
+          "schritt": "5000.00",
+          "zuschlag": "38.00"
+        },
+        {
+          "bis_wert": "200000.00",
+          "schritt": "15000.00",
+          "zuschlag": "132.00"
+        },
+        {
+          "bis_wert": "500000.00",
+          "schritt": "30000.00",
+          "zuschlag": "198.00"
+        }
+      ],
+      "ueber_hoechstwert": {
+        "schritt": "50000.00",
+        "zuschlag": "198.00"
+      },
+      "mindestbetrag": "15.00",
+      "rundungsregel_hinweis": "Die ausdrückliche gesetzliche Rundungsregel (\"auf den nächstliegenden Cent auf- oder abgerundet; 0,5 Cent werden aufgerundet\") wurde erst mit KostBRÄG 2025 in § 34 Abs. 2 Satz 2 GKG eingefügt. Für diesen Stand rechnet der Executor dennoch einheitlich kaufmännisch (ROUND_HALF_UP) — Haus-Konvention (CONVENTIONS.md), inhaltlich deckungsgleich mit der späteren Gesetzesformulierung.",
+      "pruefpunkte_anlage_2": {
+        "hinweis": "Stützpunkte aus der damals als Anlage 2 GKG veröffentlichten Tabelle (Wayback-Machine-Schnappschuss, Fundstelle BGBl. I 2020, 3233).",
+        "1000.00": "58.00",
+        "5000.00": "161.00",
+        "10000.00": "266.00",
+        "50000.00": "601.00",
+        "500000.00": "3901.00"
+      }
+    },
+    {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 5 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109, 139; Anlage 2 GKG Fundstelle BGBl. 2025 I Nr. 109, S. 11",
+      "grundbetrag": "40.00",
+      "grundbetrag_bis_wert": "500.00",
+      "stufen": [
+        {
+          "bis_wert": "2000.00",
+          "schritt": "500.00",
+          "zuschlag": "21.00"
+        },
+        {
+          "bis_wert": "10000.00",
+          "schritt": "1000.00",
+          "zuschlag": "22.50"
+        },
+        {
+          "bis_wert": "25000.00",
+          "schritt": "3000.00",
+          "zuschlag": "30.50"
+        },
+        {
+          "bis_wert": "50000.00",
+          "schritt": "5000.00",
+          "zuschlag": "40.50"
+        },
+        {
+          "bis_wert": "200000.00",
+          "schritt": "15000.00",
+          "zuschlag": "140.00"
+        },
+        {
+          "bis_wert": "500000.00",
+          "schritt": "30000.00",
+          "zuschlag": "210.00"
+        }
+      ],
+      "ueber_hoechstwert": {
+        "schritt": "50000.00",
+        "zuschlag": "210.00"
+      },
+      "mindestbetrag": "15.00",
+      "rundungsregel_hinweis": "§ 34 Abs. 2 Satz 2 GKG (seit KostBRÄG 2025): Gebühren werden auf den nächstliegenden Cent auf- oder abgerundet; 0,5 Cent werden aufgerundet — entspricht ROUND_HALF_UP.",
+      "pruefpunkte_anlage_2": {
+        "hinweis": "Stützpunkte, live von gesetze-im-internet.de/gkg_2004/anlage_2.html gelesen (Fundstelle BGBl. 2025 I Nr. 109, S. 11).",
+        "1000.00": "61.00",
+        "5000.00": "170.50",
+        "10000.00": "283.00",
+        "50000.00": "638.00",
+        "500000.00": "4138.00"
+      }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "bezeichnung": "Gebührentatbestands-Katalog Vergütungsverzeichnis (Anlage 1 RVG) — nur Wertgebühren (Zivil), Auswahl",
+  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/rvg/anlage_1.html (aktuelle Fassung, Stand Fundstelle BGBl. I 2022, 633-664 zzgl. spätere Einzeländerungen).",
+  "scope_hinweis": "Nur Wertgebühren-Tatbestände in Zivilsachen. Betragsrahmengebühren (Sozial-/Strafrecht), PKH-Vergütung (§ 49 RVG) und Beratungshilfe (Teil 2 Abschnitt 5 VV RVG) sind NICHT im Katalog und werden vom Executor als Scope-Fehler abgelehnt (siehe rechner.py).",
+  "positionen": {
+    "2300": {
+      "bezeichnung": "Geschäftsgebühr",
+      "norm": "Nr. 2300 VV RVG",
+      "art": "satzrahmen",
+      "satzrahmen_min": "0.5",
+      "satzrahmen_max": "2.5",
+      "regelsatz": "1.3",
+      "regelsatz_hinweis": "Eine Gebühr von mehr als 1,3 kann nur gefordert werden, wenn die Tätigkeit umfangreich oder schwierig war (Anm. Abs. 1 zu Nr. 2300 VV RVG) — Kappungsgrenze im Regelfall. Der Executor verlangt den Satz als Pflichtangabe (keine stille Annahme von 1,3) und weist bei Satz > 1,3 auf die Begründungspflicht hin.",
+      "vv_teil": 2
+    },
+    "3100": {
+      "bezeichnung": "Verfahrensgebühr",
+      "norm": "Nr. 3100 VV RVG",
+      "art": "festsatz",
+      "satz": "1.3",
+      "vv_teil": 3
+    },
+    "3104": {
+      "bezeichnung": "Terminsgebühr",
+      "norm": "Nr. 3104 VV RVG",
+      "art": "festsatz",
+      "satz": "1.2",
+      "vv_teil": 3
+    },
+    "1000": {
+      "bezeichnung": "Einigungsgebühr",
+      "norm": "Nr. 1000 VV RVG",
+      "art": "festsatz",
+      "satz": "1.5",
+      "vv_teil": 1
+    },
+    "1003": {
+      "bezeichnung": "Einigungsgebühr bei anhängiger Sache",
+      "norm": "Nr. 1003 VV RVG",
+      "art": "festsatz",
+      "satz": "1.0",
+      "hinweis": "Gilt anstelle von Nr. 1000, wenn über den Gegenstand bereits ein anderes gerichtliches Verfahren (außer selbständigem Beweisverfahren) anhängig ist.",
+      "vv_teil": 1
+    },
+    "1008": {
+      "bezeichnung": "Erhöhungsgebühr für weitere Auftraggeber",
+      "norm": "Nr. 1008 VV RVG",
+      "art": "erhoehung",
+      "satz_je_weiterem_auftraggeber": "0.3",
+      "erhoehung_max_satz": "2.0",
+      "anwendbar_auf": [
+        "3100",
+        "2300"
+      ],
+      "hinweis": "Erhöht die Verfahrens- oder Geschäftsgebühr um 0,3 je weiterem Auftraggeber, nur soweit der Gegenstand der anwaltlichen Tätigkeit derselbe ist (Anm. Abs. 1). Mehrere Erhöhungen dürfen einen Gebührensatz von 2,0 nicht übersteigen (Anm. Abs. 3) — der Executor kappt und weist die Kappung aus.",
+      "vv_teil": 1
+    },
+    "7002": {
+      "bezeichnung": "Pauschale für Entgelte für Post- und Telekommunikationsdienstleistungen (Auslagenpauschale)",
+      "norm": "Nr. 7002 VV RVG",
+      "art": "pauschale",
+      "satz_prozent_der_gebuehren": "20",
+      "hoechstbetrag": "20.00",
+      "vv_teil": 7
+    },
+    "7008": {
+      "bezeichnung": "Umsatzsteuer auf die Vergütung",
+      "norm": "Nr. 7008 VV RVG i. V. m. § 12 Abs. 1 UStG",
+      "art": "steuer",
+      "satz_prozent": "19",
+      "hinweis": "Entfällt, wenn die Umsatzsteuer nach § 19 Abs. 1 UStG (Kleinunternehmerregelung) unerhoben bleibt — Kanzleisache, nicht Teil dieser Berechnung.",
+      "vv_teil": 7
+    }
+  },
+  "anrechnung_geschaeftsgebuehr_auf_verfahrensgebuehr": {
+    "norm": "Vorbemerkung 3 Abs. 4 VV RVG",
+    "regel": "Eine Geschäftsgebühr nach Teil 2 VV RVG wird zur Hälfte, bei Wertgebühren jedoch höchstens mit einem Gebührensatz von 0,75, auf die Verfahrensgebühr des gerichtlichen Verfahrens angerechnet.",
+    "formel": "anrechnungssatz = min(geschaeftsgebuehr_satz * 0.5, 0.75); anrechnungsbetrag = anrechnungssatz * einfachgebuehr",
+    "voraussetzung": "Geschäftsgebühr (Nr. 2300) und Verfahrensgebühr (Nr. 3100) desselben Gegenstands, hier: derselbe Streitwert in derselben Anfrage.",
+    "hinweis": "Nur als optionaler, explizit angeforderter Rechenschritt (anrechnung_2300_auf_3100: true) — nie automatisch, da die Anrechnung von der anwaltlichen Einordnung abhängt (derselbe Gegenstand?)."
+  },
+  "teil_hinweis": "`vv_teil` = Teil der Anlage 1 RVG (Gliederung web-verifiziert). Teil-2- und Teil-3-Tatbestände in DERSELBEN Angelegenheit sind ein Eingabefehler: außergerichtliche Vertretung und gerichtliches Verfahren sind verschiedene Angelegenheiten (§§ 16 ff. RVG; die Anrechnung nach Vorbem. 3 Abs. 4 VV RVG setzt zwei Angelegenheiten gerade voraus) — mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis. Teil-1-Gebühren entstehen neben den Gebühren der anderen Teile (Vorbem. 1 VV RVG) und lösen keine Kollisionsprüfung aus."
+}

@@ -1,0 +1,24 @@
+{
+  "rvg": {
+    "auftragsdatum": "2026-03-01",
+    "streitwert": "10000.00",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Außergerichtliche Vertretung",
+        "tatbestaende": [
+          {"nr": "2300", "satz": "1.3"}
+        ]
+      },
+      {
+        "bezeichnung": "Rechtsstreit erster Instanz",
+        "tatbestaende": [
+          {"nr": "3100"},
+          {"nr": "1008", "erhoeht_position": "3100", "weitere_auftraggeber": 1}
+        ]
+      }
+    ],
+    "anrechnung_2300_auf_3100": true,
+    "auslagenpauschale": true,
+    "umsatzsteuer": true
+  }
+}

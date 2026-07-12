@@ -1,0 +1,118 @@
+{
+  "bezeichnung": "Wertgebührentabelle § 13 Abs. 1 RVG (Anlage 2 RVG)",
+  "hinweis": "Grundbetrag + Stufenzuschläge, wörtlich aus § 13 Abs. 1 RVG übernommen (nicht aus Anlage 2 abgetippt) — die Formel reproduziert Anlage 2 exakt, gegen die Stützpunkte in `pruefpunkte_anlage_2` gegengetestet (siehe core/calc/rvg/tests bzw. Skill-tests/test_rvg_tabelle.py).",
+  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/rvg/__13.html (aktuelle Fassung) und einen Wayback-Machine-Schnappschuss (2025-01) für die Vorfassung; Geltungszeiträume gegengeprüft gegen den Fassungsvergleich auf buzer.de/13_RVG.htm (mWv-Daten 01.01.2021 und 01.06.2025).",
+  "wert_hoechstgrenze": "30000000.00",
+  "wert_hoechstgrenze_norm": "§ 22 Abs. 2 Satz 1 RVG",
+  "wert_hoechstgrenze_hinweis": "Kappungsgrenze, keine Zulässigkeitsgrenze: in derselben Angelegenheit beträgt der Wert höchstens 30 Mio. € — höhere Werte werden auf 30 Mio. € gekappt und die Kappung wird in Rechenkette und Warnungen ausgewiesen. § 22 Abs. 2 Satz 2 RVG (mehrere Auftraggeber wegen verschiedener Gegenstände: je Person höchstens 30 Mio. €, insgesamt höchstens 100 Mio. €) ist NICHT modelliert — bei Erhöhungsgebühr Nr. 1008 UND Wert über 30 Mio. € lehnt der Rechner ab, statt möglicherweise falsch zu kappen. Web-verifiziert am 2026-07-12 gegen gesetze-im-internet.de/rvg/__22.html.",
+  "staende": [
+    {
+      "id": "kostraeg_2021",
+      "bezeichnung": "KostRÄG 2021 (Kostenrechtsänderungsgesetz 2021)",
+      "gueltig_ab": "2021-01-01",
+      "gueltig_bis": "2025-05-31",
+      "fundstelle": "Art. 7 KostRÄG 2021, G. v. 21.12.2020, BGBl. I S. 3229; Anlage 2 RVG in dieser Fassung: BGBl. I 2022, 665 (redaktionelle Berichtigung, keine Wertänderung)",
+      "grundbetrag": "49.00",
+      "grundbetrag_bis_wert": "500.00",
+      "stufen": [
+        {
+          "bis_wert": "2000.00",
+          "schritt": "500.00",
+          "zuschlag": "39.00"
+        },
+        {
+          "bis_wert": "10000.00",
+          "schritt": "1000.00",
+          "zuschlag": "56.00"
+        },
+        {
+          "bis_wert": "25000.00",
+          "schritt": "3000.00",
+          "zuschlag": "52.00"
+        },
+        {
+          "bis_wert": "50000.00",
+          "schritt": "5000.00",
+          "zuschlag": "81.00"
+        },
+        {
+          "bis_wert": "200000.00",
+          "schritt": "15000.00",
+          "zuschlag": "94.00"
+        },
+        {
+          "bis_wert": "500000.00",
+          "schritt": "30000.00",
+          "zuschlag": "132.00"
+        }
+      ],
+      "ueber_hoechstwert": {
+        "schritt": "50000.00",
+        "zuschlag": "165.00"
+      },
+      "mindestbetrag": "15.00",
+      "pruefpunkte_anlage_2": {
+        "hinweis": "Stützpunkte aus der damals als Anlage 2 RVG veröffentlichten Tabelle (Wayback-Machine-Schnappschuss, Fundstelle BGBl. I 2022, 665) — dienen nur dem Abgleich der Formel in Tests, nicht der Berechnung selbst.",
+        "1000.00": "88.00",
+        "5000.00": "334.00",
+        "10000.00": "614.00",
+        "50000.00": "1279.00",
+        "500000.00": "3539.00"
+      }
+    },
+    {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 11 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109, 139; Anlage 2 RVG Fundstelle BGBl. 2025 I Nr. 109, S. 30",
+      "grundbetrag": "51.50",
+      "grundbetrag_bis_wert": "500.00",
+      "stufen": [
+        {
+          "bis_wert": "2000.00",
+          "schritt": "500.00",
+          "zuschlag": "41.50"
+        },
+        {
+          "bis_wert": "10000.00",
+          "schritt": "1000.00",
+          "zuschlag": "59.50"
+        },
+        {
+          "bis_wert": "25000.00",
+          "schritt": "3000.00",
+          "zuschlag": "55.00"
+        },
+        {
+          "bis_wert": "50000.00",
+          "schritt": "5000.00",
+          "zuschlag": "86.00"
+        },
+        {
+          "bis_wert": "200000.00",
+          "schritt": "15000.00",
+          "zuschlag": "99.50"
+        },
+        {
+          "bis_wert": "500000.00",
+          "schritt": "30000.00",
+          "zuschlag": "140.00"
+        }
+      ],
+      "ueber_hoechstwert": {
+        "schritt": "50000.00",
+        "zuschlag": "175.00"
+      },
+      "mindestbetrag": "15.00",
+      "pruefpunkte_anlage_2": {
+        "hinweis": "Stützpunkte, live von gesetze-im-internet.de/rvg/anlage_2.html gelesen (Fundstelle BGBl. 2025 I Nr. 109, S. 30).",
+        "1000.00": "93.00",
+        "5000.00": "354.50",
+        "10000.00": "652.00",
+        "50000.00": "1357.00",
+        "500000.00": "3752.00"
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "bezeichnung": "Gebührentatbestands-Katalog Kostenverzeichnis (Anlage 1 GKG) — Auswahl",
+  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html (aktuelle Fassung) und einen Wayback-Machine-Schnappschuss (2025-01) für den Mindestbetrag von KV 1100 in der Vorfassung.",
+  "positionen": {
+    "1100": {
+      "bezeichnung": "Mahnverfahren — Antrag auf Erlass eines Mahnbescheids oder eines Europäischen Zahlungsbefehls",
+      "norm": "KV 1100 GKG",
+      "satz": "0.5",
+      "mindestbetrag": {
+        "kostraeg_2021": "36.00",
+        "kostbraeg_2025": "38.00"
+      },
+      "mindestbetrag_hinweis": "KV 1100 hat einen eigenen, von der allgemeinen Mindestgebühr (§ 34 Abs. 2 GKG, 15,00 €) abweichenden, versionierten Mindestbetrag."
+    },
+    "1210": {
+      "bezeichnung": "Verfahren im Allgemeinen, erster Rechtszug (Amts-/Landgericht)",
+      "norm": "KV 1210 GKG",
+      "satz": "3.0"
+    },
+    "1211": {
+      "bezeichnung": "Ermäßigung von KV 1210 bei Beendigung des gesamten Verfahrens ohne streitiges Urteil (u. a. Klagerücknahme, Anerkenntnis-/Verzichtsurteil, gerichtlicher Vergleich, übereinstimmende Erledigungserklärung ohne Kostenentscheidung)",
+      "norm": "KV 1211 GKG",
+      "satz": "1.0",
+      "ermaessigt_position": "1210",
+      "hinweis": "Schließt sich mit KV 1210 gegenseitig aus (Regelfall vs. Ermäßigung für dieselbe Instanz) — der Executor lehnt die gleichzeitige Angabe beider ab."
+    },
+    "1220": {
+      "bezeichnung": "Berufung — Verfahren im Allgemeinen",
+      "norm": "KV 1220 GKG",
+      "satz": "4.0"
+    },
+    "1222": {
+      "bezeichnung": "Ermäßigung von KV 1220 bei Beendigung des gesamten Berufungsverfahrens ohne streitiges Urteil (sofern nicht KV 1221 einschlägig)",
+      "norm": "KV 1222 GKG",
+      "satz": "2.0",
+      "ermaessigt_position": "1220",
+      "hinweis": "Schließt sich mit KV 1220 gegenseitig aus — der Executor lehnt die gleichzeitige Angabe beider ab."
+    }
+  },
+  "hinweis_allgemeine_mindestgebuehr": {
+    "norm": "§ 34 Abs. 2 Satz 1 GKG",
+    "betrag": "15.00",
+    "regel": "Gilt für jede Wertgebühr dieses Katalogs, soweit die Position keinen eigenen (höheren) Mindestbetrag hat (KV 1100: siehe dort)."
+  }
+}
