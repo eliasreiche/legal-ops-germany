@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "erzeugt_von": "plugins/compliance/skills/gwg-risiko-check/executor.py",
+    "quelle_datei": "plugins/compliance/skills/gwg-risiko-check/schema/beispiel-mandat.json",
+    "deterministik": "Alle Status-, Faktoren- und Fundstellenwerte in diesem Report sind regelbasierte Executor-Ergebnisse (P3), nicht modellgeneriert.",
+    "hinweis_bewertung": "Der Klassifikationsvorschlag ist ein Vorschlag zur Aktendokumentation — die Risikobewertung und Maßnahmenentscheidung trifft der Verpflichtete (§ 10 Abs. 2 GwG)."
+  },
+  "eingabe_normalisiert": {
+    "kataloggeschaeft": "immobilien_gewerbe_kauf",
+    "mandant_typ": "juristische_person",
+    "sitz_land": "DE",
+    "pep": "nein",
+    "wirtschaftlich_berechtigter_geklaert": "ja",
+    "bargeldintensiv": "ja",
+    "komplexe_eigentumsstruktur": "nein",
+    "distanzgeschaeft": "nein",
+    "herkunft_der_mittel_klar": "ja",
+    "boersennotiert_reguliert": "nein",
+    "oeffentliche_stelle": "nein",
+    "nominee_inhaberaktien": "nein",
+    "private_vermoegensstruktur": "nein",
+    "anonymitaets_produkt": "nein",
+    "zahlung_unbekannte_dritte": "nein"
+  },
+  "anwendbarkeit": {
+    "status": "verpflichtet",
+    "kataloggeschaeft": "immobilien_gewerbe_kauf",
+    "begruendung": "Kataloggeschäft nach § 2 Abs. 1 Nr. 10 GwG angegeben — Rechtsanwalt ist insoweit Verpflichteter.",
+    "quelle": "executor",
+    "fundstelle": "§ 2 Abs. 1 Nr. 10 Buchst. a GwG",
+    "paraphrase": "Mitwirkung an Kauf oder Verkauf von Immobilien oder Gewerbebetrieben.",
+    "marker": "⚠️",
+    "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
+  },
+  "klassifikationsvorschlag": "mittel",
+  "klassifikation_begruendung": "Mindestens ein risikoerhöhender Faktor nach Anlage 2 GwG liegt vor, ohne dass ein § 15-Tatbestand (PEP/Hochrisiko-Drittstaat) erfüllt ist.",
+  "regel_angewendet": "allgemein",
+  "angewandte_faktoren": [
+    {
+      "id": "a1_g_eu_sitz",
+      "anlage": 1,
+      "fundstelle": "Anlage 1 Nr. 3 Buchst. a GwG",
+      "paraphrase": "Sitz- bzw. Wohnsitzstaat des Mandanten ist ein Mitgliedstaat der Europäischen Union.",
+      "kategorie": "geografisch",
+      "quelle": "executor",
+      "marker": "⚠️",
+      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren.",
+      "detail": "Sitzland DE ist EU-Mitgliedstaat."
+    },
+    {
+      "id": "a2_k_bargeldintensiv",
+      "anlage": 2,
+      "fundstelle": "Anlage 2 Nr. 1 Buchst. e GwG",
+      "paraphrase": "Bargeldintensives Geschäft bzw. Unternehmen des Mandanten.",
+      "kategorie": "kundenrisiko",
+      "quelle": "executor",
+      "marker": "⚠️",
+      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
+    }
+  ],
+  "pflichten_hinweise": [
+    {
+      "norm": "§ 10 GwG",
+      "hinweis": "Allgemeine Sorgfaltspflichten sind anzuwenden (Identifizierung, wirtschaftlich Berechtigter, Zweck der Geschäftsbeziehung, kontinuierliche Überwachung).",
+      "quelle": "executor",
+      "marker": "⚠️",
+      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
+    },
+    {
+      "norm": "§ 43 GwG",
+      "hinweis": "Bei Tatsachen, die auf Geldwäsche/Terrorismusfinanzierung hindeuten, besteht grundsätzlich eine Verdachtsmeldepflicht an die FIU. Für Rechtsanwälte gilt die Ausnahme des § 43 Abs. 2 GwG (Erkenntnisse aus der Rechtsberatung/Prozessvertretung), soweit deren Voraussetzungen vorliegen — im Einzelfall anwaltlich zu prüfen.",
+      "quelle": "executor",
+      "marker": "⚠️",
+      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
+    }
+  ],
+  "luecken": [],
+  "vorbehalte": [
+    "Der Klassifikationsvorschlag ist ein regelbasierter Vorschlag, kein Verwaltungsakt-sicherer Nachweis. Die Risikobewertung und die Maßnahmenentscheidung trifft der Verpflichtete (risikobasierter Ansatz, § 10 Abs. 2 GwG).",
+    "Alle Norm-Fundstellen sind mit ⚠️ als nicht gegen den Gesetzestext geprüft gekennzeichnet; sie sind gegen die aktuelle Gesetzesfassung zu verifizieren.",
+    "Länder-Einordnung: Liste ändert sich laufend — vor Nutzung Stand prüfen. Ein Nicht-Treffer bedeutet NICHT, dass kein geografisches Risiko besteht; ein Treffer ist nur ein Anhaltspunkt und gegen die aktuelle EU-Liste zu verifizieren. (Stand der hinterlegten Liste: 2024-06 (Platzhalter, ungeprüft))"
+  ],
+  "stand": {
+    "anlage1": "2024-06 (Platzhalter, ungeprüft)",
+    "anlage2": "2024-06 (Platzhalter, ungeprüft)",
+    "hochrisiko_drittstaaten": "2024-06 (Platzhalter, ungeprüft)",
+    "hinweis": "Anlagen-Inhalte, Fundstellen und die Länderliste sind vor produktiver Nutzung gegen gesetze-im-internet.de bzw. die aktuelle Fassung der Delegierten Verordnung (EU) 2016/1675 zu prüfen (händische Abnahme, Reifegrad 'getestet')."
+  }
+}

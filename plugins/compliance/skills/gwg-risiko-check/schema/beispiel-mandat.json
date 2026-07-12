@@ -1,0 +1,17 @@
+{
+  "kataloggeschaeft": "immobilien_gewerbe_kauf",
+  "mandant_typ": "juristische_person",
+  "sitz_land": "DE",
+  "pep": "nein",
+  "wirtschaftlich_berechtigter_geklaert": "ja",
+  "bargeldintensiv": "ja",
+  "komplexe_eigentumsstruktur": "nein",
+  "distanzgeschaeft": "nein",
+  "herkunft_der_mittel_klar": "ja",
+  "boersennotiert_reguliert": "nein",
+  "oeffentliche_stelle": "nein",
+  "nominee_inhaberaktien": "nein",
+  "private_vermoegensstruktur": "nein",
+  "anonymitaets_produkt": "nein",
+  "zahlung_unbekannte_dritte": "nein"
+}

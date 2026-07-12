@@ -1,0 +1,33 @@
+{
+  "_hinweis": "Katalogfaktoren für ein potenziell GERINGERES Risiko (Anlage 1 GwG). Paraphrasen in eigenen Worten — KEIN Wortlaut-Zitat. Jede 'fundstelle' ist eine exakte Norm-Verweisung, die vor produktiver Nutzung gegen gesetze-im-internet.de (aktuelle Fassung des GwG) zu prüfen ist.",
+  "anlage": 1,
+  "titel": "Faktoren für ein potenziell geringeres Risiko",
+  "stand": "2024-06 (Platzhalter, ungeprüft)",
+  "pruefhinweis": "Buchstaben-Zuordnung und Inhalt der Anlage 1 GwG sind vor produktiver Nutzung gegen die aktuelle Gesetzesfassung (gesetze-im-internet.de) abzugleichen — Teil der händischen Abnahme (Reifegrad 'getestet'). Bei Unsicherheit gilt der Faktor als nicht belastbar.",
+  "faktoren": [
+    {
+      "id": "a1_k_boersennotiert",
+      "fundstelle": "Anlage 1 Nr. 1 Buchst. a GwG",
+      "kategorie": "kundenrisiko",
+      "fragebogen_feld": "boersennotiert_reguliert",
+      "bewertung": "ja_nein",
+      "paraphrase": "Mandant ist eine börsennotierte Gesellschaft, die Transparenz- bzw. Offenlegungspflichten unterliegt, die dem Unionsrecht entsprechen oder gleichwertig sind."
+    },
+    {
+      "id": "a1_k_oeffentliche_stelle",
+      "fundstelle": "Anlage 1 Nr. 1 Buchst. b GwG",
+      "kategorie": "kundenrisiko",
+      "fragebogen_feld": "oeffentliche_stelle",
+      "bewertung": "ja_nein",
+      "paraphrase": "Mandant ist eine öffentliche Verwaltung oder ein öffentliches Unternehmen."
+    },
+    {
+      "id": "a1_g_eu_sitz",
+      "fundstelle": "Anlage 1 Nr. 3 Buchst. a GwG",
+      "kategorie": "geografisch",
+      "fragebogen_feld": "sitz_land",
+      "bewertung": "land_eu",
+      "paraphrase": "Sitz- bzw. Wohnsitzstaat des Mandanten ist ein Mitgliedstaat der Europäischen Union."
+    }
+  ]
+}

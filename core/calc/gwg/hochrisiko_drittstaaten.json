@@ -1,0 +1,32 @@
+{
+  "_hinweis": "Liste hochriskanter Drittstaaten nach der Delegierten Verordnung (EU) 2016/1675 (auf die § 15 Abs. 3 Nr. 2 GwG verweist). Diese Datei ist ein PLATZHALTER: die Zusammensetzung der Liste ändert sich laufend durch Änderungs-Delegierte-Verordnungen. Vor jeder produktiven Nutzung ist der Stand zwingend gegen die aktuelle konsolidierte Fassung der VO (EU) 2016/1675 abzugleichen.",
+  "stand": "2024-06 (Platzhalter, ungeprüft)",
+  "quelle": "Delegierte Verordnung (EU) 2016/1675 der Kommission (in der jeweils geltenden, mehrfach geänderten Fassung), Anhang; verlinkt über § 15 Abs. 3 Nr. 2 GwG",
+  "vorbehalt": "Liste ändert sich laufend — vor Nutzung Stand prüfen. Ein Nicht-Treffer bedeutet NICHT, dass kein geografisches Risiko besteht; ein Treffer ist nur ein Anhaltspunkt und gegen die aktuelle EU-Liste zu verifizieren.",
+  "laender": [
+    {"iso": "AF", "name": "Afghanistan"},
+    {"iso": "BB", "name": "Barbados"},
+    {"iso": "BF", "name": "Burkina Faso"},
+    {"iso": "CM", "name": "Kamerun"},
+    {"iso": "CD", "name": "Demokratische Republik Kongo"},
+    {"iso": "GI", "name": "Gibraltar"},
+    {"iso": "HT", "name": "Haiti"},
+    {"iso": "IR", "name": "Iran"},
+    {"iso": "JM", "name": "Jamaika"},
+    {"iso": "KP", "name": "Demokratische Volksrepublik Korea (Nordkorea)"},
+    {"iso": "ML", "name": "Mali"},
+    {"iso": "MZ", "name": "Mosambik"},
+    {"iso": "MM", "name": "Myanmar"},
+    {"iso": "NG", "name": "Nigeria"},
+    {"iso": "PA", "name": "Panama"},
+    {"iso": "PH", "name": "Philippinen"},
+    {"iso": "SN", "name": "Senegal"},
+    {"iso": "SS", "name": "Südsudan"},
+    {"iso": "SY", "name": "Syrien"},
+    {"iso": "TZ", "name": "Tansania"},
+    {"iso": "TT", "name": "Trinidad und Tobago"},
+    {"iso": "UG", "name": "Uganda"},
+    {"iso": "VU", "name": "Vanuatu"},
+    {"iso": "YE", "name": "Jemen"}
+  ]
+}
