@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "liste_datei": "schema/beispiel-mandantenliste.csv",
+    "parteien_datei": "schema/beispiel-neue-parteien.json",
+    "erzeugt_von": "konflikt-check-offline/executor.py",
+    "schwelle_moeglich": 0.85
+  },
+  "kandidaten": [
+    {
+      "neue_partei": {
+        "name": "Bau Mustermann GmbH",
+        "rolle": "mandant",
+        "typ": "juristisch"
+      },
+      "listeneintrag": {
+        "name": "Mustermann Bau GmbH",
+        "rolle": "mandant",
+        "typ": "juristisch",
+        "az": "12/2024"
+      },
+      "regel": "S2",
+      "stufe": "treffer",
+      "score": 1.0,
+      "begruendung": "Token-Mengen-Gleichheit nach Normalisierung (Wortreihenfolge unerheblich): {bau, mustermann}"
+    },
+    {
+      "neue_partei": {
+        "name": "Erika Mustermann",
+        "rolle": "mandant",
+        "typ": "natuerlich"
+      },
+      "listeneintrag": {
+        "name": "Erika Mustermann",
+        "rolle": "mandant",
+        "typ": "natuerlich",
+        "az": "34/2023"
+      },
+      "regel": "S1",
+      "stufe": "treffer",
+      "score": 1.0,
+      "begruendung": "exakter Treffer nach Normalisierung: 'erika mustermann' = 'erika mustermann'"
+    },
+    {
+      "neue_partei": {
+        "name": "Schmitt",
+        "rolle": "gegner",
+        "typ": "natuerlich"
+      },
+      "listeneintrag": {
+        "name": "Schmidt",
+        "rolle": "gegner",
+        "typ": "natuerlich",
+        "az": null
+      },
+      "regel": "S3",
+      "stufe": "moeglicher_treffer",
+      "score": 1.0,
+      "begruendung": "phonetisch identisch nach Kölner Phonetik: 862 = 862"
+    },
+    {
+      "neue_partei": {
+        "name": "Beispiel Handels GmbH",
+        "rolle": "gegner",
+        "typ": "juristisch"
+      },
+      "listeneintrag": {
+        "name": "Beispiel Handel GmbH & Co. KG",
+        "rolle": "gegner",
+        "typ": "juristisch",
+        "az": null
+      },
+      "regel": "S4",
+      "stufe": "moeglicher_treffer",
+      "score": 0.9677,
+      "begruendung": "Ähnlichkeit 0.97 ≥ Schwelle 0.85 (Zeichenketten-Vergleich)"
+    }
+  ],
+  "zusammenfassung": {
+    "anzahl_neue_parteien": 5,
+    "anzahl_listeneintraege": 5,
+    "anzahl_geprueft_paare": 25,
+    "anzahl_treffer": 2,
+    "anzahl_moegliche_treffer": 2
+  }
+}

@@ -1,0 +1,7 @@
+[
+  {"name": "Erika Mustermann", "rolle": "mandant", "typ": "natuerlich"},
+  {"name": "Bau Mustermann GmbH", "rolle": "mandant", "typ": "juristisch"},
+  {"name": "Schmitt", "rolle": "gegner", "typ": "natuerlich"},
+  {"name": "Beispiel Handels GmbH", "rolle": "gegner", "typ": "juristisch"},
+  {"name": "Voellig Unbeteiligte Partei GmbH", "rolle": "gegner", "typ": "juristisch"}
+]
