@@ -57,9 +57,9 @@ Tabelle wird generiert von [`core/verify/struktur_lint.py`](core/verify/struktur
 | [`fristenrechner-de`](plugins/fristen-termine/skills/fristenrechner-de/SKILL.md) | `fristen-termine` | 1 | 🧪 `beta` |
 | [`zitat-verifier-de`](core/verify/zitat-verifier-de/SKILL.md) | `querschnitt` | 1 | 🧪 `beta` |
 | [`rvg-gko-rechner`](plugins/zeit-abrechnung/skills/rvg-gko-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🧪 `beta` |
-| [`gwg-risiko-check`](plugins/compliance/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🚧 `ungetestet` |
-| [`konflikt-check-offline`](plugins/compliance/skills/konflikt-check-offline/SKILL.md) | `compliance` | 2 | 🚧 `ungetestet` |
-| [`akten-intake-strukturierer`](plugins/intake/skills/akten-intake-strukturierer/SKILL.md) | `intake` | 2 | 🚧 `ungetestet` |
+| [`gwg-risiko-check`](plugins/compliance/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
+| [`konflikt-check-offline`](plugins/compliance/skills/konflikt-check-offline/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
+| [`akten-intake-strukturierer`](plugins/intake/skills/akten-intake-strukturierer/SKILL.md) | `intake` | 2 | 🧪 `beta` |
 | [`email-triage-eakte`](plugins/post-akte/skills/email-triage-eakte/SKILL.md) | `post-akte` | 3 | 🚧 `ungetestet` |
 | [`passive-zeiterfassung`](plugins/zeit-abrechnung/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `ungetestet` |
 | [`zeitnarrativ-rvg`](plugins/zeit-abrechnung/skills/zeitnarrativ-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `ungetestet` |
