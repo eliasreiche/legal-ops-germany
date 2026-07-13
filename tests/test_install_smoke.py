@@ -25,9 +25,9 @@ PLUGIN_SRC = REPO / "plugins" / "legal-ops"
 # werden zur Laufzeit gegen den kopierten Plugin-Cache absolut gemacht.
 EXECUTOR_SKILLS = [
     {
-        "id": "fristenrechner-de",
+        "id": "fristenrechner",
         "executor": "core/calc/fristen/executor.py",
-        "args": ["--input", "skills/fristenrechner-de/schema/beispiel-eingabe.json"],
+        "args": ["--input", "skills/fristenrechner/schema/beispiel-eingabe.json"],
         "exit": 0,
         "assert": lambda r: r["ergebnis"]["fristende"] == "2026-02-16",
         "assert_desc": 'ergebnis.fristende == "2026-02-16"',
@@ -38,15 +38,15 @@ EXECUTOR_SKILLS = [
         # aus dem reinen Plugin-Cache läuft (D14).
         # Nur Datei-Argumente als Werte (der Smoke-Helper macht jeden
         # Nicht-`--`-Token absolut) — Format bleibt Default `ics`.
-        "id": "fristenrechner-de-kalender",
+        "id": "fristenrechner-kalender",
         "executor": "core/calc/fristen/kalender_executor.py",
-        "args": ["--report", "skills/fristenrechner-de/schema/beispiel-report.json"],
+        "args": ["--report", "skills/fristenrechner/schema/beispiel-report.json"],
         "exit": 0,
     },
     {
-        "id": "rvg-gko-rechner",
+        "id": "rvg-gkg-rechner",
         "executor": "core/calc/rvg/executor.py",
-        "args": ["--input", "skills/rvg-gko-rechner/schema/beispiel-eingabe.json"],
+        "args": ["--input", "skills/rvg-gkg-rechner/schema/beispiel-eingabe.json"],
         "exit": 0,
     },
     {
@@ -56,24 +56,24 @@ EXECUTOR_SKILLS = [
         "exit": 0,
     },
     {
-        "id": "konflikt-check-offline",
-        "executor": "skills/konflikt-check-offline/executor.py",
-        "args": ["--liste", "skills/konflikt-check-offline/schema/beispiel-mandantenliste.csv",
-                 "--parteien", "skills/konflikt-check-offline/schema/beispiel-neue-parteien.json"],
+        "id": "interessenkollision-check",
+        "executor": "skills/interessenkollision-check/executor.py",
+        "args": ["--liste", "skills/interessenkollision-check/schema/beispiel-mandantenliste.csv",
+                 "--parteien", "skills/interessenkollision-check/schema/beispiel-neue-parteien.json"],
         "exit": 0,
     },
     {
-        "id": "akten-intake-strukturierer",
-        "executor": "skills/akten-intake-strukturierer/executor.py",
-        "args": ["--aktenkopf", "skills/akten-intake-strukturierer/schema/beispiel-aktenkopf.json",
-                 "--quelle", "skills/akten-intake-strukturierer/schema/beispiel-eingabe.md"],
+        "id": "aktenkopf-extraktor",
+        "executor": "skills/aktenkopf-extraktor/executor.py",
+        "args": ["--aktenkopf", "skills/aktenkopf-extraktor/schema/beispiel-aktenkopf.json",
+                 "--quelle", "skills/aktenkopf-extraktor/schema/beispiel-eingabe.md"],
         "exit": 0,
     },
     {
-        "id": "zitat-verifier-de",
-        "executor": "skills/zitat-verifier-de/executor.py",
-        "args": ["--input", "skills/zitat-verifier-de/schema/beispiel-eingabe.md",
-                 "--registry", "skills/zitat-verifier-de/schema/beispiel-registry.json"],
+        "id": "zitat-pruefer",
+        "executor": "skills/zitat-pruefer/executor.py",
+        "args": ["--input", "skills/zitat-pruefer/schema/beispiel-eingabe.md",
+                 "--registry", "skills/zitat-pruefer/schema/beispiel-registry.json"],
         "exit": 0,
     },
 ]
@@ -128,7 +128,7 @@ def test_fristenrechner_liefert_bekanntes_fristende(tmp_path):
     cache = _install_cache(tmp_path)
     neutral = tmp_path / "cwd"
     neutral.mkdir()
-    skill = next(s for s in EXECUTOR_SKILLS if s["id"] == "fristenrechner-de")
+    skill = next(s for s in EXECUTOR_SKILLS if s["id"] == "fristenrechner")
     res = _lauf(cache, skill, neutral)
     assert res.returncode == 0, res.stderr
     report = json.loads(res.stdout)

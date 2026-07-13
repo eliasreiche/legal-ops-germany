@@ -11,7 +11,7 @@ plugins/legal-ops/
 ├── core/
 │   ├── calc/{fristen, feiertage, rvg, gkg, matching, gwg, wertgebuehr_formel.py}
 │   └── verify/struktur_lint.py
-├── skills/          # alle Skills, inkl. zitat-verifier-de (Querschnitt)
+├── skills/          # alle Skills, inkl. zitat-pruefer (Querschnitt)
 └── README.md
 ```
 
@@ -26,14 +26,14 @@ Die Skills sind fachlich nach sieben Prozesskategorien gegliedert (das Feld
 
 | Bereich | Skills |
 |---|---|
-| `intake` | akten-intake-strukturierer |
-| `compliance` | konflikt-check-offline, gwg-risiko-check, gwg-live-screening |
-| `fristen-termine` | fristenrechner-de, fristen-docketing-light, scheduling-assistent-de |
-| `zeit-abrechnung` | rvg-gko-rechner, zeitnarrativ-rvg, passive-zeiterfassung, ar-mahnwesen-light |
-| `post-akte` | email-triage-eakte, posteingang-ocr-routing |
-| `kommunikation` | mandantenkommunikation-status |
-| `wissen-qm` | wissensmanagement-precedents, kanzlei-sop-qualitygate, datev-buchhaltungsbruecke |
-| `querschnitt` | zitat-verifier-de |
+| `intake` | aktenkopf-extraktor |
+| `compliance` | interessenkollision-check, gwg-risiko-check, gwg-live-screening |
+| `fristen-termine` | fristenrechner, fristen-docketing-light, termin-assistent |
+| `zeit-abrechnung` | rvg-gkg-rechner, taetigkeitstext-rvg, passive-zeiterfassung, honorar-mahnwesen |
+| `post-akte` | email-akten-zuordnung, posteingang-ocr-verteilung |
+| `kommunikation` | sachstandsmitteilung |
+| `wissen-qm` | wissensmanagement-precedents, kanzlei-sop-qualitygate, datev-export |
+| `querschnitt` | zitat-pruefer |
 
 Reifegrade und Wellen-Zuordnung stehen in der Status-Tabelle der
 [Repo-README](../../README.md). Hausregeln:

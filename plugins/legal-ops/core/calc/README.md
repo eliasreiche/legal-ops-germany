@@ -12,4 +12,4 @@ Ein Rechner, viele Skills — keine Duplikation. Jeder Rechner: pytest-Unit-Test
 | `verjaehrung`, `extf` | geplant | — |
 
 Tests liegen beim nutzenden Skill (z. B.
-[`plugins/legal-ops/skills/fristenrechner-de/tests/`](../skills/fristenrechner-de/tests/)).
+[`plugins/legal-ops/skills/fristenrechner/tests/`](../skills/fristenrechner/tests/)).

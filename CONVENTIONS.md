@@ -16,6 +16,22 @@ Der [Struktur-Lint](plugins/legal-ops/core/verify/struktur_lint.py) erzwingt die
 4. **Test-Disziplin trägt die Glaubwürdigkeit** — jeder Skill hat `tests/`; Rechner haben Orakel-Fälle gegen borghei `legal_calc`; CI läuft bei jedem Push.
 5. **Berufsrechts-Gate** — jedes `SKILL.md` trägt `rdg_einordnung`, `daten_hinweis`, `haftung` im Frontmatter (Pflichtfelder, Lint-erzwungen).
 
+## Naming-Konvention für Skill-Slugs (D17)
+
+Der Ordnername unter `plugins/legal-ops/skills/` (== `name:`-Frontmatter, Lint-erzwungen) folgt:
+
+- **Deutschsprachig** — wie der Rest der Doku (siehe Sprache & Zielgruppe oben).
+- **Funktion statt Implementierung** — der Slug benennt, was der Skill für die
+  Kanzlei tut (`fristenrechner`, `zitat-pruefer`, `sachstandsmitteilung`),
+  nicht wie oder womit er es tut. Kein Technologie-Wort im Namen, das das
+  nächste Refactoring bricht.
+- **Kein `-de`-Suffix** — der deutsche Rechtsraum ist der Scope des gesamten
+  Repos (siehe Sprache & Zielgruppe), kein Merkmal einzelner Skills. Ein Skill
+  ohne DE-Suffix ist genauso deutsch wie einer mit.
+- **Kein `-light`-Suffix** — Reifegrad steht im Frontmatter (`status:`,
+  Reifegrad-Leiter unten), nicht im Namen. Ein Skill, der heute ein
+  Platzhalter ist, kann morgen ausgebaut werden, ohne dass sein Slug lügt.
+
 ## Skill-Frontmatter (Pflichtfelder)
 
 ```yaml
@@ -53,7 +69,7 @@ Jede Norm-, Urteils- oder Fundstellen-Angabe in generierten Texten trägt einen 
 - ❌ **abweichend** — Prüfung ergab eine Abweichung (mit Fundstelle)
 
 Unmarkierte Zitate sind ein Lint-/Review-Fehler. Der Querschnitts-Skill
-[`zitat-verifier-de`](plugins/legal-ops/skills/zitat-verifier-de/SKILL.md) automatisiert die Prüfung.
+[`zitat-pruefer`](plugins/legal-ops/skills/zitat-pruefer/SKILL.md) automatisiert die Prüfung.
 
 ## Anti-Halluzination
 

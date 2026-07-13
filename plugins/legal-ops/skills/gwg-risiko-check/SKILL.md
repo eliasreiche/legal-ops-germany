@@ -76,13 +76,13 @@ Die Katalogfaktoren (Fundstelle + Paraphrase) liegen als Daten in
    Hinweise (§§ 10/14/15/43 GwG) und Lücken. Jeder Zahlen-/Status-/
    Fundstellenwert stammt aus dem Report, nicht aus dem Modell.
 
-4. **zitat-verifier-Lauf** als letzter Schritt: Die gerenderte Markdown-Doku
-   wird durch [`zitat-verifier-de`](../zitat-verifier-de/SKILL.md)
+4. **Zitat-Prüfer-Lauf** als letzter Schritt: Die gerenderte Markdown-Doku
+   wird durch [`zitat-pruefer`](../zitat-pruefer/SKILL.md)
    mit der mitgelieferten Registry geprüft, damit die §-Zitate nicht unmarkiert
    bleiben:
 
    ```bash
-   python3 ${CLAUDE_PLUGIN_ROOT}/skills/zitat-verifier-de/executor.py \
+   python3 ${CLAUDE_PLUGIN_ROOT}/skills/zitat-pruefer/executor.py \
      --input <akten-doku.md> \
      --registry ${CLAUDE_PLUGIN_ROOT}/skills/gwg-risiko-check/schema/quellen-registry.json
    ```

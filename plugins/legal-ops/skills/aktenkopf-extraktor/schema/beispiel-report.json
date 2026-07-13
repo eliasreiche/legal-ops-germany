@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "erzeugt_von": "aktenkopf-extraktor/executor.py",
+    "aktenkopf_datei": "beispiel-aktenkopf.json",
+    "quelldateien": [
+      "beispiel-eingabe.md"
+    ],
+    "anzahl_kritische_werte": 11,
+    "hinweis": "Erkannte Datumsnennungen sind KEINE Fristberechnung — Fristen nur über den Skill fristenrechner (Zweitkontrolle)."
+  },
+  "schema_ok": true,
+  "schema_fehler": [],
+  "provenienz": [
+    {
+      "pfad": "aktenkopf.eingangsdatum",
+      "typ": "datum",
+      "wert": "2026-03-05",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 10,
+        "zitat": "Hamburg, 05.03.2026"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: datum)"
+    },
+    {
+      "pfad": "parteien[2].kontakt.email",
+      "typ": "email",
+      "wert": "kanzlei@gegner-recht.example",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 3,
+        "zitat": "Telefon: 040 / 987 65 43 · E-Mail: kanzlei@gegner-recht.example"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: email)"
+    },
+    {
+      "pfad": "parteien[2].kontakt.telefon",
+      "typ": "telefon",
+      "wert": "040 / 987 65 43",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 3,
+        "zitat": "Telefon: 040 / 987 65 43 · E-Mail: kanzlei@gegner-recht.example"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: telefon)"
+    },
+    {
+      "pfad": "parteien[2].kontakt.iban",
+      "typ": "iban",
+      "wert": "DE02 1203 0000 0000 2020 51",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 35,
+        "zitat": "IBAN: DE02 1203 0000 0000 2020 51"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: iban)"
+    },
+    {
+      "pfad": "fristen_hinweise[0].datum_im_text",
+      "typ": "datum",
+      "wert": "2026-02-12",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 14,
+        "zitat": "Verkehrsunfall vom 12.02.2026 in Hamburg — Schadensersatzforderung unserer"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: datum)"
+    },
+    {
+      "pfad": "fristen_hinweise[1].datum_im_text",
+      "typ": "datum",
+      "wert": "2026-03-20",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 31,
+        "zitat": "Wir fordern Sie auf, den vorgenannten Betrag bis zum 20.03.2026 auf folgendes"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: datum)"
+    },
+    {
+      "pfad": "betraege[0].betrag",
+      "typ": "geld",
+      "wert": "1.234,56 €",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 25,
+        "zitat": "- Reparaturkosten laut Kostenvoranschlag: 1.234,56 €"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: geld)"
+    },
+    {
+      "pfad": "betraege[1].betrag",
+      "typ": "geld",
+      "wert": "487,90 €",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 26,
+        "zitat": "- Sachverständigenkosten: 487,90 €"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: geld)"
+    },
+    {
+      "pfad": "betraege[2].betrag",
+      "typ": "geld",
+      "wert": "30,00 €",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 27,
+        "zitat": "- Allgemeine Unkostenpauschale: 30,00 €"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: geld)"
+    },
+    {
+      "pfad": "betraege[3].betrag",
+      "typ": "geld",
+      "wert": "1.752,46 €",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 29,
+        "zitat": "Die Gesamtforderung beläuft sich damit auf 1.752,46 €."
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: geld)"
+    },
+    {
+      "pfad": "aktenzeichen_fremd[0].aktenzeichen",
+      "typ": "aktenzeichen",
+      "wert": "045/26 K01",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-eingabe.md",
+        "zeile": 12,
+        "zitat": "Unser Zeichen: 045/26 K01"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: aktenzeichen)"
+    }
+  ],
+  "luecken": [
+    {
+      "feld": "parteien[1].anschrift",
+      "grund": "Anschrift der Geschaedigten (Gegnerin) fehlt im Schreiben — nur die Kanzlei-Anschrift ist genannt. Fuer Zustellungen und die Aktenanlage erforderlich."
+    },
+    {
+      "feld": "parteien[0].kontakt",
+      "grund": "Telefon/E-Mail des Mandanten sind im Dokument nicht enthalten — beim Erstkontakt zu erfragen."
+    }
+  ],
+  "zusammenfassung": {
+    "belegt": 11,
+    "nicht_belegt": 0,
+    "schema_fehler": 0
+  }
+}
