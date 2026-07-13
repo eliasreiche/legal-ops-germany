@@ -21,8 +21,9 @@ def test_frontmatter_fehlt():
 
 
 def test_alle_skills_gefunden():
-    # 18 Skill-Kandidaten sind von Anfang an sichtbar (D8)
-    assert len(struktur_lint.skill_dirs()) == 18
+    # 18 Skill-Kandidaten sind von Anfang an sichtbar (D8); #19 kontext-sync
+    # kommt mit dem Kontext-Layer-Fundament (D19) hinzu.
+    assert len(struktur_lint.skill_dirs()) == 19
 
 
 def _skill(tmp_path, name, status, extra="", mit_tests=False):
@@ -146,6 +147,84 @@ def test_containment_meldet_fehlenden_executor(tmp_path):
     fehler: list[str] = []
     struktur_lint.pruefe_containment(skill, fehler)
     assert any("existiert nicht" in f for f in fehler), fehler
+
+
+# --------------------------------------------------------------------------
+# Kontext-Layer (D11, D19) — optionale kontext_reads/kontext_writes-Felder.
+# --------------------------------------------------------------------------
+
+def test_liste_feld_flow_stil():
+    text = "---\nkontext_reads: [mandate/*.md, kontakte.md]\n---\n# x\n"
+    assert struktur_lint.liste_feld(text, "kontext_reads") == ["mandate/*.md", "kontakte.md"]
+
+
+def test_liste_feld_block_stil():
+    text = "---\nkontext_writes:\n  - mandate/*.md\n  - kontakte.md\n---\n# x\n"
+    assert struktur_lint.liste_feld(text, "kontext_writes") == ["mandate/*.md", "kontakte.md"]
+
+
+def test_liste_feld_einzelner_skalar():
+    text = "---\nkontext_reads: mandate/*.md\n---\n# x\n"
+    assert struktur_lint.liste_feld(text, "kontext_reads") == ["mandate/*.md"]
+
+
+def test_liste_feld_nicht_vorhanden_ist_none():
+    text = "---\nname: x\n---\n# x\n"
+    assert struktur_lint.liste_feld(text, "kontext_reads") is None
+
+
+def test_pruefe_kontext_felder_gueltige_muster_sind_sauber():
+    text = "---\nkontext_reads: [mandate/*.md, kanzlei.md]\nkontext_writes: [export/*]\n---\n"
+    fehler: list[str] = []
+    struktur_lint.pruefe_kontext_felder(text, "ref", fehler)
+    assert fehler == []
+
+
+def test_pruefe_kontext_felder_leere_liste_ist_fehler():
+    text = "---\nkontext_reads: []\n---\n"
+    fehler: list[str] = []
+    struktur_lint.pruefe_kontext_felder(text, "ref", fehler)
+    assert any("leer" in f for f in fehler)
+
+
+def test_pruefe_kontext_felder_muster_ohne_dokumentierten_bereich_ist_fehler():
+    text = "---\nkontext_reads: [irgendwo/x.md]\n---\n"
+    fehler: list[str] = []
+    struktur_lint.pruefe_kontext_felder(text, "ref", fehler)
+    assert any("dokumentierten kontext/-Bereich" in f for f in fehler)
+
+
+def test_pruefe_kontext_felder_leeres_muster_ist_fehler():
+    text = "---\nkontext_reads: [mandate/*.md, \"\"]\n---\n"
+    fehler: list[str] = []
+    struktur_lint.pruefe_kontext_felder(text, "ref", fehler)
+    assert any("leeres Muster" in f for f in fehler)
+
+
+def test_pruefe_skill_ohne_kontext_felder_bleibt_gueltig(tmp_path):
+    # Kein Pflichtfeld — bestehende Skills ohne kontext_reads/writes bleiben
+    # gültig (Regressionsschutz für die 18 bestehenden Skills).
+    fehler: list[str] = []
+    struktur_lint.pruefe_skill(_skill(tmp_path, "beta-skill", "beta", mit_tests=True), fehler)
+    assert fehler == []
+
+
+def test_pruefe_skill_mit_gueltigen_kontext_feldern_bleibt_gueltig(tmp_path):
+    fehler: list[str] = []
+    struktur_lint.pruefe_skill(
+        _skill(tmp_path, "beta-skill", "beta", mit_tests=True,
+               extra="kontext_reads: [mandate/*.md]\nkontext_writes: [kontakte.md]\n"),
+        fehler)
+    assert fehler == []
+
+
+def test_pruefe_skill_mit_ungueltigem_kontext_feld_meldet_fehler(tmp_path):
+    fehler: list[str] = []
+    struktur_lint.pruefe_skill(
+        _skill(tmp_path, "beta-skill", "beta", mit_tests=True,
+               extra="kontext_reads: [irgendwo/x.md]\n"),
+        fehler)
+    assert any("dokumentierten kontext/-Bereich" in f for f in fehler)
 
 
 def test_containment_meldet_mehrzeilige_cwd_relative_invocation(tmp_path):

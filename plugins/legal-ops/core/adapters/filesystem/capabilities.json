@@ -1,0 +1,8 @@
+{
+  "adapter": "filesystem",
+  "dokumente": true,
+  "kalender": false,
+  "mail": false,
+  "push": true,
+  "hinweis": "Referenz-Adapter: synchronisiert beliebige Dateien nach Mapping (--mapping). Keine Kalender-/Mail-Semantik — dafür sind spezialisierte Adapter/MCP-Konnektoren zuständig (siehe core/adapters/README.md)."
+}
