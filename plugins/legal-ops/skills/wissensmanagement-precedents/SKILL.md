@@ -1,5 +1,6 @@
 ---
 name: wissensmanagement-precedents
+description: "Indexiert und findet Kanzlei-eigene Muster/Precedents (anonymisiert) und schlägt das passende Muster zu einem Sachverhalt vor. Triggert bei Muster finden, Precedent/Vorlage suchen, Wissensmanagement, ähnlicher Fall. Work-in-progress (Welle 5)."
 status: Work-in-progress
 welle: 5
 plugin: wissen-qm

@@ -1,5 +1,6 @@
 ---
 name: zitat-verifier-de
+description: "Extrahiert jede Norm-, Urteils- und Fundstellenangabe aus einem Text/Markdown-Dokument und markiert sie mit 3-Zustands-Marker (verifiziert / nicht prüfbar / abweichend) gegen eine Quellen-Registry. Querschnitts-Skill, den andere Skills am Ende mitnutzen. Triggert bei Zitate prüfen, Fundstellen verifizieren, Normzitat-Check, Belege gegen Registry."
 status: beta
 welle: 1
 plugin: querschnitt

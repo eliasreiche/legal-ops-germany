@@ -1,5 +1,6 @@
 ---
 name: konflikt-check-offline
+description: "Fuzzy-Matching neuer Mandats-Parteien gegen die Mandanten-/Gegnerliste der Kanzlei (Kölner Phonetik, Matching-Stufen S1–S4) — Datei rein, Treffer-Report raus, vollständig offline. Triggert bei Kollisionsprüfung, Interessenkonflikt, Konflikt-Check vor Mandatsannahme, § 43a BRAO / § 3 BORA, Parteien abgleichen. Die anwaltliche Kollisionsentscheidung bleibt Kanzleisache."
 status: beta
 welle: 2
 plugin: compliance

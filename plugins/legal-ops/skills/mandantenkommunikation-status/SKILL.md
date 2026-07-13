@@ -1,5 +1,6 @@
 ---
 name: mandantenkommunikation-status
+description: "Draftet informierende Status-Updates an Mandanten aus Aktenereignissen — ohne rechtliche Bewertung oder Empfehlung. Triggert bei Mandanten-Statusupdate, Sachstandsmitteilung, Mandanten informieren. Work-in-progress (Welle 5)."
 status: Work-in-progress
 welle: 5
 plugin: kommunikation

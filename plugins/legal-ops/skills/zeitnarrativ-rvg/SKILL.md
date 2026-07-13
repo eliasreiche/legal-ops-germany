@@ -1,5 +1,6 @@
 ---
 name: zeitnarrativ-rvg
+description: "Formuliert aus Stichworten/Kalendereinträgen abrechnungsfähige Tätigkeitsbeschreibungen; Zeitwerte stammen ausschließlich aus dem Input, nie vom Modell. Triggert bei Leistungsbeschreibung, Tätigkeitstext für Abrechnung, Zeitnarrativ, Leistungsnachweis formulieren. Work-in-progress (Welle 3)."
 status: Work-in-progress
 welle: 3
 plugin: zeit-abrechnung

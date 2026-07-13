@@ -1,5 +1,6 @@
 ---
 name: fristen-docketing-light
+description: "Exportiert berechnete Fristen (aus fristenrechner-de) als iCal/CSV für Kanzlei-Kalender oder Kanzleisoftware. Triggert bei Fristen exportieren, Fristenkalender-Import, iCal/CSV der Fristen, Docketing. Work-in-progress (Welle 4)."
 status: Work-in-progress
 welle: 4
 plugin: fristen-termine

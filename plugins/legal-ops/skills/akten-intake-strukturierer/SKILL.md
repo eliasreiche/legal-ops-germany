@@ -1,5 +1,6 @@
 ---
 name: akten-intake-strukturierer
+description: "Strukturiert eingehende Mandats-Dokumente (Anspruchsschreiben, Kündigung, Behördenpost) zu einem maschinenlesbaren Aktenkopf — Rubrum, Parteien, Datumsnennungen, Geldbeträge, Aktenzeichen — samt Lückenliste fehlender Pflichtangaben; ein Executor erzwingt Provenienz gegen Halluzination. Triggert bei Aktenanlage, Mandats-Intake, Dokument/Schreiben strukturieren, Aktenkopf erstellen."
 status: beta
 welle: 2
 plugin: intake

@@ -1,5 +1,6 @@
 ---
 name: gwg-risiko-check
+description: "GwG-Risikoscoring eines Mandats anhand der Katalogfaktoren der Anlagen 1 und 2 GwG mit Dokumentations-Output für die interne Akte — offline, deterministisch, regelbasierter Klassifikationsvorschlag mit Fundstellen. Triggert bei Geldwäsche-Risiko, GwG-Prüfung, Risikoklassifizierung Mandat, Sorgfaltspflichten, § 10 GwG. Die Bewertung bleibt beim Verpflichteten."
 status: beta
 welle: 2
 plugin: compliance

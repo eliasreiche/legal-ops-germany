@@ -1,5 +1,6 @@
 ---
 name: kanzlei-sop-qualitygate
+description: "Prüft Dokumente und Prozesse gegen hinterlegte Kanzlei-SOPs (Checklisten) und erzeugt einen Abweichungsbericht. Triggert bei SOP-Prüfung, Qualitätsgate, Checkliste abgleichen, QM-Abweichung. Work-in-progress (Welle 5)."
 status: Work-in-progress
 welle: 5
 plugin: wissen-qm

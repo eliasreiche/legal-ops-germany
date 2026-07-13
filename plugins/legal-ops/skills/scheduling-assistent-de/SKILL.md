@@ -1,5 +1,6 @@
 ---
 name: scheduling-assistent-de
+description: "Schlägt Termine unter Berücksichtigung von Gerichtsterminen, Fristen und Kanzlei-Kalender (MS Graph oder iCal) vor. Triggert bei Terminvorschlag, Terminfindung, Kalender-Planung, freie Slots. Work-in-progress (Welle 5)."
 status: Work-in-progress
 welle: 5
 plugin: fristen-termine

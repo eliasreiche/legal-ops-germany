@@ -1,5 +1,6 @@
 ---
 name: datev-buchhaltungsbruecke
+description: "Erzeugt aus Kanzlei-Belegdaten importierbare DATEV-EXTF-Buchungsstapel (dateibasiert). Triggert bei DATEV-Export, Buchungsstapel, EXTF, Buchhaltung übergeben, Belege exportieren. Work-in-progress (Welle 4)."
 status: Work-in-progress
 welle: 4
 plugin: wissen-qm

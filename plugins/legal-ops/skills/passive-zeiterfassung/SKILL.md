@@ -1,5 +1,6 @@
 ---
 name: passive-zeiterfassung
+description: "Rekonstruiert aus MS-Graph-Kalender und -Mail-Metadaten Zeiterfassungs-Vorschläge je Akte zum Bestätigen oder Verwerfen. Triggert bei Zeiterfassung, Stunden rekonstruieren, Timesheet-Vorschlag, erfasste Zeiten je Akte. Work-in-progress (Welle 3)."
 status: Work-in-progress
 welle: 3
 plugin: zeit-abrechnung

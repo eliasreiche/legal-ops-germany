@@ -1,5 +1,6 @@
 ---
 name: posteingang-ocr-routing
+description: "OCR über gescannten Papier-Posteingang, extrahiert Absender/Aktenzeichen/Fristbezug und routet in eine Hotfolder-Ablage. Triggert bei Posteingang scannen, OCR Papierpost, Post routen, Scan-Ablage. Work-in-progress (Welle 4)."
 status: Work-in-progress
 welle: 4
 plugin: post-akte

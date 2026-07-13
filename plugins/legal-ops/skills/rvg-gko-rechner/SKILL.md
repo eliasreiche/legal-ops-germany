@@ -1,5 +1,6 @@
 ---
 name: rvg-gko-rechner
+description: "Berechnet RVG-Anwaltsvergütung und GKG-Gerichtskosten (Wertgebühren, Zivilsachen) deterministisch mit nachvollziehbarer Rechenkette — Tabellenstand nach Stichtag (KostRÄG 2021 / KostBRÄG 2025), Gebührensätze, Anrechnung, Auslagen, USt. Triggert bei RVG berechnen, Gerichtskosten/GKG, Anwaltsvergütung, Streitwert zu Gebühren, Kostennote, Vergütungsberechnung."
 status: beta
 welle: 1
 plugin: zeit-abrechnung

@@ -1,5 +1,6 @@
 ---
 name: fristenrechner-de
+description: "Berechnet gerichtliche und prozessuale Fristen nach §§ 186–193 BGB und § 222 ZPO deterministisch mit nachvollziehbarer Rechenkette (Fristbeginn, Ende, Wochenend-/Feiertagsverschiebung je Bundesland). Triggert bei Fristberechnung, Einspruchsfrist, Berufungs-/Beschwerde-/Revisionsfrist, Notfrist, Fristende, Zustelldatum plus Fristart, Feiertagsverschiebung. Strikt Zweitkontrolle, ersetzt keine Fristenkontrolle der Kanzlei."
 status: beta
 welle: 1
 plugin: fristen-termine

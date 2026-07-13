@@ -1,5 +1,6 @@
 ---
 name: email-triage-eakte
+description: "Ordnet eingehende E-Mails (MS-Graph-Adapter oder EML-Dateien) Akten zu, priorisiert und schlägt Ablage in der e-Akte vor. Triggert bei E-Mail-Triage, Posteingang zuordnen, e-Akte-Ablage, Mail-Priorisierung. Work-in-progress (Welle 3)."
 status: Work-in-progress
 welle: 3
 plugin: post-akte

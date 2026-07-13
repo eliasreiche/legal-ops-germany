@@ -1,5 +1,6 @@
 ---
 name: ar-mahnwesen-light
+description: "Wertet offene Posten (CSV/EXTF-Export) aus, priorisiert Forderungen und draftet interne Mahn-/Zahlungserinnerungsschreiben an eigene Mandanten. Triggert bei Mahnwesen, offene Rechnungen, Zahlungserinnerung, überfällige Forderungen, offene Posten. Work-in-progress (Welle 4)."
 status: Work-in-progress
 welle: 4
 plugin: zeit-abrechnung
