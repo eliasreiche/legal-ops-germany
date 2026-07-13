@@ -76,6 +76,45 @@ EXECUTOR_SKILLS = [
                  "--registry", "skills/zitat-pruefer/schema/beispiel-registry.json"],
         "exit": 0,
     },
+    {
+        # Kontext-Layer-Fundament (D19): Schema-Validator gegen die
+        # Beispiel-Fixture — muss core/context/schema.py aus dem reinen
+        # Plugin-Cache heraus importieren können (kein Repo-Root im Pfad).
+        "id": "kontext-validator",
+        "executor": "core/context/validator.py",
+        "args": ["--kontext", "core/context/beispiel-kontext"],
+        "exit": 0,
+    },
+    {
+        # Retention-Hinweis-Executor: importiert core/context/schema.py
+        # relativ zu core/ — prüft denselben Cache-Import-Pfad wie oben,
+        # nur aus core/calc/retention/ heraus.
+        "id": "retention-hinweis",
+        "executor": "core/calc/retention/executor.py",
+        # kein --stichtag hier: _abs_args absolutiert jedes Nicht-"--"-Token,
+        # ein Datumswert würde fälschlich zu einem Pfad gemacht. Der
+        # Default (heute) genügt für den Cache-/Import-Smoke-Test.
+        "args": ["--kontext", "core/context/beispiel-kontext"],
+        "exit": 0,
+    },
+    {
+        # filesystem-Referenzadapter: git-artiges Subcommand (`pull`) vor den
+        # `--`-Optionen — kein Pfad, darf NICHT über _abs_args absolutiert
+        # werden, deshalb `pre_args` statt `args` für dieses eine Token.
+        # --kontext und --manifest existieren im Repo noch nicht (frisches
+        # Ziel) und werden vom Adapter selbst angelegt — rein innerhalb des
+        # Tmp-Caches, keine Repo-Nebenwirkung.
+        "id": "kontext-sync-adapter-pull",
+        "executor": "core/adapters/filesystem/adapter.py",
+        "pre_args": ["pull"],
+        "args": [
+            "--quelle", "skills/kontext-sync/schema/smoke/quelle",
+            "--kontext", "skills/kontext-sync/schema/smoke/kontext-ziel",
+            "--manifest", "skills/kontext-sync/schema/smoke/manifest.json",
+            "--mapping", "skills/kontext-sync/schema/smoke/mapping.json",
+        ],
+        "exit": 0,
+    },
 ]
 
 
@@ -101,7 +140,10 @@ def test_core_wird_mit_ausgeliefert(tmp_path):
 
 
 def _lauf(cache: Path, skill: dict, cwd: Path) -> subprocess.CompletedProcess:
-    cmd = [sys.executable, str(cache / skill["executor"])] + _abs_args(cache, skill["args"])
+    # pre_args (z. B. ein git-artiges Subcommand wie "pull") werden unverändert
+    # übernommen, nie über _abs_args absolutiert (kein Pfad-Argument).
+    cmd = ([sys.executable, str(cache / skill["executor"])] + skill.get("pre_args", [])
+          + _abs_args(cache, skill["args"]))
     return subprocess.run(cmd, cwd=str(cwd), capture_output=True, text=True)
 
 

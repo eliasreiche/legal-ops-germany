@@ -101,6 +101,48 @@ Der Reviewer automatisiert damit die Gates dieses Dokuments (Struktur-Lint,
 Tests, P3/P5, Zitier- und Anti-Halluzinations-Disziplin) als Torwächter vor dem
 Commit.
 
+## Kontext-Layer (D11, D19)
+
+Ein per-Kanzlei-Ordner `kontext/` ist die **einzige** Schnittstelle der
+Skills zu Kanzlei-Wissen (Mandate, Parteien, Termine, Kontakte). Kein Skill
+liest oder schreibt Kanzleisoftware direkt — Anbindung läuft ausschließlich
+über Adapter/MCP-Sync nach `kontext/` (D11a: für Microsoft 365 der
+offizielle M365-MCP-Konnektor statt eines eigenen `msgraph`-Adapters; für
+Dateien der Referenz-Adapter `filesystem`).
+
+Vollständiger Kontrakt (Ordner-Format, Mandats-Schema, Validierung, Adapter-
+Vertrag, Retention): [`core/context/README.md`](plugins/legal-ops/core/context/README.md),
+[`core/adapters/README.md`](plugins/legal-ops/core/adapters/README.md),
+[`core/calc/retention/README.md`](plugins/legal-ops/core/calc/retention/README.md).
+Orchestrierender Skill: [`kontext-sync`](plugins/legal-ops/skills/kontext-sync/SKILL.md).
+
+### Neue optionale Frontmatter-Felder
+
+Ein Skill, der `kontext/` liest oder schreibt, deklariert das im SKILL.md:
+
+```yaml
+kontext_reads:
+  - mandate/*.md
+  - kontakte.md
+kontext_writes:
+  - mandate/*.md
+```
+
+**Kein Pflichtfeld** — die bestehenden 18 Skills bleiben ohne diese Felder
+gültig. Wenn vorhanden: Werte müssen nicht-leere Strings sein und mit einem
+dokumentierten `kontext/`-Bereich beginnen (`kanzlei.md`, `mandate/`,
+`kontakte.md`, `posteingang/`, `export/`) — vom Struktur-Lint erzwungen.
+
+### Retention-Grundsatz — kein Auto-Delete
+
+`mandatsende` im Mandats-Frontmatter speist einen Hinweis-Report
+(§ 50 Abs. 1 BRAO, 6 Jahre Handakten, Fristbeginn Schluss des
+Kalenderjahres der Mandatsbeendigung). Der zuständige Executor
+(`core/calc/retention/executor.py`) **löscht nie** — er markiert nur, was ab
+wann löschbar wäre. Die Löschentscheidung und -durchführung bleibt manuelle
+Kanzleisache (D10-Auflage: Begründung je Speicherort, Retention, manuelle
+Löschung dokumentieren).
+
 ## Was dieses Repo nicht ist
 
 Keine Rechtsberatung, keine Rechtsgebiets-Skills (Schriftsätze, Gutachten), kein Hosting,

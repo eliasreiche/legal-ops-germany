@@ -48,6 +48,13 @@ _EXECUTOR_TOKEN_RE = re.compile(r"(\S*executor\.py)")
 # Relative Markdown-Doku-Links [text](ziel).
 _LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 
+# Kontext-Layer (D11, D19): optionale Frontmatter-Felder eines Skills, der
+# kontext/ liest bzw. schreibt. Kein Pflichtfeld — bestehende Skills bleiben
+# ohne diese Felder gültig. Werte sind Pfad-Muster relativ zu kontext/, siehe
+# plugins/legal-ops/core/context/README.md.
+KONTEXT_FELDER = ("kontext_reads", "kontext_writes")
+KONTEXT_BEREICHE = ("kanzlei.md", "mandate/", "kontakte.md", "posteingang/", "export/")
+
 
 def frontmatter(text: str) -> dict[str, str] | None:
     """Liest den YAML-Frontmatter-Block als flache key:value-Paare."""
@@ -63,6 +70,57 @@ def frontmatter(text: str) -> dict[str, str] | None:
                 wert = wert[1:-1]
             felder[km.group(1)] = wert
     return felder
+
+
+def liste_feld(text: str, feld: str) -> list[str] | None:
+    """Liest ein optionales YAML-Listenfeld im Frontmatter-Block (Flow-Stil
+    `feld: [a, b]`, Block-Stil `feld:\\n  - a\\n  - b` oder ein einzelner
+    Skalar `feld: a`). Gibt `None` zurück, wenn das Feld nicht vorkommt —
+    unabhängig von `frontmatter()`, weil die dort verwendete flache
+    key:value-Struktur keine Listen abbildet."""
+    m = re.match(r"\A---\n(.*?)\n---\n", text, re.DOTALL)
+    if not m:
+        return None
+    zeilen = m.group(1).splitlines()
+    for i, zeile in enumerate(zeilen):
+        km = re.match(rf"^{re.escape(feld)}:\s*(.*)$", zeile)
+        if not km:
+            continue
+        rest = km.group(1).strip()
+        if rest.startswith("[") and rest.endswith("]"):
+            innen = rest[1:-1].strip()
+            return [] if not innen else [t.strip().strip("'\"") for t in innen.split(",")]
+        if rest:
+            return [rest.strip("'\"")]
+        werte: list[str] = []
+        for folge in zeilen[i + 1:]:
+            fm2 = re.match(r"^\s*-\s*(.+)$", folge)
+            if not fm2:
+                break
+            werte.append(fm2.group(1).strip().strip("'\""))
+        return werte
+    return None
+
+
+def pruefe_kontext_felder(text: str, ref: object, fehler: list[str]) -> None:
+    """Kontext-Layer (D11, D19): optionale `kontext_reads`/`kontext_writes` —
+    wenn vorhanden, müssen Werte nicht-leere Strings sein und mit einem
+    dokumentierten kontext/-Bereich beginnen (kein Pflichtfeld, siehe
+    core/context/README.md)."""
+    for feld in KONTEXT_FELDER:
+        werte = liste_feld(text, feld)
+        if werte is None:
+            continue
+        if not werte:
+            fehler.append(f"{ref}: `{feld}` ist als Liste vorhanden, aber leer")
+            continue
+        for muster in werte:
+            if not muster.strip():
+                fehler.append(f"{ref}: `{feld}` enthält ein leeres Muster")
+            elif not muster.startswith(KONTEXT_BEREICHE):
+                fehler.append(f"{ref}: `{feld}`-Muster `{muster}` beginnt nicht mit einem "
+                              f"dokumentierten kontext/-Bereich "
+                              f"({', '.join(KONTEXT_BEREICHE)})")
 
 
 def skill_dirs() -> list[Path]:
@@ -155,7 +213,8 @@ def hat_echte_tests(skill: Path) -> bool:
 
 
 def pruefe_skill(skill: Path, fehler: list[str]) -> dict[str, str] | None:
-    fm = frontmatter((skill / "SKILL.md").read_text(encoding="utf-8"))
+    text = (skill / "SKILL.md").read_text(encoding="utf-8")
+    fm = frontmatter(text)
     try:
         ref = skill.relative_to(REPO) / "SKILL.md"
     except ValueError:  # Skill außerhalb des Repos (z. B. in Tests)
@@ -163,6 +222,7 @@ def pruefe_skill(skill: Path, fehler: list[str]) -> dict[str, str] | None:
     if fm is None:
         fehler.append(f"{ref}: kein Frontmatter-Block")
         return None
+    pruefe_kontext_felder(text, ref, fehler)
     for feld in PFLICHTFELDER:
         if not fm.get(feld, "").strip():
             fehler.append(f"{ref}: Pflichtfeld `{feld}` fehlt oder ist leer (P5)")
