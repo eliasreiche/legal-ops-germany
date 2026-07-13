@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO / "core" / "verify"))
+sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "verify"))
 
 import struktur_lint  # noqa: E402
 
@@ -82,6 +82,65 @@ def test_getestet_mit_abnahme_und_tests_ist_sauber(tmp_path):
 
 def test_lint_laeuft_sauber_auf_dem_repo():
     ergebnis = subprocess.run(
-        [sys.executable, str(REPO / "core" / "verify" / "struktur_lint.py")],
+        [sys.executable, str(REPO / "plugins" / "legal-ops" / "core" / "verify" / "struktur_lint.py")],
         capture_output=True, text=True)
     assert ergebnis.returncode == 0, ergebnis.stderr
+
+
+# --------------------------------------------------------------------------
+# Containment-Regel (Gate B) — Executor-Pfade und Doku-Links dürfen die
+# Plugin-Grenze nicht verlassen. Genau die Regel, die den fehlenden-core-Bug
+# gefangen hätte.
+# --------------------------------------------------------------------------
+
+def _plugin_skill(tmp_path, name="demo-skill", skill_md="", core_files=()):
+    """Baut plugins/legal-ops/{core,skills/<name>} unter tmp_path nach, damit
+    plugin_root(skill) == .../legal-ops und ${CLAUDE_PLUGIN_ROOT} auf legal-ops
+    zeigt."""
+    plugin = tmp_path / "plugins" / "legal-ops"
+    skill = plugin / "skills" / name
+    skill.mkdir(parents=True)
+    for rel in core_files:
+        f = plugin / rel
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text("x", encoding="utf-8")
+    (skill / "SKILL.md").write_text(skill_md, encoding="utf-8")
+    return skill
+
+
+def test_containment_akzeptiert_plugin_relative_referenzen(tmp_path):
+    md = ("# demo\n"
+          "python3 ${CLAUDE_PLUGIN_ROOT}/core/calc/fristen/executor.py --input x.json\n"
+          "Siehe [Rechner](../../core/calc/fristen/executor.py) und "
+          "[Konvention](https://example.org/CONVENTIONS.md).\n")
+    skill = _plugin_skill(tmp_path, skill_md=md,
+                          core_files=["core/calc/fristen/executor.py"])
+    fehler: list[str] = []
+    struktur_lint.pruefe_containment(skill, fehler)
+    assert fehler == [], fehler
+
+
+def test_containment_meldet_escape_doku_link(tmp_path):
+    md = "# demo\nSiehe [CONVENTIONS](../../../../CONVENTIONS.md).\n"
+    skill = _plugin_skill(tmp_path, skill_md=md)
+    fehler: list[str] = []
+    struktur_lint.pruefe_containment(skill, fehler)
+    assert any("verlässt die Plugin-Grenze" in f for f in fehler), fehler
+
+
+def test_containment_meldet_cwd_relativen_executor(tmp_path):
+    md = "# demo\npython3 core/calc/fristen/executor.py --input x.json\n"
+    skill = _plugin_skill(tmp_path, skill_md=md,
+                          core_files=["core/calc/fristen/executor.py"])
+    fehler: list[str] = []
+    struktur_lint.pruefe_containment(skill, fehler)
+    assert any("nicht plugin-relativ" in f for f in fehler), fehler
+
+
+def test_containment_meldet_fehlenden_executor(tmp_path):
+    md = ("# demo\n"
+          "python3 ${CLAUDE_PLUGIN_ROOT}/core/calc/fehlt/executor.py --input x.json\n")
+    skill = _plugin_skill(tmp_path, skill_md=md)
+    fehler: list[str] = []
+    struktur_lint.pruefe_containment(skill, fehler)
+    assert any("existiert nicht" in f for f in fehler), fehler

@@ -1,7 +1,7 @@
 # CONVENTIONS — Hausregeln
 
 Verbindlich für jeden Skill, Executor und jede Doku-Seite in diesem Repo.
-Der [Struktur-Lint](core/verify/struktur_lint.py) erzwingt die maschinenprüfbaren Teile in CI.
+Der [Struktur-Lint](plugins/legal-ops/core/verify/struktur_lint.py) erzwingt die maschinenprüfbaren Teile in CI.
 
 ## Sprache & Zielgruppe
 
@@ -10,7 +10,7 @@ Der [Struktur-Lint](core/verify/struktur_lint.py) erzwingt die maschinenprüfbar
 
 ## Fünf Grundprinzipien (Kurzform)
 
-1. **Prozesszentrierte Taxonomie** — 7 Prozesskategorien = 7 Plugins; kein Rechtsgebiets-Schnitt.
+1. **Prozesszentrierte Taxonomie** — 7 Prozesskategorien (Frontmatter-Feld `plugin:`), ausgeliefert als **ein** Plugin `legal-ops` (`core/` liegt darin, siehe D14); kein Rechtsgebiets-Schnitt.
 2. **Datei-Schnittstelle immer, Connector optional** — jeder Skill definiert Ein-/Ausgaben als Dateien (CSV, PDF, EML, iCal, EXTF, DOCX); Live-Adapter (MS Graph, Sanktionslisten) füttern dieselbe Schnittstelle.
 3. **Deterministik-Grenze** — alles mit Zahlen, Daten, Fristen oder Geld rechnet ein Python-Executor in `core/calc/`, nie das Modell. Modellgenerierte Werte in Zahlenfeldern sind ein Testfehler.
 4. **Test-Disziplin trägt die Glaubwürdigkeit** — jeder Skill hat `tests/`; Rechner haben Orakel-Fälle gegen borghei `legal_calc`; CI läuft bei jedem Push.
@@ -52,7 +52,7 @@ Jede Norm-, Urteils- oder Fundstellen-Angabe in generierten Texten trägt einen 
 - ❌ **abweichend** — Prüfung ergab eine Abweichung (mit Fundstelle)
 
 Unmarkierte Zitate sind ein Lint-/Review-Fehler. Der Querschnitts-Skill
-[`zitat-verifier-de`](core/verify/zitat-verifier-de/SKILL.md) automatisiert die Prüfung.
+[`zitat-verifier-de`](plugins/legal-ops/skills/zitat-verifier-de/SKILL.md) automatisiert die Prüfung.
 
 ## Anti-Halluzination
 

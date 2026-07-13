@@ -12,9 +12,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Struktur-Lint (P4/P5)
-        run: python3 core/verify/struktur_lint.py
-      - name: pytest
+      - name: Struktur-Lint (P4/P5 + Containment-Gate B)
+        run: python3 plugins/legal-ops/core/verify/struktur_lint.py
+      - name: pytest (inkl. Gate A Install-Smoke + Gate B Containment)
         run: |
           pip install pytest
           pytest -q
+      - name: Install-Smoke-Test (Gate A, ausgeliefertes Artefakt)
+        run: pytest -q tests/test_install_smoke.py
