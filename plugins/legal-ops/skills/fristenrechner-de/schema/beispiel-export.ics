@@ -1,0 +1,33 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//claude-for-legal-non-billable-germany//fristenrechner-de//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:1aad51ffe931eb8e@fristenrechner-de.legal-ops
+DTSTAMP:20260116T000000Z
+DTSTART;VALUE=DATE:20260216
+DTEND;VALUE=DATE:20260217
+SUMMARY:Frist: Berufungsfrist [NOTFRIST] — Az. 12/2026
+DESCRIPTION:Fristart: Berufungsfrist — § 517 ZPO ✅ (verifiziert: aus F
+ ristberechnungs-Report)\nFristende: 16.02.2026 (nach § 193 BGB verschoben
+ )\nVorfrist (3 Tage vorher): 13.02.2026\n⚠️ Notfrist — nicht verlän
+ gerbar (§ 224 Abs. 2 ZPO)\; bei Versäumung nur Wiedereinsetzung (§§ 23
+ 3 ff. ZPO).\nHinweis: Fristbeginn spätestens mit Ablauf von fünf Monaten
+  nach Verkündung (§ 517 ZPO) — diese Alternative rechnet der Executor 
+ nicht mit\; bei fehlender/später Zustellung gesondert prüfen.\nHinweis: 
+ Berufungsfrist ist eine Notfrist (§ 224 Abs. 1 Satz 2 ZPO)\; sie kann nic
+ ht verlängert werden (§ 224 Abs. 2 ZPO) — bei Versäumung kommt nur Wi
+ edereinsetzung in Betracht (§§ 233 ff. ZPO).\nZweitkontrolle bleibt zwin
+ gend: Dieser Export ersetzt keinen Fristenkalender mit Vier-Augen-Prinzip.
+  Import und Kontrolle im Zielsystem verantwortet die Kanzlei.
+SEQUENCE:0
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Vorfrist: Frist: Berufungsfrist [NOTFRIST] — Az. 12/2026
+TRIGGER:-P3D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

@@ -33,6 +33,17 @@ EXECUTOR_SKILLS = [
         "assert_desc": 'ergebnis.fristende == "2026-02-16"',
     },
     {
+        # Zweiter Executor desselben Skills: Kalender-/Docketing-Export aus dem
+        # Fristen-Report (calc → export). Prüft, dass auch er self-contained
+        # aus dem reinen Plugin-Cache läuft (D14).
+        # Nur Datei-Argumente als Werte (der Smoke-Helper macht jeden
+        # Nicht-`--`-Token absolut) — Format bleibt Default `ics`.
+        "id": "fristenrechner-de-kalender",
+        "executor": "core/calc/fristen/kalender_executor.py",
+        "args": ["--report", "skills/fristenrechner-de/schema/beispiel-report.json"],
+        "exit": 0,
+    },
+    {
         "id": "rvg-gko-rechner",
         "executor": "core/calc/rvg/executor.py",
         "args": ["--input", "skills/rvg-gko-rechner/schema/beispiel-eingabe.json"],
