@@ -1,6 +1,6 @@
 ---
 name: zeitnarrativ-rvg
-status: ungetestet
+status: Work-in-progress
 welle: 3
 plugin: zeit-abrechnung
 rdg_einordnung: "Sprachliche Aufbereitung interner Abrechnungstexte; keine Beratung."
@@ -10,7 +10,7 @@ haftung: "Formulierungen vor Rechnungsstellung prüfen; Zeitansätze verantworte
 
 # zeitnarrativ-rvg
 
-> **Status: `ungetestet`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 3).
+> **Status: `Work-in-progress`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 3).
 
 ## Zweck
 

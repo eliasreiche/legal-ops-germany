@@ -1,6 +1,6 @@
 ---
 name: ar-mahnwesen-light
-status: ungetestet
+status: Work-in-progress
 welle: 4
 plugin: zeit-abrechnung
 rdg_einordnung: "Internes Forderungsmanagement der Kanzlei in eigener Sache; keine Inkasso-Dienstleistung für Dritte."
@@ -10,7 +10,7 @@ haftung: "Beträge und Verzugsdaten stammen aus dem Executor; Versand der Schrei
 
 # ar-mahnwesen-light
 
-> **Status: `ungetestet`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 4).
+> **Status: `Work-in-progress`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 4).
 
 ## Zweck
 

@@ -1,6 +1,6 @@
 ---
 name: kanzlei-sop-qualitygate
-status: ungetestet
+status: Work-in-progress
 welle: 5
 plugin: wissen-qm
 rdg_einordnung: "Interne Qualitätssicherung gegen eigene Standards; keine rechtliche Prüfung."
@@ -10,7 +10,7 @@ haftung: "Checklisten-Ergebnis ersetzt keine fachliche Endkontrolle."
 
 # kanzlei-sop-qualitygate
 
-> **Status: `ungetestet`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 5).
+> **Status: `Work-in-progress`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 5).
 
 ## Zweck
 

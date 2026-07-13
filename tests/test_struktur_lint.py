@@ -11,8 +11,8 @@ import struktur_lint  # noqa: E402
 
 def test_frontmatter_liest_quoted_werte():
     fm = struktur_lint.frontmatter(
-        '---\nname: foo\nstatus: ungetestet\nhaftung: "Zweitkontrolle."\n---\n# x\n')
-    assert fm == {"name": "foo", "status": "ungetestet",
+        '---\nname: foo\nstatus: Work-in-progress\nhaftung: "Zweitkontrolle."\n---\n# x\n')
+    assert fm == {"name": "foo", "status": "Work-in-progress",
                   "haftung": "Zweitkontrolle."}
 
 
@@ -49,7 +49,7 @@ def test_pruefe_skill_meldet_fehlende_pflichtfelder(tmp_path):
     assert "rdg_einordnung" in meldungen
     assert "daten_hinweis" in meldungen
     assert "haftung" in meldungen
-    assert "ungetestet`, `beta` oder `getestet" in meldungen
+    assert "Work-in-progress`, `beta` oder `getestet" in meldungen
 
 
 def test_beta_verlangt_echte_tests(tmp_path):

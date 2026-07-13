@@ -1,6 +1,6 @@
 ---
 name: scheduling-assistent-de
-status: ungetestet
+status: Work-in-progress
 welle: 5
 plugin: fristen-termine
 rdg_einordnung: "Organisatorische Terminfindung; keine Rechtsdienstleistung."
@@ -10,7 +10,7 @@ haftung: "Terminvorschläge kollidierende Fristen sind Hinweise; Bestätigung du
 
 # scheduling-assistent-de
 
-> **Status: `ungetestet`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 5).
+> **Status: `Work-in-progress`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 5).
 
 ## Zweck
 

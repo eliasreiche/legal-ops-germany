@@ -21,7 +21,7 @@ Der [Struktur-Lint](core/verify/struktur_lint.py) erzwingt die maschinenprüfbar
 ```yaml
 ---
 name: <verzeichnisname>            # muss dem Ordnernamen entsprechen
-status: ungetestet | beta | getestet   # Reifegrad-Leiter, siehe unten
+status: Work-in-progress | beta | getestet   # Reifegrad-Leiter, siehe unten
 welle: 1-5                         # Build-Reihenfolge
 plugin: <plugin> | querschnitt
 rdg_einordnung: "Warum keine Rechtsdienstleistung / wo die Grenze des Outputs liegt."
@@ -35,12 +35,13 @@ haendisch_getestet: JJJJ-MM-TT     # nur bei status: getestet (Pflicht, Datum de
 
 | Status | Bedeutung | Lint-Voraussetzung |
 |---|---|---|
-| 🚧 `ungetestet` | Stub oder Implementierung ohne Absicherung | — |
-| 🧪 `beta` | Tests gegen Testdaten/Orakel-Fälle laufen grün in CI | echte Dateien in `tests/` |
-| ✅ `getestet` | zusätzlich **händisch abgenommen** (durch den Maintainer) | wie `beta` + `haendisch_getestet: <Datum>` |
+| 🚧 `Work-in-progress` | **noch nicht entwickelt** (Stub) **oder** Code vorhanden, aber **noch kein Test-Run** — keine Zusicherung | — |
+| 🧪 `beta` | **gegen Testdaten durch Agenten getestet** (Tests/Orakel-Fälle laufen grün in CI); noch keine Live-Abnahme | echte Dateien in `tests/` |
+| ✅ `getestet` | **live (händisch) getestet** durch den Maintainer — **aber keine Garantie für die Funktionsweise in Production** | wie `beta` + `haendisch_getestet: <Datum>` |
 
 Ein Status wird nie übersprungen dokumentiert: `getestet` setzt inhaltlich voraus, dass
-die `beta`-Kriterien erfüllt sind. Automatisierte Tests allein rechtfertigen höchstens `beta`.
+die `beta`-Kriterien erfüllt sind. Automatisierte Tests allein rechtfertigen höchstens `beta`;
+`getestet` ist eine ehrliche Live-Abnahme, kein Produktions-Freibrief.
 
 ## Zitierdisziplin (3-Zustands-Marker)
 

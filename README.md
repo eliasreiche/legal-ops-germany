@@ -38,9 +38,12 @@ Daten nach außen — Freigabe des jeweiligen Datenflusses ist Sache der Kanzlei
 - **Datei rein, Datei raus.** Jeder Skill arbeitet über Datei-Schnittstellen (CSV, PDF,
   EML, iCal, DATEV-EXTF, DOCX) — kompatibel mit dem Export/Import jeder Kanzleisoftware.
   Live-Adapter (Microsoft Graph, EU-/UN-Sanktionslisten) sind optional.
-- **Ehrliche Labels.** Jeder Skill trägt sichtbar seinen Reifegrad: 🚧 `ungetestet` →
-  🧪 `beta` (Tests gegen Testdaten/Orakel-Fälle laufen grün in CI) → ✅ `getestet`
-  (zusätzlich händisch abgenommen). Automatisierte Tests allein rechtfertigen höchstens `beta`.
+- **Ehrliche Labels.** Jeder Skill trägt sichtbar seinen Reifegrad:
+  - 🚧 `Work-in-progress` — noch nicht entwickelt (Stub) oder Code vorhanden, aber noch kein Test-Run.
+  - 🧪 `beta` — gegen Testdaten durch Agenten getestet (Tests/Orakel-Fälle laufen grün in CI).
+  - ✅ `getestet` — live (händisch) getestet durch den Maintainer, **aber keine Garantie für die Funktionsweise in Production**.
+
+  Automatisierte Tests allein rechtfertigen höchstens `beta`; `getestet` ist eine ehrliche Live-Abnahme, kein Produktions-Freibrief.
 - **Berufsrechts-Gate.** Jeder Skill dokumentiert im Frontmatter seine RDG-Einordnung,
   Datenhinweise (§ 203 StGB, DSGVO/BRAO) und Haftungsgrenzen — vom Lint erzwungen.
 
@@ -60,18 +63,18 @@ Tabelle wird generiert von [`core/verify/struktur_lint.py`](core/verify/struktur
 | [`gwg-risiko-check`](plugins/compliance/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
 | [`konflikt-check-offline`](plugins/compliance/skills/konflikt-check-offline/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
 | [`akten-intake-strukturierer`](plugins/intake/skills/akten-intake-strukturierer/SKILL.md) | `intake` | 2 | 🧪 `beta` |
-| [`email-triage-eakte`](plugins/post-akte/skills/email-triage-eakte/SKILL.md) | `post-akte` | 3 | 🚧 `ungetestet` |
-| [`passive-zeiterfassung`](plugins/zeit-abrechnung/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `ungetestet` |
-| [`zeitnarrativ-rvg`](plugins/zeit-abrechnung/skills/zeitnarrativ-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `ungetestet` |
-| [`gwg-live-screening`](plugins/compliance/skills/gwg-live-screening/SKILL.md) | `compliance` | 4 | 🚧 `ungetestet` |
-| [`fristen-docketing-light`](plugins/fristen-termine/skills/fristen-docketing-light/SKILL.md) | `fristen-termine` | 4 | 🚧 `ungetestet` |
-| [`posteingang-ocr-routing`](plugins/post-akte/skills/posteingang-ocr-routing/SKILL.md) | `post-akte` | 4 | 🚧 `ungetestet` |
-| [`datev-buchhaltungsbruecke`](plugins/wissen-qm/skills/datev-buchhaltungsbruecke/SKILL.md) | `wissen-qm` | 4 | 🚧 `ungetestet` |
-| [`ar-mahnwesen-light`](plugins/zeit-abrechnung/skills/ar-mahnwesen-light/SKILL.md) | `zeit-abrechnung` | 4 | 🚧 `ungetestet` |
-| [`scheduling-assistent-de`](plugins/fristen-termine/skills/scheduling-assistent-de/SKILL.md) | `fristen-termine` | 5 | 🚧 `ungetestet` |
-| [`mandantenkommunikation-status`](plugins/kommunikation/skills/mandantenkommunikation-status/SKILL.md) | `kommunikation` | 5 | 🚧 `ungetestet` |
-| [`kanzlei-sop-qualitygate`](plugins/wissen-qm/skills/kanzlei-sop-qualitygate/SKILL.md) | `wissen-qm` | 5 | 🚧 `ungetestet` |
-| [`wissensmanagement-precedents`](plugins/wissen-qm/skills/wissensmanagement-precedents/SKILL.md) | `wissen-qm` | 5 | 🚧 `ungetestet` |
+| [`email-triage-eakte`](plugins/post-akte/skills/email-triage-eakte/SKILL.md) | `post-akte` | 3 | 🚧 `Work-in-progress` |
+| [`passive-zeiterfassung`](plugins/zeit-abrechnung/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
+| [`zeitnarrativ-rvg`](plugins/zeit-abrechnung/skills/zeitnarrativ-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
+| [`gwg-live-screening`](plugins/compliance/skills/gwg-live-screening/SKILL.md) | `compliance` | 4 | 🚧 `Work-in-progress` |
+| [`fristen-docketing-light`](plugins/fristen-termine/skills/fristen-docketing-light/SKILL.md) | `fristen-termine` | 4 | 🚧 `Work-in-progress` |
+| [`posteingang-ocr-routing`](plugins/post-akte/skills/posteingang-ocr-routing/SKILL.md) | `post-akte` | 4 | 🚧 `Work-in-progress` |
+| [`datev-buchhaltungsbruecke`](plugins/wissen-qm/skills/datev-buchhaltungsbruecke/SKILL.md) | `wissen-qm` | 4 | 🚧 `Work-in-progress` |
+| [`ar-mahnwesen-light`](plugins/zeit-abrechnung/skills/ar-mahnwesen-light/SKILL.md) | `zeit-abrechnung` | 4 | 🚧 `Work-in-progress` |
+| [`scheduling-assistent-de`](plugins/fristen-termine/skills/scheduling-assistent-de/SKILL.md) | `fristen-termine` | 5 | 🚧 `Work-in-progress` |
+| [`mandantenkommunikation-status`](plugins/kommunikation/skills/mandantenkommunikation-status/SKILL.md) | `kommunikation` | 5 | 🚧 `Work-in-progress` |
+| [`kanzlei-sop-qualitygate`](plugins/wissen-qm/skills/kanzlei-sop-qualitygate/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
+| [`wissensmanagement-precedents`](plugins/wissen-qm/skills/wissensmanagement-precedents/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
 <!-- skill-status:ende -->
 
 ## Nutzung

@@ -1,6 +1,6 @@
 ---
 name: gwg-live-screening
-status: ungetestet
+status: Work-in-progress
 welle: 4
 plugin: compliance
 rdg_einordnung: "Abgleich gegen öffentliche Pflichtlisten als Rechercheunterstützung; Maßnahmen bei Treffern entscheidet der Verpflichtete."
@@ -10,7 +10,7 @@ haftung: "Listenstand ist datiert zu dokumentieren; falsch-negative Treffer durc
 
 # gwg-live-screening
 
-> **Status: `ungetestet`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 4).
+> **Status: `Work-in-progress`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 4).
 
 ## Zweck
 

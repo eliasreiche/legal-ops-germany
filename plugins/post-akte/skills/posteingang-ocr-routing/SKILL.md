@@ -1,6 +1,6 @@
 ---
 name: posteingang-ocr-routing
-status: ungetestet
+status: Work-in-progress
 welle: 4
 plugin: post-akte
 rdg_einordnung: "Organisatorische Postverarbeitung; keine inhaltliche Bearbeitung."
@@ -10,7 +10,7 @@ haftung: "Fristauslösende Eingänge sind gesondert der Fristenkontrolle zuzufü
 
 # posteingang-ocr-routing
 
-> **Status: `ungetestet`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 4).
+> **Status: `Work-in-progress`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 4).
 
 ## Zweck
 

@@ -1,6 +1,6 @@
 ---
 name: mandantenkommunikation-status
-status: ungetestet
+status: Work-in-progress
 welle: 5
 plugin: kommunikation
 rdg_einordnung: "Statusinformation ohne Beratungsinhalt; Grenze wird im Output-Kontrakt erzwungen (keine Empfehlungs-Formulierungen)."
@@ -10,7 +10,7 @@ haftung: "Jedes Schreiben geht vor Versand durch den Anwalt; der Skill versendet
 
 # mandantenkommunikation-status
 
-> **Status: `ungetestet`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 5).
+> **Status: `Work-in-progress`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 5).
 
 ## Zweck
 

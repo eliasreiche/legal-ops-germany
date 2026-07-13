@@ -1,6 +1,6 @@
 ---
 name: email-triage-eakte
-status: ungetestet
+status: Work-in-progress
 welle: 3
 plugin: post-akte
 rdg_einordnung: "Organisatorische Posteingangs-Sortierung; keine inhaltliche Bearbeitung der Korrespondenz."
@@ -10,7 +10,7 @@ haftung: "Zuordnungsvorschläge sind zu bestätigen; fristauslösende Post ist g
 
 # email-triage-eakte
 
-> **Status: `ungetestet`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 3).
+> **Status: `Work-in-progress`** — Stub aus dem Repo-Gerüst (Welle-1-Fundament). Implementierung folgt gemäß Build-Reihenfolge (Welle 3).
 
 ## Zweck
 
