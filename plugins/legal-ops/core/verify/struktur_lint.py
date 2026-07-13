@@ -3,7 +3,7 @@
 
 Prüft:
   * jedes SKILL.md trägt die Pflichtfelder aus P5 (rdg_einordnung,
-    daten_hinweis, haftung) sowie name/status/welle/plugin,
+    daten_hinweis, haftung) sowie name/description/status/welle/plugin,
   * status ist `Work-in-progress`, `beta` oder `getestet` (Reifegrad-Leiter):
       - `Work-in-progress` = noch nicht entwickelt (Stub) oder Code ohne Test-Run
       - `beta`     = gegen Testdaten durch Agenten getestet (Orakel/Tests grün in CI)
@@ -33,7 +33,7 @@ from pathlib import Path
 # vier Ebenen höher (verify -> core -> legal-ops -> plugins -> REPO).
 REPO = Path(__file__).resolve().parents[4]
 LINT_PFAD = "plugins/legal-ops/core/verify/struktur_lint.py"
-PFLICHTFELDER = ["name", "status", "welle", "plugin",
+PFLICHTFELDER = ["name", "description", "status", "welle", "plugin",
                  "rdg_einordnung", "daten_hinweis", "haftung"]
 STATUS_WERTE = {"Work-in-progress", "beta", "getestet"}
 TABELLE_START = "<!-- skill-status:start -->"
