@@ -14,7 +14,7 @@ und mehr. Funktionsweise ausschließlich nach deutschem Recht.
 ## Zulässigkeit & Grenzen
 
 Diese Library ist in Gänze **Beta und kein geprüftes Produkt** — es hat keine unabhängige
-juristische oder aufsichtsrechtliche Prüfung stattgefunden. Dies trifft auch zu, wenn Labels von "getestet" oder sprechen oder händische oder autmatisierte Testläufe referenzieren. Sie trifft **keine Aussage**
+juristische oder aufsichtsrechtliche Prüfung stattgefunden. Das gilt auch dann, wenn ein Label „getestet" lautet oder von händischen oder automatisierten Testläufen gesprochen wird. Sie trifft **keine Aussage**
 zur Zulässigkeit eines Einsatzes im konkreten Mandat oder Unternehmen. Ob und wie die
 Skills produktiv genutzt werden dürfen, muss die Kanzlei vor dem Einsatz selbst prüfen —
 insbesondere im Hinblick auf:
@@ -87,7 +87,7 @@ kein Hosting und keine Datenhaltung durch die Library.
 git clone https://github.com/eliasreiche/claude-for-legal-non-billable-germany.git
 ```
 
-Einbindung als Claude-Code-/Cowork-Plugin über [`marketplace.json`](marketplace.json);
+Einbindung als Claude-Code-/Cowork-Plugin über [`marketplace.json`](.claude-plugin/marketplace.json);
 Details je Skill im jeweiligen `SKILL.md`.
 
 ## Entwicklung
