@@ -60,22 +60,22 @@ Tabelle wird generiert von [`plugins/legal-ops/core/verify/struktur_lint.py`](pl
 <!-- skill-status:start -->
 | Skill | Plugin | Welle | Status |
 |---|---|---|---|
-| [`fristenrechner-de`](plugins/legal-ops/skills/fristenrechner-de/SKILL.md) | `fristen-termine` | 1 | 🧪 `beta` |
-| [`zitat-verifier-de`](plugins/legal-ops/skills/zitat-verifier-de/SKILL.md) | `querschnitt` | 1 | 🧪 `beta` |
-| [`rvg-gko-rechner`](plugins/legal-ops/skills/rvg-gko-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🧪 `beta` |
+| [`fristenrechner`](plugins/legal-ops/skills/fristenrechner/SKILL.md) | `fristen-termine` | 1 | 🧪 `beta` |
+| [`zitat-pruefer`](plugins/legal-ops/skills/zitat-pruefer/SKILL.md) | `querschnitt` | 1 | 🧪 `beta` |
+| [`rvg-gkg-rechner`](plugins/legal-ops/skills/rvg-gkg-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🧪 `beta` |
 | [`gwg-risiko-check`](plugins/legal-ops/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
-| [`konflikt-check-offline`](plugins/legal-ops/skills/konflikt-check-offline/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
-| [`akten-intake-strukturierer`](plugins/legal-ops/skills/akten-intake-strukturierer/SKILL.md) | `intake` | 2 | 🧪 `beta` |
-| [`email-triage-eakte`](plugins/legal-ops/skills/email-triage-eakte/SKILL.md) | `post-akte` | 3 | 🚧 `Work-in-progress` |
+| [`interessenkollision-check`](plugins/legal-ops/skills/interessenkollision-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
+| [`aktenkopf-extraktor`](plugins/legal-ops/skills/aktenkopf-extraktor/SKILL.md) | `intake` | 2 | 🧪 `beta` |
+| [`email-akten-zuordnung`](plugins/legal-ops/skills/email-akten-zuordnung/SKILL.md) | `post-akte` | 3 | 🚧 `Work-in-progress` |
 | [`passive-zeiterfassung`](plugins/legal-ops/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
-| [`zeitnarrativ-rvg`](plugins/legal-ops/skills/zeitnarrativ-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
+| [`taetigkeitstext-rvg`](plugins/legal-ops/skills/taetigkeitstext-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
 | [`gwg-live-screening`](plugins/legal-ops/skills/gwg-live-screening/SKILL.md) | `compliance` | 4 | 🚧 `Work-in-progress` |
 | [`fristen-docketing-light`](plugins/legal-ops/skills/fristen-docketing-light/SKILL.md) | `fristen-termine` | 4 | 🚧 `Work-in-progress` |
-| [`posteingang-ocr-routing`](plugins/legal-ops/skills/posteingang-ocr-routing/SKILL.md) | `post-akte` | 4 | 🚧 `Work-in-progress` |
-| [`datev-buchhaltungsbruecke`](plugins/legal-ops/skills/datev-buchhaltungsbruecke/SKILL.md) | `wissen-qm` | 4 | 🚧 `Work-in-progress` |
-| [`ar-mahnwesen-light`](plugins/legal-ops/skills/ar-mahnwesen-light/SKILL.md) | `zeit-abrechnung` | 4 | 🚧 `Work-in-progress` |
-| [`scheduling-assistent-de`](plugins/legal-ops/skills/scheduling-assistent-de/SKILL.md) | `fristen-termine` | 5 | 🚧 `Work-in-progress` |
-| [`mandantenkommunikation-status`](plugins/legal-ops/skills/mandantenkommunikation-status/SKILL.md) | `kommunikation` | 5 | 🚧 `Work-in-progress` |
+| [`posteingang-ocr-verteilung`](plugins/legal-ops/skills/posteingang-ocr-verteilung/SKILL.md) | `post-akte` | 4 | 🚧 `Work-in-progress` |
+| [`datev-export`](plugins/legal-ops/skills/datev-export/SKILL.md) | `wissen-qm` | 4 | 🚧 `Work-in-progress` |
+| [`honorar-mahnwesen`](plugins/legal-ops/skills/honorar-mahnwesen/SKILL.md) | `zeit-abrechnung` | 4 | 🚧 `Work-in-progress` |
+| [`termin-assistent`](plugins/legal-ops/skills/termin-assistent/SKILL.md) | `fristen-termine` | 5 | 🚧 `Work-in-progress` |
+| [`sachstandsmitteilung`](plugins/legal-ops/skills/sachstandsmitteilung/SKILL.md) | `kommunikation` | 5 | 🚧 `Work-in-progress` |
 | [`kanzlei-sop-qualitygate`](plugins/legal-ops/skills/kanzlei-sop-qualitygate/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
 | [`wissensmanagement-precedents`](plugins/legal-ops/skills/wissensmanagement-precedents/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
 <!-- skill-status:ende -->

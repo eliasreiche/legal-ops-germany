@@ -1,6 +1,6 @@
 ---
 name: fristen-docketing-light
-description: "Export berechneter Fristen als iCal/CSV — in fristenrechner-de integriert (calc → export in einem Skill). Dieser Eintrag bleibt Platzhalter für erweitertes Docketing (Sammel-Export, Import-Profile). Work-in-progress (Welle 4)."
+description: "Export berechneter Fristen als iCal/CSV — in fristenrechner integriert (calc → export in einem Skill). Dieser Eintrag bleibt Platzhalter für erweitertes Docketing (Sammel-Export, Import-Profile). Work-in-progress (Welle 4)."
 status: Work-in-progress
 welle: 4
 plugin: fristen-termine
@@ -11,7 +11,7 @@ haftung: "Import und Kontrolle im Zielsystem verantwortet die Kanzlei; ersetzt k
 
 # fristen-docketing-light
 
-> **Status: `Work-in-progress` — in [`fristenrechner-de`](../fristenrechner-de/SKILL.md) integriert.**
+> **Status: `Work-in-progress` — in [`fristenrechner`](../fristenrechner/SKILL.md) integriert.**
 > Der iCal-/CSV-Export ist als **zweite Stufe** direkt in den Fristenrechner
 > gewandert (calc → export in einem Skill), damit die Berechnung unmittelbar
 > einen Kalender-Export erzeugt und nur bei einer Korrektur einen neuen. Dieser
@@ -23,23 +23,23 @@ haftung: "Import und Kontrolle im Zielsystem verantwortet die Kanzlei; ersetzt k
 
 Export berechneter Fristen als iCal/CSV zum Import in Kanzlei-Kalender oder
 Kanzleisoftware. Die **Einzel-Frist**-Ausprägung dieser Funktion ist umgesetzt
-in [`fristenrechner-de`](../fristenrechner-de/SKILL.md) über
+in [`fristenrechner`](../fristenrechner/SKILL.md) über
 `core/calc/fristen/kalender_executor.py` (Format-/Feld-/UID-Kontrakt:
-[`fristenrechner-de/schema/README.md`](../fristenrechner-de/schema/README.md)).
+[`fristenrechner/schema/README.md`](../fristenrechner/schema/README.md)).
 
 ## Eingaben (Datei-Kontrakt, P2)
 
 *Für den Einzel-Frist-Export: der JSON-Report aus `core/calc/fristen/executor.py`
-(siehe fristenrechner-de). Eine mögliche Erweiterung dieses Skills — Sammel-
+(siehe fristenrechner). Eine mögliche Erweiterung dieses Skills — Sammel-
 Export mehrerer Reports / systemspezifische Profile — ist noch zu spezifizieren.*
 
 ## Ablauf
 
-*Einzel-Frist: siehe [`fristenrechner-de`](../fristenrechner-de/SKILL.md),
+*Einzel-Frist: siehe [`fristenrechner`](../fristenrechner/SKILL.md),
 Abschnitt „Ablauf" (Schritte 5–6). Erweiterungen folgen mit der Implementierung.*
 
 ## Output-Format
 
-*iCal `.ics` / CSV wie in fristenrechner-de. Deterministik-Grenze (P3): Jeder
+*iCal `.ics` / CSV wie in fristenrechner. Deterministik-Grenze (P3): Jeder
 Datums-/Zahlenwert im Output stammt aus einem Executor und ist als solcher
 markiert.*

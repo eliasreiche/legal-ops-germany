@@ -66,7 +66,7 @@ def frontmatter(text: str) -> dict[str, str] | None:
 
 
 def skill_dirs() -> list[Path]:
-    # Ein Plugin `legal-ops`; alle Skills (inkl. zitat-verifier-de) liegen unter
+    # Ein Plugin `legal-ops`; alle Skills (inkl. zitat-pruefer) liegen unter
     # plugins/legal-ops/skills/*. core/ enthält nur noch geteilte Rechner/Verifier
     # ohne eigenes SKILL.md.
     return [p.parent for p in sorted(REPO.glob("plugins/*/skills/*/SKILL.md"))]

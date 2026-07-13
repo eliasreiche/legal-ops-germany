@@ -29,7 +29,7 @@ Anti-Halluzination: Die Faktoren der Anlagen 1/2 GwG sind als PARAPHRASE mit
 exakter Fundstelle in anlage1.json / anlage2.json hinterlegt (kein erfundener
 Wortlaut). Jede Fundstelle im erzeugten Report trägt einen 3-Zustands-Marker
 (hier stets ⚠️ „nicht prüfbar" — der Executor prüft nicht gegen den
-Gesetzestext; die Prüfung übernimmt der abschließende zitat-verifier-de-Lauf
+Gesetzestext; die Prüfung übernimmt der abschließende zitat-pruefer-Lauf
 bzw. die händische Abnahme gegen gesetze-im-internet.de).
 
 Nur Standardbibliothek. Kein Netzwerkzugriff. JSON rein -> Report-Dict raus.
@@ -51,7 +51,7 @@ HOCHRISIKO_PFAD = _GWG_DIR / "hochrisiko_drittstaaten.json"
 MARKER_NICHT_PRUEFBAR = "⚠️"
 MARKER_BEGRUENDUNG = (
     "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen "
-    "den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen "
+    "den Gesetzestext geprüft — im Skill-Ablauf durch zitat-pruefer gegen "
     "die Quellen-Registry und bei der händischen Abnahme gegen "
     "gesetze-im-internet.de zu verifizieren.")
 

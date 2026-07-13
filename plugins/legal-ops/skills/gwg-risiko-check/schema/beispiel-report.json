@@ -30,7 +30,7 @@
     "fundstelle": "§ 2 Abs. 1 Nr. 10 Buchst. a GwG",
     "paraphrase": "Mitwirkung an Kauf oder Verkauf von Immobilien oder Gewerbebetrieben.",
     "marker": "⚠️",
-    "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
+    "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-pruefer gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
   },
   "klassifikationsvorschlag": "mittel",
   "klassifikation_begruendung": "Mindestens ein risikoerhöhender Faktor nach Anlage 2 GwG liegt vor, ohne dass ein § 15-Tatbestand (PEP/Hochrisiko-Drittstaat) erfüllt ist.",
@@ -44,7 +44,7 @@
       "kategorie": "geografisch",
       "quelle": "executor",
       "marker": "⚠️",
-      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren.",
+      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-pruefer gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren.",
       "detail": "Sitzland DE ist EU-Mitgliedstaat."
     },
     {
@@ -55,7 +55,7 @@
       "kategorie": "kundenrisiko",
       "quelle": "executor",
       "marker": "⚠️",
-      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
+      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-pruefer gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
     }
   ],
   "pflichten_hinweise": [
@@ -64,14 +64,14 @@
       "hinweis": "Allgemeine Sorgfaltspflichten sind anzuwenden (Identifizierung, wirtschaftlich Berechtigter, Zweck der Geschäftsbeziehung, kontinuierliche Überwachung).",
       "quelle": "executor",
       "marker": "⚠️",
-      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
+      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-pruefer gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
     },
     {
       "norm": "§ 43 GwG",
       "hinweis": "Bei Tatsachen, die auf Geldwäsche/Terrorismusfinanzierung hindeuten, besteht grundsätzlich eine Verdachtsmeldepflicht an die FIU. Für Rechtsanwälte gilt die Ausnahme des § 43 Abs. 2 GwG (Erkenntnisse aus der Rechtsberatung/Prozessvertretung), soweit deren Voraussetzungen vorliegen — im Einzelfall anwaltlich zu prüfen.",
       "quelle": "executor",
       "marker": "⚠️",
-      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-verifier-de gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
+      "marker_begruendung": "Fundstelle stammt aus den Katalog-Daten dieses Skills und ist nicht gegen den Gesetzestext geprüft — im Skill-Ablauf durch zitat-pruefer gegen die Quellen-Registry und bei der händischen Abnahme gegen gesetze-im-internet.de zu verifizieren."
     }
   ],
   "luecken": [],

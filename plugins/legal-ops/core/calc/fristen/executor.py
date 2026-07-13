@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """fristen — CLI-Executor (P2/P3): JSON-Eingabe rein, JSON-Report raus.
 
-Wird vom Skill `fristenrechner-de` aufgerufen. Das Modell (Claude) rechnet
+Wird vom Skill `fristenrechner` aufgerufen. Das Modell (Claude) rechnet
 nie selbst — es übergibt die Eingabedatei, liest den Report und stellt ihn
 dar. Jeder Datums-/Zahlenwert im Report stammt aus diesem Executor
 (Deterministik-Grenze, CONVENTIONS.md P3).
 
 Eingabe (JSON-Datei, Schema siehe plugins/legal-ops/skills/
-fristenrechner-de/schema/README.md):
+fristenrechner/schema/README.md):
 
     {
       "ereignis_datum": "2026-01-15",

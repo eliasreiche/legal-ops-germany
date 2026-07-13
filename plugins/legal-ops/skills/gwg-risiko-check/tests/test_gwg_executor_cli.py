@@ -1,9 +1,9 @@
-"""Tests für den Skill-Executor (CLI, P2) und die zitat-verifier-Integration.
+"""Tests für den Skill-Executor (CLI, P2) und die Zitat-Prüfer-Integration.
 
 Deckt ab: CLI über subprocess (Mandat rein → Report raus), Beispieldateien-
 Round-Trip, adversariale Inputs (kaputtes JSON, unbekanntes Feld, unzulässiger
 Wert) mit sauberem Exit 2 ohne Traceback, sowie den abschließenden
-zitat-verifier-de-Lauf über die mitgelieferte quellen-registry.json.
+zitat-pruefer-Lauf über die mitgelieferte quellen-registry.json.
 """
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ REPO = Path(__file__).resolve().parents[5]
 SKILL = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL / "executor.py"
 SCHEMA = SKILL / "schema"
-VERIFIER = REPO / "plugins" / "legal-ops" / "skills" / "zitat-verifier-de" / "executor.py"
+VERIFIER = REPO / "plugins" / "legal-ops" / "skills" / "zitat-pruefer" / "executor.py"
 
 
 def _lauf(eingabe, tmp_path: Path) -> subprocess.CompletedProcess:
@@ -132,10 +132,10 @@ def test_fehler_kein_objekt(tmp_path):
 
 
 # --------------------------------------------------------------------------
-# zitat-verifier-Integration (letzter Skill-Schritt)
+# Zitat-Prüfer-Integration (letzter Skill-Schritt)
 # --------------------------------------------------------------------------
 
-def test_zitat_verifier_verifiziert_gwg_normen(tmp_path):
+def test_zitat_pruefer_verifiziert_gwg_normen(tmp_path):
     # Die gerenderte Doku zitiert die GwG-§§; mit der mitgelieferten Registry
     # müssen sie ✅ verifiziert (kein ❌ abweichend) sein.
     doku = tmp_path / "doku.md"

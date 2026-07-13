@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """rvg/gkg — CLI-Executor (P2/P3): JSON-Eingabe rein, JSON-Report raus.
 
-Wird vom Skill `rvg-gko-rechner` aufgerufen. Das Modell (Claude) rechnet nie
+Wird vom Skill `rvg-gkg-rechner` aufgerufen. Das Modell (Claude) rechnet nie
 selbst — es übergibt die Eingabedatei, liest den Report und stellt ihn dar.
 Jeder Geldbetrag im Report stammt aus diesem Executor (Deterministik-Grenze,
 CONVENTIONS.md P3).
@@ -18,7 +18,7 @@ Kostenschuldnern (Anwaltshonorar vs. Gerichtskasse); eine stille
 Zusammenrechnung wäre irreführend.
 
 Eingabe (JSON-Datei, Schema siehe plugins/legal-ops/skills/
-rvg-gko-rechner/schema/README.md). Der RVG-Block kennt zwei Formen:
+rvg-gkg-rechner/schema/README.md). Der RVG-Block kennt zwei Formen:
 'tatbestaende' (flache Kurzform für genau EINE Angelegenheit) oder
 'angelegenheiten' (volle Form — je Angelegenheit eigene Gebühren, eigene
 Auslagenpauschale Nr. 7002 und eigene USt; Teil-2- und Teil-3-Tatbestände

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """fristen/kalender — CLI-Executor (P2/P3): Fristen-Report rein, Kalender raus.
 
-Zweiter Executor des Skills `fristenrechner-de`. Er nimmt **ausschließlich**
+Zweiter Executor des Skills `fristenrechner`. Er nimmt **ausschließlich**
 den JSON-Report von `executor.py` (die Fristberechnung) und erzeugt daraus
 einen Kalender-/Docketing-Export (iCal `.ics` oder CSV) zum Import in
 Fristenkalender oder Kanzleisoftware.
@@ -18,7 +18,7 @@ Re-Import aktualisiert dasselbe Ereignis (kein Duplikat). Eine **korrigierte**
 Frist ändert die Identität → neue UID → neues Ereignis. Wall-Clock-Werte
 (DTSTAMP) werden aus dem Report abgeleitet, damit der Export byte-stabil ist.
 
-Eingabe (JSON-Report, Schema: plugins/legal-ops/skills/fristenrechner-de/
+Eingabe (JSON-Report, Schema: plugins/legal-ops/skills/fristenrechner/
 schema/README.md → Abschnitt „Kalender-Export"):
 
     python3 core/calc/fristen/kalender_executor.py \
@@ -38,8 +38,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
-PRODID = "-//claude-for-legal-non-billable-germany//fristenrechner-de//DE"
-UID_DOMAIN = "fristenrechner-de.legal-ops"
+PRODID = "-//claude-for-legal-non-billable-germany//fristenrechner//DE"
+UID_DOMAIN = "fristenrechner.legal-ops"
 # Zweitkontroll-Klausel (P5) — steht immer in Beschreibung und CSV.
 ZWEITKONTROLLE = ("Zweitkontrolle bleibt zwingend: Dieser Export ersetzt keinen "
                   "Fristenkalender mit Vier-Augen-Prinzip. Import und Kontrolle "

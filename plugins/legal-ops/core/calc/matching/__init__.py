@@ -1,7 +1,7 @@
 """matching — wiederverwendbare Fuzzy-Matching-Bibliothek (P3).
 
 Öffentliche API für Namensvergleich (natürliche und juristische Personen),
-genutzt von `plugins/legal-ops/skills/konflikt-check-offline/executor.py`
+genutzt von `plugins/legal-ops/skills/interessenkollision-check/executor.py`
 und künftig von Skill #13 `gwg-live-screening` (Sanktionslisten-Abgleich,
 Welle 3). Reine Standardbibliothek, kein Netzwerkzugriff, keine
 Persistierung — siehe die einzelnen Module für Regelwerk und Grenzen:
