@@ -13,8 +13,8 @@ und mehr. Funktionsweise ausschließlich nach deutschem Recht.
 
 ## Zulässigkeit & Grenzen
 
-Diese Library ist **Beta und kein geprüftes Produkt** — es hat keine unabhängige
-juristische oder aufsichtsrechtliche Prüfung stattgefunden. Sie trifft **keine Aussage**
+Diese Library ist in Gänze **Beta und kein geprüftes Produkt** — es hat keine unabhängige
+juristische oder aufsichtsrechtliche Prüfung stattgefunden. Dies trifft auch zu, wenn Labels von "getestet" oder sprechen oder händische oder autmatisierte Testläufe referenzieren. Sie trifft **keine Aussage**
 zur Zulässigkeit eines Einsatzes im konkreten Mandat oder Unternehmen. Ob und wie die
 Skills produktiv genutzt werden dürfen, muss die Kanzlei vor dem Einsatz selbst prüfen —
 insbesondere im Hinblick auf:
