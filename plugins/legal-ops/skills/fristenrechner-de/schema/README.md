@@ -107,6 +107,60 @@ Vollständiges Beispiel: [`beispiel-report.json`](beispiel-report.json)
   Vollstreckungsbescheids möglich, verspäteter Widerspruch gilt als
   Einspruch (§ 694 ZPO).
 
+## Kalender-Export (zweite Stufe: calc → export)
+
+Nach der Berechnung erzeugt derselbe Skill aus dem Report einen Kalender-/
+Docketing-Export über den zweiten Executor
+[`core/calc/fristen/kalender_executor.py`](../../../core/calc/fristen/kalender_executor.py).
+**Eingabe ist ausschließlich der Report oben** — kein zweiter Fachdatensatz,
+keine erneute Rechnung. Beispiele:
+[`beispiel-export.ics`](beispiel-export.ics),
+[`beispiel-export.csv`](beispiel-export.csv).
+
+```
+python3 ${CLAUDE_PLUGIN_ROOT}/core/calc/fristen/kalender_executor.py \
+  --report REPORT.json --format ics|csv|beide \
+  [--output DATEI | --output-dir ORDNER] \
+  [--aktenzeichen AZ] [--bezeichnung TEXT] [--vorlauftage N]
+```
+
+| Flag | Pflicht | Bedeutung |
+|---|---|---|
+| `--report` | ja | JSON-Report aus `executor.py`. Muss `ergebnis.quelle == "executor"` tragen — modellgenerierte „Reports" werden abgelehnt (P3). |
+| `--format` | nein | `ics` (Default), `csv` oder `beide`. `beide` verlangt `--output-dir`. |
+| `--output` / `--output-dir` | nein | Zieldatei (ein Format) bzw. Zielordner (`beide`, Dateiname `frist-<uid8>.ics/.csv`). Ohne beides: Ausgabe nach stdout. |
+| `--aktenzeichen` | nein | Az als **Label** (kein Rechenwert); wird in Titel, CSV und UID-Identität übernommen. |
+| `--bezeichnung` | nein | Freie Terminbezeichnung; überschreibt die Fristart-Bezeichnung im Titel. |
+| `--vorlauftage` | nein | Vorfrist-Vorlauf in Tagen (Default 3); der Executor rechnet `Vorfrist = Fristende − N` und setzt die iCal-`VALARM` auf `-PND`. |
+
+**Determinismus & „Re-Export nur bei Korrektur" (P3).** Jeder Datumswert im
+Export stammt aus dem Report oder wird daraus abgeleitet (Vorfrist, iCal-DTEND
+= Fristende + 1 Tag); `DTSTAMP` wird aus dem Report abgeleitet, nicht aus der
+Wall-Clock. Die VEVENT-`UID` ist ein Hash der **Fristidentität** (Ereignis,
+Fristart/Dauer, Fristtyp, Bundesland, Fristende, Aktenzeichen). Folge:
+
+- **Unveränderte Frist** → byte-identischer Export → Re-Import aktualisiert
+  dasselbe Kalenderereignis (kein Duplikat); ein erneuter Export ist überflüssig.
+- **Korrigierte Frist** (anderes Ereignisdatum, andere Fristart, korrigiertes
+  Bundesland …) → andere Identität → **neue UID** → neues Ereignis. Genau dann
+  wird ein neuer Export erzeugt.
+
+**iCal (`.ics`, RFC 5545).** Ein Ganztags-`VEVENT` auf das (frühere, sichere)
+Fristende, mit `VALARM`-Vorfrist, Norm-Angabe (✅-markiert, Executor-Quelle),
+Verschiebungs-/Notfrist-Kennzeichnung und der Zweitkontroll-Klausel in der
+`DESCRIPTION`. `kein_technisches_fristende` erscheint als **„Kontrolltermin"**,
+nie als harte Frist. Ein teilgebietlicher Feiertag: das Ereignis liegt auf dem
+**früheren** Ende, das spätere Alternativende steht als Prüfhinweis in der
+Beschreibung.
+
+**CSV (`;`-getrennt, DE-Kanzleisoftware-freundlich).** Eine Zeile je Frist mit
+Kopf: `fristende;vorfrist;vorlauftage;titel;fristart;norm;aktenzeichen;
+bundesland;notfrist;verschoben;kein_technisches_fristende;
+alternativ_ende_teilgebietlich;uid;quelle`. Felder mit `;`/`"`/Zeilenumbruch
+werden RFC-4180-konform gequotet.
+
+Exit-Codes: `0` = Export erzeugt, `2` = Eingabefehler (kein Traceback).
+
 ## Bewusste Grenzen
 
 - **Keine Zustellungs-/Bekanntgabefiktionen**: § 130 Abs. 1 BGB,
