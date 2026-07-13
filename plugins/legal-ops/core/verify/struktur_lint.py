@@ -107,7 +107,10 @@ def pruefe_containment(skill: Path, fehler: list[str]) -> None:
         ref = skill / "SKILL.md"
 
     # (1) Executor-Invocations: nur Zeilen mit `python3 ... executor.py`.
-    for zeile in text.splitlines():
+    # Bash-Zeilenfortsetzungen (`\` am Zeilenende) vorher zu einer logischen
+    # Zeile zusammenfassen, damit eine mehrzeilige Invocation (python3 \
+    # <newline> ...executor.py) nicht an der Prüfung vorbeirutscht.
+    for zeile in re.sub(r"\\\n[ \t]*", " ", text).splitlines():
         if "executor.py" not in zeile or "python" not in zeile:
             continue
         m = _EXECUTOR_TOKEN_RE.search(zeile)

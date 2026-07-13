@@ -144,3 +144,18 @@ def test_containment_meldet_fehlenden_executor(tmp_path):
     fehler: list[str] = []
     struktur_lint.pruefe_containment(skill, fehler)
     assert any("existiert nicht" in f for f in fehler), fehler
+
+
+def test_containment_meldet_mehrzeilige_cwd_relative_invocation(tmp_path):
+    # Bash-Zeilenfortsetzung: `python3` auf Zeile 1, `executor.py` auf der
+    # Folgezeile. Ohne das Zusammenfassen der `\`-Fortsetzungen rutschte diese
+    # (CWD-relative, also im Cache nicht lauffähige) Invocation durch.
+    md = ("# demo\n"
+          "python3 \\\n"
+          "  core/calc/fristen/executor.py \\\n"
+          "  --input x.json\n")
+    skill = _plugin_skill(tmp_path, skill_md=md,
+                          core_files=["core/calc/fristen/executor.py"])
+    fehler: list[str] = []
+    struktur_lint.pruefe_containment(skill, fehler)
+    assert any("nicht plugin-relativ" in f for f in fehler), fehler
