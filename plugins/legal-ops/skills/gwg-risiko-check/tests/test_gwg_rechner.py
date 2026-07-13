@@ -11,6 +11,7 @@ import copy
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -18,10 +19,12 @@ import pytest
 REPO = Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
+from gwg import rechner  # noqa: E402
 from gwg.rechner import (  # noqa: E402
     FRAGEBOGEN_FELDER,
     KLASSIFIKATIONEN,
     GwGEingabeFehler,
+    frische_status,
     klassifiziere,
     lade_kataloge,
 )
@@ -113,13 +116,20 @@ def test_hoch_pep():
 
 
 def test_hoch_hochrisiko_drittstaat():
+    # Iran: EU-Hochrisiko + FATF-Schwarzliste -> gesetzlicher Trigger.
     r = klassifiziere(_m(sitz_land="IR"))
     assert r["klassifikationsvorschlag"] == "hoch"
     geo = [f for f in r["angewandte_faktoren"]
            if f["fundstelle"] == "Anlage 2 Nr. 3 Buchst. a GwG"]
     assert len(geo) == 1
     # Vorbehalts-Kennzeichnung beim Länder-Treffer (im Faktor-Detail).
-    assert "Liste ändert sich laufend" in geo[0]["detail"]
+    assert "ändern sich laufend" in geo[0]["detail"]
+    treffer = r["laender_listen_treffer"]
+    assert treffer["iso2"] == "IR"
+    assert set(treffer["listen"]) == {"eu-hochrisiko", "fatf-blacklist"}
+    # BaFin-Allgemeinverfügung-Hinweis nur für KP/IR.
+    assert any("BaFin-Allgemeinverfügung" in p["norm"]
+               for p in r["pflichten_hinweise"])
 
 
 def test_pep_und_land_gleichzeitig_bleibt_hoch():
@@ -197,10 +207,114 @@ def test_katalog_stand_vorhanden():
 
 def test_hochrisiko_liste_hat_vorbehalt_und_iso():
     _, _, hochrisiko = lade_kataloge()
-    assert "ändert sich laufend" in hochrisiko["vorbehalt"]
+    assert "ändern sich laufend" in hochrisiko["vorbehalt"]
+    zulaessige_listen = {"eu-hochrisiko", "fatf-blacklist", "fatf-greylist"}
     for eintrag in hochrisiko["laender"]:
-        assert re.match(r"^[A-Z]{2}$", eintrag["iso"]), eintrag
-        assert eintrag["name"].strip()
+        assert re.match(r"^[A-Z]{2}$", eintrag["iso2"]), eintrag
+        assert eintrag["land"].strip()
+        assert eintrag["listen"], eintrag
+        assert set(eintrag["listen"]) <= zulaessige_listen, eintrag
+
+
+# --------------------------------------------------------------------------
+# Listen-Treffer-Logik (Aufgabe: Länderliste verifiziert, 3 Listen)
+# --------------------------------------------------------------------------
+
+def test_listen_konsistenz_gegen_vorgabe():
+    """JSON enthält exakt die vorgegebenen Länder je Liste (Anzahl +
+    Stichproben) — verifizierte Daten vom 2026-07-13."""
+    _, _, hochrisiko = lade_kataloge()
+    laender = {e["iso2"]: set(e["listen"]) for e in hochrisiko["laender"]}
+
+    eu_only = {"AF", "DZ", "NA", "TT", "VU", "RU"}
+    eu_und_schwarz = {"IR", "KP", "MM"}
+    eu_und_grau = {"AO", "BO", "VG", "CM", "CI", "CD", "HT", "KE", "LA", "LB",
+                   "MC", "NP", "SS", "SY", "VE", "VN", "YE"}
+    nur_grau = {"BA", "BG", "IQ", "KW", "PG"}
+
+    assert len(laender) == 31
+    for iso in eu_only:
+        assert laender[iso] == {"eu-hochrisiko"}, iso
+    for iso in eu_und_schwarz:
+        assert laender[iso] == {"eu-hochrisiko", "fatf-blacklist"}, iso
+    for iso in eu_und_grau:
+        assert laender[iso] == {"eu-hochrisiko", "fatf-greylist"}, iso
+    for iso in nur_grau:
+        assert laender[iso] == {"fatf-greylist"}, iso
+
+    alle_eu = eu_only | eu_und_schwarz | eu_und_grau
+    assert len(alle_eu) == 26  # 23 (Abschnitt I) + 1 + 1 + 1
+    eu_abschnitte = hochrisiko["eu_abschnitte"]
+    assert len(eu_abschnitte["I"]) == 23
+    assert eu_abschnitte["II"] == ["IR"]
+    assert eu_abschnitte["III"] == ["KP"]
+    assert eu_abschnitte["IV"] == ["RU"]
+
+
+def test_eu_treffer_pro_liste_hoch():
+    # (a) je Liste ein Beispiel-Land -> hoch + korrekte Listen-Ausweisung.
+    r = klassifiziere(_m(sitz_land="DZ"))  # nur EU
+    assert r["klassifikationsvorschlag"] == "hoch"
+    assert r["laender_listen_treffer"]["listen"] == ["eu-hochrisiko"]
+    assert any(f["fundstelle"] == "Anlage 2 Nr. 3 Buchst. a GwG"
+               for f in r["angewandte_faktoren"])
+
+
+def test_fatf_schwarzliste_treffer_hoch():
+    r = klassifiziere(_m(sitz_land="KP"))  # EU + FATF-schwarz
+    assert r["klassifikationsvorschlag"] == "hoch"
+    assert set(r["laender_listen_treffer"]["listen"]) == {
+        "eu-hochrisiko", "fatf-blacklist"}
+    assert any("BaFin-Allgemeinverfügung" in p["norm"]
+               for p in r["pflichten_hinweise"])
+
+
+def test_fatf_grauliste_mit_eu_treffer_hoch():
+    r = klassifiziere(_m(sitz_land="AO"))  # EU + FATF-grau
+    assert r["klassifikationsvorschlag"] == "hoch"
+    assert set(r["laender_listen_treffer"]["listen"]) == {
+        "eu-hochrisiko", "fatf-greylist"}
+
+
+def test_nur_fatf_grau_hoch_als_hauseinstufung():
+    # (b) nur-FATF-grau-Land (Kuwait) -> hoch, aber als konservative
+    # Haus-Einstufung ohne Gesetzespflicht, nicht als § 15-Zitat.
+    r = klassifiziere(_m(sitz_land="KW"))
+    assert r["klassifikationsvorschlag"] == "hoch"
+    treffer = r["laender_listen_treffer"]
+    assert treffer["listen"] == ["fatf-greylist"]
+    # Kein statutorischer Anlage-2-Faktor für einen reinen Grauliste-Treffer.
+    assert not any(f["fundstelle"] == "Anlage 2 Nr. 3 Buchst. a GwG"
+                   for f in r["angewandte_faktoren"])
+    haus_faktor = [f for f in r["angewandte_faktoren"]
+                   if f["id"] == "haus_fatf_listen_treffer"]
+    assert len(haus_faktor) == 1
+    assert haus_faktor[0]["anlage"] is None
+    hinweis = [p for p in r["pflichten_hinweise"]
+               if p["norm"] == "Hausrichtlinie (keine GwG-Norm)"]
+    assert len(hinweis) == 1
+    assert "konservative Haus-Einstufung" in hinweis[0]["hinweis"]
+    assert "KEINE unmittelbare Gesetzespflicht" in hinweis[0]["hinweis"]
+    assert not any(p["norm"] == "§ 15 GwG" for p in r["pflichten_hinweise"])
+
+
+def test_bulgarien_eu_mitgliedstaat_sonderfall():
+    # Bulgarien: nur FATF-grau, aber EU-Mitgliedstaat -> Sonderhinweis im
+    # Begründungstext (kann begrifflich kein Drittstaat sein).
+    r = klassifiziere(_m(sitz_land="BG"))
+    assert r["klassifikationsvorschlag"] == "hoch"
+    assert any("EU-Mitgliedstaat" in v and "Drittstaat" in v
+               for v in r["vorbehalte"])
+
+
+def test_kein_listen_treffer_fuer_nicht_gelistetes_land():
+    # (c) Nicht-Listen-Land (Frankreich) -> kein Hochrisiko-Treffer.
+    r = klassifiziere(_m(sitz_land="FR"))
+    assert r["laender_listen_treffer"] is None
+    assert not any(f["id"] == "a2_g_hochrisiko_drittstaat"
+                   for f in r["angewandte_faktoren"])
+    assert not any(f["id"] == "haus_fatf_listen_treffer"
+                   for f in r["angewandte_faktoren"])
 
 
 # --------------------------------------------------------------------------
@@ -240,3 +354,58 @@ def test_fehlende_felder_werden_unklar():
     r = klassifiziere({"kataloggeschaeft": "vermoegensverwaltung"})
     assert r["klassifikationsvorschlag"] == "unvollstaendig"
     assert r["eingabe_normalisiert"]["pep"] == "unklar"
+
+
+# --------------------------------------------------------------------------
+# CI-Frische-Warnung (Aufgabe 3): abgerufen_am der Hochrisiko-Länderliste.
+# (d) Frische-Logik über Monkeypatch des Datums, nicht der echten Systemzeit.
+# --------------------------------------------------------------------------
+
+def test_frische_frisch_kein_warnung():
+    hr = {"abgerufen_am": "2026-07-13"}
+    status = frische_status(hr, heute=date(2026, 7, 13))
+    assert status["warnung"] is False
+    assert status["fehler"] is False
+
+
+def test_frische_warnung_ab_4_monaten():
+    hr = {"abgerufen_am": "2026-01-01"}
+    status = frische_status(hr, heute=date(2026, 7, 13))  # ~6,3 Monate
+    assert status["warnung"] is True
+    assert status["fehler"] is False
+
+
+def test_frische_kein_warnung_knapp_unter_4_monaten():
+    hr = {"abgerufen_am": "2026-05-01"}
+    status = frische_status(hr, heute=date(2026, 7, 13))  # ~2,4 Monate
+    assert status["warnung"] is False
+
+
+def test_frische_fehler_ab_12_monaten():
+    hr = {"abgerufen_am": "2025-06-01"}
+    status = frische_status(hr, heute=date(2026, 7, 13))  # ~13,5 Monate
+    assert status["warnung"] is True
+    assert status["fehler"] is True
+
+
+def test_frische_fehlendes_datum_ist_fehler():
+    status = frische_status({}, heute=date(2026, 7, 13))
+    assert status["fehler"] is True
+
+
+def test_frische_ueber_monkeypatch_heute(monkeypatch):
+    # Monkeypatch der internen _heute()-Funktion statt der echten Systemzeit —
+    # simuliert, dass seit dem Abruf ein Jahr vergangen ist.
+    hr = {"abgerufen_am": "2026-07-13"}
+    monkeypatch.setattr(rechner, "_heute", lambda: date(2027, 8, 1))
+    status = frische_status(hr)
+    assert status["fehler"] is True
+
+
+def test_gwg_hochrisiko_liste_ist_nicht_ueberfaellig():
+    # Harter CI-Test (kein Monkeypatch): schlägt erst fehl, wenn die
+    # hinterlegte Liste seit >= 12 Monaten nicht aktualisiert wurde
+    # (erzwingt spätestens einen Jahres-Refresh, siehe rechner.py).
+    _, _, hochrisiko = lade_kataloge()
+    status = frische_status(hochrisiko)
+    assert not status["fehler"], status["hinweis"]

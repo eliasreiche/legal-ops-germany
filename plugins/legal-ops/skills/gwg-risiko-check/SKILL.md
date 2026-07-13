@@ -1,23 +1,47 @@
 ---
 name: gwg-risiko-check
-description: "GwG-Risikoscoring eines Mandats anhand der Katalogfaktoren der Anlagen 1 und 2 GwG mit Dokumentations-Output für die interne Akte — offline, deterministisch, regelbasierter Klassifikationsvorschlag mit Fundstellen. Triggert bei Geldwäsche-Risiko, GwG-Prüfung, Risikoklassifizierung Mandat, Sorgfaltspflichten, § 10 GwG. Die Bewertung bleibt beim Verpflichteten."
+description: "GwG-Risikoscoring eines Mandats anhand der Katalogfaktoren der Anlagen 1 und 2 GwG mit Dokumentations-Output für die interne Akte — offline, deterministisch, regelbasierter Klassifikationsvorschlag mit Fundstellen. Triggert bei Geldwäsche-Risiko, GwG-Prüfung, Risikoklassifizierung Mandat, Sorgfaltspflichten, § 10 GwG, Hochrisikoländer, FATF-Grauliste/Schwarzliste, EU-Hochrisiko-Drittstaaten. Die Bewertung bleibt beim Verpflichteten."
 status: beta
 welle: 2
 plugin: compliance
 rdg_einordnung: "Strukturierte Dokumentationshilfe zu gesetzlichen Katalogfaktoren (Anlagen 1/2 GwG) mit regelbasiertem Klassifikationsvorschlag; keine Rechtsdienstleistung — die Risikobewertung und die Maßnahmenentscheidung trifft der Verpflichtete (§ 10 Abs. 2 GwG)."
 daten_hinweis: "KYC-/Mandatsdaten im Input — pseudonymisieren oder DSGVO-/BRAO-konformen Modellzugang nutzen (AWS-Bedrock-Pfad, § 203 StGB). Der Executor arbeitet rein lokal, ohne Netzwerkzugriff."
-haftung: "Ersetzt keine GwG-Pflichtenprüfung; das Scoring ist ein Vorschlag zur Aktendokumentation, kein Verwaltungsakt-sicherer Nachweis. Zweitkontrolle und Bewertung bleiben Kanzleisache. Anlagen-Inhalte und Länderliste sind vor produktiver Nutzung gegen gesetze-im-internet.de bzw. die Delegierte Verordnung (EU) 2016/1675 zu prüfen."
+haftung: "Ersetzt keine GwG-Pflichtenprüfung; das Scoring ist ein Vorschlag zur Aktendokumentation, kein Verwaltungsakt-sicherer Nachweis. Zweitkontrolle und Bewertung bleiben Kanzleisache. Die Anlagen-1/2-Fundstellen sind Platzhalter und vor produktiver Nutzung gegen gesetze-im-internet.de zu prüfen. Die Hochrisiko-Länderliste ist am 2026-07-13 browser-verifiziert (EU-VO (EU) 2016/1675 + BaFin-Rundschreiben 07/2026 zu den FATF-Listen), ändert sich aber laufend (FATF-Plenum ca. Feb/Jun/Okt) — Quartals-Review erforderlich."
 ---
 
 # gwg-risiko-check
 
 > **Status: `beta`** — automatisierte Tests laufen grün in CI
-> (`tests/test_gwg_rechner.py` + `tests/test_gwg_executor_cli.py`, 34 Fälle). Noch
-> **nicht** händisch abgenommen: Die Katalog-Fundstellen der Anlagen 1/2 GwG und
-> die Hochrisiko-Länderliste sind Platzhalter und vor produktiver Nutzung gegen
-> die aktuelle Gesetzesfassung zu prüfen. `status: getestet` wird erst nach
-> dieser Prüfung durch den Maintainer gesetzt (siehe
+> (`tests/test_gwg_rechner.py` + `tests/test_gwg_executor_cli.py`). Noch
+> **nicht** händisch abgenommen: Die Katalog-Fundstellen der Anlagen 1/2 GwG
+> sind Platzhalter und vor produktiver Nutzung gegen die aktuelle
+> Gesetzesfassung zu prüfen. `status: getestet` wird erst nach dieser Prüfung
+> durch den Maintainer gesetzt (siehe
 > [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
+
+**Hochrisiko-Länderliste — Quellen (✅ browser-verifiziert am 2026-07-13):**
+Die Datei [`core/calc/gwg/hochrisiko_drittstaaten.json`](../../core/calc/gwg/hochrisiko_drittstaaten.json)
+führt drei Listen zusammen:
+
+- **EU-Hochrisiko-Drittstaaten** — Delegierte Verordnung (EU) 2016/1675 der
+  Kommission, konsolidierte Fassung CELEX 02016R1675-20260129 (EUR-Lex,
+  Anhang Abschnitte I–IV), Stand 2026-01-29. Rechtsanker § 15 Abs. 3 Nr. 2
+  GwG — ein Treffer ist ein **gesetzlicher** Trigger für verstärkte
+  Sorgfaltspflichten (mindestens § 15 Abs. 5 GwG).
+- **FATF-Schwarzliste** („High-Risk Jurisdictions subject to a Call for
+  Action") und **FATF-Grauliste** („Jurisdictions under Increased
+  Monitoring") — FATF-Erklärungen/-Bericht vom 19.06.2026, referenziert über
+  BaFin-Rundschreiben 07/2026 (GW) vom 13.07.2026 (die FATF-Primärseite
+  fatf-gafi.org blockt automatisierte Zugriffe, daher die amtliche deutsche
+  Sekundärquelle). Ein reiner FATF-Treffer **ohne** EU-Listung ist **keine**
+  Gesetzespflicht nach § 15 Abs. 3 Nr. 2 GwG (der nur auf die EU-Liste
+  verweist) — siehe Gewichtungs-Entscheidung unten.
+
+**Pflege-Hinweis:** Quartals-Review nach jedem FATF-Plenum (ca.
+Februar/Juni/Oktober) sowie bei neuen EU-Änderungsverordnungen zu
+2016/1675. Ein automatisierter Test warnt (nicht blockierend), wenn
+`abgerufen_am` älter als 4 Monate ist, und schlägt hart fehl ab 12 Monaten
+(`tests/test_gwg_rechner.py::test_gwg_hochrisiko_liste_ist_nicht_ueberfaellig`).
 
 ## Zweck
 
@@ -115,10 +139,25 @@ GwG" (bargeldintensiv) und dem Hinweis auf § 10 GwG
 
 Ist im Fragebogen `pep: "ja"` gesetzt, greift Regel 2: Ergebnis `hoch` mit dem
 Faktor „§ 15 Abs. 3 Nr. 1 GwG" und dem Pflichten-Hinweis auf die verstärkten
-Sorgfaltspflichten (§ 15 GwG). Bei `sitz_land` in einem hinterlegten
-Hochrisiko-Drittstaat greift dieselbe Regel über „Anlage 2 Nr. 3 Buchst. a GwG"
-/ § 15 Abs. 3 Nr. 2 GwG — der Länder-Treffer wird immer mit dem Vorbehalt
-„Liste ändert sich laufend — Stand prüfen" gekennzeichnet.
+Sorgfaltspflichten (§ 15 GwG). Bei `sitz_land` in der EU-Hochrisiko-Liste greift
+dieselbe Regel über „Anlage 2 Nr. 3 Buchst. a GwG" / § 15 Abs. 3 Nr. 2 GwG
+(gesetzlicher Trigger); bei Nordkorea/Iran zusätzlich der Hinweis auf die
+BaFin-Allgemeinverfügung. Der Länder-Treffer wird immer mit dem Vorbehalt
+„Listen ändern sich laufend — Stand prüfen" gekennzeichnet, und der Report
+weist im Feld `laender_listen_treffer` aus, welche der drei Listen (EU,
+FATF-schwarz, FATF-grau) im Detail getroffen haben.
+
+### Beispiel 4 — hoch, aber Haus-Einstufung (nur FATF-Grauliste)
+
+Ist `sitz_land` z. B. `KW` (Kuwait) — nur auf der FATF-Grauliste, nicht auf der
+EU-Liste —, liefert der Rechner ebenfalls `hoch` (Gewichtungs-Entscheidung:
+jeder Listen-Treffer löst `hoch` aus), aber **ohne** das Anlage-2-/§-15-Zitat.
+Stattdessen trägt der Faktor die `id: "haus_fatf_listen_treffer"` mit
+`fundstelle: "Hausrichtlinie (keine GwG-Norm)"` und der
+Pflichten-Hinweis macht explizit klar: keine unmittelbare Gesetzespflicht,
+konservative Haus-Einstufung nach BaFin-Rundschreiben 07/2026. Ist das Land
+zugleich EU-Mitgliedstaat (z. B. Bulgarien), ergänzt ein Vorbehalt, dass es
+begrifflich schon kein „Drittstaat" i. S. d. § 15 Abs. 3 Nr. 2 GwG sein kann.
 
 ### Beispiel 3 — nicht verpflichtet
 
@@ -126,13 +165,32 @@ Ist `kataloggeschaeft: "keins"`, ist der Rechtsanwalt insoweit kein
 Verpflichteter (§ 2 Abs. 1 Nr. 10 GwG): Ergebnis `nicht_verpflichtet`, keine
 Risikoklasse, mit dem Vorbehalt „Einordnung prüfen".
 
+## Gewichtungs-Entscheidung: alle drei Listen lösen `hoch` aus (Maintainer, konservativ)
+
+Ein Treffer auf **jeder** der drei hinterlegten Listen (EU-Hochrisiko,
+FATF-Schwarzliste, FATF-Grauliste) führt in diesem Skill zur Klassifikation
+`hoch` — auch dann, wenn nur die FATF-Grauliste greift und **keine**
+gesetzliche Pflicht nach § 15 Abs. 3 Nr. 2 GwG besteht (der ausschließlich auf
+die EU-Liste verweist). Das ist eine bewusst konservative Haus-Praxis, keine
+Behauptung einer Gesetzespflicht. Damit die Unterscheidung nicht verloren
+geht, weist der Report bei jedem Länder-Treffer im Feld
+`laender_listen_treffer` aus, welche Liste(n) getroffen haben, und die
+Pflichten-Hinweise unterscheiden zwischen echtem § 15-GwG-Tatbestand (EU-
+Listung oder PEP) und reiner Haus-Einstufung (nur FATF, keine EU-Listung) —
+Details im Docstring von
+[`core/calc/gwg/rechner.py`](../../core/calc/gwg/rechner.py).
+
 ## Grenzen (bewusst)
 
 - **Kein Rechtsrat, keine Bewertung** — nur Dokumentationshilfe; die
   Risikobewertung trifft der Verpflichtete (§ 10 Abs. 2 GwG).
-- **Anlagen-Inhalte und Länderliste sind Platzhalter** — vor produktiver
-  Nutzung gegen die aktuelle Gesetzes-/EU-Fassung zu prüfen (Reifegrad
-  `getestet`).
+- **Anlagen-1/2-Fundstellen sind Platzhalter** — vor produktiver Nutzung
+  gegen die aktuelle Gesetzesfassung zu prüfen (Reifegrad `getestet`). Die
+  Hochrisiko-Länderliste ist am 2026-07-13 browser-verifiziert, ändert sich
+  aber laufend — Quartals-Review nach FATF-Plenum Pflicht.
+- **FATF-Grauliste-Treffer ohne EU-Listung sind keine Gesetzespflicht** —
+  die Klassifikation `hoch` ist dort eine konservative Haus-Einstufung
+  dieses Skills, kein Verwaltungsakt-sicherer Nachweis einer § 15-GwG-Pflicht.
 - **Keine PEP-Ermittlung, kein Sanktionslisten-Abgleich, keine
   Identifizierung** — dafür ist der Live-Screening-Pfad bzw. eine eigene
   Prüfung nötig.
