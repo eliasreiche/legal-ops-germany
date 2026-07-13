@@ -71,8 +71,10 @@ EXECUTOR_SKILLS = [
 def _install_cache(tmp_path: Path) -> Path:
     """Kopiert nur plugins/legal-ops/ (ohne Repo-Root) in den simulierten Cache."""
     cache = tmp_path / "install-cache" / "legal-ops"
+    # 1:1 wie der reale Install: das gesamte Plugin-Dir kopieren (inkl. der
+    # skill-internen tests/), nur Python-Artefakte auslassen.
     shutil.copytree(PLUGIN_SRC, cache,
-                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "tests"))
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     return cache
 
 
