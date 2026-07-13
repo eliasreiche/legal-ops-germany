@@ -9,39 +9,9 @@
   },
   "plugins": [
     {
-      "name": "intake",
-      "source": "./plugins/intake",
-      "description": "Mandantenaufnahme und Aktenanlage"
-    },
-    {
-      "name": "compliance",
-      "source": "./plugins/compliance",
-      "description": "Konfliktprüfung, GwG/KYC"
-    },
-    {
-      "name": "fristen-termine",
-      "source": "./plugins/fristen-termine",
-      "description": "Fristen, Wiedervorlagen, Scheduling"
-    },
-    {
-      "name": "zeit-abrechnung",
-      "source": "./plugins/zeit-abrechnung",
-      "description": "Zeiterfassung, RVG-Billing-Vorbereitung, internes AR"
-    },
-    {
-      "name": "post-akte",
-      "source": "./plugins/post-akte",
-      "description": "Posteingang, E-Mail-Triage, e-Akte-Ablage"
-    },
-    {
-      "name": "kommunikation",
-      "source": "./plugins/kommunikation",
-      "description": "Status-Updates und Serienbriefe ohne Beratung"
-    },
-    {
-      "name": "wissen-qm",
-      "source": "./plugins/wissen-qm",
-      "description": "Precedents, SOPs, Buchhaltungsbrücke"
+      "name": "legal-ops",
+      "source": "./plugins/legal-ops",
+      "description": "Non-billable Kanzlei-Workflows: alle Skills (Fristen, RVG/GKG, GwG, Intake, Konflikt-Check, Post/e-Akte, Kommunikation, QM) samt geteilten Executors in einem Plugin — core/ ist Teil der Auslieferung. Keine Rechtsberatung."
     }
   ]
 }

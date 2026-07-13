@@ -1,9 +1,0 @@
-# Plugin `fristen-termine`
-
-Fristen, Wiedervorlagen, Scheduling.
-
-| Skill | Welle | Status |
-|---|---|---|
-| [`fristenrechner-de`](skills/fristenrechner-de/SKILL.md) | 1 | `beta` |
-| [`fristen-docketing-light`](skills/fristen-docketing-light/SKILL.md) | 4 | `Work-in-progress` |
-| [`scheduling-assistent-de`](skills/scheduling-assistent-de/SKILL.md) | 5 | `Work-in-progress` |

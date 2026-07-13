@@ -1,0 +1,8 @@
+{
+  "name": "legal-ops",
+  "description": "Non-billable Workflows deutscher Kanzleien: Claude-Skills + deterministische Python-Executors über sieben Prozessbereiche (Intake, Compliance, Fristen/Termine, Zeit/Abrechnung, Post/e-Akte, Kommunikation, Wissen/QM) plus Querschnitt. Keine Rechtsberatung.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Elias Reiche"
+  }
+}

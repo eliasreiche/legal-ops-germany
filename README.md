@@ -33,8 +33,8 @@ Daten nach außen — Freigabe des jeweiligen Datenflusses ist Sache der Kanzlei
 ## Wie es funktioniert
 
 - **Claude orchestriert, Python rechnet.** Alles mit Zahlen, Daten, Fristen oder Geld
-  wird von Executors in [`core/calc/`](core/calc/) deterministisch berechnet — nie vom
-  Modell generiert.
+  wird von Executors in [`plugins/legal-ops/core/calc/`](plugins/legal-ops/core/calc/)
+  deterministisch berechnet — nie vom Modell generiert.
 - **Datei rein, Datei raus.** Jeder Skill arbeitet über Datei-Schnittstellen (CSV, PDF,
   EML, iCal, DATEV-EXTF, DOCX) — kompatibel mit dem Export/Import jeder Kanzleisoftware.
   Live-Adapter (Microsoft Graph, EU-/UN-Sanktionslisten) sind optional.
@@ -47,34 +47,38 @@ Daten nach außen — Freigabe des jeweiligen Datenflusses ist Sache der Kanzlei
 - **Berufsrechts-Gate.** Jeder Skill dokumentiert im Frontmatter seine RDG-Einordnung,
   Datenhinweise (§ 203 StGB, DSGVO/BRAO) und Haftungsgrenzen — vom Lint erzwungen.
 
-Hausregeln: [CONVENTIONS.md](CONVENTIONS.md) · Struktur: 7 Prozesskategorien = 7 Plugins
-unter [`plugins/`](plugins/), geteilte Rechner unter [`core/`](core/).
+Hausregeln: [CONVENTIONS.md](CONVENTIONS.md) · Struktur: ein Plugin
+[`legal-ops`](plugins/legal-ops/) bündelt alle Skills (fachlich in sieben
+Prozessbereichen gegliedert, Feld `plugin:` im Frontmatter) **und** die
+geteilten Rechner unter [`plugins/legal-ops/core/`](plugins/legal-ops/core/) —
+so ist `core/` Teil der Auslieferung und jeder Executor-Skill nach dem Install
+lauffähig.
 
 ## Skill-Status
 
-Tabelle wird generiert von [`core/verify/struktur_lint.py`](core/verify/struktur_lint.py) (`--write-readme`).
+Tabelle wird generiert von [`plugins/legal-ops/core/verify/struktur_lint.py`](plugins/legal-ops/core/verify/struktur_lint.py) (`--write-readme`).
 
 <!-- skill-status:start -->
 | Skill | Plugin | Welle | Status |
 |---|---|---|---|
-| [`fristenrechner-de`](plugins/fristen-termine/skills/fristenrechner-de/SKILL.md) | `fristen-termine` | 1 | 🧪 `beta` |
-| [`zitat-verifier-de`](core/verify/zitat-verifier-de/SKILL.md) | `querschnitt` | 1 | 🧪 `beta` |
-| [`rvg-gko-rechner`](plugins/zeit-abrechnung/skills/rvg-gko-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🧪 `beta` |
-| [`gwg-risiko-check`](plugins/compliance/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
-| [`konflikt-check-offline`](plugins/compliance/skills/konflikt-check-offline/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
-| [`akten-intake-strukturierer`](plugins/intake/skills/akten-intake-strukturierer/SKILL.md) | `intake` | 2 | 🧪 `beta` |
-| [`email-triage-eakte`](plugins/post-akte/skills/email-triage-eakte/SKILL.md) | `post-akte` | 3 | 🚧 `Work-in-progress` |
-| [`passive-zeiterfassung`](plugins/zeit-abrechnung/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
-| [`zeitnarrativ-rvg`](plugins/zeit-abrechnung/skills/zeitnarrativ-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
-| [`gwg-live-screening`](plugins/compliance/skills/gwg-live-screening/SKILL.md) | `compliance` | 4 | 🚧 `Work-in-progress` |
-| [`fristen-docketing-light`](plugins/fristen-termine/skills/fristen-docketing-light/SKILL.md) | `fristen-termine` | 4 | 🚧 `Work-in-progress` |
-| [`posteingang-ocr-routing`](plugins/post-akte/skills/posteingang-ocr-routing/SKILL.md) | `post-akte` | 4 | 🚧 `Work-in-progress` |
-| [`datev-buchhaltungsbruecke`](plugins/wissen-qm/skills/datev-buchhaltungsbruecke/SKILL.md) | `wissen-qm` | 4 | 🚧 `Work-in-progress` |
-| [`ar-mahnwesen-light`](plugins/zeit-abrechnung/skills/ar-mahnwesen-light/SKILL.md) | `zeit-abrechnung` | 4 | 🚧 `Work-in-progress` |
-| [`scheduling-assistent-de`](plugins/fristen-termine/skills/scheduling-assistent-de/SKILL.md) | `fristen-termine` | 5 | 🚧 `Work-in-progress` |
-| [`mandantenkommunikation-status`](plugins/kommunikation/skills/mandantenkommunikation-status/SKILL.md) | `kommunikation` | 5 | 🚧 `Work-in-progress` |
-| [`kanzlei-sop-qualitygate`](plugins/wissen-qm/skills/kanzlei-sop-qualitygate/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
-| [`wissensmanagement-precedents`](plugins/wissen-qm/skills/wissensmanagement-precedents/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
+| [`fristenrechner-de`](plugins/legal-ops/skills/fristenrechner-de/SKILL.md) | `fristen-termine` | 1 | 🧪 `beta` |
+| [`zitat-verifier-de`](plugins/legal-ops/skills/zitat-verifier-de/SKILL.md) | `querschnitt` | 1 | 🧪 `beta` |
+| [`rvg-gko-rechner`](plugins/legal-ops/skills/rvg-gko-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🧪 `beta` |
+| [`gwg-risiko-check`](plugins/legal-ops/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
+| [`konflikt-check-offline`](plugins/legal-ops/skills/konflikt-check-offline/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
+| [`akten-intake-strukturierer`](plugins/legal-ops/skills/akten-intake-strukturierer/SKILL.md) | `intake` | 2 | 🧪 `beta` |
+| [`email-triage-eakte`](plugins/legal-ops/skills/email-triage-eakte/SKILL.md) | `post-akte` | 3 | 🚧 `Work-in-progress` |
+| [`passive-zeiterfassung`](plugins/legal-ops/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
+| [`zeitnarrativ-rvg`](plugins/legal-ops/skills/zeitnarrativ-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
+| [`gwg-live-screening`](plugins/legal-ops/skills/gwg-live-screening/SKILL.md) | `compliance` | 4 | 🚧 `Work-in-progress` |
+| [`fristen-docketing-light`](plugins/legal-ops/skills/fristen-docketing-light/SKILL.md) | `fristen-termine` | 4 | 🚧 `Work-in-progress` |
+| [`posteingang-ocr-routing`](plugins/legal-ops/skills/posteingang-ocr-routing/SKILL.md) | `post-akte` | 4 | 🚧 `Work-in-progress` |
+| [`datev-buchhaltungsbruecke`](plugins/legal-ops/skills/datev-buchhaltungsbruecke/SKILL.md) | `wissen-qm` | 4 | 🚧 `Work-in-progress` |
+| [`ar-mahnwesen-light`](plugins/legal-ops/skills/ar-mahnwesen-light/SKILL.md) | `zeit-abrechnung` | 4 | 🚧 `Work-in-progress` |
+| [`scheduling-assistent-de`](plugins/legal-ops/skills/scheduling-assistent-de/SKILL.md) | `fristen-termine` | 5 | 🚧 `Work-in-progress` |
+| [`mandantenkommunikation-status`](plugins/legal-ops/skills/mandantenkommunikation-status/SKILL.md) | `kommunikation` | 5 | 🚧 `Work-in-progress` |
+| [`kanzlei-sop-qualitygate`](plugins/legal-ops/skills/kanzlei-sop-qualitygate/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
+| [`wissensmanagement-precedents`](plugins/legal-ops/skills/wissensmanagement-precedents/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
 <!-- skill-status:ende -->
 
 ## Nutzung
@@ -93,8 +97,8 @@ Details je Skill im jeweiligen `SKILL.md`.
 ## Entwicklung
 
 ```bash
-python3 core/verify/struktur_lint.py   # Struktur-Lint (P4/P5)
-pip install pytest && pytest -q        # Tests
+python3 plugins/legal-ops/core/verify/struktur_lint.py   # Struktur-Lint (P4/P5 + Containment)
+pip install pytest && pytest -q                           # Tests (inkl. Install-Smoke-Test)
 ```
 
 ## Lizenz

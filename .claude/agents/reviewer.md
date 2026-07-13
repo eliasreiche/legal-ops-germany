@@ -36,7 +36,7 @@ Unabhängigkeit ist der ganze Wert dieses Gates.
 
 1. [`CONVENTIONS.md`](../../CONVENTIONS.md) — die Hausregeln (P1–P5,
    Reifegrad-Leiter, Zitierdisziplin, Anti-Halluzination).
-2. [`core/verify/struktur_lint.py`](../../core/verify/struktur_lint.py) — die
+2. [`plugins/legal-ops/core/verify/struktur_lint.py`](../../plugins/legal-ops/core/verify/struktur_lint.py) — die
    maschinenprüfbaren Regeln.
 
 ## Prüf-Gates
@@ -45,7 +45,7 @@ Arbeite jedes Gate ab. Ein einziger Blocker → `REJECTED`.
 
 | # | Gate | Wie geprüft |
 |---|---|---|
-| G1 | **Struktur-Lint** | `.venv/bin/python core/verify/struktur_lint.py` → Exit 0 |
+| G1 | **Struktur-Lint** | `.venv/bin/python plugins/legal-ops/core/verify/struktur_lint.py` → Exit 0 |
 | G2 | **Tests grün** | `.venv/bin/python -m pytest -q` (voll) **und** gezielt die `tests/` des betroffenen Skills |
 | G3 | **Deterministik-Grenze (P3)** | Jeder Zahlen-/Datums-/Geldwert im Output stammt aus einem `core/calc`-Executor und ist als solcher markiert. Modellgerechnete/hartcodierte Werte in Zahlenfeldern = Blocker |
 | G4 | **Berufsrechts-Gate (P5)** | `rdg_einordnung`, `daten_hinweis`, `haftung` vorhanden **und inhaltlich** (kein Platzhalter). Bei Fristen/Gebühren: Zweitkontroll-Klausel zwingend |

@@ -1,0 +1,252 @@
+#!/usr/bin/env python3
+"""Struktur-Lint (P4/P5) — erzwingt die Hausregeln des Repos.
+
+Prüft:
+  * jedes SKILL.md trägt die Pflichtfelder aus P5 (rdg_einordnung,
+    daten_hinweis, haftung) sowie name/status/welle/plugin,
+  * status ist `Work-in-progress`, `beta` oder `getestet` (Reifegrad-Leiter):
+      - `Work-in-progress` = noch nicht entwickelt (Stub) oder Code ohne Test-Run
+      - `beta`     = gegen Testdaten durch Agenten getestet (Orakel/Tests grün in CI)
+                     → setzt echte Testdateien in tests/ voraus (.gitkeep zählt nicht)
+      - `getestet` = live (händisch) getestet, keine Production-Garantie
+                     → setzt außerdem `haendisch_getestet: <JJJJ-MM-TT>` im Frontmatter voraus,
+  * name im Frontmatter == Verzeichnisname,
+  * jedes Plugin hat .claude-plugin/plugin.json und README.md,
+  * Containment (Auslieferungsgrenze): jeder von einer SKILL.md referenzierte
+    Executor-Pfad und jeder relative Doku-Link löst INNERHALB des Plugin-
+    Verzeichnisses auf — ein Pfad, der die Plugin-Grenze verlässt, ist ein
+    Fehler (externe Verweise gehören als absolute URL, nicht als relativer Link),
+  * die Status-Tabelle im Repo-README ist synchron (--check, Default in CI);
+    --write-readme regeneriert sie.
+
+Nur Standardbibliothek — kein PyYAML, damit der Lint ohne Installation läuft.
+Exit-Code 0 = sauber, 1 = Verstöße (CI failt).
+"""
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+# struktur_lint.py liegt in plugins/legal-ops/core/verify/ — der Repo-Anker ist
+# vier Ebenen höher (verify -> core -> legal-ops -> plugins -> REPO).
+REPO = Path(__file__).resolve().parents[4]
+LINT_PFAD = "plugins/legal-ops/core/verify/struktur_lint.py"
+PFLICHTFELDER = ["name", "status", "welle", "plugin",
+                 "rdg_einordnung", "daten_hinweis", "haftung"]
+STATUS_WERTE = {"Work-in-progress", "beta", "getestet"}
+TABELLE_START = "<!-- skill-status:start -->"
+TABELLE_ENDE = "<!-- skill-status:ende -->"
+
+# Executor-Invocations in SKILL.md müssen plugin-relativ über diese Variable
+# adressieren (Claude-Code-Plugin-Konvention: absolute Pfad zum installierten
+# Plugin-Verzeichnis), damit sie ohne CWD-Annahme im Auslieferungs-Cache laufen.
+PLUGIN_ROOT_VAR = "${CLAUDE_PLUGIN_ROOT}"
+# Executor-Token einer Aufruf-Zeile (`python3 <token>`), inkl. der Variable.
+_EXECUTOR_TOKEN_RE = re.compile(r"(\S*executor\.py)")
+# Relative Markdown-Doku-Links [text](ziel).
+_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
+
+
+def frontmatter(text: str) -> dict[str, str] | None:
+    """Liest den YAML-Frontmatter-Block als flache key:value-Paare."""
+    m = re.match(r"\A---\n(.*?)\n---\n", text, re.DOTALL)
+    if not m:
+        return None
+    felder: dict[str, str] = {}
+    for zeile in m.group(1).splitlines():
+        km = re.match(r"^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$", zeile)
+        if km:
+            wert = km.group(2).strip()
+            if len(wert) >= 2 and wert[0] == wert[-1] and wert[0] in "'\"":
+                wert = wert[1:-1]
+            felder[km.group(1)] = wert
+    return felder
+
+
+def skill_dirs() -> list[Path]:
+    # Ein Plugin `legal-ops`; alle Skills (inkl. zitat-verifier-de) liegen unter
+    # plugins/legal-ops/skills/*. core/ enthält nur noch geteilte Rechner/Verifier
+    # ohne eigenes SKILL.md.
+    return [p.parent for p in sorted(REPO.glob("plugins/*/skills/*/SKILL.md"))]
+
+
+def plugin_root(skill: Path) -> Path:
+    """Plugin-Wurzel eines Skills: plugins/<plugin>/skills/<name> -> parents[1]."""
+    return skill.parents[1]
+
+
+def _innerhalb(pfad: Path, wurzel: Path) -> bool:
+    try:
+        pfad.resolve().relative_to(wurzel.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def _ist_externer_link(ziel: str) -> bool:
+    return ziel.startswith(("http://", "https://", "mailto:", "//")) or ziel.startswith("#")
+
+
+def pruefe_containment(skill: Path, fehler: list[str]) -> None:
+    """Containment-Regel (Auslieferungsgrenze): jeder Executor-Pfad und jeder
+    relative Doku-Link einer SKILL.md muss innerhalb des Plugin-Verzeichnisses
+    auflösen. Das ist genau die Regel, die den fehlenden `core/`-Bug gefangen
+    hätte: ein Aufruf, der aus dem `source`-Dir hinauszeigt, ist im Install-Cache
+    nicht lauffähig."""
+    skill_md = skill / "SKILL.md"
+    try:
+        text = skill_md.read_text(encoding="utf-8")
+    except OSError:
+        return
+    wurzel = plugin_root(skill)
+    try:
+        ref = skill.relative_to(REPO) / "SKILL.md"
+    except ValueError:
+        ref = skill / "SKILL.md"
+
+    # (1) Executor-Invocations: nur Zeilen mit `python3 ... executor.py`.
+    for zeile in text.splitlines():
+        if "executor.py" not in zeile or "python" not in zeile:
+            continue
+        m = _EXECUTOR_TOKEN_RE.search(zeile)
+        if not m:
+            continue
+        token = m.group(1).strip('"').strip("'")
+        if token.startswith(PLUGIN_ROOT_VAR):
+            rel = token[len(PLUGIN_ROOT_VAR):].lstrip("/")
+            ziel = wurzel / rel
+            if not _innerhalb(ziel, wurzel):
+                fehler.append(f"{ref}: Executor-Pfad verlässt die Plugin-Grenze: {token}")
+            elif not ziel.is_file():
+                fehler.append(f"{ref}: referenzierter Executor existiert nicht: "
+                              f"{token} (→ {ziel.relative_to(REPO) if _innerhalb(ziel, REPO) else ziel})")
+        else:
+            fehler.append(f"{ref}: Executor-Invocation ist nicht plugin-relativ — "
+                          f"`{PLUGIN_ROOT_VAR}/...` erwartet (setzt sonst ein CWD "
+                          f"voraus, im Install-Cache nicht lauffähig): {token}")
+
+    # (2) Relative Doku-Links: müssen im Plugin bleiben.
+    for m in _LINK_RE.finditer(text):
+        ziel = m.group(1).strip()
+        if _ist_externer_link(ziel):
+            continue
+        pfad_teil = ziel.split("#", 1)[0].strip()
+        if not pfad_teil:  # reiner Anker
+            continue
+        if pfad_teil.startswith(PLUGIN_ROOT_VAR):
+            aufgeloest = wurzel / pfad_teil[len(PLUGIN_ROOT_VAR):].lstrip("/")
+        else:
+            aufgeloest = skill_md.parent / pfad_teil
+        if not _innerhalb(aufgeloest, wurzel):
+            fehler.append(f"{ref}: Doku-Link verlässt die Plugin-Grenze: {ziel} "
+                          f"— externe Verweise als absolute URL angeben, nicht als "
+                          f"relativen Link")
+
+
+def hat_echte_tests(skill: Path) -> bool:
+    tests = skill / "tests"
+    return tests.is_dir() and any(
+        f.is_file() and f.name != ".gitkeep" for f in tests.rglob("*"))
+
+
+def pruefe_skill(skill: Path, fehler: list[str]) -> dict[str, str] | None:
+    fm = frontmatter((skill / "SKILL.md").read_text(encoding="utf-8"))
+    try:
+        ref = skill.relative_to(REPO) / "SKILL.md"
+    except ValueError:  # Skill außerhalb des Repos (z. B. in Tests)
+        ref = skill / "SKILL.md"
+    if fm is None:
+        fehler.append(f"{ref}: kein Frontmatter-Block")
+        return None
+    for feld in PFLICHTFELDER:
+        if not fm.get(feld, "").strip():
+            fehler.append(f"{ref}: Pflichtfeld `{feld}` fehlt oder ist leer (P5)")
+    status = fm.get("status")
+    if status not in STATUS_WERTE:
+        fehler.append(f"{ref}: status muss `Work-in-progress`, `beta` oder `getestet` "
+                      f"sein, ist: `{status}` (Reifegrad-Leiter)")
+    if fm.get("name") != skill.name:
+        fehler.append(f"{ref}: name `{fm.get('name')}` != Verzeichnis `{skill.name}`")
+    if status in ("beta", "getestet") and not hat_echte_tests(skill):
+        fehler.append(f"{ref}: status `{status}` ohne Testdateien in tests/ (P4)")
+    if status == "getestet" and not re.match(
+            r"^\d{4}-\d{2}-\d{2}$", fm.get("haendisch_getestet", "")):
+        fehler.append(f"{ref}: status `getestet` verlangt "
+                      f"`haendisch_getestet: <JJJJ-MM-TT>` im Frontmatter "
+                      f"(händische Abnahme, D8-Nachtrag)")
+    return fm
+
+
+def pruefe_plugins(fehler: list[str]) -> None:
+    for plugin in sorted((REPO / "plugins").iterdir()):
+        if not plugin.is_dir():
+            continue
+        if not (plugin / ".claude-plugin" / "plugin.json").is_file():
+            fehler.append(f"plugins/{plugin.name}: .claude-plugin/plugin.json fehlt")
+        if not (plugin / "README.md").is_file():
+            fehler.append(f"plugins/{plugin.name}: README.md fehlt")
+
+
+def status_tabelle(skills: list[tuple[Path, dict[str, str]]]) -> str:
+    zeilen = ["| Skill | Plugin | Welle | Status |", "|---|---|---|---|"]
+    def sortkey(eintrag):
+        pfad, fm = eintrag
+        return (int(fm.get("welle", "9")), fm.get("plugin", ""), fm.get("name", ""))
+    for pfad, fm in sorted(skills, key=sortkey):
+        rel = pfad.relative_to(REPO) / "SKILL.md"
+        status = fm.get("status", "?")
+        badge = {"getestet": "✅ `getestet`",
+                 "beta": "🧪 `beta`"}.get(status, "🚧 `Work-in-progress`")
+        zeilen.append(f"| [`{fm.get('name')}`]({rel}) | `{fm.get('plugin')}` "
+                      f"| {fm.get('welle')} | {badge} |")
+    return "\n".join(zeilen)
+
+
+def readme_sync(tabelle: str, schreiben: bool, fehler: list[str]) -> None:
+    readme = REPO / "README.md"
+    text = readme.read_text(encoding="utf-8")
+    if TABELLE_START not in text or TABELLE_ENDE not in text:
+        fehler.append(f"README.md: Marker {TABELLE_START} / {TABELLE_ENDE} fehlen")
+        return
+    neu = re.sub(
+        re.escape(TABELLE_START) + r".*?" + re.escape(TABELLE_ENDE),
+        TABELLE_START + "\n" + tabelle + "\n" + TABELLE_ENDE,
+        text, flags=re.DOTALL)
+    if schreiben:
+        if neu != text:
+            readme.write_text(neu, encoding="utf-8")
+            print("README.md: Status-Tabelle aktualisiert")
+    elif neu != text:
+        fehler.append("README.md: Status-Tabelle nicht synchron — "
+                      f"`python3 {LINT_PFAD} --write-readme` ausführen")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--write-readme", action="store_true",
+                        help="Status-Tabelle im README regenerieren statt nur prüfen")
+    args = parser.parse_args()
+
+    fehler: list[str] = []
+    skills: list[tuple[Path, dict[str, str]]] = []
+    for skill in skill_dirs():
+        fm = pruefe_skill(skill, fehler)
+        pruefe_containment(skill, fehler)
+        if fm:
+            skills.append((skill, fm))
+    pruefe_plugins(fehler)
+    readme_sync(status_tabelle(skills), args.write_readme, fehler)
+
+    if fehler:
+        print(f"Struktur-Lint: {len(fehler)} Verstöße\n", file=sys.stderr)
+        for f in fehler:
+            print(f"  ✗ {f}", file=sys.stderr)
+        return 1
+    print(f"Struktur-Lint: sauber ({len(skills)} Skills geprüft)")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

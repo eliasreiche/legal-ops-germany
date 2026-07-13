@@ -1,8 +1,0 @@
-{
-  "name": "post-akte",
-  "description": "Posteingang, E-Mail-Triage, e-Akte-Ablage — non-billable Workflows deutscher Kanzleien. Keine Rechtsberatung.",
-  "version": "0.1.0",
-  "author": {
-    "name": "Elias Reiche"
-  }
-}
