@@ -21,6 +21,7 @@ Der [Struktur-Lint](plugins/legal-ops/core/verify/struktur_lint.py) erzwingt die
 ```yaml
 ---
 name: <verzeichnisname>            # muss dem Ordnernamen entsprechen
+description: "Was der Skill tut + wann er triggert (Skill-Discovery)."
 status: Work-in-progress | beta | getestet   # Reifegrad-Leiter, siehe unten
 welle: 1-5                         # Build-Reihenfolge
 plugin: <plugin> | querschnitt

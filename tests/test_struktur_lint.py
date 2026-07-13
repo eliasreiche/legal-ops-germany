@@ -32,7 +32,8 @@ def _skill(tmp_path, name, status, extra="", mit_tests=False):
     if mit_tests:
         (skill / "tests" / "test_x.py").write_text("def test_x(): pass\n")
     (skill / "SKILL.md").write_text(
-        f"---\nname: {name}\nstatus: {status}\nwelle: 1\nplugin: intake\n"
+        f'---\nname: {name}\ndescription: "x"\nstatus: {status}\nwelle: 1\n'
+        f'plugin: intake\n'
         f'rdg_einordnung: "x"\ndaten_hinweis: "x"\nhaftung: "x"\n{extra}---\n# x\n',
         encoding="utf-8")
     return skill
@@ -46,6 +47,7 @@ def test_pruefe_skill_meldet_fehlende_pflichtfelder(tmp_path):
     fehler: list[str] = []
     struktur_lint.pruefe_skill(skill, fehler)
     meldungen = "\n".join(fehler)
+    assert "description" in meldungen   # Pflicht seit 197a96f (Skill-Discovery)
     assert "rdg_einordnung" in meldungen
     assert "daten_hinweis" in meldungen
     assert "haftung" in meldungen
