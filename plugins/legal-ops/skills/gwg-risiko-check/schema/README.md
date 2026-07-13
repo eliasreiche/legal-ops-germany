@@ -16,7 +16,7 @@ Strukturierter Fragebogen zu einem Mandat. **Fehlende Felder werden als
 |---|---|---|
 | `kataloggeschaeft` | `immobilien_gewerbe_kauf`, `vermoegensverwaltung`, `konten_depot`, `gesellschaft_mittelbeschaffung`, `treuhand_gesellschaft`, `finanz_immobilien_transaktion`, `keins`, `unklar` | Anwendbarkeits-Gate § 2 Abs. 1 Nr. 10 GwG. `keins` → `nicht_verpflichtet`; `unklar` → `unvollstaendig`. |
 | `mandant_typ` | `natuerliche_person`, `juristische_person`, `trust_aehnlich`, `unklar` | Dokumentation; fließt in die Lücken-Ausweisung ein. |
-| `sitz_land` | ISO-3166-alpha-2 (z. B. `DE`) oder `unklar` | Geografie: EU-Mitgliedstaat (Anlage 1 Nr. 3 Buchst. a) bzw. Hochrisiko-Drittstaat (Anlage 2 Nr. 3 Buchst. a). **Kritische Angabe.** |
+| `sitz_land` | ISO-3166-alpha-2 (z. B. `DE`) oder `unklar` | Geografie: EU-Mitgliedstaat (Anlage 1 Nr. 3 Buchst. a) bzw. Treffer auf einer der drei Hochrisiko-Listen (EU/FATF-schwarz/FATF-grau, Anlage 2 Nr. 3 Buchst. a bei EU-Treffer). **Kritische Angabe.** |
 | `pep` | `ja`, `nein`, `unklar` | Politisch exponierte Person (§ 15 Abs. 3 Nr. 1 GwG). **Kritische Angabe.** |
 | `wirtschaftlich_berechtigter_geklaert` | `ja`, `nein`, `unklar` | Klärung des wB (§ 10 Abs. 1 Nr. 2 GwG). **Kritisch** — nur `ja` erlaubt eine Klassifikation. |
 | `bargeldintensiv` | `ja`, `nein`, `unklar` | Anlage 2 Nr. 1 Buchst. e GwG. |
@@ -75,9 +75,24 @@ Vollständiges Beispiel: [`beispiel-report.json`](beispiel-report.json)
   "pflichten_hinweise": [ { "norm": "§ 10 GwG", "hinweis": "…", "marker": "⚠️", "…": "…" } ],
   "luecken": [ { "feld": "pep", "frage": "…", "kritisch": true } ],
   "vorbehalte": [ "…" ],
-  "stand": { "anlage1": "…", "anlage2": "…", "hochrisiko_drittstaaten": "…", "hinweis": "…" }
+  "stand": { "anlage1": "…", "anlage2": "…",
+             "hochrisiko_drittstaaten": { "eu-hochrisiko": "…", "fatf-blacklist": "…", "fatf-greylist": "…" },
+             "hochrisiko_abgerufen_am": "2026-07-13", "hinweis": "…" },
+  "laender_listen_treffer": {
+    "iso2": "IR", "land": "Iran", "listen": ["eu-hochrisiko", "fatf-blacklist"],
+    "je_liste": [ { "liste": "eu-hochrisiko", "bezeichnung": "…", "rechtsfolge": "…", "stand_quelle": "…", "url": "…" } ]
+  }
 }
 ```
+
+- **`laender_listen_treffer`** — `null`, solange `sitz_land` auf keiner der
+  drei Listen (EU-Hochrisiko, FATF-Schwarzliste, FATF-Grauliste) in
+  [`core/calc/gwg/hochrisiko_drittstaaten.json`](../../../core/calc/gwg/hochrisiko_drittstaaten.json)
+  steht; sonst ein Objekt mit `listen` (welche Liste(n) getroffen haben) und
+  `je_liste` (Rechtsfolge/Quelle je Liste). Nur ein EU-Hochrisiko-Treffer ist
+  ein gesetzlicher Trigger nach § 15 Abs. 3 Nr. 2 GwG — ein reiner
+  FATF-Treffer ohne EU-Listung ist eine konservative Haus-Einstufung (siehe
+  [SKILL.md](../SKILL.md), Abschnitt „Gewichtungs-Entscheidung").
 
 - **`marker`** (3-Zustands-Marker, CONVENTIONS.md): der Executor prüft nicht
   gegen den Gesetzestext, daher stets ⚠️ „nicht prüfbar". Die §-Fundstellen
@@ -99,9 +114,15 @@ zu prüfen.
 - **Kein Rechtsrat, keine Bewertung.** Das Ergebnis ist ein Vorschlag zur
   Aktendokumentation; die Risikobewertung trifft der Verpflichtete
   (§ 10 Abs. 2 GwG).
-- **Anlagen-Inhalte und Länderliste sind Platzhalter** und vor produktiver
-  Nutzung gegen gesetze-im-internet.de bzw. die Delegierte Verordnung
-  (EU) 2016/1675 zu prüfen (Reifegrad `getestet`).
+- **Anlagen-1/2-Fundstellen sind Platzhalter** und vor produktiver Nutzung
+  gegen gesetze-im-internet.de zu prüfen (Reifegrad `getestet`). Die
+  Hochrisiko-Länderliste ist am 2026-07-13 browser-verifiziert (Quellen in
+  `hochrisiko_drittstaaten.json` → `quellen`), ändert sich aber laufend
+  (FATF-Plenum ca. Feb/Jun/Okt) — Quartals-Review Pflicht; ein CI-Test warnt
+  ab 4 Monaten Alter (`abgerufen_am`) und schlägt hart fehl ab 12 Monaten.
+- **FATF-Grauliste-Treffer ohne EU-Listung begründen keine Gesetzespflicht**
+  — die Klassifikation `hoch` ist dort konservative Haus-Einstufung, kein
+  Verwaltungsakt-sicherer Nachweis (siehe `laender_listen_treffer` oben).
 - **PEP-Ermittlung, Sanktionslisten-Abgleich und Identifizierung** sind nicht
   Gegenstand dieses Offline-Skills — hierfür ist der Sanktionslisten-/
   Live-Screening-Pfad bzw. eine eigene Prüfung nötig.

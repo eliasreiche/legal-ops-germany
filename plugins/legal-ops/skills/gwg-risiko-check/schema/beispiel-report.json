@@ -78,12 +78,18 @@
   "vorbehalte": [
     "Der Klassifikationsvorschlag ist ein regelbasierter Vorschlag, kein Verwaltungsakt-sicherer Nachweis. Die Risikobewertung und die Maßnahmenentscheidung trifft der Verpflichtete (risikobasierter Ansatz, § 10 Abs. 2 GwG).",
     "Alle Norm-Fundstellen sind mit ⚠️ als nicht gegen den Gesetzestext geprüft gekennzeichnet; sie sind gegen die aktuelle Gesetzesfassung zu verifizieren.",
-    "Länder-Einordnung: Liste ändert sich laufend — vor Nutzung Stand prüfen. Ein Nicht-Treffer bedeutet NICHT, dass kein geografisches Risiko besteht; ein Treffer ist nur ein Anhaltspunkt und gegen die aktuelle EU-Liste zu verifizieren. (Stand der hinterlegten Liste: 2024-06 (Platzhalter, ungeprüft))"
+    "Länder-Einordnung: Alle drei Listen ändern sich laufend (EU-Änderungsverordnungen unregelmäßig; FATF-Plenarsitzungen ca. Februar/Juni/Oktober) — vor produktiver Nutzung ist der Stand zwingend gegen die aktuellen Quellen abzugleichen. Ein Nicht-Treffer bedeutet NICHT, dass kein geografisches Risiko besteht; ein Treffer ist nur ein Anhaltspunkt und gegen die aktuellen Listen zu verifizieren. (Stand der hinterlegten Listen — eu-hochrisiko: 2026-01-29 (konsolidierte Fassung, zuletzt geändert durch Delegierte VO (EU) 2026/46 und 2026/83), fatf-blacklist: 2026-06-19 (FATF-Erklärung 'High-Risk Jurisdictions subject to a Call for Action'), fatf-greylist: 2026-06-19 (FATF-Bericht 'Jurisdictions under Increased Monitoring'; Neuaufnahmen ggü. Feb 2026: Bosnien und Herzegowina, Irak — gestrichen: Algerien, Namibia); abgerufen am 2026-07-13)"
   ],
   "stand": {
     "anlage1": "2024-06 (Platzhalter, ungeprüft)",
     "anlage2": "2024-06 (Platzhalter, ungeprüft)",
-    "hochrisiko_drittstaaten": "2024-06 (Platzhalter, ungeprüft)",
-    "hinweis": "Anlagen-Inhalte, Fundstellen und die Länderliste sind vor produktiver Nutzung gegen gesetze-im-internet.de bzw. die aktuelle Fassung der Delegierten Verordnung (EU) 2016/1675 zu prüfen (händische Abnahme, Reifegrad 'getestet')."
-  }
+    "hochrisiko_drittstaaten": {
+      "eu-hochrisiko": "2026-01-29 (konsolidierte Fassung, zuletzt geändert durch Delegierte VO (EU) 2026/46 und 2026/83)",
+      "fatf-blacklist": "2026-06-19 (FATF-Erklärung 'High-Risk Jurisdictions subject to a Call for Action')",
+      "fatf-greylist": "2026-06-19 (FATF-Bericht 'Jurisdictions under Increased Monitoring'; Neuaufnahmen ggü. Feb 2026: Bosnien und Herzegowina, Irak — gestrichen: Algerien, Namibia)"
+    },
+    "hochrisiko_abgerufen_am": "2026-07-13",
+    "hinweis": "Anlagen-Inhalte, Fundstellen und die drei Länderlisten (EU-Hochrisiko, FATF-Schwarzliste, FATF-Grauliste) sind vor produktiver Nutzung gegen gesetze-im-internet.de bzw. die in `quellen` je Liste genannten aktuellen Quellen zu prüfen (händische Abnahme, Reifegrad 'getestet')."
+  },
+  "laender_listen_treffer": null
 }

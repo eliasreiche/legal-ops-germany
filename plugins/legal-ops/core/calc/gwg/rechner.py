@@ -37,6 +37,7 @@ Nur Standardbibliothek. Kein Netzwerkzugriff. JSON rein -> Report-Dict raus.
 from __future__ import annotations
 
 import json
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -45,6 +46,65 @@ _GWG_DIR = Path(__file__).resolve().parent
 ANLAGE1_PFAD = _GWG_DIR / "anlage1.json"
 ANLAGE2_PFAD = _GWG_DIR / "anlage2.json"
 HOCHRISIKO_PFAD = _GWG_DIR / "hochrisiko_drittstaaten.json"
+
+# Deutsche Kurzbezeichnungen der drei Länderlisten (für Report-Fließtext).
+LISTEN_LABELS: dict[str, str] = {
+    "eu-hochrisiko": "EU-Hochrisiko-Drittstaaten (Delegierte VO (EU) 2016/1675)",
+    "fatf-blacklist": "FATF-Schwarzliste (High-Risk Jurisdictions subject to a "
+                      "Call for Action)",
+    "fatf-greylist": "FATF-Grauliste (Jurisdictions under Increased "
+                     "Monitoring)",
+}
+
+# Länder mit zusätzlicher BaFin-Anzeigepflicht (Allgemeinverfügung vom
+# 13.05.2020) — nur Nordkorea und Iran, nicht jeder Blacklist-Treffer.
+_BAFIN_ALLGEMEINVERFUEGUNG_LAENDER = frozenset({"KP", "IR"})
+
+# CI-Frische-Warnung (Aufgabe 3): FATF tagt ca. Februar/Juni/Oktober (drei
+# Plena/Jahr) — eine Warnung ab 4 Monaten deckt ein verpasstes Plenum ab, ohne
+# dass CI bei jedem Zwischenstand rot wird. Der harte Fehler erst ab 12
+# Monaten erzwingt spätestens einen Jahres-Refresh, ohne bei planmäßiger
+# Kadenz spontan zu failen.
+FRISCHE_WARN_MONATE = 4
+FRISCHE_FEHLER_MONATE = 12
+_TAGE_PRO_MONAT = 30.44  # Durchschnitt (365.25 / 12), für grobe Monatsschätzung
+
+
+def _heute() -> date:
+    """Eigene Funktion (statt date.today() inline), damit Tests sie per
+    monkeypatch überschreiben können, ohne die echte Systemzeit zu berühren."""
+    return date.today()
+
+
+def frische_status(hochrisiko: dict[str, Any], *,
+                    heute: date | None = None) -> dict[str, Any]:
+    """Bewertet das Alter von `abgerufen_am` der Hochrisiko-Länderliste.
+
+    Liefert nur Fakten (warnung/fehler-Flags) zurück — kein Assert. Ruft
+    kein Netzwerk auf; reiner Datumsvergleich. Der Aufrufer (CI-Test)
+    entscheidet, ob `fehler` einen Test scheitern lässt."""
+    heute = heute if heute is not None else _heute()
+    roh = hochrisiko.get("abgerufen_am")
+    try:
+        abgerufen = datetime.strptime(str(roh), "%Y-%m-%d").date()
+    except (TypeError, ValueError):
+        return {"ok": False, "warnung": True, "fehler": True,
+                "alter_tage": None,
+                "hinweis": f"'abgerufen_am' fehlt oder ist ungültig: {roh!r}"}
+    alter_tage = (heute - abgerufen).days
+    alter_monate = alter_tage / _TAGE_PRO_MONAT
+    warnung = alter_monate >= FRISCHE_WARN_MONATE
+    fehler = alter_monate >= FRISCHE_FEHLER_MONATE
+    return {
+        "ok": not warnung,
+        "warnung": warnung,
+        "fehler": fehler,
+        "alter_tage": alter_tage,
+        "hinweis": (f"Hochrisiko-Länderliste zuletzt am {roh} abgerufen "
+                    f"({alter_tage} Tage / ~{alter_monate:.1f} Monate) — "
+                    f"Quartals-Review nach FATF-Plenum (Feb/Jun/Okt) "
+                    f"empfohlen; Pflicht-Refresh ab 12 Monaten."),
+    }
 
 # 3-Zustands-Marker (CONVENTIONS.md): der Executor kann eine Fundstelle nicht
 # gegen den Gesetzestext prüfen -> immer ⚠️ „nicht prüfbar".
@@ -258,10 +318,12 @@ def _stand_block(a1: dict, a2: dict, hr: dict) -> dict[str, Any]:
         "anlage1": a1.get("stand"),
         "anlage2": a2.get("stand"),
         "hochrisiko_drittstaaten": hr.get("stand"),
-        "hinweis": ("Anlagen-Inhalte, Fundstellen und die Länderliste sind vor "
-                    "produktiver Nutzung gegen gesetze-im-internet.de bzw. die "
-                    "aktuelle Fassung der Delegierten Verordnung (EU) 2016/1675 "
-                    "zu prüfen (händische Abnahme, Reifegrad 'getestet')."),
+        "hochrisiko_abgerufen_am": hr.get("abgerufen_am"),
+        "hinweis": ("Anlagen-Inhalte, Fundstellen und die drei Länderlisten "
+                    "(EU-Hochrisiko, FATF-Schwarzliste, FATF-Grauliste) sind "
+                    "vor produktiver Nutzung gegen gesetze-im-internet.de bzw. "
+                    "die in `quellen` je Liste genannten aktuellen Quellen zu "
+                    "prüfen (händische Abnahme, Reifegrad 'getestet')."),
     }
 
 
@@ -334,7 +396,9 @@ def klassifiziere(mandat: dict[str, Any], *,
                faktoren: list[dict[str, Any]],
                pflichten: list[dict[str, Any]],
                vorbehalte: list[str],
-               anwend_begr: str, anwend_vorbehalt: str | None) -> dict[str, Any]:
+               anwend_begr: str, anwend_vorbehalt: str | None,
+               laender_listen_treffer: dict[str, Any] | None = None
+               ) -> dict[str, Any]:
         anwendbarkeit = {
             "status": status_anwendbarkeit,
             "kataloggeschaeft": norm["kataloggeschaeft"],
@@ -361,6 +425,7 @@ def klassifiziere(mandat: dict[str, Any], *,
             "luecken": luecken,
             "vorbehalte": vorbehalte,
             "stand": stand,
+            "laender_listen_treffer": laender_listen_treffer,
         }
 
     # --- Regel 0: Anwendbarkeits-Gate (§ 2 Abs. 1 Nr. 10 GwG) ---
@@ -428,7 +493,11 @@ def klassifiziere(mandat: dict[str, Any], *,
     # Anlage 2 (risikoerhöhend)
     anlage2_treffer = 0
     hochrisiko_land_hit = False
-    hochrisiko_laender = {e["iso"]: e["name"] for e in hochrisiko["laender"]}
+    eu_hochrisiko_hit = False
+    hausrichtlinie_hit = False
+    laender_listen_treffer: dict[str, Any] | None = None
+    hochrisiko_laender = {e["iso2"]: e for e in hochrisiko["laender"]}
+    hochrisiko_quellen = hochrisiko.get("quellen", {})
     for fk in anlage2["faktoren"]:
         if fk["bewertung"] == "ja_nein":
             if norm.get(fk["fragebogen_feld"]) == "ja":
@@ -436,21 +505,77 @@ def klassifiziere(mandat: dict[str, Any], *,
                 anlage2_treffer += 1
         elif fk["bewertung"] == "land_hochrisiko":
             land_konsultiert = True
-            if norm["sitz_land"] in hochrisiko_laender:
+            eintrag = hochrisiko_laender.get(norm["sitz_land"])
+            if eintrag is not None:
                 hochrisiko_land_hit = True
-                faktoren.append(_faktor_eintrag(
-                    fk, anlage=2,
-                    detail=f"Sitzland {norm['sitz_land']} "
-                           f"({hochrisiko_laender[norm['sitz_land']]}) ist in "
-                           f"der hinterlegten Hochrisiko-Liste enthalten. "
-                           f"{hochrisiko['vorbehalt']}"))
+                listen = eintrag["listen"]
+                eu_hochrisiko_hit = "eu-hochrisiko" in listen
+                hausrichtlinie_hit = not eu_hochrisiko_hit
+                listen_text = ", ".join(
+                    LISTEN_LABELS.get(l, l) for l in listen)
+                je_liste = [
+                    {
+                        "liste": l,
+                        "bezeichnung": LISTEN_LABELS.get(l, l),
+                        "rechtsfolge": hochrisiko_quellen.get(l, {}).get(
+                            "rechtsfolge"),
+                        "stand_quelle": hochrisiko_quellen.get(l, {}).get(
+                            "stand_quelle"),
+                        "url": hochrisiko_quellen.get(l, {}).get("url"),
+                    }
+                    for l in listen
+                ]
+                laender_listen_treffer = {
+                    "iso2": norm["sitz_land"],
+                    "land": eintrag["land"],
+                    "listen": listen,
+                    "je_liste": je_liste,
+                }
+                if eu_hochrisiko_hit:
+                    # Statutorischer Faktor — Anlage 2 Nr. 3 Buchst. a GwG
+                    # gilt nur für den EU-Listen-Treffer.
+                    faktoren.append(_faktor_eintrag(
+                        fk, anlage=2,
+                        detail=f"Sitzland {norm['sitz_land']} "
+                               f"({eintrag['land']}) ist gelistet auf: "
+                               f"{listen_text}. {hochrisiko['vorbehalt']}"))
+                else:
+                    # Kein EU-Listen-Treffer — § 15 Abs. 3 Nr. 2 GwG verweist
+                    # nur auf die EU-Liste, daher KEIN Zitat der Anlage-2-Norm
+                    # (Anti-Halluzination). Konservative Haus-Einstufung.
+                    faktoren.append({
+                        "id": "haus_fatf_listen_treffer",
+                        "anlage": None,
+                        "fundstelle": "Hausrichtlinie (keine GwG-Norm)",
+                        "paraphrase": (
+                            "Sitzland ist nicht auf der EU-Hochrisiko-Liste "
+                            "gelistet, aber auf mindestens einer FATF-Liste "
+                            "(Schwarz- und/oder Grauliste) — konservative "
+                            "Haus-Einstufung dieses Skills als 'hoch', keine "
+                            "unmittelbare Gesetzespflicht aus § 15 Abs. 3 "
+                            "Nr. 2 GwG (BaFin-Rundschreiben 07/2026)."),
+                        "kategorie": "geografisch",
+                        "quelle": "executor",
+                        **_marker_felder(),
+                        "detail": f"Sitzland {norm['sitz_land']} "
+                                  f"({eintrag['land']}) ist gelistet auf: "
+                                  f"{listen_text}. {hochrisiko['vorbehalt']}",
+                    })
                 anlage2_treffer += 1
 
     if land_konsultiert:
+        stand_texte = ", ".join(
+            f"{k}: {v}" for k, v in hochrisiko.get("stand", {}).items())
         vorbehalte.append(
             "Länder-Einordnung: " + hochrisiko["vorbehalt"] +
-            " (Stand der hinterlegten Liste: "
-            + str(hochrisiko.get("stand")) + ")")
+            " (Stand der hinterlegten Listen — " + stand_texte +
+            "; abgerufen am " + str(hochrisiko.get("abgerufen_am")) + ")")
+        if hausrichtlinie_hit and norm["sitz_land"] in EU_MITGLIEDSTAATEN:
+            vorbehalte.append(
+                f"Sitzland {norm['sitz_land']} ist EU-Mitgliedstaat und kann "
+                "begrifflich schon kein 'Drittstaat mit hohem Risiko' i. S. d. "
+                "§ 15 Abs. 3 Nr. 2 GwG sein — der FATF-Grauliste-Treffer "
+                "bleibt eine reine Haus-Einstufung ohne Gesetzesgrundlage.")
 
     # PEP als eigener § 15-Tatbestand (nicht Teil der Anlage-2-Katalogfaktoren)
     pep_hit = norm["pep"] == "ja"
@@ -470,36 +595,76 @@ def klassifiziere(mandat: dict[str, Any], *,
     anwend_begr = ("Kataloggeschäft nach § 2 Abs. 1 Nr. 10 GwG angegeben — "
                    "Rechtsanwalt ist insoweit Verpflichteter.")
 
-    # --- Regel 2: § 15 GwG (PEP oder Hochrisiko-Drittstaat) -> hoch ---
+    # --- Regel 2: § 15 GwG (PEP/EU-Hochrisiko) ODER Haus-Einstufung
+    # (reiner FATF-Treffer ohne EU-Listung) -> hoch. Maintainer-Entscheidung:
+    # JEDER Listen-Treffer (EU, FATF-schwarz, FATF-grau) löst 'hoch' aus
+    # (konservative Haus-Praxis); der Report weist aber je Treffer aus, ob es
+    # sich um eine Gesetzespflicht (§ 15 GwG) oder eine Haus-Einstufung ohne
+    # unmittelbare Rechtsfolge handelt.
     if pep_hit or hochrisiko_land_hit:
-        pflichten = [
-            _pflicht("§ 15 GwG",
-                     "Verstärkte Sorgfaltspflichten sind anzuwenden "
-                     + ("(PEP, § 15 Abs. 3 Nr. 1 GwG). "
-                        if pep_hit else "")
-                     + ("(Hochrisiko-Drittstaat, § 15 Abs. 3 Nr. 2 GwG). "
-                        if hochrisiko_land_hit else "")
-                     + "Umfang und konkrete Maßnahmen bestimmt der "
-                       "Verpflichtete."),
-            _pflicht("§ 10 GwG",
-                     "Die allgemeinen Sorgfaltspflichten gelten fort und "
-                     "werden durch die verstärkten Pflichten ergänzt."),
-            _verdachtsmeldungs_hinweis(),
-        ]
+        gesetzlicher_trigger = pep_hit or eu_hochrisiko_hit
+        pflichten = []
+        if gesetzlicher_trigger:
+            pflichten.append(_pflicht(
+                "§ 15 GwG",
+                "Verstärkte Sorgfaltspflichten sind anzuwenden "
+                + ("(PEP, § 15 Abs. 3 Nr. 1 GwG). " if pep_hit else "")
+                + ("(EU-Hochrisiko-Drittstaat, § 15 Abs. 3 Nr. 2 GwG, "
+                   "mindestens § 15 Abs. 5 GwG). " if eu_hochrisiko_hit
+                   else "")
+                + "Umfang und konkrete Maßnahmen bestimmt der "
+                  "Verpflichtete."))
+            pflichten.append(_pflicht(
+                "§ 10 GwG",
+                "Die allgemeinen Sorgfaltspflichten gelten fort und werden "
+                "durch die verstärkten Pflichten ergänzt."))
+        if hausrichtlinie_hit and not gesetzlicher_trigger:
+            pflichten.append({
+                "norm": "Hausrichtlinie (keine GwG-Norm)",
+                "hinweis": (
+                    "Sitzland ist nicht auf der EU-Hochrisiko-Liste gelistet "
+                    "(§ 15 Abs. 3 Nr. 2 GwG verweist ausschließlich auf diese "
+                    "Liste), aber auf mindestens einer FATF-Liste. Es besteht "
+                    "laut BaFin-Rundschreiben 07/2026 KEINE unmittelbare "
+                    "Gesetzespflicht aus dieser Listung. Die Klassifikation "
+                    "'hoch' ist eine konservative Haus-Einstufung dieses "
+                    "Skills; die allgemeinen Sorgfaltspflichten (§ 10 GwG) "
+                    "bleiben Ausgangspunkt, ergänzt um verschärfte interne "
+                    "Maßnahmen ohne eigene Gesetzesgrundlage."),
+                "quelle": "executor", **_marker_felder(),
+            })
+            pflichten.append(_pflicht(
+                "§ 10 GwG",
+                "Die allgemeinen Sorgfaltspflichten sind unabhängig von der "
+                "Haus-Einstufung anzuwenden."))
+        if norm["sitz_land"] in _BAFIN_ALLGEMEINVERFUEGUNG_LAENDER:
+            pflichten.append(_pflicht(
+                "BaFin-Allgemeinverfügung vom 13.05.2020",
+                "Zusätzliche Anzeigepflicht für Geschäftsbeziehungen und "
+                "Transaktionen mit Bezug zu Nordkorea/Iran gegenüber der "
+                "BaFin — unabhängig von § 15 GwG."))
+        pflichten.append(_verdachtsmeldungs_hinweis())
+
         begr_teile = []
         if pep_hit:
             begr_teile.append("PEP-Status (§ 15 Abs. 3 Nr. 1 GwG)")
-        if hochrisiko_land_hit:
+        if eu_hochrisiko_hit:
             begr_teile.append(
-                "Sitz in Hochrisiko-Drittstaat (Anlage 2 Nr. 3 GwG, § 15 Abs. 3 "
-                "Nr. 2 GwG)")
+                "Sitz in EU-Hochrisiko-Drittstaat (Anlage 2 Nr. 3 Buchst. a "
+                "GwG, § 15 Abs. 3 Nr. 2 GwG)")
+        if hausrichtlinie_hit and not eu_hochrisiko_hit:
+            begr_teile.append(
+                "Sitz in einem nur auf FATF-Listen (schwarz/grau) geführten "
+                "Land ohne EU-Listung — konservative Haus-Einstufung, keine "
+                "Gesetzespflicht")
         return report(
             "verpflichtet", "hoch",
-            "Mindestens ein Tatbestand der verstärkten Sorgfaltspflichten "
-            "liegt vor: " + " und ".join(begr_teile) + ".",
+            "Mindestens ein Tatbestand für die Klassifikation 'hoch' liegt "
+            "vor: " + " und ".join(begr_teile) + ".",
             "paragraph_15", kg_meta=kg_meta, faktoren=faktoren,
             pflichten=pflichten, vorbehalte=vorbehalte,
-            anwend_begr=anwend_begr, anwend_vorbehalt=None)
+            anwend_begr=anwend_begr, anwend_vorbehalt=None,
+            laender_listen_treffer=laender_listen_treffer)
 
     # --- Regel 3: nur Anlage-1-Faktoren, kein Anlage-2-Faktor -> niedrig ---
     if anlage1_treffer > 0 and anlage2_treffer == 0:
