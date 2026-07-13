@@ -26,8 +26,7 @@ insbesondere im Hinblick auf:
 - **KI-Verordnung** — VO (EU) 2024/1689 (Risiko-Einstufung, Transparenz- und
   Betreiberpflichten).
 
-**Mandantendaten gehören ausschließlich in Tools mit Auftragsverarbeitungsvertrag (AVV)
-und EU-Hosting.** Die optionalen Live-Adapter (Microsoft Graph, Sanktionslisten) geben
+**Mandantendaten gehören ausschließlich in regulatorisch und teschnisch sichere Tools.** Die optionalen Live-Adapter (Microsoft Graph, Sanktionslisten) geben
 Daten nach außen — Freigabe des jeweiligen Datenflusses ist Sache der Kanzlei.
 
 ## Wie es funktioniert
