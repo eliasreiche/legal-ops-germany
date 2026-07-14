@@ -45,6 +45,24 @@ ZWEITKONTROLLE = ("Zweitkontrolle bleibt zwingend: Dieser Export ersetzt keinen 
                   "Fristenkalender mit Vier-Augen-Prinzip. Import und Kontrolle "
                   "im Zielsystem verantwortet die Kanzlei.")
 
+# Statische Norm-Belehrungen dieses Moduls (Notfrist-/Einspruchs-Hinweis in
+# der Kalender-Beschreibung) — als benannte Konstanten, damit der
+# CI-Marker-Konsistenz-Test (tests/test_zitiermarker_statisch.py) sie ohne
+# fragiles Quelltext-Grep über STATISCHE_NORM_BELEHRUNGEN abgreifen kann.
+# Rein additiv/Umbenennung — _beschreibungszeilen() nutzt dieselben Texte
+# unverändert weiter.
+NOTFRIST_BELEHRUNG = ("✅ Notfrist — nicht verlängerbar (§ 224 Abs. 2 ZPO); bei "
+                     "Versäumung nur Wiedereinsetzung (§§ 233 ff. ZPO).")
+KEIN_TECHNISCHES_FRISTENDE_BELEHRUNG = (
+    "✅ Kein Fristende im technischen Sinn — das Datum ist nur der "
+    "Ablauf der Belehrungsfrist; verspäteter Widerspruch gilt als "
+    "Einspruch (§ 694 ZPO). Nicht als harte Frist behandeln.")
+
+STATISCHE_NORM_BELEHRUNGEN: list[dict[str, str]] = [
+    {"marker": "✅", "text": NOTFRIST_BELEHRUNG},
+    {"marker": "✅", "text": KEIN_TECHNISCHES_FRISTENDE_BELEHRUNG},
+]
+
 
 class ExportEingabeFehler(ValueError):
     """Eingabefehler → Exit 2 mit klarer Meldung, nie Traceback."""
@@ -176,12 +194,9 @@ def _beschreibungszeilen(k: dict[str, Any]) -> list[str]:
     z.append(f"Vorfrist ({k['vorlauftage']} Tage vorher): "
              f"{k['vorfrist'].strftime('%d.%m.%Y')}")
     if k["notfrist"]:
-        z.append("⚠️ Notfrist — nicht verlängerbar (§ 224 Abs. 2 ZPO); bei "
-                 "Versäumung nur Wiedereinsetzung (§§ 233 ff. ZPO).")
+        z.append(NOTFRIST_BELEHRUNG)
     if k["kein_technisches_fristende"]:
-        z.append("⚠️ Kein Fristende im technischen Sinn — das Datum ist nur der "
-                 "Ablauf der Belehrungsfrist; verspäteter Widerspruch gilt als "
-                 "Einspruch (§ 694 ZPO). Nicht als harte Frist behandeln.")
+        z.append(KEIN_TECHNISCHES_FRISTENDE_BELEHRUNG)
     if k["teilgebietliches_ende"]:
         z.append(f"⚠️ Teilgebietlicher Feiertag möglich: Fällt am Fristende-Ort "
                  f"ein nur örtlich geltender Feiertag an, verschiebt sich das "

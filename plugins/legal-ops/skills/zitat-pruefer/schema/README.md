@@ -38,6 +38,11 @@ Felder:
   gilt als `abweichend` (Prämisse: die Normliste je Gesetz ist vollständig für den
   mitgelieferten Ausschnitt). Ein Kürzel, das in der Registry gar nicht vorkommt,
   bleibt `nicht_pruefbar`.
+- `normen[].quelle` — optional, keine vom Executor ausgewertete Prüfgrundlage (reine
+  Dokumentation): Fundstellen-URL der Quelle, aus der der Registry-Eintrag stammt
+  (Konvention: `gesetze-im-internet.de`, z. B.
+  `"https://www.gesetze-im-internet.de/brao/__50.html"`). Erleichtert die spätere
+  händische Abnahme gegen den Gesetzestext.
 - `entscheidungen[].datum` — ISO-Format `JJJJ-MM-TT`.
 - `entscheidungen[].aktenzeichen` — wird whitespace-normalisiert verglichen.
 - `fundstellen[]` — `zeitschrift` + `jahr` + `seite` bilden den Schlüssel; `gericht`
