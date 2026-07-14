@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "erzeugt_von": "email-akten-zuordnung/executor.py",
+    "quelle_typ": "eml",
+    "kontext_verzeichnis": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/core/context/beispiel-kontext",
+    "schwelle_moeglich": 0.85,
+    "textauszug_max_len": 500,
+    "anzahl_dokumente": 4,
+    "anzahl_mandate": 2,
+    "mandat_warnungen": []
+  },
+  "dokumente": [
+    {
+      "quelle": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-az-im-betreff.eml",
+      "absender_name": "Kanzlei Beispiel",
+      "absender_adresse": "kanzlei@beispiel.example",
+      "empfaenger": [
+        "posteingang@eigene-kanzlei.example"
+      ],
+      "cc": [],
+      "betreff": "Fristsetzung in unserer Sache, Az. 2026-001",
+      "textauszug": "Sehr geehrte Damen und Herren,\n\nin unserem Aktenzeichen 2026-001 setzen wir Ihnen eine Frist zur Stellungnahme bis zum 15.07.2026.\n\nMit freundlichen Grüßen\nKanzlei Beispiel (fiktiv)\n",
+      "textauszug_gekuerzt": false,
+      "datum": "2026-06-20",
+      "kandidaten": [
+        {
+          "az": "2026-001",
+          "datei": "mandate/2026-001.md",
+          "stufe": "Z0",
+          "kategorie": "treffer",
+          "score": 1.0,
+          "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+        }
+      ],
+      "kein_treffer": false,
+      "fristverdacht": true,
+      "fristverdacht_hinweis": "Signalwort für eine mögliche Frist erkannt — diese Post gesondert der Fristenkontrolle zuführen (Skill 'fristenrechner' als Zweitkontrolle). Dies ist KEINE Fristberechnung und KEIN Normzitat.",
+      "prioritaet": "hoch",
+      "ablage_vorschlag": {
+        "moeglich": true,
+        "dateiname": "posteingang/2026-06-20-fristsetzung-in-unserer-sache-az-2026-001.eml",
+        "kommunikations_zeile": "2026-06-20 — Fristsetzung in unserer Sache, Az. 2026-001 — [Datei](../posteingang/2026-06-20-fristsetzung-in-unserer-sache-az-2026-001.eml)",
+        "hinweis": null
+      }
+    },
+    {
+      "quelle": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-fristverdacht.eml",
+      "absender_name": "Zweite Beispiel KG",
+      "absender_adresse": "kg@zweite-beispiel.example",
+      "empfaenger": [
+        "posteingang@eigene-kanzlei.example"
+      ],
+      "cc": [],
+      "betreff": "Kündigung des Vertrags über Bürobedarf",
+      "textauszug": "Sehr geehrte Damen und Herren,\n\nhiermit kündigen wir fristgerecht den bestehenden Vertrag über die Lieferung von Bürobedarf.\n\nMit freundlichen Grüßen\nZweite Beispiel KG (fiktiv)\n",
+      "textauszug_gekuerzt": false,
+      "datum": "2026-06-24",
+      "kandidaten": [
+        {
+          "az": "2026-001",
+          "datei": "mandate/2026-001.md",
+          "stufe": "Z1",
+          "kategorie": "treffer",
+          "score": 1.0,
+          "begruendung": "Partei 'Beispiel GmbH' (Rolle: mandant) per Stufe Z1 im Feld 'textauszug' gefunden: Name 'beispiel' als zusammenhängende Phrase im Text gefunden"
+        },
+        {
+          "az": "2026-002",
+          "datei": "mandate/2026-002.md",
+          "stufe": "Z1",
+          "kategorie": "treffer",
+          "score": 1.0,
+          "begruendung": "Partei 'Zweite Beispiel KG' (Rolle: mandant) per Stufe Z1 im Feld 'textauszug' gefunden: Name 'zweite beispiel' als zusammenhängende Phrase im Text gefunden"
+        }
+      ],
+      "kein_treffer": false,
+      "fristverdacht": true,
+      "fristverdacht_hinweis": "Signalwort für eine mögliche Frist erkannt — diese Post gesondert der Fristenkontrolle zuführen (Skill 'fristenrechner' als Zweitkontrolle). Dies ist KEINE Fristberechnung und KEIN Normzitat.",
+      "prioritaet": "hoch",
+      "ablage_vorschlag": {
+        "moeglich": true,
+        "dateiname": "posteingang/2026-06-24-kuendigung-des-vertrags-ueber-buerobedarf.eml",
+        "kommunikations_zeile": "2026-06-24 — Kündigung des Vertrags über Bürobedarf — [Datei](../posteingang/2026-06-24-kuendigung-des-vertrags-ueber-buerobedarf.eml)",
+        "hinweis": null
+      }
+    },
+    {
+      "quelle": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-kein-treffer.eml",
+      "absender_name": "Newsletter",
+      "absender_adresse": "newsletter@versand.example",
+      "empfaenger": [
+        "posteingang@eigene-kanzlei.example"
+      ],
+      "cc": [],
+      "betreff": "Ihr wöchentliches Update",
+      "textauszug": "Diese Woche gibt es Neuigkeiten aus der Branche (fiktiver Inhalt, keine Mandats-/Personenbezug).\n",
+      "textauszug_gekuerzt": false,
+      "datum": "2026-06-22",
+      "kandidaten": [],
+      "kein_treffer": true,
+      "fristverdacht": false,
+      "fristverdacht_hinweis": null,
+      "prioritaet": "normal",
+      "ablage_vorschlag": {
+        "moeglich": true,
+        "dateiname": "posteingang/2026-06-22-ihr-woechentliches-update.eml",
+        "kommunikations_zeile": "2026-06-22 — Ihr wöchentliches Update — [Datei](../posteingang/2026-06-22-ihr-woechentliches-update.eml)",
+        "hinweis": null
+      }
+    },
+    {
+      "quelle": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-nur-parteiname.eml",
+      "absender_name": "Muster AG",
+      "absender_adresse": "recht@muster-ag.example",
+      "empfaenger": [
+        "posteingang@eigene-kanzlei.example"
+      ],
+      "cc": [],
+      "betreff": "Zahlungsaufforderung",
+      "textauszug": "Sehr geehrte Damen und Herren,\n\nim Namen der Muster AG fordern wir Sie hiermit zur Zahlung des offenen Betrags auf.\n\nMit freundlichen Grüßen (fiktiv)\n",
+      "textauszug_gekuerzt": false,
+      "datum": "2026-06-25",
+      "kandidaten": [
+        {
+          "az": "2026-001",
+          "datei": "mandate/2026-001.md",
+          "stufe": "Z1",
+          "kategorie": "treffer",
+          "score": 1.0,
+          "begruendung": "Partei 'Muster AG' (Rolle: gegenseite) per Stufe Z1 im Feld 'textauszug' gefunden: Name 'muster' als zusammenhängende Phrase im Text gefunden"
+        }
+      ],
+      "kein_treffer": false,
+      "fristverdacht": false,
+      "fristverdacht_hinweis": null,
+      "prioritaet": "hoch",
+      "ablage_vorschlag": {
+        "moeglich": true,
+        "dateiname": "posteingang/2026-06-25-zahlungsaufforderung.eml",
+        "kommunikations_zeile": "2026-06-25 — Zahlungsaufforderung — [Datei](../posteingang/2026-06-25-zahlungsaufforderung.eml)",
+        "hinweis": null
+      }
+    }
+  ]
+}
