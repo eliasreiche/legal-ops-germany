@@ -27,11 +27,14 @@ zitat-pruefer selbst für i.V.m.-Ketten — nach Worst-Case aggregiert: der
 Marker.
 
 Stand 2026-07-14 (siehe Report des Inventar-Agenten): Die Test-Registry
-deckt § 50 Abs. 1 BRAO, § 224 ZPO, § 233 ZPO und § 694 ZPO ab. Die Marker
-in beiden Modulen sind maschinell gedeckt: dieser Test erzwingt Konsistenz
+deckt § 50 Abs. 1 BRAO, § 224 ZPO, § 233 ZPO, § 694 ZPO, § 520 ZPO und
+§ 551 ZPO ab. Die Marker in allen drei Modulen (inkl. core/calc/fristen/
+executor.py — Notfrist- und Verlängerbar-Hinweis in den `hinweise` der
+Fristberechnung) sind maschinell gedeckt: dieser Test erzwingt Konsistenz
 in beide Richtungen (verifizierbares Zitat mit ⚠️ = rot, nicht
 verifizierbares Zitat mit ✅ = rot). Historie: eingeführt zusammen mit der
-Marker-Umstellung ⚠️→✅ (2026-07-14).
+Marker-Umstellung ⚠️→✅ (2026-07-14); core/calc/fristen/executor.py
+nachträglich ergänzt (2026-07-14, Notfrist-/Verlängerbar-Belehrungen).
 """
 from __future__ import annotations
 
@@ -56,6 +59,7 @@ _MARKER_RANG = {"❌": 2, "⚠️": 1, "✅": 0}
 _MODULE = [
     ("core/calc/retention/executor.py", CALC_DIR / "retention" / "executor.py"),
     ("core/calc/fristen/kalender_executor.py", CALC_DIR / "fristen" / "kalender_executor.py"),
+    ("core/calc/fristen/executor.py", CALC_DIR / "fristen" / "executor.py"),
 ]
 
 

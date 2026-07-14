@@ -1,10 +1,12 @@
 {
-  "_hinweis": "Dedizierte Quellen-Registry für tests/test_zitiermarker_statisch.py — deckt genau die Normen ab, die in den STATISCHE_NORM_BELEHRUNGEN-Konstanten von core/calc/retention/executor.py und core/calc/fristen/kalender_executor.py zitiert werden. Bewusst getrennt von skills/zitat-pruefer/schema/beispiel-registry.json, damit dieser Test dessen Fixtures nicht mitbeeinflusst.",
+  "_hinweis": "Dedizierte Quellen-Registry für tests/test_zitiermarker_statisch.py — deckt genau die Normen ab, die in den STATISCHE_NORM_BELEHRUNGEN-Konstanten von core/calc/retention/executor.py, core/calc/fristen/kalender_executor.py und core/calc/fristen/executor.py zitiert werden. Bewusst getrennt von skills/zitat-pruefer/schema/beispiel-registry.json, damit dieser Test dessen Fixtures nicht mitbeeinflusst.",
   "normen": [
     {"kuerzel": "BRAO", "paragraph": "50", "bezeichnung": "Handakten (Aufbewahrungs- und Herausgabepflicht)", "quelle": "https://www.gesetze-im-internet.de/brao/__50.html"},
     {"kuerzel": "ZPO", "paragraph": "224", "bezeichnung": "Notfristen", "quelle": "https://www.gesetze-im-internet.de/zpo/__224.html"},
     {"kuerzel": "ZPO", "paragraph": "233", "bezeichnung": "Wiedereinsetzung in den vorigen Stand", "quelle": "https://www.gesetze-im-internet.de/zpo/__233.html"},
-    {"kuerzel": "ZPO", "paragraph": "694", "bezeichnung": "Widerspruch gegen den Mahnbescheid", "quelle": "https://www.gesetze-im-internet.de/zpo/__694.html"}
+    {"kuerzel": "ZPO", "paragraph": "694", "bezeichnung": "Widerspruch gegen den Mahnbescheid", "quelle": "https://www.gesetze-im-internet.de/zpo/__694.html"},
+    {"kuerzel": "ZPO", "paragraph": "520", "bezeichnung": "Berufungsbegründung", "quelle": "https://www.gesetze-im-internet.de/zpo/__520.html"},
+    {"kuerzel": "ZPO", "paragraph": "551", "bezeichnung": "Revisionsbegründung", "quelle": "https://www.gesetze-im-internet.de/zpo/__551.html"}
   ],
   "entscheidungen": [],
   "fundstellen": []
