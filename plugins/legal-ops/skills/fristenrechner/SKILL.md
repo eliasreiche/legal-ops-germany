@@ -148,9 +148,9 @@ Von Claude präsentiertes Ergebnis (aus dem Report übernommen):
 | 1 Monat: der Zahl nach entsprechender Tag | § 188 Abs. 2 Alt. 1 BGB | 15.02.2026 (So) |
 | Sonntag → nächster Werktag | § 193 BGB / § 222 Abs. 2 ZPO | **16.02.2026 (Mo)** |
 
-Hinweise (aus dem Report): Notfrist (§ 224 Abs. 1 ZPO), Fristbeginn spätestens
-fünf Monate nach Verkündung (§ 517 ZPO). **Zweitkontrolle durch die Kanzlei
-bleibt zwingend.**
+Hinweise (aus dem Report): Notfrist (✅ § 224 Abs. 1 Satz 2 ZPO), Fristbeginn
+spätestens fünf Monate nach Verkündung (§ 517 ZPO). **Zweitkontrolle durch die
+Kanzlei bleibt zwingend.**
 
 ### Beispiel 2 — freie Frist, teilgebietlicher Feiertag (beide Enden)
 

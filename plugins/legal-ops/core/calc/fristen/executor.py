@@ -44,6 +44,38 @@ from fristen.rechner import (  # noqa: E402
 )
 from feiertage import STAND as FEIERTAGE_STAND  # noqa: E402
 
+# Statische Norm-Belehrungen dieses Moduls (Notfrist- und Verlängerbar-Hinweis
+# in den `hinweise`) — als benannte Vorlagen-Konstanten, damit der
+# CI-Marker-Konsistenz-Test (tests/test_zitiermarker_statisch.py) sie ohne
+# fragiles Quelltext-Grep über STATISCHE_NORM_BELEHRUNGEN abgreifen kann.
+# Wortlaut unverändert bis auf das vorangestellte ✅-Präfix (Muster aus
+# kalender_executor.py); baue_report() nutzt dieselben Vorlagen per .format().
+NOTFRIST_BELEHRUNG_VORLAGE = (
+    "✅ {bezeichnung} ist eine Notfrist "
+    "(§ 224 Abs. 1 Satz 2 ZPO); sie kann nicht verlängert werden "
+    "(§ 224 Abs. 2 ZPO) — bei Versäumung kommt nur "
+    "Wiedereinsetzung in Betracht (§§ 233 ff. ZPO).")
+VERLAENGERBAR_BELEHRUNG_VORLAGE = (
+    "✅ {bezeichnung} ist auf rechtzeitigen Antrag "
+    "verlängerbar ({norm}) — Verlängerung ist eine "
+    "anwaltliche Entscheidung, nicht Teil dieser Berechnung.")
+
+# Für den CI-Marker-Konsistenz-Test: Notfrist-Vorlage roh (der
+# {bezeichnung}-Platzhalter enthält kein Zitat und stört den zitat-pruefer
+# nicht) plus je Katalog-Fristart mit `verlaengerbar: true` eine instanziierte
+# Verlängerbar-Belehrung (bezeichnung + norm aus fristarten.json, über
+# dieselbe lade_katalog()-Funktion wie baue_report() geladen — keine neue
+# Lade-Abstraktion). Effekt: eine künftige verlängerbare Katalog-Fristart mit
+# nicht in tests/fixtures/statische_normen_registry.json registrierter Norm
+# lässt den CI-Test rot werden — das ist gewollt.
+STATISCHE_NORM_BELEHRUNGEN: list[dict[str, str]] = [
+    {"marker": "✅", "text": NOTFRIST_BELEHRUNG_VORLAGE},
+] + [
+    {"marker": "✅", "text": VERLAENGERBAR_BELEHRUNG_VORLAGE.format(
+        bezeichnung=f["bezeichnung"], norm=f["norm"])}
+    for f in lade_katalog()["fristarten"] if f.get("verlaengerbar")
+]
+
 
 def _pflichtfeld(eingabe: dict[str, Any], feld: str) -> Any:
     if feld not in eingabe or eingabe[feld] in (None, ""):
@@ -105,15 +137,11 @@ def baue_report(eingabe: dict[str, Any], quelle_datei: str) -> dict[str, Any]:
         hinweise.extend(fristart.get("hinweise", []))
         if fristart.get("notfrist"):
             hinweise.append(
-                f"{fristart['bezeichnung']} ist eine Notfrist "
-                f"(§ 224 Abs. 1 Satz 2 ZPO); sie kann nicht verlängert werden "
-                f"(§ 224 Abs. 2 ZPO) — bei Versäumung kommt nur "
-                f"Wiedereinsetzung in Betracht (§§ 233 ff. ZPO).")
+                NOTFRIST_BELEHRUNG_VORLAGE.format(bezeichnung=fristart["bezeichnung"]))
         elif fristart.get("verlaengerbar"):
             hinweise.append(
-                f"{fristart['bezeichnung']} ist auf rechtzeitigen Antrag "
-                f"verlängerbar ({fristart['norm']}) — Verlängerung ist eine "
-                f"anwaltliche Entscheidung, nicht Teil dieser Berechnung.")
+                VERLAENGERBAR_BELEHRUNG_VORLAGE.format(
+                    bezeichnung=fristart["bezeichnung"], norm=fristart["norm"]))
     else:
         dauer_roh = _pflichtfeld(eingabe, "dauer")
         if not isinstance(dauer_roh, int) or isinstance(dauer_roh, bool):
