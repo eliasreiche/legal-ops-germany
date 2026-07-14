@@ -1,0 +1,39 @@
+{
+  "termine": [
+    {
+      "betreff": "Besprechung Az. 2026-001 - Sachstand",
+      "start": "2026-07-06T09:00:00",
+      "ende": "2026-07-06T09:45:00",
+      "teilnehmer": ["RA Dr. Klein", "Sachbearbeitung"],
+      "ort": "Kanzlei"
+    },
+    {
+      "betreff": "Sammeltermin Az. 2026-001 und Az. 2026-002",
+      "start": "2026-07-06T11:00:00",
+      "ende": "2026-07-06T11:30:00",
+      "teilnehmer": [],
+      "ort": null
+    },
+    {
+      "betreff": "Interne Fortbildung Datenschutz-Grundverordnung",
+      "start": "2026-07-07T14:00:00",
+      "ende": "2026-07-07T15:30:00",
+      "teilnehmer": ["Dr. Schmitt", "Frau Weber"],
+      "ort": "Konferenzraum"
+    },
+    {
+      "betreff": "Telefonkonferenz mit Muster AG",
+      "start": "2026-07-08T10:00:00",
+      "ende": "2026-07-08T11:00:00",
+      "teilnehmer": ["Muster AG"],
+      "ort": null
+    },
+    {
+      "betreff": "Rückruf Az. 2026-002 - Terminabstimmung",
+      "start": "2026-07-08T10:30:00",
+      "ende": "2026-07-08T11:15:00",
+      "teilnehmer": [],
+      "ort": null
+    }
+  ]
+}

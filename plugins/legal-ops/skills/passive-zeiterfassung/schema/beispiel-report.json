@@ -1,0 +1,209 @@
+{
+  "meta": {
+    "erzeugt_von": "passive-zeiterfassung/executor.py",
+    "quelle_termine": "plugins/legal-ops/skills/passive-zeiterfassung/schema/beispiel-termine.json",
+    "quelle_mails": "plugins/legal-ops/skills/passive-zeiterfassung/schema/beispiel-mails.json",
+    "kontext_verzeichnis": "plugins/legal-ops/core/context/beispiel-kontext",
+    "mail_pauschale_minuten": 6,
+    "anzahl_termine": 5,
+    "anzahl_mails": 3,
+    "mandat_warnungen": [],
+    "deterministik": "Alle Minuten-, Datums- und Zuordnungswerte in diesem Report sind Executor-Ergebnisse (P3), nicht modellgeneriert."
+  },
+  "vorschlaege": [
+    {
+      "quelle_typ": "kalender",
+      "betreff": "Besprechung Az. 2026-001 - Sachstand",
+      "datum": "2026-07-06",
+      "leistung": {
+        "datum": "2026-07-06",
+        "az": "2026-001",
+        "minuten": null,
+        "start": "2026-07-06T09:00:00",
+        "ende": "2026-07-06T09:45:00",
+        "stichworte": [
+          "Besprechung Az. 2026-001 - Sachstand",
+          "Ort: Kanzlei",
+          "Teilnehmerzahl: 2"
+        ],
+        "quelle": "kalender"
+      },
+      "zuordnung": {
+        "az": "2026-001",
+        "datei": "mandate/2026-001.md",
+        "stufe": "Z0",
+        "kategorie": "treffer",
+        "score": 1.0,
+        "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+      },
+      "status": "zu_bestaetigen"
+    },
+    {
+      "quelle_typ": "kalender",
+      "betreff": "Telefonkonferenz mit Muster AG",
+      "datum": "2026-07-08",
+      "leistung": {
+        "datum": "2026-07-08",
+        "az": "2026-001",
+        "minuten": null,
+        "start": "2026-07-08T10:00:00",
+        "ende": "2026-07-08T11:00:00",
+        "stichworte": [
+          "Telefonkonferenz mit Muster AG",
+          "Teilnehmerzahl: 1"
+        ],
+        "quelle": "kalender"
+      },
+      "zuordnung": {
+        "az": "2026-001",
+        "datei": "mandate/2026-001.md",
+        "stufe": "Z1",
+        "kategorie": "treffer",
+        "score": 1.0,
+        "begruendung": "Partei 'Muster AG' (Rolle: gegenseite) per Stufe Z1 im Feld 'betreff' gefunden: Name 'muster' als zusammenhängende Phrase im Text gefunden"
+      },
+      "status": "zu_bestaetigen"
+    },
+    {
+      "quelle_typ": "kalender",
+      "betreff": "Rückruf Az. 2026-002 - Terminabstimmung",
+      "datum": "2026-07-08",
+      "leistung": {
+        "datum": "2026-07-08",
+        "az": "2026-002",
+        "minuten": null,
+        "start": "2026-07-08T10:30:00",
+        "ende": "2026-07-08T11:15:00",
+        "stichworte": [
+          "Rückruf Az. 2026-002 - Terminabstimmung"
+        ],
+        "quelle": "kalender"
+      },
+      "zuordnung": {
+        "az": "2026-002",
+        "datei": "mandate/2026-002.md",
+        "stufe": "Z0",
+        "kategorie": "treffer",
+        "score": 1.0,
+        "begruendung": "Aktenzeichen '2026-002' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+      },
+      "status": "zu_bestaetigen"
+    },
+    {
+      "quelle_typ": "mail",
+      "betreff": "Az. 2026-001 - Kurze Rückfrage zur Fristsetzung",
+      "datum": "2026-07-06",
+      "leistung": {
+        "datum": "2026-07-06",
+        "az": "2026-001",
+        "minuten": 6,
+        "start": null,
+        "ende": null,
+        "stichworte": [
+          "Az. 2026-001 - Kurze Rückfrage zur Fristsetzung",
+          "E-Mail ausgehend"
+        ],
+        "quelle": "mail"
+      },
+      "zuordnung": {
+        "az": "2026-001",
+        "datei": "mandate/2026-001.md",
+        "stufe": "Z0",
+        "kategorie": "treffer",
+        "score": 1.0,
+        "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+      },
+      "status": "zu_bestaetigen"
+    },
+    {
+      "quelle_typ": "mail",
+      "betreff": "Zahlungsziel - Rueckfrage",
+      "datum": "2026-07-07",
+      "leistung": {
+        "datum": "2026-07-07",
+        "az": "2026-001",
+        "minuten": 6,
+        "start": null,
+        "ende": null,
+        "stichworte": [
+          "Zahlungsziel - Rueckfrage",
+          "E-Mail eingehend"
+        ],
+        "quelle": "mail"
+      },
+      "zuordnung": {
+        "az": "2026-001",
+        "datei": "mandate/2026-001.md",
+        "stufe": "Z1",
+        "kategorie": "treffer",
+        "score": 1.0,
+        "begruendung": "Partei 'Muster AG' (Rolle: gegenseite) per Stufe Z1 im Feld 'absender_name' gefunden: Name 'muster' als zusammenhängende Phrase im Text gefunden"
+      },
+      "status": "zu_bestaetigen"
+    }
+  ],
+  "mehrdeutig": [
+    {
+      "quelle_typ": "kalender",
+      "betreff": "Sammeltermin Az. 2026-001 und Az. 2026-002",
+      "datum": "2026-07-06",
+      "kandidaten": [
+        {
+          "az": "2026-001",
+          "datei": "mandate/2026-001.md",
+          "stufe": "Z0",
+          "kategorie": "treffer",
+          "score": 1.0,
+          "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+        },
+        {
+          "az": "2026-002",
+          "datei": "mandate/2026-002.md",
+          "stufe": "Z0",
+          "kategorie": "treffer",
+          "score": 1.0,
+          "begruendung": "Aktenzeichen '2026-002' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+        }
+      ],
+      "hinweis": "Mehr als eine Akte kommt in Frage — die Kanzlei entscheidet, keine automatische Zuordnung."
+    }
+  ],
+  "nicht_zuordenbar": [
+    {
+      "quelle_typ": "kalender",
+      "betreff": "Interne Fortbildung Datenschutz-Grundverordnung",
+      "datum": "2026-07-07",
+      "hinweis": "Kein Mandat zugeordnet — Akte manuell wählen; es wird kein Aktenzeichen erfunden."
+    },
+    {
+      "quelle_typ": "mail",
+      "betreff": "Newsletter - Fortbildungsangebote im Sommer",
+      "datum": "2026-07-07",
+      "hinweis": "Kein Mandat zugeordnet — Akte manuell wählen; es wird kein Aktenzeichen erfunden."
+    }
+  ],
+  "ohne_zeitwert": [],
+  "warnungen": [
+    {
+      "typ": "termin_ueberlappung",
+      "termin_a": {
+        "betreff": "Telefonkonferenz mit Muster AG",
+        "start": "2026-07-08T10:00:00",
+        "ende": "2026-07-08T11:00:00"
+      },
+      "termin_b": {
+        "betreff": "Rückruf Az. 2026-002 - Terminabstimmung",
+        "start": "2026-07-08T10:30:00",
+        "ende": "2026-07-08T11:15:00"
+      },
+      "hinweis": "Zeitliche Überlappung — nicht beide Zeiträume in voller Länge abrechnen; die Kanzlei löst die Doppelerfassung auf."
+    }
+  ],
+  "summen": {
+    "je_az": {
+      "2026-001": 117,
+      "2026-002": 45
+    },
+    "minuten_gesamt": 162
+  }
+}
