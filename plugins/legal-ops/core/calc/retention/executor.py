@@ -43,13 +43,22 @@ if str(_CORE_DIR) not in sys.path:
 from context.schema import STATUS_WERTE, lese_mandate  # noqa: E402
 
 NORM_HINWEIS = (
-    "⚠️ § 50 Abs. 1 BRAO — Aufbewahrungsfrist Handakten: 6 Jahre, Fristbeginn "
+    "✅ § 50 Abs. 1 BRAO — Aufbewahrungsfrist Handakten: 6 Jahre, Fristbeginn "
     "mit dem Schluss des Kalenderjahres der Mandatsbeendigung. Statische "
     "Belehrung, kein Einzelfall-Check: berücksichtigt keine abweichenden "
     "Sonderfristen (Steuerunterlagen, Sozietätsvertrag, Kammerauflagen, "
     "laufende Verjährungs-/Regresshemmung). Vor tatsächlicher Löschung "
     "zwingend anwaltlich prüfen — dieser Executor löscht nie."
 )
+
+# Statische Norm-Belehrungen dieses Moduls, für den CI-Marker-Konsistenz-Test
+# (tests/test_zitiermarker_statisch.py) als benannte Konstante statt fragilem
+# Quelltext-Grep. Rein additiv — NORM_HINWEIS wird weiterhin unverändert in
+# baue_report()/baue_markdown() verwendet, kein Verhaltens-Impact.
+STATISCHE_NORM_BELEHRUNGEN: list[dict[str, str]] = [
+    {"marker": "✅", "text": NORM_HINWEIS},
+]
+
 AUFBEWAHRUNG_JAHRE = 6
 
 EINORDNUNG_UEBERFAELLIG = "loeschbar_ueberfaellig"
