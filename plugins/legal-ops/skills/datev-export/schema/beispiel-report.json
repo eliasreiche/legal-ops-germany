@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "erzeugt_von": "core/calc/extf/executor.py",
+    "quelle_datei": "beispiel-eingabe.json",
+    "deterministik": "Alle Beträge/Daten/Kontonummern in diesem Report und der EXTF-Datei sind Executor-Ergebnisse (P3), nicht modellgeneriert.",
+    "formatversion_hinweis": "⚠️ Formatversion 700 / Feldliste NICHT primärquellen-verifiziert — vor erstem Echt-Import gegen aktuelle DATEV-Dokumentation prüfen.",
+    "scope_hinweis": "Nur Buchungsstapel-Export — kein Parser, keine Stammdaten (Kategorie 16), kein Import."
+  },
+  "header": {
+    "erzeugt_am": "2026-07-13T10:00:00",
+    "beraternummer": 12345,
+    "mandantennummer": 100,
+    "wirtschaftsjahresbeginn": "2026-01-01",
+    "sachkontenlaenge": 4,
+    "buchungszeitraum_von": "2026-01-01",
+    "buchungszeitraum_bis": "2026-12-31",
+    "bezeichnung": "Buchungsstapel Juli 2026",
+    "formatversion": 5,
+    "waehrung": "EUR",
+    "quelle": "executor"
+  },
+  "buchungen_anzahl": 1,
+  "buchungen": [
+    {
+      "index": 1,
+      "umsatz": "952.50",
+      "soll_haben": "S",
+      "konto": "1200",
+      "gegenkonto": "8400",
+      "belegdatum_ttmm": "1503",
+      "belegdatum_iso": "2026-03-15",
+      "belegfeld1": "RE-2026-042",
+      "buchungstext": "Honorar Müller ./. Schmidt",
+      "quelle": "executor"
+    }
+  ],
+  "warnungen": []
+}

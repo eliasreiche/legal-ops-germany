@@ -50,6 +50,19 @@ EXECUTOR_SKILLS = [
         "exit": 0,
     },
     {
+        # DATEV-EXTF-Buchungsstapel-Export (D20): mandatorisches --output
+        # zusätzlich zu --input — beide Nicht-"--"-Token werden über
+        # _abs_args gegen den KOPIERTEN Plugin-Cache absolutiert (nie den
+        # echten Repo-Baum), das Zielverzeichnis core/calc/extf/ existiert
+        # dort bereits (aus dem copytree), die Schreib-Nebenwirkung bleibt
+        # im Wegwerf-tmp_path.
+        "id": "datev-export",
+        "executor": "core/calc/extf/executor.py",
+        "args": ["--input", "skills/datev-export/schema/beispiel-eingabe.json",
+                 "--output", "core/calc/extf/_smoke-stapel.csv"],
+        "exit": 0,
+    },
+    {
         "id": "gwg-risiko-check",
         "executor": "skills/gwg-risiko-check/executor.py",
         "args": ["--mandat", "skills/gwg-risiko-check/schema/beispiel-mandat.json"],

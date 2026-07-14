@@ -1,0 +1,24 @@
+{
+  "header": {
+    "erzeugt_am": "2026-07-13T10:00:00",
+    "exportiert_von": "Kanzlei Mustermann",
+    "beraternummer": 12345,
+    "mandantennummer": 100,
+    "wirtschaftsjahresbeginn": "2026-01-01",
+    "sachkontenlaenge": 4,
+    "buchungszeitraum_von": "2026-01-01",
+    "buchungszeitraum_bis": "2026-12-31",
+    "bezeichnung": "Buchungsstapel Juli 2026"
+  },
+  "buchungen": [
+    {
+      "umsatz": "952.50",
+      "soll_haben": "S",
+      "konto": "1200",
+      "gegenkonto": "8400",
+      "belegdatum": "2026-03-15",
+      "belegfeld1": "RE-2026-042",
+      "buchungstext": "Honorar Müller ./. Schmidt"
+    }
+  ]
+}

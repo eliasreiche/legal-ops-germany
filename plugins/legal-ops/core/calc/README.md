@@ -10,7 +10,8 @@ Ein Rechner, viele Skills — keine Duplikation. Jeder Rechner: pytest-Unit-Test
 | [`rvg/`](rvg/) | umgesetzt | RVG-Wertgebühren (§ 13 RVG als Stufenformel + versionierte Parameterdaten, KostRÄG 2021 / KostBRÄG 2025, Stichtag § 60 RVG); VV-Katalog als Daten ([`rvg/vv-katalog.json`](rvg/vv-katalog.json)); Anrechnung Vorbem. 3 Abs. 4 VV RVG; gemeinsamer CLI-Executor ([`rvg/executor.py`](rvg/executor.py)) für RVG **und** GKG. Nur `decimal.Decimal`, nie float. |
 | [`gkg/`](gkg/) | umgesetzt | GKG-Gerichtskosten (§ 34 GKG analog als Formel + versionierte Daten, Stichtag § 71 GKG); KV-Katalog als Daten ([`gkg/kv-katalog.json`](gkg/kv-katalog.json)); Streitwert-Höchstgrenze § 39 Abs. 2 GKG. Gemeinsame Stufenformel in [`wertgebuehr_formel.py`](wertgebuehr_formel.py). |
 | [`retention/`](retention/) | umgesetzt | Retention-Hinweis-Executor (§ 50 Abs. 1 BRAO, 6 Jahre Handakten) über `kontext/mandate/*.md` — reiner Hinweis-Report, **kein Auto-Delete**. Liest `mandatsende`/`status` über [`core/context/schema.py`](../context/schema.py). |
-| `verjaehrung`, `extf` | geplant | — |
+| [`extf/`](extf/) | umgesetzt | DATEV-EXTF-Buchungsstapel-Export (Kategorie 21, Formatversion 700) — nur Buchungsstapel, kein Parser/Stammdaten/Import (D20). CP1252, Komma-Dezimal, Belegdatum TTMM gegen Header-Buchungszeitraum geprüft; modell-extrahierte Zahlenfelder brauchen `bestaetigt: true`. ⚠️ Formatversion nicht primärquellen-verifiziert. |
+| `verjaehrung` | geplant | — |
 
 Tests liegen beim nutzenden Skill (z. B.
 [`plugins/legal-ops/skills/fristenrechner/tests/`](../skills/fristenrechner/tests/)
