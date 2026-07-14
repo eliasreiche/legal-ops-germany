@@ -6,7 +6,7 @@ Open-Source-Library aus **Claude-Skills und deterministischen Python-Executors**
 **non-billable Workflows** deutscher Boutique- und Kleinkanzleien — Fristenberechnung
 (ZPO/BGB) mit Kalender-Export, Gebühren (RVG/GKG), GwG-Risikoklassifizierung mit
 verifizierter Hochrisiko-Länderliste, Aktenkopf-Extraktion, Interessenkollisions-Check,
-DATEV-EXTF-Export und mehr. **19 Skills, davon 8 in `beta`** (Status-Tabelle unten).
+DATEV-EXTF-Export und mehr. **19 Skills, davon 11 in `beta`** (Status-Tabelle unten).
 Funktionsweise ausschließlich nach deutschem Recht.
 
 > **Keine Rechtsberatung.** Diese Library unterstützt organisatorische und rechnerische
