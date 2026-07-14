@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "erzeugt_von": "plugins/legal-ops/skills/taetigkeitstext-rvg/executor.py",
+    "eingabe_datei": "schema/beispiel-leistungen.json",
+    "config": {
+      "takt_minuten": 6
+    },
+    "deterministik": "Alle Minuten-, Datums- und Summenwerte in diesem Report sind Executor-Ergebnisse (P3), nicht modellgeneriert."
+  },
+  "eintraege": [
+    {
+      "index": 0,
+      "datum": "2026-07-01",
+      "az": "12/2026",
+      "minuten": 47,
+      "minuten_getaktet": 48,
+      "quelle_zeit": "start_ende",
+      "stichworte": [
+        "Telefonat mit Mandant",
+        "Sachstand zur Kündigungsschutzklage besprochen"
+      ],
+      "quelle": "kalender"
+    },
+    {
+      "index": 1,
+      "datum": "2026-07-01",
+      "az": "12/2026",
+      "minuten": 30,
+      "minuten_getaktet": 30,
+      "quelle_zeit": "minuten",
+      "stichworte": [
+        "Fristenkontrolle Klageerwiderung geprüft"
+      ],
+      "quelle": "manuell"
+    },
+    {
+      "index": 2,
+      "datum": "2026-07-02",
+      "az": "34/2026",
+      "minuten": 15,
+      "minuten_getaktet": 18,
+      "quelle_zeit": "minuten",
+      "stichworte": [
+        "Kurze Rückfrage per Mail beantwortet"
+      ],
+      "quelle": "mail"
+    },
+    {
+      "index": 4,
+      "datum": "2026-07-03",
+      "az": "34/2026",
+      "minuten": 22,
+      "minuten_getaktet": 24,
+      "quelle_zeit": "start_ende",
+      "stichworte": [
+        "Recherche zu Kündigungsfristen",
+        "Ergebnis an Sachbearbeiter weitergegeben"
+      ],
+      "quelle": "kalender"
+    }
+  ],
+  "ohne_az": [
+    {
+      "index": 3,
+      "datum": "2026-07-03",
+      "az": null,
+      "minuten": 20,
+      "minuten_getaktet": 24,
+      "quelle_zeit": "minuten",
+      "stichworte": [
+        "Interne Notiz zur Aktenorganisation"
+      ],
+      "quelle": "manuell"
+    }
+  ],
+  "summen": {
+    "je_az": {
+      "12/2026": 78,
+      "34/2026": 42
+    },
+    "je_az_und_datum": [
+      {
+        "az": "12/2026",
+        "datum": "2026-07-01",
+        "minuten": 78
+      },
+      {
+        "az": "34/2026",
+        "datum": "2026-07-02",
+        "minuten": 18
+      },
+      {
+        "az": "34/2026",
+        "datum": "2026-07-03",
+        "minuten": 24
+      }
+    ]
+  },
+  "zusammenfassung": {
+    "anzahl_eintraege": 5,
+    "anzahl_mit_az": 4,
+    "anzahl_ohne_az": 1,
+    "minuten_gesamt": 134,
+    "minuten_gesamt_getaktet": 144
+  }
+}
