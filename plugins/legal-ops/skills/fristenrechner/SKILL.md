@@ -3,7 +3,7 @@ name: fristenrechner
 description: "Berechnet gerichtliche und prozessuale Fristen nach §§ 186–193 BGB und § 222 ZPO deterministisch mit nachvollziehbarer Rechenkette (Fristbeginn, Ende, Wochenend-/Feiertagsverschiebung je Bundesland). Triggert bei Fristberechnung, Einspruchsfrist, Berufungs-/Beschwerde-/Revisionsfrist, Notfrist, Fristende, Zustelldatum plus Fristart, Feiertagsverschiebung. Strikt Zweitkontrolle, ersetzt keine Fristenkontrolle der Kanzlei."
 status: beta
 welle: 1
-plugin: fristen-termine
+bereich: fristen-termine
 rdg_einordnung: "Rechnerische Fristermittlung nach §§ 186–193 BGB / § 222 ZPO ohne Subsumtion des Einzelfalls; die rechtliche Einordnung des fristauslösenden Ereignisses (wirksame Zustellung, richtige Fristart, Fristbeginn-Alternativen) bleibt beim Anwalt."
 daten_hinweis: "Die Berechnung benötigt nur Datum, Fristart und Bundesland — keine Mandantendaten. Wird beim Export ein Aktenzeichen/eine Bezeichnung mitgegeben, kann die Export-Datei (.ics/.csv) diese tragen — dann wie eine Akte behandeln (Speicherperimeter D10). Beide Executors arbeiten rein lokal, ohne Netzwerkzugriff."
 haftung: "Zweitkontrolle, zwingend: Der Rechner ist das zweite Augenpaar, nie das erste — er ersetzt keine Fristenkontrolle der Kanzlei (Fristenkalender, Vier-Augen-Prinzip, anwaltliche Endkontrolle bleiben unberührt). Bei Notfristen und teilgebietlichen Feiertagen gilt das doppelt. Der Kalender-Export ist ein technischer Übernahmehelfer; Import und Kontrolle im Zielsystem verantwortet die Kanzlei."

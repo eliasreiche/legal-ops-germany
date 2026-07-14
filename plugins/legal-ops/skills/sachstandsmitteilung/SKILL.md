@@ -3,7 +3,7 @@ name: sachstandsmitteilung
 description: "Draftet informierende Status-Updates an Mandanten aus Aktenereignissen — ohne rechtliche Bewertung oder Empfehlung. Triggert bei Mandanten-Statusupdate, Sachstandsmitteilung, Mandanten informieren. Work-in-progress (Welle 5)."
 status: Work-in-progress
 welle: 5
-plugin: kommunikation
+bereich: kommunikation
 rdg_einordnung: "Statusinformation ohne Beratungsinhalt; Grenze wird im Output-Kontrakt erzwungen (keine Empfehlungs-Formulierungen)."
 daten_hinweis: "Mandatsbezug — DSGVO-/BRAO-konformen Modellzugang nutzen."
 haftung: "Jedes Schreiben geht vor Versand durch den Anwalt; der Skill versendet nichts."

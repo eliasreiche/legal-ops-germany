@@ -22,7 +22,7 @@ kein Aufruf setzt ein bestimmtes Arbeitsverzeichnis voraus.
 ## Prozessbereiche
 
 Die Skills sind fachlich nach sieben Prozesskategorien gegliedert (das Feld
-`plugin:` im Frontmatter trägt den Bereich; die Auslieferung bleibt ein Plugin):
+`bereich:` im Frontmatter trägt den Bereich; die Auslieferung bleibt ein Plugin):
 
 | Bereich | Skills |
 |---|---|

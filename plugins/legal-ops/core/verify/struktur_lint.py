@@ -3,7 +3,9 @@
 
 Prüft:
   * jedes SKILL.md trägt die Pflichtfelder aus P5 (rdg_einordnung,
-    daten_hinweis, haftung) sowie name/description/status/welle/plugin,
+    daten_hinweis, haftung) sowie name/description/status/welle/bereich
+    (Feld hieß bis 2026-07-14 `plugin:` — seit D14 gibt es nur ein Plugin
+    `legal-ops`, `bereich:` ist reine fachliche Gliederung),
   * status ist `Work-in-progress`, `beta` oder `getestet` (Reifegrad-Leiter):
       - `Work-in-progress` = noch nicht entwickelt (Stub) oder Code ohne Test-Run
       - `beta`     = gegen Testdaten durch Agenten getestet (Orakel/Tests grün in CI)
@@ -33,7 +35,7 @@ from pathlib import Path
 # vier Ebenen höher (verify -> core -> legal-ops -> plugins -> REPO).
 REPO = Path(__file__).resolve().parents[4]
 LINT_PFAD = "plugins/legal-ops/core/verify/struktur_lint.py"
-PFLICHTFELDER = ["name", "description", "status", "welle", "plugin",
+PFLICHTFELDER = ["name", "description", "status", "welle", "bereich",
                  "rdg_einordnung", "daten_hinweis", "haftung"]
 STATUS_WERTE = {"Work-in-progress", "beta", "getestet"}
 TABELLE_START = "<!-- skill-status:start -->"
@@ -224,8 +226,14 @@ def pruefe_skill(skill: Path, fehler: list[str]) -> dict[str, str] | None:
         return None
     pruefe_kontext_felder(text, ref, fehler)
     for feld in PFLICHTFELDER:
-        if not fm.get(feld, "").strip():
-            fehler.append(f"{ref}: Pflichtfeld `{feld}` fehlt oder ist leer (P5)")
+        if fm.get(feld, "").strip():
+            continue
+        if feld == "bereich" and fm.get("plugin", "").strip():
+            fehler.append(f"{ref}: Feld `plugin:` heißt seit 2026-07-14 `bereich:` "
+                          f"(Umbenennung D14 — ein Plugin `legal-ops`, `bereich:` ist "
+                          f"reine fachliche Gliederung; Pflichtfeld, P5)")
+            continue
+        fehler.append(f"{ref}: Pflichtfeld `{feld}` fehlt oder ist leer (P5)")
     status = fm.get("status")
     if status not in STATUS_WERTE:
         fehler.append(f"{ref}: status muss `Work-in-progress`, `beta` oder `getestet` "
@@ -253,16 +261,16 @@ def pruefe_plugins(fehler: list[str]) -> None:
 
 
 def status_tabelle(skills: list[tuple[Path, dict[str, str]]]) -> str:
-    zeilen = ["| Skill | Plugin | Welle | Status |", "|---|---|---|---|"]
+    zeilen = ["| Skill | Bereich | Welle | Status |", "|---|---|---|---|"]
     def sortkey(eintrag):
         pfad, fm = eintrag
-        return (int(fm.get("welle", "9")), fm.get("plugin", ""), fm.get("name", ""))
+        return (int(fm.get("welle", "9")), fm.get("bereich", ""), fm.get("name", ""))
     for pfad, fm in sorted(skills, key=sortkey):
         rel = pfad.relative_to(REPO) / "SKILL.md"
         status = fm.get("status", "?")
         badge = {"getestet": "✅ `getestet`",
                  "beta": "🧪 `beta`"}.get(status, "🚧 `Work-in-progress`")
-        zeilen.append(f"| [`{fm.get('name')}`]({rel}) | `{fm.get('plugin')}` "
+        zeilen.append(f"| [`{fm.get('name')}`]({rel}) | `{fm.get('bereich')}` "
                       f"| {fm.get('welle')} | {badge} |")
     return "\n".join(zeilen)
 

@@ -60,7 +60,7 @@ Datenflusses ist Sache der Kanzlei.
 
 Hausregeln: [CONVENTIONS.md](CONVENTIONS.md) · Struktur: ein Plugin
 [`legal-ops`](plugins/legal-ops/) bündelt alle Skills (fachlich in Prozessbereiche
-plus Querschnitt gegliedert, Feld `plugin:` im Frontmatter) **und** die
+plus Querschnitt gegliedert, Feld `bereich:` im Frontmatter) **und** die
 geteilten Rechner unter [`plugins/legal-ops/core/`](plugins/legal-ops/core/) —
 so ist `core/` Teil der Auslieferung und jeder Executor-Skill nach dem Install
 lauffähig.
@@ -70,7 +70,7 @@ lauffähig.
 Tabelle wird generiert von [`plugins/legal-ops/core/verify/struktur_lint.py`](plugins/legal-ops/core/verify/struktur_lint.py) (`--write-readme`).
 
 <!-- skill-status:start -->
-| Skill | Plugin | Welle | Status |
+| Skill | Bereich | Welle | Status |
 |---|---|---|---|
 | [`fristenrechner`](plugins/legal-ops/skills/fristenrechner/SKILL.md) | `fristen-termine` | 1 | 🧪 `beta` |
 | [`zitat-pruefer`](plugins/legal-ops/skills/zitat-pruefer/SKILL.md) | `querschnitt` | 1 | 🧪 `beta` |

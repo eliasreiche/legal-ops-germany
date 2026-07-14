@@ -3,7 +3,7 @@ name: email-akten-zuordnung
 description: "Ordnet eingehende E-Mails (EML-Dateien oder M365-Metadaten via kontext-sync) Akten zu, priorisiert (inkl. Fristverdacht) und schlägt Ablage in der e-Akte vor. Triggert bei E-Mail-Triage, Posteingang zuordnen, e-Akte-Ablage, Mail-Priorisierung."
 status: beta
 welle: 3
-plugin: post-akte
+bereich: post-akte
 rdg_einordnung: "Organisatorische Posteingangs-Sortierung als Vorschlag (Aktenzeichen-/Parteiname-Abgleich, Prioritäts-Regel); keine inhaltliche Bearbeitung der Korrespondenz, keine Fristberechnung."
 daten_hinweis: "E-Mail-Metadaten und -Auszüge sind Mandatsdaten — § 203 StGB / DSGVO beachten, DSGVO-/BRAO-konformer Modellzugang. PII-Minimierung: der Report enthält nie den vollen Mail-Text, nur Metadaten (Absender, Betreff, Datum) plus einen Textauszug von max. 500 Zeichen; Mail-Volltexte bleiben im Ursprungssystem (Mailserver/EML-Archiv/M365)."
 haftung: "Zuordnungs-, Prioritäts- und Ablage-Vorschläge sind zu bestätigen und werden nie automatisch ausgeführt. Fristverdacht ist ein Hinweis, keine Fristberechnung — fristauslösende Post ist zwingend gesondert der Fristenkontrolle (Skill `fristenrechner`) zuzuführen. Mehrdeutige/widersprüchliche Zuordnungen gehen immer als Rückfrage an die Kanzlei, nie als automatische Entscheidung."
