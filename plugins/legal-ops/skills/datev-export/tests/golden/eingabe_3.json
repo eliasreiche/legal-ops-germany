@@ -1,0 +1,22 @@
+{
+  "header": {
+    "erzeugt_am": "2026-02-28T23:59:59",
+    "exportiert_von": "Solo-Kanzlei",
+    "beraternummer": 7,
+    "mandantennummer": 1,
+    "wirtschaftsjahresbeginn": "2026-01-01",
+    "buchungszeitraum_von": "2026-01-01",
+    "buchungszeitraum_bis": "2026-12-31",
+    "bezeichnung": "Minimalfall"
+  },
+  "buchungen": [
+    {
+      "umsatz": "42",
+      "soll_haben": "H",
+      "konto": "70001",
+      "gegenkonto": "1000",
+      "belegdatum": "2026-02-01",
+      "buchungstext": "Vorschuss \"Projekt X\""
+    }
+  ]
+}

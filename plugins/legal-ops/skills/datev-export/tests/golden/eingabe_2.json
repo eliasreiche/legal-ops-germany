@@ -1,0 +1,41 @@
+{
+  "header": {
+    "erzeugt_am": "2026-08-01T09:30:15.500",
+    "exportiert_von": "Kanzlei B. & Partner",
+    "beraternummer": 1001,
+    "mandantennummer": 42,
+    "wirtschaftsjahresbeginn": "2026-01-01",
+    "sachkontenlaenge": 5,
+    "buchungszeitraum_von": "2026-08-01",
+    "buchungszeitraum_bis": "2026-08-31",
+    "bezeichnung": "Buchungsstapel August 2026",
+    "diktatkuerzel": "MM",
+    "buchungstyp": 1,
+    "waehrung": "EUR",
+    "formatversion": 5,
+    "herkunft": "RE"
+  },
+  "buchungen": [
+    {
+      "umsatz": "1500.00",
+      "soll_haben": "S",
+      "konto": "70000",
+      "gegenkonto": "84000",
+      "bu_schluessel": "9",
+      "belegdatum": "2026-08-05",
+      "belegfeld1": "RE-2026-100",
+      "buchungstext": "Honorar Mandant A"
+    },
+    {
+      "umsatz": "238.95",
+      "soll_haben": "H",
+      "konto": "10001",
+      "gegenkonto": "70000",
+      "belegdatum": "2026-08-20",
+      "belegfeld1": "RE-2026-101",
+      "belegfeld2": "Teilzahlung",
+      "skonto": "5.00",
+      "buchungstext": "Zahlungseingang Mandant B"
+    }
+  ]
+}

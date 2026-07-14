@@ -29,10 +29,10 @@ Die Skills sind fachlich nach sieben Prozesskategorien gegliedert (das Feld
 | `intake` | aktenkopf-extraktor |
 | `compliance` | interessenkollision-check, gwg-risiko-check, gwg-live-screening |
 | `fristen-termine` | fristenrechner, fristen-docketing-light, termin-assistent |
-| `zeit-abrechnung` | rvg-gkg-rechner, taetigkeitstext-rvg, passive-zeiterfassung, honorar-mahnwesen |
+| `zeit-abrechnung` | rvg-gkg-rechner, taetigkeitstext-rvg, passive-zeiterfassung, honorar-mahnwesen, datev-export |
 | `post-akte` | email-akten-zuordnung, posteingang-ocr-verteilung |
 | `kommunikation` | sachstandsmitteilung |
-| `wissen-qm` | wissensmanagement-precedents, kanzlei-sop-qualitygate, datev-export |
+| `wissen-qm` | wissensmanagement-precedents, kanzlei-sop-qualitygate |
 | `querschnitt` | zitat-pruefer |
 
 Reifegrade und Wellen-Zuordnung stehen in der Status-Tabelle der

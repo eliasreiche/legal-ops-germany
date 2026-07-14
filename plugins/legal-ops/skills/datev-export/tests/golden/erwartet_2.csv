@@ -1,0 +1,4 @@
+"EXTF";700;21;"Buchungsstapel";5;20260801093015500;;"RE";"Kanzlei B. & Partner";;1001;42;20260101;5;20260801;20260831;"Buchungsstapel August 2026";"MM";1;;;"EUR";;;;;;;;;
+"Umsatz (ohne Soll/Haben-Kz)";"Soll/Haben-Kennzeichen";"WKZ Umsatz";"Kurs";"Basis-Umsatz";"WKZ Basis-Umsatz";"Konto";"Gegenkonto (ohne BU-Schlüssel)";"BU-Schlüssel";"Belegdatum";"Belegfeld 1";"Belegfeld 2";"Skonto";"Buchungstext";"Postensperre";"Diverse Adressnummer";"Geschäftspartnerbank";"Sachverhalt";"Zinssperre";"Beleglink"
+1500,00;"S";;;;;70000;84000;"9";0508;"RE-2026-100";;;"Honorar Mandant A";;;;;;
+238,95;"H";;;;;10001;70000;;2008;"RE-2026-101";"Teilzahlung";5,00;"Zahlungseingang Mandant B";;;;;;
