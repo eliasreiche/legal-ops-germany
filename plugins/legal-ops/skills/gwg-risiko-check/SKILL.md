@@ -3,7 +3,7 @@ name: gwg-risiko-check
 description: "GwG-Risikoscoring eines Mandats anhand der Katalogfaktoren der Anlagen 1 und 2 GwG mit Dokumentations-Output für die interne Akte — offline, deterministisch, regelbasierter Klassifikationsvorschlag mit Fundstellen. Triggert bei Geldwäsche-Risiko, GwG-Prüfung, Risikoklassifizierung Mandat, Sorgfaltspflichten, § 10 GwG, Hochrisikoländer, FATF-Grauliste/Schwarzliste, EU-Hochrisiko-Drittstaaten. Die Bewertung bleibt beim Verpflichteten."
 status: beta
 welle: 2
-plugin: compliance
+bereich: compliance
 rdg_einordnung: "Strukturierte Dokumentationshilfe zu gesetzlichen Katalogfaktoren (Anlagen 1/2 GwG) mit regelbasiertem Klassifikationsvorschlag; keine Rechtsdienstleistung — die Risikobewertung und die Maßnahmenentscheidung trifft der Verpflichtete (§ 10 Abs. 2 GwG)."
 daten_hinweis: "KYC-/Mandatsdaten im Input — pseudonymisieren oder DSGVO-/BRAO-konformen Modellzugang nutzen (AWS-Bedrock-Pfad, § 203 StGB). Der Executor arbeitet rein lokal, ohne Netzwerkzugriff."
 haftung: "Ersetzt keine GwG-Pflichtenprüfung; das Scoring ist ein Vorschlag zur Aktendokumentation, kein Verwaltungsakt-sicherer Nachweis. Zweitkontrolle und Bewertung bleiben Kanzleisache. Die Anlagen-1/2-Fundstellen sind Platzhalter und vor produktiver Nutzung gegen gesetze-im-internet.de zu prüfen. Die Hochrisiko-Länderliste ist am 2026-07-13 browser-verifiziert (EU-VO (EU) 2016/1675 + BaFin-Rundschreiben 07/2026 zu den FATF-Listen), ändert sich aber laufend (FATF-Plenum ca. Feb/Jun/Okt) — Quartals-Review erforderlich."

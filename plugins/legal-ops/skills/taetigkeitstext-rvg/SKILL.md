@@ -3,7 +3,7 @@ name: taetigkeitstext-rvg
 description: "Formuliert aus Stichworten/Kalendereinträgen abrechnungsfähige Tätigkeitsbeschreibungen; Zeitwerte stammen ausschließlich aus dem Input, nie vom Modell — ein Provenienz-Gate erzwingt das maschinell gegen jede Zahl/jedes Datum im Text. Triggert bei Leistungsbeschreibung, Tätigkeitstext für Abrechnung, Zeitnarrativ, Leistungsnachweis formulieren."
 status: beta
 welle: 3
-plugin: zeit-abrechnung
+bereich: zeit-abrechnung
 rdg_einordnung: "Sprachliche Aufbereitung interner Abrechnungstexte aus vorgegebenen Stichworten und Zeitwerten; keine rechtliche Bewertung der Tätigkeit, keine Gebührenberechnung (dafür rvg-gkg-rechner) und keine Empfehlung, was abgerechnet werden darf."
 daten_hinweis: "Tätigkeitsbeschreibungen tragen Mandatsbezug (Aktenzeichen, Sachverhalts-Stichworte) — nur über DSGVO-/BRAO-konformen Modellzugang (AWS-Bedrock-Pfad) verarbeiten, § 203 StGB beachten. Der Executor arbeitet rein lokal, ohne Netzwerkzugriff, und liest nur die übergebenen Dateien."
 haftung: "Der formulierte Text ist ein Entwurf — die Freigabe zur Rechnungsstellung (inhaltlich wie zeitlich) bleibt Kanzleisache. Zeitansätze stammen ausnahmslos aus dem Input (Kalender/Mail/manuelle Erfassung); der Executor erfindet nichts, das Provenienz-Gate ist Pflichtschritt vor jeder Ausgabe, ersetzt aber keine inhaltliche Prüfung der Abrechenbarkeit (RVG-Konformität, Zeitplausibilität) durch die Kanzlei."

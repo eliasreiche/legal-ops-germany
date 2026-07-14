@@ -3,7 +3,7 @@ name: termin-assistent
 description: "Schlägt Termine unter Berücksichtigung von Gerichtsterminen, Fristen und Kanzlei-Kalender (MS Graph oder iCal) vor. Triggert bei Terminvorschlag, Terminfindung, Kalender-Planung, freie Slots. Work-in-progress (Welle 5)."
 status: Work-in-progress
 welle: 5
-plugin: fristen-termine
+bereich: fristen-termine
 rdg_einordnung: "Organisatorische Terminfindung; keine Rechtsdienstleistung."
 daten_hinweis: "Kalenderdaten des Kanzlei-Tenants — DSGVO beachten."
 haftung: "Terminvorschläge kollidierende Fristen sind Hinweise; Bestätigung durch die Kanzlei erforderlich."

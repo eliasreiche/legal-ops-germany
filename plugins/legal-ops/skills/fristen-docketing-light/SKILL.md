@@ -3,7 +3,7 @@ name: fristen-docketing-light
 description: "Export berechneter Fristen als iCal/CSV — in fristenrechner integriert (calc → export in einem Skill). Dieser Eintrag bleibt Platzhalter für erweitertes Docketing (Sammel-Export, Import-Profile). Work-in-progress (Welle 4)."
 status: Work-in-progress
 welle: 4
-plugin: fristen-termine
+bereich: fristen-termine
 rdg_einordnung: "Technischer Export rechnerisch ermittelter Termine; keine Fristenverwaltung als Dienstleistung."
 daten_hinweis: "Fristdaten können Aktenzeichen tragen — Exportdateien wie Akten behandeln."
 haftung: "Import und Kontrolle im Zielsystem verantwortet die Kanzlei; ersetzt keinen Fristenkalender mit Vier-Augen-Prinzip."

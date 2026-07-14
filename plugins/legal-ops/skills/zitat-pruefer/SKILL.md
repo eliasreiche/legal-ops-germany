@@ -3,7 +3,7 @@ name: zitat-pruefer
 description: "Extrahiert jede Norm-, Urteils- und Fundstellenangabe aus einem Text/Markdown-Dokument und markiert sie mit 3-Zustands-Marker (verifiziert / nicht prüfbar / abweichend) gegen eine Quellen-Registry. Querschnitts-Skill, den andere Skills am Ende mitnutzen. Triggert bei Zitate prüfen, Fundstellen verifizieren, Normzitat-Check, Belege gegen Registry."
 status: beta
 welle: 1
-plugin: querschnitt
+bereich: querschnitt
 rdg_einordnung: "Reine Format- und Konsistenzprüfung von Zitaten gegen eine vom Nutzer mitgelieferte Quellen-Registry; keine rechtliche Bewertung des Inhalts einer Norm oder Entscheidung und keine Aussage zur Rechtslage."
 daten_hinweis: "Dokumente können Mandatsbezug haben — vor Verarbeitung pseudonymisieren oder DSGVO-/BRAO-konformen Modellzugang nutzen (AWS-Bedrock-Pfad, § 203 StGB). Der Executor selbst arbeitet rein lokal, ohne Netzwerkzugriff."
 haftung: "Ersetzt keine inhaltliche Prüfung der zitierten Quellen durch den Anwalt. ✅ verifiziert heißt nur: Angabe stimmt mit der mitgelieferten Registry überein — nicht, dass Norm oder Entscheidung inhaltlich einschlägig sind. Zweitkontrolle bleibt Kanzleisache."

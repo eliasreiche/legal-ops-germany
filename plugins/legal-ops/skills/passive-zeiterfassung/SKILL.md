@@ -3,7 +3,7 @@ name: passive-zeiterfassung
 description: "Rekonstruiert aus Kalender- und Mail-Metadaten Zeiterfassungs-Vorschläge je Akte zum Bestätigen oder Verwerfen und übergibt bestätigte Einträge an taetigkeitstext-rvg. Triggert bei Zeiterfassung, Stunden rekonstruieren, Timesheet-Vorschlag, erfasste Zeiten je Akte."
 status: beta
 welle: 3
-plugin: zeit-abrechnung
+bereich: zeit-abrechnung
 kontext_reads:
   - mandate/*.md
 rdg_einordnung: "Interner Verwaltungsvorschlag zur Zeiterfassung; keine Rechtsdienstleistung. Der Output ordnet Metadaten Akten zu und schlägt Zeitwerte vor — keine rechtliche Bewertung, keine Abrechnungsentscheidung."

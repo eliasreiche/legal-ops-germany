@@ -3,7 +3,7 @@ name: wissensmanagement-precedents
 description: "Indexiert und findet Kanzlei-eigene Muster/Precedents (anonymisiert) und schlägt das passende Muster zu einem Sachverhalt vor. Triggert bei Muster finden, Precedent/Vorlage suchen, Wissensmanagement, ähnlicher Fall. Work-in-progress (Welle 5)."
 status: Work-in-progress
 welle: 5
-plugin: wissen-qm
+bereich: wissen-qm
 rdg_einordnung: "Wiederauffinden eigener Arbeitsmittel; die Anpassung des Musters an den Fall ist anwaltliche Arbeit."
 daten_hinweis: "Muster vor Indexierung anonymisieren; keine Mandatsdaten im Index."
 haftung: "Muster-Vorschlag ersetzt keine Prüfung der Aktualität und Passung durch den Anwalt."

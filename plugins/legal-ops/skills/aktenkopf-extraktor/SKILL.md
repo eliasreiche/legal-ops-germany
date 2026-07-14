@@ -3,7 +3,7 @@ name: aktenkopf-extraktor
 description: "Strukturiert eingehende Mandats-Dokumente (Anspruchsschreiben, Kündigung, Behördenpost) zu einem maschinenlesbaren Aktenkopf — Rubrum, Parteien, Datumsnennungen, Geldbeträge, Aktenzeichen — samt Lückenliste fehlender Pflichtangaben; ein Executor erzwingt Provenienz gegen Halluzination. Triggert bei Aktenanlage, Mandats-Intake, Dokument/Schreiben strukturieren, Aktenkopf erstellen."
 status: beta
 welle: 2
-plugin: intake
+bereich: intake
 rdg_einordnung: "Organisatorische Strukturierung und Extraktion eingehender Mandats-Dokumente in einen Aktenkopf; keine rechtliche Ersteinschätzung, keine Subsumtion, keine Fristberechnung. Erkannte Datumsnennungen sind Rohmaterial für die Aktenanlage, keine Rechtsdienstleistung."
 daten_hinweis: "Mandantendaten im Input — nur über DSGVO-/BRAO-konformen Modellzugang (AWS-Bedrock-Pfad) verarbeiten; § 203 StGB beachten. Der Executor arbeitet rein lokal, ohne Netzwerkzugriff, und liest nur die übergebenen Dateien."
 haftung: "Erkannte Fristen/Datumsnennungen sind bloße Hinweise, keine Fristenkontrolle und keine Fristberechnung — dafür ist ausschließlich der Skill fristenrechner als Zweitkontrolle zuständig. Die Vollständigkeit der Extraktion (insb. der Lückenliste) bleibt anwaltlich zu prüfen."

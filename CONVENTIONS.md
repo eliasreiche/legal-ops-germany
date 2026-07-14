@@ -10,7 +10,7 @@ Der [Struktur-Lint](plugins/legal-ops/core/verify/struktur_lint.py) erzwingt die
 
 ## Fünf Grundprinzipien (Kurzform)
 
-1. **Prozesszentrierte Taxonomie** — 7 Prozesskategorien (Frontmatter-Feld `plugin:`), ausgeliefert als **ein** Plugin `legal-ops` (`core/` liegt darin, siehe D14); kein Rechtsgebiets-Schnitt.
+1. **Prozesszentrierte Taxonomie** — 7 Prozesskategorien (Frontmatter-Feld `bereich:`), ausgeliefert als **ein** Plugin `legal-ops` (`core/` liegt darin, siehe D14); kein Rechtsgebiets-Schnitt. (Das Feld hieß bis 2026-07-14 `plugin:` — nach D14 gibt es nur ein Plugin, `bereich:` ist reine fachliche Gliederung, keine Auslieferungseinheit.)
 2. **Datei-Schnittstelle immer, Connector optional** — jeder Skill definiert Ein-/Ausgaben als Dateien (CSV, PDF, EML, iCal, EXTF, DOCX); Live-Adapter (MS Graph, Sanktionslisten) füttern dieselbe Schnittstelle.
 3. **Deterministik-Grenze** — alles mit Zahlen, Daten, Fristen oder Geld rechnet ein Python-Executor in `core/calc/`, nie das Modell. Modellgenerierte Werte in Zahlenfeldern sind ein Testfehler.
 4. **Test-Disziplin trägt die Glaubwürdigkeit** — jeder Skill hat `tests/`; Rechner haben Orakel-Fälle gegen borghei `legal_calc`; CI läuft bei jedem Push.
@@ -40,7 +40,7 @@ name: <verzeichnisname>            # muss dem Ordnernamen entsprechen
 description: "Was der Skill tut + wann er triggert (Skill-Discovery)."
 status: Work-in-progress | beta | getestet   # Reifegrad-Leiter, siehe unten
 welle: 1-5                         # Build-Reihenfolge
-plugin: <plugin> | querschnitt
+bereich: <bereich> | querschnitt
 rdg_einordnung: "Warum keine Rechtsdienstleistung / wo die Grenze des Outputs liegt."
 daten_hinweis: "Welche Daten hinein dürfen; § 203 StGB / DSGVO / BRAO-konformer Modellzugang."
 haftung: "Zweitkontroll-Klausel; bei Fristen/Gebühren zwingend."

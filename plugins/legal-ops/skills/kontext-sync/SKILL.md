@@ -3,7 +3,7 @@ name: kontext-sync
 description: "Synchronisiert Kanzlei-Daten (Mandate, Kontakte, Kanzlei-Profil) zwischen der Kanzleisoftware/M365 und dem lokalen kontext/-Ordner — per vorhandenem MCP-Konnektor oder per filesystem-Referenzadapter, danach immer Schema-Validierung. Triggert bei kontext/ synchronisieren, Kanzlei-Daten abgleichen, Mandat aktualisieren, kontext-sync, Kontext-Layer befüllen, Mandatsakte nach kontext/ holen, M365 nach kontext/ übernehmen. Konflikte werden nie automatisch aufgelöst."
 status: beta
 welle: 3
-plugin: querschnitt
+bereich: querschnitt
 rdg_einordnung: "Reine Datei-/Datensynchronisation zwischen Systemen nach dokumentiertem Schema (kein inhaltliches Verfassen, keine rechtliche Bewertung); keine Rechtsdienstleistung."
 daten_hinweis: "kontext/ enthält Mandatsdaten (Az., Mandant, Gegenseite, Streitwert) — Datenperimeter und Klassifizierung nach D10 (Datenklassifizierung des Vaults/der Kanzlei-Datenhaltung, kod-decisions) beachten: nur in regulatorisch/technisch sicheren Tools verarbeiten, DSGVO-/BRAO-konformen Modellzugang nutzen (AWS-Bedrock-Pfad, § 203 StGB). Der filesystem-Adapter arbeitet rein lokal, ohne Netzwerkzugriff; ein MCP-Konnektor (z. B. M365) überträgt Daten an einen externen Dienst — dessen Freigabe ist Sache der Kanzlei."
 haftung: "Der Validator und der filesystem-Adapter sind deterministische Executors (P3) — Schema-Konformität und Konflikterkennung sind automatisiert getestet. Der MCP-Sync-Schritt selbst (welcher Konnektor, welche Felder wie gemappt werden) ist nicht automatisiert testbar und bleibt manuelle Prüfung. Ein gemeldeter Konflikt wird NIE automatisch aufgelöst — Zweitkontrolle und Merge-Entscheidung bleiben Kanzleisache."

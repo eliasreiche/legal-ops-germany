@@ -34,7 +34,7 @@ def _skill(tmp_path, name, status, extra="", mit_tests=False):
         (skill / "tests" / "test_x.py").write_text("def test_x(): pass\n")
     (skill / "SKILL.md").write_text(
         f'---\nname: {name}\ndescription: "x"\nstatus: {status}\nwelle: 1\n'
-        f'plugin: intake\n'
+        f'bereich: intake\n'
         f'rdg_einordnung: "x"\ndaten_hinweis: "x"\nhaftung: "x"\n{extra}---\n# x\n',
         encoding="utf-8")
     return skill
@@ -53,6 +53,25 @@ def test_pruefe_skill_meldet_fehlende_pflichtfelder(tmp_path):
     assert "daten_hinweis" in meldungen
     assert "haftung" in meldungen
     assert "Work-in-progress`, `beta` oder `getestet" in meldungen
+
+
+def test_altes_plugin_feld_meldet_umbenennung(tmp_path):
+    # Übergangsfall (2026-07-14): ein SKILL.md, das noch das alte Feld
+    # `plugin:` statt `bereich:` trägt, muss eine gezielte Umbenennungs-
+    # Meldung bekommen — nicht nur "Pflichtfeld fehlt".
+    skill = tmp_path / "alter-skill"
+    (skill / "tests").mkdir(parents=True)
+    (skill / "tests" / "test_x.py").write_text("def test_x(): pass\n")
+    (skill / "SKILL.md").write_text(
+        '---\nname: alter-skill\ndescription: "x"\nstatus: beta\nwelle: 1\n'
+        'plugin: intake\n'
+        'rdg_einordnung: "x"\ndaten_hinweis: "x"\nhaftung: "x"\n---\n# x\n',
+        encoding="utf-8")
+    fehler: list[str] = []
+    struktur_lint.pruefe_skill(skill, fehler)
+    meldungen = "\n".join(fehler)
+    assert "`plugin:` heißt seit 2026-07-14 `bereich:`" in meldungen
+    assert "Pflichtfeld `bereich` fehlt" not in meldungen
 
 
 def test_beta_verlangt_echte_tests(tmp_path):

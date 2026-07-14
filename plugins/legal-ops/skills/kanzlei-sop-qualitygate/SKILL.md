@@ -3,7 +3,7 @@ name: kanzlei-sop-qualitygate
 description: "Prüft Dokumente und Prozesse gegen hinterlegte Kanzlei-SOPs (Checklisten) und erzeugt einen Abweichungsbericht. Triggert bei SOP-Prüfung, Qualitätsgate, Checkliste abgleichen, QM-Abweichung. Work-in-progress (Welle 5)."
 status: Work-in-progress
 welle: 5
-plugin: wissen-qm
+bereich: wissen-qm
 rdg_einordnung: "Interne Qualitätssicherung gegen eigene Standards; keine rechtliche Prüfung."
 daten_hinweis: "SOPs sind intern; geprüfte Dokumente können Mandatsbezug haben — DSGVO-/BRAO-konformer Modellzugang."
 haftung: "Checklisten-Ergebnis ersetzt keine fachliche Endkontrolle."

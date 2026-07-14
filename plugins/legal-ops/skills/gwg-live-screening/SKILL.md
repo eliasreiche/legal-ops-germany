@@ -3,7 +3,7 @@ name: gwg-live-screening
 description: "Screent Parteien gegen EU-/UN-Sanktionslisten (offizielle XML/JSON-Quellen) und dokumentiert Treffer/Nicht-Treffer. Triggert bei Sanktionslisten-Abgleich, Embargo-Prüfung, GwG-Screening, PEP- oder Sanktionsprüfung. Work-in-progress (Welle 4)."
 status: Work-in-progress
 welle: 4
-plugin: compliance
+bereich: compliance
 rdg_einordnung: "Abgleich gegen öffentliche Pflichtlisten als Rechercheunterstützung; Maßnahmen bei Treffern entscheidet der Verpflichtete."
 daten_hinweis: "Nur Parteinamen gehen in den Abgleich; Listen sind öffentlich."
 haftung: "Listenstand ist datiert zu dokumentieren; falsch-negative Treffer durch Transliteration möglich — kein abschließender Nachweis."
