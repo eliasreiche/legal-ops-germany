@@ -4,8 +4,10 @@
 
 Open-Source-Library aus **Claude-Skills und deterministischen Python-Executors** für die
 **non-billable Workflows** deutscher Boutique- und Kleinkanzleien — Fristenberechnung
-(ZPO/BGB), Gebühren (RVG/GKG), GwG-Risikoprüfung, Intake, E-Mail-Triage, Konflikt-Check
-und mehr. Funktionsweise ausschließlich nach deutschem Recht.
+(ZPO/BGB) mit Kalender-Export, Gebühren (RVG/GKG), GwG-Risikoklassifizierung mit
+verifizierter Hochrisiko-Länderliste, Aktenkopf-Extraktion, Interessenkollisions-Check,
+DATEV-EXTF-Export und mehr. **19 Skills, davon 8 in `beta`** (Status-Tabelle unten).
+Funktionsweise ausschließlich nach deutschem Recht.
 
 > **Keine Rechtsberatung.** Diese Library unterstützt organisatorische und rechnerische
 > Abläufe der Kanzlei. Jedes Ergebnis unterliegt der Zweitkontrolle durch die Kanzlei;
@@ -26,8 +28,9 @@ insbesondere im Hinblick auf:
 - **KI-Verordnung** — VO (EU) 2024/1689 (Risiko-Einstufung, Transparenz- und
   Betreiberpflichten).
 
-**Mandantendaten gehören ausschließlich in regulatorisch und teschnisch sichere Tools.** Die optionalen Live-Adapter (Microsoft Graph, Sanktionslisten) geben
-Daten nach außen — Freigabe des jeweiligen Datenflusses ist Sache der Kanzlei.
+**Mandantendaten gehören ausschließlich in regulatorisch und technisch sichere Tools.** Optionale Live-Anbindungen (vorhandene MCP-Konnektoren, z. B. Microsoft 365;
+EU-/UN-Sanktionslisten geplant) geben Daten nach außen — Freigabe des jeweiligen
+Datenflusses ist Sache der Kanzlei.
 
 ## Wie es funktioniert
 
@@ -36,7 +39,16 @@ Daten nach außen — Freigabe des jeweiligen Datenflusses ist Sache der Kanzlei
   deterministisch berechnet — nie vom Modell generiert.
 - **Datei rein, Datei raus.** Jeder Skill arbeitet über Datei-Schnittstellen (CSV, PDF,
   EML, iCal, DATEV-EXTF, DOCX) — kompatibel mit dem Export/Import jeder Kanzleisoftware.
-  Live-Adapter (Microsoft Graph, EU-/UN-Sanktionslisten) sind optional.
+  Live-Anbindung ist optional und nutzt **vorhandene MCP-Konnektoren** (z. B.
+  Microsoft 365), gebündelt in genau einem Skill (`kontext-sync`) — eigener
+  Integrations-Code für Kanzleisoftware ist bewusst nicht enthalten (Verweis auf
+  die API-Doku des Herstellers bzw. „Integration geplant").
+- **Kontext-Layer.** Ein per-Kanzlei-Ordner `kontext/` (Kanzlei-Profil,
+  `mandate/<az>.md`, Kontakte) ist die einzige Schnittstelle der Skills zu
+  Kanzlei-Wissen — befüllt per Datei-Adapter oder MCP-Sync, von einem Executor
+  validiert ([`plugins/legal-ops/core/context/`](plugins/legal-ops/core/context/)).
+  Aufbewahrungs-Hinweise nach § 50 BRAO liefert ein Retention-Executor — **gelöscht
+  wird nie automatisch**.
 - **Ehrliche Labels.** Jeder Skill trägt sichtbar seinen Reifegrad:
   - 🚧 `Work-in-progress` — noch nicht entwickelt (Stub) oder Code vorhanden, aber noch kein Test-Run.
   - 🧪 `beta` — gegen Testdaten durch Agenten getestet (Tests/Orakel-Fälle laufen grün in CI).
@@ -47,8 +59,8 @@ Daten nach außen — Freigabe des jeweiligen Datenflusses ist Sache der Kanzlei
   Datenhinweise (§ 203 StGB, DSGVO/BRAO) und Haftungsgrenzen — vom Lint erzwungen.
 
 Hausregeln: [CONVENTIONS.md](CONVENTIONS.md) · Struktur: ein Plugin
-[`legal-ops`](plugins/legal-ops/) bündelt alle Skills (fachlich in sieben
-Prozessbereichen gegliedert, Feld `plugin:` im Frontmatter) **und** die
+[`legal-ops`](plugins/legal-ops/) bündelt alle Skills (fachlich in Prozessbereiche
+plus Querschnitt gegliedert, Feld `plugin:` im Frontmatter) **und** die
 geteilten Rechner unter [`plugins/legal-ops/core/`](plugins/legal-ops/core/) —
 so ist `core/` Teil der Auslieferung und jeder Executor-Skill nach dem Install
 lauffähig.
