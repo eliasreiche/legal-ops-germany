@@ -68,7 +68,7 @@ Tabelle wird generiert von [`plugins/legal-ops/core/verify/struktur_lint.py`](pl
 | [`aktenkopf-extraktor`](plugins/legal-ops/skills/aktenkopf-extraktor/SKILL.md) | `intake` | 2 | 🧪 `beta` |
 | [`email-akten-zuordnung`](plugins/legal-ops/skills/email-akten-zuordnung/SKILL.md) | `post-akte` | 3 | 🧪 `beta` |
 | [`kontext-sync`](plugins/legal-ops/skills/kontext-sync/SKILL.md) | `querschnitt` | 3 | 🧪 `beta` |
-| [`passive-zeiterfassung`](plugins/legal-ops/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🚧 `Work-in-progress` |
+| [`passive-zeiterfassung`](plugins/legal-ops/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🧪 `beta` |
 | [`taetigkeitstext-rvg`](plugins/legal-ops/skills/taetigkeitstext-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🧪 `beta` |
 | [`gwg-live-screening`](plugins/legal-ops/skills/gwg-live-screening/SKILL.md) | `compliance` | 4 | 🚧 `Work-in-progress` |
 | [`fristen-docketing-light`](plugins/legal-ops/skills/fristen-docketing-light/SKILL.md) | `fristen-termine` | 4 | 🚧 `Work-in-progress` |

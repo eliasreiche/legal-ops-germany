@@ -1,0 +1,67 @@
+{
+  "eintraege": [
+    {
+      "datum": "2026-07-06",
+      "az": "2026-001",
+      "minuten": null,
+      "start": "2026-07-06T09:00:00",
+      "ende": "2026-07-06T09:45:00",
+      "stichworte": [
+        "Besprechung Az. 2026-001 - Sachstand",
+        "Ort: Kanzlei",
+        "Teilnehmerzahl: 2"
+      ],
+      "quelle": "kalender"
+    },
+    {
+      "datum": "2026-07-08",
+      "az": "2026-001",
+      "minuten": null,
+      "start": "2026-07-08T10:00:00",
+      "ende": "2026-07-08T11:00:00",
+      "stichworte": [
+        "Telefonkonferenz mit Muster AG",
+        "Teilnehmerzahl: 1"
+      ],
+      "quelle": "kalender"
+    },
+    {
+      "datum": "2026-07-08",
+      "az": "2026-002",
+      "minuten": null,
+      "start": "2026-07-08T10:30:00",
+      "ende": "2026-07-08T11:15:00",
+      "stichworte": [
+        "Rückruf Az. 2026-002 - Terminabstimmung"
+      ],
+      "quelle": "kalender"
+    },
+    {
+      "datum": "2026-07-06",
+      "az": "2026-001",
+      "minuten": 6,
+      "start": null,
+      "ende": null,
+      "stichworte": [
+        "Az. 2026-001 - Kurze Rückfrage zur Fristsetzung",
+        "E-Mail ausgehend"
+      ],
+      "quelle": "mail"
+    },
+    {
+      "datum": "2026-07-07",
+      "az": "2026-001",
+      "minuten": 6,
+      "start": null,
+      "ende": null,
+      "stichworte": [
+        "Zahlungsziel - Rueckfrage",
+        "E-Mail eingehend"
+      ],
+      "quelle": "mail"
+    }
+  ],
+  "config": {
+    "takt_minuten": null
+  }
+}

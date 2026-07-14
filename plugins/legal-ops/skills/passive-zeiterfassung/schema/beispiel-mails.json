@@ -1,0 +1,25 @@
+{
+  "mails": [
+    {
+      "zeitstempel": "2026-07-06T13:15:00",
+      "betreff": "Az. 2026-001 - Kurze Rückfrage zur Fristsetzung",
+      "absender": "Kanzlei",
+      "empfaenger": ["kontakt@muster-ag.example"],
+      "richtung": "ausgehend"
+    },
+    {
+      "zeitstempel": "2026-07-07T08:40:00",
+      "betreff": "Zahlungsziel - Rueckfrage",
+      "absender": "Muster AG Rechtsabteilung",
+      "empfaenger": ["kanzlei@example.org"],
+      "richtung": "eingehend"
+    },
+    {
+      "zeitstempel": "2026-07-07T16:20:00",
+      "betreff": "Newsletter - Fortbildungsangebote im Sommer",
+      "absender": "Fortbildungswerk",
+      "empfaenger": ["kanzlei@example.org"],
+      "richtung": "eingehend"
+    }
+  ]
+}
