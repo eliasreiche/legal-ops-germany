@@ -1,0 +1,64 @@
+{
+  "eintraege": [
+    {
+      "datum": "2026-07-01",
+      "az": "12/2026",
+      "minuten": null,
+      "start": "2026-07-01T09:00:00",
+      "ende": "2026-07-01T09:47:00",
+      "stichworte": [
+        "Telefonat mit Mandant",
+        "Sachstand zur Kündigungsschutzklage besprochen"
+      ],
+      "quelle": "kalender"
+    },
+    {
+      "datum": "2026-07-01",
+      "az": "12/2026",
+      "minuten": 30,
+      "start": null,
+      "ende": null,
+      "stichworte": [
+        "Fristenkontrolle Klageerwiderung geprüft"
+      ],
+      "quelle": "manuell"
+    },
+    {
+      "datum": "2026-07-02",
+      "az": "34/2026",
+      "minuten": 15,
+      "start": null,
+      "ende": null,
+      "stichworte": [
+        "Kurze Rückfrage per Mail beantwortet"
+      ],
+      "quelle": "mail"
+    },
+    {
+      "datum": "2026-07-03",
+      "az": null,
+      "minuten": 20,
+      "start": null,
+      "ende": null,
+      "stichworte": [
+        "Interne Notiz zur Aktenorganisation"
+      ],
+      "quelle": "manuell"
+    },
+    {
+      "datum": "2026-07-03",
+      "az": "34/2026",
+      "minuten": null,
+      "start": "2026-07-03T14:00:00",
+      "ende": "2026-07-03T14:22:00",
+      "stichworte": [
+        "Recherche zu Kündigungsfristen",
+        "Ergebnis an Sachbearbeiter weitergegeben"
+      ],
+      "quelle": "kalender"
+    }
+  ],
+  "config": {
+    "takt_minuten": 6
+  }
+}

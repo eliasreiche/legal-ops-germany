@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "erzeugt_von": "plugins/legal-ops/skills/taetigkeitstext-rvg/executor.py",
+    "text_datei": "schema/beispiel-entwurf.md",
+    "report_datei": "schema/beispiel-report.json",
+    "deterministik": "Jeder Beleg-Zustand (belegt/fremd) in diesem Prüf-Report ist ein Executor-Ergebnis (P3), nicht modellgeneriert."
+  },
+  "gefundene_werte": {
+    "minuten": [
+      {
+        "roh": "47 Minuten",
+        "normalisiert": 47,
+        "typ": "minuten",
+        "status": "belegt"
+      },
+      {
+        "roh": "30 Minuten",
+        "normalisiert": 30,
+        "typ": "minuten",
+        "status": "belegt"
+      },
+      {
+        "roh": "78 Minuten",
+        "normalisiert": 78,
+        "typ": "minuten",
+        "status": "belegt"
+      },
+      {
+        "roh": "15 Minuten",
+        "normalisiert": 15,
+        "typ": "minuten",
+        "status": "belegt"
+      },
+      {
+        "roh": "22 Minuten",
+        "normalisiert": 22,
+        "typ": "minuten",
+        "status": "belegt"
+      },
+      {
+        "roh": "20 Minuten",
+        "normalisiert": 20,
+        "typ": "minuten",
+        "status": "belegt"
+      },
+      {
+        "roh": "1,3 Stunden",
+        "normalisiert": 78,
+        "typ": "stunden",
+        "status": "belegt"
+      }
+    ],
+    "daten": [
+      {
+        "roh": "01.07.2026",
+        "normalisiert": "2026-07-01",
+        "status": "belegt"
+      },
+      {
+        "roh": "01.07.2026",
+        "normalisiert": "2026-07-01",
+        "status": "belegt"
+      },
+      {
+        "roh": "02.07.2026",
+        "normalisiert": "2026-07-02",
+        "status": "belegt"
+      },
+      {
+        "roh": "03.07.2026",
+        "normalisiert": "2026-07-03",
+        "status": "belegt"
+      },
+      {
+        "roh": "03.07.2026",
+        "normalisiert": "2026-07-03",
+        "status": "belegt"
+      }
+    ],
+    "aktenzeichen": [
+      {
+        "roh": "12/2026",
+        "status": "belegt"
+      },
+      {
+        "roh": "34/2026",
+        "status": "belegt"
+      }
+    ]
+  },
+  "befunde": [],
+  "zusammenfassung": {
+    "anzahl_gefunden": 14,
+    "anzahl_befunde": 0
+  },
+  "ergebnis": "sauber"
+}
