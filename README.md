@@ -106,6 +106,32 @@ git clone https://github.com/eliasreiche/claude-for-legal-non-billable-germany.g
 Einbindung als Claude-Code-/Cowork-Plugin über [`marketplace.json`](.claude-plugin/marketplace.json);
 Details je Skill im jeweiligen `SKILL.md`.
 
+### Voraussetzungen
+
+Python ≥ 3.x und `pytest` sind unter [Entwicklung](#entwicklung) beschrieben
+(nur zum Ausführen der Tests nötig, nicht für den Skill-Betrieb selbst).
+
+**Optionale System-Werkzeuge** — je nachdem, welche eingehenden
+Dokumentformate ein Skill verarbeiten soll:
+
+| Werkzeug | Wofür |
+|---|---|
+| `poppler` | PDF-Textextraktion und -Rendering |
+| `pandoc` | DOCX → Markdown-Konvertierung |
+
+```bash
+# macOS
+brew install poppler pandoc
+
+# Debian/Ubuntu
+apt-get install poppler-utils pandoc
+```
+
+Ohne diese Werkzeuge laufen die Executors unverändert weiter — sie
+bündeln keine Binärabhängigkeiten (Claude-Code-Plugin = Skripte + Markdown).
+Nur die Dokument-Konvertierung davor (PDF/DOCX → Text/Markdown) braucht dann
+Handarbeit oder andere Werkzeuge.
+
 ## Entwicklung
 
 ```bash

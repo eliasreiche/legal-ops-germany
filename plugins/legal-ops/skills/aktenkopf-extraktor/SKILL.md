@@ -61,12 +61,30 @@ Der Executor liest nur diese Dateien, kein Netzwerk, keine Datenbank.
 
 ## Ablauf
 
-1. **Claude liest das/die Quelldokument(e) und extrahiert nach Schema** in einen
-   `aktenkopf.json` — es **erfindet nichts**: Was nicht im Text steht, wird nicht
-   ergänzt, sondern als Eintrag in `luecken` ausgewiesen (mit Begründung, warum
-   die Angabe für die Aktenanlage nötig ist). Datumsnennungen kommen als
-   `fristen_hinweise` mit wörtlichem `quelle_zitat` in den Aktenkopf, nie als
-   berechnete Frist.
+**Verbindlicher Arbeitsablauf (Audit 2026-07-15).** Eine händische Abnahme hat
+gezeigt: Ein freihändig aus dem Gedächtnis erstelltes Aktenkopf-JSON produziert
+zuverlässig Schema-Fehler — u. a. falsche Wurzel-Schlüssel (statt des
+Schema-Objekts `aktenkopf` ein flacher Aufbau, statt `betraege` ein erfundenes
+`geldbetraege`, statt `aktenzeichen_fremd` ein erfundenes `fremde_aktenzeichen`),
+Enum-Verstöße (`Mandant_aktuell` statt `mandant`, `natürlich` statt
+`natuerlich`) und fehlende Pflichtfelder bei `fristen_hinweise` (`datum_im_text`,
+`originalschreibweise`, `vermutete_bedeutung`) — insgesamt 35 Fehler in einem
+Testlauf. Die Provenienz-Prüfung selbst fing dabei zuverlässig einen nicht
+belegten Wert ab. Deshalb sind die folgenden Schritte **verbindlich, kein
+Freihand-Entwurf und kein One-Shot**:
+
+1. **Claude kopiert [`schema/beispiel-aktenkopf.json`](schema/beispiel-aktenkopf.json)
+   als Vorlage** und füllt sie aus dem/den Quelldokument(en) — ein
+   Aktenkopf-JSON wird **nie** frei aus dem Gedächtnis aufgebaut. Wurzel-Schlüssel
+   (`aktenkopf`, `parteien`, `fristen_hinweise`, `betraege`, `aktenzeichen_fremd`,
+   `luecken`) und Enum-Werte (`rolle`: `mandant`/`gegner`/`sonstige`; `typ`:
+   `natuerlich`/`juristisch`) werden **wörtlich** aus der Vorlage bzw.
+   [`schema/README.md`](schema/README.md) übernommen — nie umformulieren, nie mit
+   Umlauten oder abweichender Groß-/Kleinschreibung schreiben. Was nicht im Text
+   steht, wird nicht ergänzt, sondern als Eintrag in `luecken` ausgewiesen (mit
+   Begründung, warum die Angabe für die Aktenanlage nötig ist). Datumsnennungen
+   kommen als `fristen_hinweise` mit wörtlichem `quelle_zitat` in den Aktenkopf,
+   nie als berechnete Frist.
 2. **Claude ruft den Executor auf** (kein eigenes Prüfen durch das Modell):
 
    ```bash
@@ -82,8 +100,11 @@ Der Executor liest nur diese Dateien, kein Netzwerk, keine Datenbank.
    `nicht_belegt`-Wert und/oder Schema-Fehler, `2` = Eingabefehler.
 4. **Bei `nicht_belegt` oder Schema-Fehler korrigiert Claude** den Aktenkopf —
    einen nicht belegten Wert entweder **streichen** (er stand nicht im Dokument)
-   oder als **Lücke** ausweisen; ein leeres Pflichtfeld mit einem `luecken`-
-   Eintrag versehen — und ruft den Executor erneut auf, bis er sauber läuft.
+   oder als **Lücke** ausweisen — nie erfinden; ein leeres Pflichtfeld mit einem
+   `luecken`-Eintrag versehen — und ruft den Executor erneut auf. **Kein
+   One-Shot**: Schritte 1–4 bilden eine Korrekturschleife (erstellen → prüfen →
+   korrigieren → erneut prüfen), keinen Einmal-Check. Wiederholen, bis der
+   Executor mit Exit-Code `0` sauber durchläuft.
 5. **Claude stellt das Ergebnis in Markdown dar**: Aktenkopf, Parteien-Tabelle,
    Frist-Hinweise **mit deutlichem Haftungshinweis** (erkannte Datumsnennungen,
    keine Fristenkontrolle; Fristberechnung nur über `fristenrechner`) und die
