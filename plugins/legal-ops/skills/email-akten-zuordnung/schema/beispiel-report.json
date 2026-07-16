@@ -2,7 +2,7 @@
   "meta": {
     "erzeugt_von": "email-akten-zuordnung/executor.py",
     "quelle_typ": "eml",
-    "kontext_verzeichnis": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/core/context/beispiel-kontext",
+    "kontext_verzeichnis": "/pfad/zum/repo/plugins/legal-ops/core/context/beispiel-kontext",
     "schwelle_moeglich": 0.85,
     "textauszug_max_len": 500,
     "anzahl_dokumente": 4,
@@ -11,7 +11,7 @@
   },
   "dokumente": [
     {
-      "quelle": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-az-im-betreff.eml",
+      "quelle": "/pfad/zum/repo/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-az-im-betreff.eml",
       "absender_name": "Kanzlei Beispiel",
       "absender_adresse": "kanzlei@beispiel.example",
       "empfaenger": [
@@ -44,7 +44,7 @@
       }
     },
     {
-      "quelle": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-fristverdacht.eml",
+      "quelle": "/pfad/zum/repo/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-fristverdacht.eml",
       "absender_name": "Zweite Beispiel KG",
       "absender_adresse": "kg@zweite-beispiel.example",
       "empfaenger": [
@@ -85,7 +85,7 @@
       }
     },
     {
-      "quelle": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-kein-treffer.eml",
+      "quelle": "/pfad/zum/repo/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-kein-treffer.eml",
       "absender_name": "Newsletter",
       "absender_adresse": "newsletter@versand.example",
       "empfaenger": [
@@ -109,7 +109,7 @@
       }
     },
     {
-      "quelle": "/Users/eliasreiche/Projects/claude-for-legal-non-billable-germany/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-nur-parteiname.eml",
+      "quelle": "/pfad/zum/repo/plugins/legal-ops/skills/email-akten-zuordnung/schema/beispiel-nur-parteiname.eml",
       "absender_name": "Muster AG",
       "absender_adresse": "recht@muster-ag.example",
       "empfaenger": [
