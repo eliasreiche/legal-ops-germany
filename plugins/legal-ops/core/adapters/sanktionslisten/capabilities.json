@@ -1,0 +1,7 @@
+{
+  "adapter": "sanktionslisten",
+  "typ": "datenquelle",
+  "kontext_layer": false,
+  "formate": ["eu-fsf-xml", "un-consolidated-xml"],
+  "push": false
+}

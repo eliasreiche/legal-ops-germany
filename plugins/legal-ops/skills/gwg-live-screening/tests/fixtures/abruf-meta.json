@@ -1,0 +1,10 @@
+{
+  "eu-fsf-mini.xml": {
+    "url": "https://webgate.ec.europa.eu/fsd/fsf/public/files/xmlFullSanctionsList_1_1/content",
+    "abgerufen_am": "2026-07-15"
+  },
+  "un-consolidated-mini.xml": {
+    "url": "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
+    "abgerufen_am": "2026-07-15"
+  }
+}

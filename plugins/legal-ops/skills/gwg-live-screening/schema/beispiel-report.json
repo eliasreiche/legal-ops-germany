@@ -1,0 +1,143 @@
+{
+  "meta": {
+    "erzeugt_von": "plugins/legal-ops/skills/gwg-live-screening/executor.py",
+    "parteien_datei": "plugins/legal-ops/skills/gwg-live-screening/schema/beispiel-parteien.json",
+    "listen_verzeichnis": "plugins/legal-ops/skills/gwg-live-screening/tests/fixtures",
+    "schwelle_moeglich": 0.8,
+    "bezugsdatum": "2026-07-16",
+    "deterministik": "Stufe/Score jedes Paars stammen aus dem Executor (core/calc/matching), nicht vom Modell (P3).",
+    "hinweis_massnahmen": "Treffer/mögliche Treffer sind Recherche-Kandidaten. Maßnahmen (z. B. Verdachtsmeldung § 43 GwG, Bereitstellungsverbot) entscheidet der Verpflichtete."
+  },
+  "listen_frische": [
+    {
+      "liste": "eu-fsf-mini.xml",
+      "quelle": "EU-FSF",
+      "generierungsdatum": "2026-07-15",
+      "abgerufen_am": "2026-07-15",
+      "alter_tage": 1,
+      "warnung_veraltet": false,
+      "anzahl_eintraege": 3
+    },
+    {
+      "liste": "un-consolidated-mini.xml",
+      "quelle": "UN",
+      "generierungsdatum": "2026-07-14",
+      "abgerufen_am": "2026-07-15",
+      "alter_tage": 1,
+      "warnung_veraltet": false,
+      "anzahl_eintraege": 3
+    }
+  ],
+  "warnungen": [],
+  "parteien": [
+    {
+      "partei": {
+        "name": "Max Mustermann",
+        "typ": "natuerlich"
+      },
+      "ergebnis": "treffer",
+      "anzahl_treffer": 1,
+      "anzahl_moegliche_treffer": 1,
+      "treffer": [
+        {
+          "liste": "eu-fsf-mini.xml",
+          "quelle": "EU-FSF",
+          "listen_referenz": "EU.9001.99",
+          "programm": "MUSTER-PROG",
+          "eintrag_typ": "person",
+          "geburtsdatum": "1970-01-01",
+          "gelisteter_name": "Max Mustermann",
+          "namensfeld": "primaername",
+          "regel": "S1",
+          "stufe": "treffer",
+          "score": 1.0,
+          "begruendung": "exakter Treffer nach Normalisierung: 'max mustermann' = 'max mustermann'"
+        },
+        {
+          "liste": "un-consolidated-mini.xml",
+          "quelle": "UN",
+          "listen_referenz": "MUi.9001",
+          "programm": "MUSTER",
+          "eintrag_typ": "person",
+          "geburtsdatum": "1962-03-04",
+          "gelisteter_name": "Hans Mustermann",
+          "namensfeld": "alias",
+          "regel": "S4",
+          "stufe": "moeglicher_treffer",
+          "score": 0.8276,
+          "begruendung": "Ähnlichkeit 0.83 ≥ Schwelle 0.80"
+        }
+      ]
+    },
+    {
+      "partei": {
+        "name": "Musterbau AG",
+        "typ": "juristisch"
+      },
+      "ergebnis": "treffer",
+      "anzahl_treffer": 1,
+      "anzahl_moegliche_treffer": 0,
+      "treffer": [
+        {
+          "liste": "un-consolidated-mini.xml",
+          "quelle": "UN",
+          "listen_referenz": "MUe.9101",
+          "programm": "MUSTER",
+          "eintrag_typ": "organisation",
+          "geburtsdatum": null,
+          "gelisteter_name": "Musterbau AG",
+          "namensfeld": "alias",
+          "regel": "S1",
+          "stufe": "treffer",
+          "score": 1.0,
+          "begruendung": "exakter Treffer nach Normalisierung: 'musterbau' = 'musterbau'"
+        }
+      ]
+    },
+    {
+      "partei": {
+        "name": "Maximilian Mustermann",
+        "typ": "natuerlich"
+      },
+      "ergebnis": "moeglicher_treffer",
+      "anzahl_treffer": 0,
+      "anzahl_moegliche_treffer": 1,
+      "treffer": [
+        {
+          "liste": "eu-fsf-mini.xml",
+          "quelle": "EU-FSF",
+          "listen_referenz": "EU.9001.99",
+          "programm": "MUSTER-PROG",
+          "eintrag_typ": "person",
+          "geburtsdatum": "1970-01-01",
+          "gelisteter_name": "Maximilian Mustremann",
+          "namensfeld": "alias",
+          "regel": "S3",
+          "stufe": "moeglicher_treffer",
+          "score": 1.0,
+          "begruendung": "phonetisch identisch nach Kölner Phonetik je Token: [648656, 682766] = [648656, 682766]"
+        }
+      ]
+    },
+    {
+      "partei": {
+        "name": "Johanna Sauber",
+        "typ": "natuerlich"
+      },
+      "ergebnis": "kein_treffer",
+      "anzahl_treffer": 0,
+      "anzahl_moegliche_treffer": 0,
+      "treffer": []
+    }
+  ],
+  "zusammenfassung": {
+    "anzahl_parteien": 4,
+    "anzahl_listen": 2,
+    "anzahl_listeneintraege": 6,
+    "parteien_mit_treffer": 2,
+    "parteien_mit_moeglichem_treffer": 1,
+    "parteien_ohne_treffer": 1,
+    "gesamt_treffer": 2,
+    "gesamt_moegliche_treffer": 2
+  }
+}

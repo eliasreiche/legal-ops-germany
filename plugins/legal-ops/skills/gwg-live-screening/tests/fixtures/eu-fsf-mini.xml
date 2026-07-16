@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FIKTIVER Ausschnitt im Schema der EU-Konsolidierten Finanzsanktionsliste
+  (FSF "full file"). Struktur echt (Wurzel <export generationDate>, darunter
+  <sanctionEntity> mit <subjectType code>, <nameAlias>, <birthdate>,
+  <regulation>), alle Einträge FREI ERFUNDEN und als fiktiv erkennbar
+  (MUSTERMANN/MUSTERFRAU, Musterhandel). Keine echten Personendaten.
+  Namensraum bewusst gesetzt, damit die Namensraum-Toleranz mitgetestet wird.
+-->
+<export xmlns="http://eu.europa.ec/fpi/fsd/export" generationDate="2026-07-15T12:00:00Z" globalFileId="fiktiv-0001">
+  <sanctionEntity euReferenceNumber="EU.9001.99" logicalId="900001">
+    <regulation regulationType="council" programme="MUSTER-PROG" numberTitle="VO (EU) 9001/2026" publicationDate="2026-01-15">
+      <publicationUrl>https://example.invalid/fiktiv</publicationUrl>
+    </regulation>
+    <subjectType classificationCode="P" code="person"/>
+    <nameAlias firstName="Max" lastName="Mustermann" wholeName="Max Mustermann" nameLanguage="deu"/>
+    <nameAlias wholeName="Maximilian Mustremann" nameLanguage="deu"/>
+    <birthdate birthdate="1970-01-01" year="1970" month="1" day="1"/>
+  </sanctionEntity>
+  <sanctionEntity euReferenceNumber="EU.9002.99" logicalId="900002">
+    <regulation regulationType="council" programme="MUSTER-PROG" numberTitle="VO (EU) 9001/2026" publicationDate="2026-01-15">
+      <publicationUrl>https://example.invalid/fiktiv</publicationUrl>
+    </regulation>
+    <subjectType classificationCode="E" code="enterprise"/>
+    <nameAlias wholeName="Musterhandel GmbH" nameLanguage="deu"/>
+    <nameAlias wholeName="Musterhandel Import Export" nameLanguage="deu"/>
+  </sanctionEntity>
+  <sanctionEntity euReferenceNumber="EU.9003.99" logicalId="900003">
+    <regulation regulationType="council" programme="ANDERE-PROG" numberTitle="VO (EU) 9003/2026" publicationDate="2026-02-20">
+      <publicationUrl>https://example.invalid/fiktiv</publicationUrl>
+    </regulation>
+    <subjectType classificationCode="P" code="person"/>
+    <nameAlias firstName="Erika" lastName="Musterfrau" wholeName="Erika Musterfrau" nameLanguage="deu"/>
+    <birthdate birthdate="1985-05-05" year="1985" month="5" day="5"/>
+  </sanctionEntity>
+</export>
