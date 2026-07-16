@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "erzeugt_von": "posteingang-ocr-verteilung/executor.py",
+    "eingang_datei": "beispiel-eingang.json",
+    "quelldateien": [
+      "beispiel-scan.txt"
+    ],
+    "kontext_verzeichnis": "../../../core/context/beispiel-kontext",
+    "schwelle_moeglich": 0.85,
+    "anzahl_kritische_werte": 6,
+    "anzahl_mandate": 2,
+    "mandat_warnungen": [],
+    "hinweis": "Der Skill berechnet NIE eine Frist. `fristrelevant` ist ein deterministisch abgeleitetes Flag, keine Fristberechnung — Fristen ausschließlich über den Skill fristenrechner (Zweitkontrolle)."
+  },
+  "schema_ok": true,
+  "schema_fehler": [],
+  "provenienz": [
+    {
+      "pfad": "eingang.datum_schreiben",
+      "typ": "datum",
+      "wert": "2026-07-01",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-scan.txt",
+        "zeile": 9,
+        "zitat": "Hamburg, 01.07.2026"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: datum)"
+    },
+    {
+      "pfad": "eingang.aktenzeichen_fremd",
+      "typ": "aktenzeichen",
+      "wert": "VB-2026-77",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-scan.txt",
+        "zeile": 12,
+        "zitat": "Unser Zeichen: VB-2026-77"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: aktenzeichen)"
+    },
+    {
+      "pfad": "eingang.aktenzeichen_eigen",
+      "typ": "aktenzeichen",
+      "wert": "2026-001",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-scan.txt",
+        "zeile": 11,
+        "zitat": "Ihr Zeichen: 2026-001"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: aktenzeichen)"
+    },
+    {
+      "pfad": "fristindikatoren[0].quelle_zitat",
+      "typ": "zitat",
+      "wert": "Mahnung und Fristsetzung",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-scan.txt",
+        "zeile": 14,
+        "zitat": "Mahnung und Fristsetzung"
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: zitat)"
+    },
+    {
+      "pfad": "fristindikatoren[1].quelle_zitat",
+      "typ": "zitat",
+      "wert": "binnen 14 Tagen ab Zugang dieses Schreibens auszugleichen",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-scan.txt",
+        "zeile": 18,
+        "zitat": "wir haben die von Ihnen ausgestellte Rechnung Nr. 8815 bislang nicht beglichen erhalten. Wir fordern Sie hiermit auf, den offenen Betrag binnen 14 Tagen ab Zugang dieses Schreibens auszugleichen, spätestens jedoch bis zum 15.07.2026."
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: zitat)"
+    },
+    {
+      "pfad": "fristindikatoren[2].quelle_zitat",
+      "typ": "zitat",
+      "wert": "spätestens jedoch bis zum 15.07.2026",
+      "status": "belegt",
+      "fundstelle": {
+        "datei": "beispiel-scan.txt",
+        "zeile": 18,
+        "zitat": "wir haben die von Ihnen ausgestellte Rechnung Nr. 8815 bislang nicht beglichen erhalten. Wir fordern Sie hiermit auf, den offenen Betrag binnen 14 Tagen ab Zugang dieses Schreibens auszugleichen, spätestens jedoch bis zum 15.07.2026."
+      },
+      "begruendung": "wörtlich in Quelle gefunden (Normalisierung: zitat)"
+    }
+  ],
+  "luecken": [],
+  "fristrelevant": true,
+  "fristrelevant_hinweis": "Mindestens ein Frist-Indikator ist provenienzgeprüft belegt — dieser Eingang ist gesondert der Fristenkontrolle zuzuführen (Skill 'fristenrechner' als Zweitkontrolle). Dies ist KEINE Fristberechnung und KEIN Normzitat.",
+  "zuordnung": {
+    "kandidaten": [
+      {
+        "az": "2026-001",
+        "datei": "mandate/2026-001.md",
+        "stufe": "Z0",
+        "kategorie": "treffer",
+        "score": 1.0,
+        "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'textauszug' gefunden"
+      }
+    ],
+    "kein_treffer": false,
+    "eindeutig": true,
+    "az_fuer_routing": "2026-001",
+    "erfordert_rueckfrage": false,
+    "hinweis": null
+  },
+  "routing_plan": {
+    "moeglich": true,
+    "ziel_ordner": "posteingang/2026-07-01_2026-001_muster-ag",
+    "dateien": [
+      {
+        "quelle": "beispiel-scan.txt",
+        "ziel": "posteingang/2026-07-01_2026-001_muster-ag/beispiel-scan.txt"
+      }
+    ],
+    "ausgefuehrt": false,
+    "fehler": null,
+    "hinweis": "Dry-Run — mit `--ausfuehren` tatsächlich kopieren (nie löschen, nie überschreiben)."
+  },
+  "zusammenfassung": {
+    "belegt": 6,
+    "nicht_belegt": 0,
+    "schema_fehler": 0
+  }
+}

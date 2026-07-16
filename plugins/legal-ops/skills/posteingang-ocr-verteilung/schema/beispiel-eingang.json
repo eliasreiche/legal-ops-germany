@@ -1,0 +1,15 @@
+{
+  "eingang": {
+    "absender": "Muster AG",
+    "datum_schreiben": "2026-07-01",
+    "aktenzeichen_fremd": "VB-2026-77",
+    "aktenzeichen_eigen": "2026-001",
+    "betreff": "Mahnung und Fristsetzung"
+  },
+  "fristindikatoren": [
+    { "schluesselwort": "Mahnung", "quelle_zitat": "Mahnung und Fristsetzung" },
+    { "schluesselwort": "binnen", "quelle_zitat": "binnen 14 Tagen ab Zugang dieses Schreibens auszugleichen" },
+    { "schluesselwort": "spätestens", "quelle_zitat": "spätestens jedoch bis zum 15.07.2026" }
+  ],
+  "luecken": []
+}
