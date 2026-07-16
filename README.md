@@ -88,11 +88,11 @@ Tabelle wird generiert von [`plugins/legal-ops/core/verify/struktur_lint.py`](pl
 | [`kontext-sync`](plugins/legal-ops/skills/kontext-sync/SKILL.md) | `querschnitt` | 3 | 🧪 `beta` |
 | [`passive-zeiterfassung`](plugins/legal-ops/skills/passive-zeiterfassung/SKILL.md) | `zeit-abrechnung` | 3 | 🧪 `beta` |
 | [`taetigkeitstext-rvg`](plugins/legal-ops/skills/taetigkeitstext-rvg/SKILL.md) | `zeit-abrechnung` | 3 | 🧪 `beta` |
-| [`gwg-live-screening`](plugins/legal-ops/skills/gwg-live-screening/SKILL.md) | `compliance` | 4 | 🚧 `Work-in-progress` |
+| [`gwg-live-screening`](plugins/legal-ops/skills/gwg-live-screening/SKILL.md) | `compliance` | 4 | 🧪 `beta` |
 | [`fristen-docketing-light`](plugins/legal-ops/skills/fristen-docketing-light/SKILL.md) | `fristen-termine` | 4 | 🚧 `Work-in-progress` |
-| [`posteingang-ocr-verteilung`](plugins/legal-ops/skills/posteingang-ocr-verteilung/SKILL.md) | `post-akte` | 4 | 🚧 `Work-in-progress` |
+| [`posteingang-ocr-verteilung`](plugins/legal-ops/skills/posteingang-ocr-verteilung/SKILL.md) | `post-akte` | 4 | 🧪 `beta` |
 | [`datev-export`](plugins/legal-ops/skills/datev-export/SKILL.md) | `zeit-abrechnung` | 4 | 🧪 `beta` |
-| [`honorar-mahnwesen`](plugins/legal-ops/skills/honorar-mahnwesen/SKILL.md) | `zeit-abrechnung` | 4 | 🚧 `Work-in-progress` |
+| [`honorar-mahnwesen`](plugins/legal-ops/skills/honorar-mahnwesen/SKILL.md) | `zeit-abrechnung` | 4 | 🧪 `beta` |
 | [`termin-assistent`](plugins/legal-ops/skills/termin-assistent/SKILL.md) | `fristen-termine` | 5 | 🚧 `Work-in-progress` |
 | [`sachstandsmitteilung`](plugins/legal-ops/skills/sachstandsmitteilung/SKILL.md) | `kommunikation` | 5 | 🚧 `Work-in-progress` |
 | [`kanzlei-sop-qualitygate`](plugins/legal-ops/skills/kanzlei-sop-qualitygate/SKILL.md) | `wissen-qm` | 5 | 🚧 `Work-in-progress` |
