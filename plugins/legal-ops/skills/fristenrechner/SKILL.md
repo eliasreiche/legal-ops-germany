@@ -1,7 +1,8 @@
 ---
 name: fristenrechner
 description: "Berechnet gerichtliche und prozessuale Fristen nach §§ 186–193 BGB und § 222 ZPO deterministisch mit nachvollziehbarer Rechenkette (Fristbeginn, Ende, Wochenend-/Feiertagsverschiebung je Bundesland). Triggert bei Fristberechnung, Einspruchsfrist, Berufungs-/Beschwerde-/Revisionsfrist, Notfrist, Fristende, Zustelldatum plus Fristart, Feiertagsverschiebung. Strikt Zweitkontrolle, ersetzt keine Fristenkontrolle der Kanzlei."
-status: beta
+status: getestet
+haendisch_getestet: 2026-07-15
 welle: 1
 bereich: fristen-termine
 rdg_einordnung: "Rechnerische Fristermittlung nach §§ 186–193 BGB / § 222 ZPO ohne Subsumtion des Einzelfalls; die rechtliche Einordnung des fristauslösenden Ereignisses (wirksame Zustellung, richtige Fristart, Fristbeginn-Alternativen) bleibt beim Anwalt."
@@ -11,10 +12,12 @@ haftung: "Zweitkontrolle, zwingend: Der Rechner ist das zweite Augenpaar, nie da
 
 # fristenrechner
 
-> **Status: `beta`** — automatisierte Tests laufen grün in CI (`tests/`,
-> inkl. Orakel-Fälle gegen borghei `legal_calc`). Noch **nicht** händisch
-> abgenommen — `status: getestet` vergibt erst der Maintainer nach eigener
-> Prüfung (siehe [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
+> **Status: `getestet`** — automatisierte Tests laufen grün in CI (`tests/`,
+> inkl. Orakel-Fälle gegen borghei `legal_calc`); händische Live-Abnahme durch
+> den Maintainer am 2026-07-15 (Real-World-Test: Berufungs- und
+> Berufungsbegründungsfrist aus zugestelltem LG-Urteil, Rechenkette und
+> iCal-/CSV-Export verifiziert). Keine Produktions-Garantie — Zweitkontrolle
+> bleibt Pflicht (siehe [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
 
 ## Zweck
 
