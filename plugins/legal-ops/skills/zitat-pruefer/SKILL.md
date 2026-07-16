@@ -11,8 +11,9 @@ haftung: "Ersetzt keine inhaltliche Prüfung der zitierten Quellen durch den Anw
 
 # zitat-pruefer
 
-> **Status: `beta`** — automatisierte Tests laufen grün in CI (`tests/test_executor.py`,
-> 55 Fälle). Noch **nicht** händisch abgenommen — dafür wird `status: getestet` erst nach
+> **Status: `beta`** — automatisierte Tests laufen grün in CI (`tests/test_executor.py`
+> und `tests/test_zitat_pruefer_encoding_und_registries.py`, 73 Fälle). Noch **nicht**
+> händisch abgenommen — dafür wird `status: getestet` erst nach
 > Prüfung durch den Maintainer gesetzt (siehe [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md),
 > Reifegrad-Leiter).
 
@@ -56,6 +57,65 @@ Vollständige Format-Spezifikation: [`schema/README.md`](schema/README.md).
 > rechnen. Vor Nutzung: Registry je Gesetz möglichst vollständig aus einer
 > verlässlichen Quelle (Gesetzesdatenbank, Kommentar) ziehen — kein bloßer Auszug
 > der im Dokument ohnehin schon zitierten Normen.
+
+## Voraussetzungen & PDF-Praxis
+
+Zwei Punkte aus der händischen Real-World-Abnahme (LG-Berlin-Urteil, 2026-07-15):
+
+### 1. Encoding-Falle bei Gerichts-PDFs
+
+Manche Gerichts-PDFs tragen ein Custom-Font-Encoding, bei dem die **Textebene**
+das Paragraphenzeichen verfälscht: `§` erscheint als `$`, `§§` als `SS` (real
+beobachtet: „auf `$ 826 BGB` gestützt", „`(SS 37, 37b Abs. 1 StBerG)`"). Ohne
+Reparatur erkennt der Executor solche Zitate gar nicht als Normzitate.
+
+Der optionale Reparatur-Schritt `--repariere-encoding` ersetzt **kontextsensitiv**
+`$`→`§` und `SS`→`§§` — **nur** dort, wo ein echtes Normzitat vorliegt (Marker +
+Ziffernblock + **bekanntes** Gesetzeskürzel dahinter). Geldangaben wie `$ 50 Euro`
+oder Wörter wie `PASSAU` bleiben unangetastet. Jede Ersetzung wird im Report unter
+`meta.encoding_reparaturen` mit **Position, Zeile, Original, Ersetzung und Kontext**
+dokumentiert, damit die Kanzlei die Reparatur zweitkontrollieren kann. Der Schritt
+ist standardmäßig **aus** — er ändert Zeichen im Dokument und wird deshalb nur bei
+Bedarf explizit zugeschaltet.
+
+> **Kein OCR.** Dies repariert ausschließlich eine bekannte Encoding-Falle in der
+> bereits vorhandenen Textebene. Ein OCR-Fallback für gescannte Bild-PDFs (ohne
+> brauchbare Textebene) ist **nicht** Teil dieses Skills — er kommt separat mit
+> Skill #11 [`posteingang-ocr-verteilung`](../posteingang-ocr-verteilung/SKILL.md)
+> (Welle 4).
+
+### 2. Standard-Registries (BGB, ZPO, StGB)
+
+Ohne Registry bleibt jedes Norm-Zitat ⚠️ `nicht_pruefbar` — nur die Formatprüfung
+läuft. Für die drei am häufigsten zitierten Gesetze liegen fertige Registries bei:
+
+```
+schema/standard-registries/bgb.json
+schema/standard-registries/zpo.json
+schema/standard-registries/stgb.json
+```
+
+Sie sind maschinell aus der amtlichen Gesetzes-XML von `gesetze-im-internet.de`
+erzeugt (Generator: [`schema/standard-registries/generiere_registries.py`](schema/standard-registries/generiere_registries.py),
+Provenienz-Felder `quelle_url` / `abgerufen_am` je Datei). Aufgehobene/weggefallene
+Paragraphen sind mit `"aufgehoben": true` aufgenommen, damit ein Zitat auf eine
+historische Nummer nicht fälschlich als ❌ `abweichend` gemeldet wird. Übergabe an
+den Executor über `--registry`:
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/zitat-pruefer/executor.py \
+  --input <urteil.md> \
+  --registry ${CLAUDE_PLUGIN_ROOT}/skills/zitat-pruefer/schema/standard-registries/bgb.json \
+  --repariere-encoding
+```
+
+> **Frische:** Gesetze ändern sich laufend. Die Registries sind Momentaufnahmen
+> zum `abgerufen_am`-Datum (Muster analog zum Frische-Gate des `gwg-risiko-check`,
+> D19) und vor produktiver Nutzung gegen den aktuellen Stand abzugleichen —
+> Neu-Erzeugung per `generiere_registries.py` (nur der Generator geht ins Netz;
+> der Executor selbst bleibt strikt offline, P3). Der Executor bezieht **immer nur
+> genau eine** Registry-Datei je Lauf; ein Zitat gegen ein anderes Gesetz (z. B.
+> `§ 37b StBerG` bei übergebener BGB-Registry) bleibt korrekt ⚠️ `nicht_pruefbar`.
 
 ## Ablauf
 

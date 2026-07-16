@@ -1,0 +1,2376 @@
+{
+  "_hinweis": "Standard-Registry für StGB (Strafgesetzbuch) im Format von plugins/legal-ops/skills/zitat-pruefer/schema/README.md. Maschinell erzeugt aus der amtlichen Gesetzes-XML; NICHT von Hand editieren, sondern mit generiere_registries.py neu erzeugen. Aufgehobene/weggefallene Paragraphen sind mit \"aufgehoben\": true aufgenommen, damit ein Zitat auf eine historische Nummer nicht fälschlich als ❌ abweichend gemeldet wird.",
+  "quelle_url": "https://www.gesetze-im-internet.de/stgb/xml.zip",
+  "abgerufen_am": "2026-07-16",
+  "frische_hinweis": "Gesetze ändern sich laufend (neue, geänderte, aufgehobene §§). Diese Registry ist eine Momentaufnahme zum abgerufen_am-Datum und vor produktiver Nutzung gegen den aktuellen Stand auf gesetze-im-internet.de abzugleichen; Neu-Erzeugung per generiere_registries.py. Analog zum Frische-Gate des gwg-risiko-check (D19).",
+  "stand": {
+    "paragraphen_aktiv": 553,
+    "paragraphen_aufgehoben": 25
+  },
+  "normen": [
+    {
+      "kuerzel": "StGB",
+      "paragraph": "1"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "2"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "3"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "4"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "5"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "6"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "7"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "8"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "9"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "10"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "11"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "12"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "13"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "14"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "15"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "16"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "17"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "18"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "19"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "20"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "21"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "22"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "23"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "24"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "25"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "26"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "27"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "28"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "29"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "30"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "31"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "32"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "33"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "34"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "35"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "36"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "37"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "38"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "39"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "40"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "41"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "42"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "43"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "44"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "45"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "45a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "45b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "46"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "46a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "46b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "47"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "48"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "49"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "50"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "51"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "52"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "53"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "54"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "55"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "56"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "56a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "56b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "56c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "56d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "56e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "56f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "56g"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "57"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "57a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "57b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "58"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "59"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "59a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "59b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "59c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "60"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "61"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "62"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "63"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "64"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "65"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "66"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "66a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "66b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "66c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67g"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "67h"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "68"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "68a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "68b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "68c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "68d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "68e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "68f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "68g"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "69"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "69a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "69b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "70"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "70a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "70b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "71"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "72"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "73"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "73a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "73b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "73c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "73d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "73e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "74"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "74a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "74b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "74c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "74d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "74e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "74f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "75"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "76"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "76a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "76b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "77"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "77a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "77b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "77c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "77d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "77e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "78"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "78a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "78b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "78c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "79"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "79a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "79b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "80"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "80a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "81"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "82"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "83"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "83a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "84"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "85"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "86"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "86a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "87"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "87a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "88"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "89"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "89a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "89b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "89c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "90"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "90a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "90b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "90c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "91"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "91a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "92"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "92a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "92b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "93"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "94"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "95"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "96"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "97"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "97a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "97b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "98"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "99"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "100"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "100a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "101"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "101a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "102"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "103"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "104"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "104a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "105"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "106"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "106a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "106b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "107"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "107a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "107b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "107c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "108"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "108a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "108b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "108c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "108d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "108e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "108f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109b",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109c",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109g"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109h"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109i"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "109k"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "110"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "111"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "112"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "113"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "114"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "115"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "116",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "117",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "118",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "119",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "120"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "121"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "122"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "123"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "124"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "125"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "125a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "126"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "126a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "127"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "128"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "129"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "129a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "129b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "130"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "130a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "131"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "132"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "132a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "133"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "134"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "135"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "136"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "137"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "138"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "139"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "140"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "141"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "142"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "143"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "144"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "145"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "145a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "145b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "145c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "145d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "146"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "147"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "148"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "149"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "150"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "151"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "152"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "152a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "152b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "152c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "153"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "154"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "155"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "156"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "157"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "158"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "159"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "160"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "161"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "162"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "163"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "164"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "165"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "166"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "167"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "167a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "168"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "169"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "170"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "171"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "172"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "173"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "174"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "174a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "174b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "174c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "175"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "176"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "176a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "176b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "176c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "176d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "176e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "177"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "178"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "179"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "180"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "180a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "180b",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "181",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "181a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "181b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "182"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "183"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "183a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184g"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184h"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184i"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184j"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184k"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "184l"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "185"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "186"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "187"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "188"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "189"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "190"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "191"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "192"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "192a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "193"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "194"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "195",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "196",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "197",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "198",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "199"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "200"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "201"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "201a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "202"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "202a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "202b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "202c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "202d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "203"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "204"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "205"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "206"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "207",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "208",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "209",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "210",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "211"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "212"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "213"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "214",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "215",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "216"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "217"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "218"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "218a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "218b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "218c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "219"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "219a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "219b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "219c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "219d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "220"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "220a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "221"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "222"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "223"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "224"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "225"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "226"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "226a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "227"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "228"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "229"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "230"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "231"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "232"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "232a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "232b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "233"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "233a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "233b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "234"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "234a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "234b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "235"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "236"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "237"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "238"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "239"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "239a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "239b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "239c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "240"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "241"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "241a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "242"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "243"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "244"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "244a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "245"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "246"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "247"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "248"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "248a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "248b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "248c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "249"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "250"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "251"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "252"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "253"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "254"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "255"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "256"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "257"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "258"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "258a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "259"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "260"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "260a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "261"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "262"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "263"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "263a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "264"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "264a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "265"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "265a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "265b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "265c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "265d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "265e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "266"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "266a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "266b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "267"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "268"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "269"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "270"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "271"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "272"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "273"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "274"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "275"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "276"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "276a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "277"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "278"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "279"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "280"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "281"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "282"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "283"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "283a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "283b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "283c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "283d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "284"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "285"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "286"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "287"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "288"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "289"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "290"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "291"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "292"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "293"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "294"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "295"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "296"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "297"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "298"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "299"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "299a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "299b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "300"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "301"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "302"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "303"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "303a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "303b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "303c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "304"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "305"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "305a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "306"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "306a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "306b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "306c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "306d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "306e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "306f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "307"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "308"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "309"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "310"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "311"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "312"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "313"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "314"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "314a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "315"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "315a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "315b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "315c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "315d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "315e"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "315f"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "316"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "316a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "316b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "316c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "317"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "318"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "319"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "320"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "321"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "322"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "323"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "323a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "323b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "323c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "324"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "324a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "325"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "325a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "326"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "327"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "328"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "329"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "330"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "330a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "330b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "330c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "330d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "331"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "332"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "333"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "334"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "335"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "335a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "336"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "337"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "338"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "339"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "340"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "341",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "342",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "343"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "344"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "345"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "346",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "347",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "348"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "349",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "350",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "351",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "352"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "353"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "353a"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "353b"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "353c"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "353d"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "354"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "355"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "356"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "357"
+    },
+    {
+      "kuerzel": "StGB",
+      "paragraph": "358"
+    }
+  ],
+  "entscheidungen": [],
+  "fundstellen": []
+}

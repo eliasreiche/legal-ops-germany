@@ -202,6 +202,71 @@ _IVM_KETTE_RE = re.compile(
 _TRENN_RE = re.compile(r"\s*(?:,|und|u\.)\s*")
 
 
+# --------------------------------------------------------------------------
+# Encoding-Reparatur (Befund 2026-07-15, Gerichts-PDF Custom-Font)
+# --------------------------------------------------------------------------
+# Gerichts-PDFs mit Custom-Font-Encoding liefern in der Textebene '$' statt '§'
+# und 'SS' statt '§§' (real beobachtet: "auf $ 826 BGB gestützt",
+# "(SS 37, 37b Abs. 1 StBerG)"). Die Reparatur ersetzt KONTEXTSENSITIV, nie
+# blind: nur dort, wo ein echtes Normzitat vorliegt — Marker ('$' oder 'SS') +
+# Ziffernblock (wie im Normzitat, inkl. §§-Kette und Abs./Satz/Nr.) + einem
+# BEKANNTEN Gesetzeskürzel (aus gesetzeskuerzel.json) dahinter. Das bekannte
+# Kürzel ist die entscheidende Disambiguierung gegen
+#   * Geldangaben:  "$ 50 Euro"  ('Euro' ist kein Kürzel → keine Reparatur),
+#   * Wörter:       "PASSAU"      (auf 'SS' folgt keine Ziffer → keine Reparatur).
+# Ein '$/SS' vor einer Ziffer, aber OHNE bekanntes Kürzel dahinter, wird bewusst
+# NICHT angefasst (konservativ, KISS). Jede Ersetzung wird in einer Reparatur-
+# Liste (Position/Zeile/Original/Ersetzung/Kontext) dokumentiert, damit die
+# Kanzlei sie zweitkontrollieren kann.
+#
+# Hinweis: Dies ist KEIN OCR — es repariert nur eine bekannte Encoding-Falle in
+# der bereits vorhandenen Textebene. OCR über gescannte Bild-PDFs kommt separat
+# mit Skill #11 (posteingang-ocr-verteilung, Welle 4).
+_REP_KOPF = (
+    r"(?<![0-9A-Za-zÄÖÜäöüß])(?P<marker>\$|SS)"
+    r"" + _WS + r"*"
+    r"\d+[a-z]?(?:\s*(?:,|und|u\.)\s*\d+[a-z]?)*"
+    r"(?:\s*ff?\.)?"
+    r"(?:\s*(?:(?:Abs\.|Absatz)\s*(?:\d+[a-z]?|(?:" + _ROEMISCH_ABS_ALT + r"))"
+    r"|(?:" + _ROEMISCH_ABS_ALT + r")))?"
+    r"(?:\s*(?:S\.|Satz)\s*\d+)?"
+    r"(?:\s*(?:Nr\.|Nummer)\s*\d+[a-z]?)?"
+    r"(?:\s*(?:lit\.|Buchst\.)\s*[a-z]\)?)?"
+)
+
+
+def _reparatur_re(kuerzel_bekannt: set[str]) -> re.Pattern:
+    kuerzel_alt = "|".join(
+        re.escape(k) for k in sorted(kuerzel_bekannt, key=len, reverse=True))
+    return re.compile(
+        _REP_KOPF + _WS + r"+(?:" + kuerzel_alt + r")(?![A-Za-zÄÖÜäöüß])")
+
+
+def repariere_encoding(text: str, kuerzel_bekannt: set[str]
+                        ) -> tuple[str, list[dict[str, Any]]]:
+    """Repariert die Gerichts-PDF-Encoding-Falle deterministisch (siehe oben).
+
+    Gibt (reparierter_text, reparaturen) zurück. Weil '§' genau so lang ist wie
+    '$' und '§§' genau so lang wie 'SS', bleiben alle Zeichen-Offsets stabil —
+    die gemeldeten Positionen gelten unverändert für Original und Reparat."""
+    pattern = _reparatur_re(kuerzel_bekannt)
+    reparaturen: list[dict[str, Any]] = []
+
+    def _ersetze(m: "re.Match[str]") -> str:
+        marker = m.group("marker")
+        ersetzung = "§" if marker == "$" else "§§"
+        reparaturen.append({
+            "position": m.start("marker"),
+            "zeile": _zeile_von(text, m.start("marker")),
+            "original": marker,
+            "ersetzung": ersetzung,
+            "kontext": re.sub(r"\s+", " ", m.group(0).strip()),
+        })
+        return ersetzung + m.group(0)[len(marker):]
+
+    return pattern.sub(_ersetze, text), reparaturen
+
+
 def _normalisiere_abs(roh: str | None) -> str | None:
     """Vereinheitlicht die Abs.-Angabe: bare römische Kurzschreibweise ("I")
     wird wie "Abs. I" dargestellt (B1), ohne dass sich das Verhalten für die
@@ -604,10 +669,17 @@ def pruefe_fundstelle(treffer: dict[str, Any],
 # --------------------------------------------------------------------------
 
 def baue_report(text: str, registry: dict[str, Any], schema_dir: Path,
-                 quelle_datei: str, registry_datei: str | None) -> dict[str, Any]:
+                 quelle_datei: str, registry_datei: str | None,
+                 repariere: bool = False) -> dict[str, Any]:
     kuerzel_bekannt = lade_kuerzelliste(schema_dir)
     gerichte = lade_gerichte(schema_dir)
     zeitschriften = lade_zeitschriften(schema_dir)
+
+    # Optionale Encoding-Reparatur VOR jeder Extraktion (Gerichts-PDF-Falle,
+    # Befund 2026-07-15). Standardmäßig aus — nur mit --repariere-encoding.
+    reparaturen: list[dict[str, Any]] = []
+    if repariere:
+        text, reparaturen = repariere_encoding(text, kuerzel_bekannt)
 
     zitate: list[Zitat] = []
     zaehler = 0
@@ -645,13 +717,19 @@ def baue_report(text: str, registry: dict[str, Any], schema_dir: Path,
         ZUSTAND_ABWEICHEND: sum(1 for z in zitate if z.zustand == ZUSTAND_ABWEICHEND),
     }
 
+    meta = {
+        "quelle_datei": quelle_datei,
+        "registry_datei": registry_datei,
+        "erzeugt_von": "zitat-pruefer/executor.py",
+        "anzahl_zitate": len(zitate),
+    }
+    # Reparatur-Liste nur ausweisen, wenn tatsächlich repariert wurde — hält
+    # den Report (und das Golden-File beispiel-report.json) im Normalfall stabil.
+    if reparaturen:
+        meta["encoding_reparaturen"] = reparaturen
+
     return {
-        "meta": {
-            "quelle_datei": quelle_datei,
-            "registry_datei": registry_datei,
-            "erzeugt_von": "zitat-pruefer/executor.py",
-            "anzahl_zitate": len(zitate),
-        },
+        "meta": meta,
         "zitate": [z.as_dict() for z in zitate],
         "zusammenfassung": zusammenfassung,
     }
@@ -667,6 +745,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--registry", help="Optionale Quellen-Registry (JSON)")
     parser.add_argument("--schema-dir", default=str(SCHEMA_DIR_DEFAULT),
                         help="Verzeichnis mit gesetzeskuerzel.json/gerichte.json/zeitschriften.json")
+    parser.add_argument("--repariere-encoding", action="store_true",
+                        help="Gerichts-PDF-Encoding-Falle vor der Prüfung reparieren "
+                             "('$'→'§', 'SS'→'§§' nur im Normzitat-Kontext); jede "
+                             "Ersetzung wird in meta.encoding_reparaturen dokumentiert")
     parser.add_argument("--output", help="Zieldatei für den JSON-Report (Default: stdout)")
     args = parser.parse_args(argv)
 
@@ -693,7 +775,8 @@ def main(argv: list[str] | None = None) -> int:
 
     report = baue_report(text, registry, schema_dir,
                           quelle_datei=str(input_pfad),
-                          registry_datei=str(registry_pfad) if registry_pfad else None)
+                          registry_datei=str(registry_pfad) if registry_pfad else None,
+                          repariere=args.repariere_encoding)
 
     ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
     if args.output:

@@ -1,0 +1,5436 @@
+{
+  "_hinweis": "Standard-Registry für ZPO (Zivilprozessordnung) im Format von plugins/legal-ops/skills/zitat-pruefer/schema/README.md. Maschinell erzeugt aus der amtlichen Gesetzes-XML; NICHT von Hand editieren, sondern mit generiere_registries.py neu erzeugen. Aufgehobene/weggefallene Paragraphen sind mit \"aufgehoben\": true aufgenommen, damit ein Zitat auf eine historische Nummer nicht fälschlich als ❌ abweichend gemeldet wird.",
+  "quelle_url": "https://www.gesetze-im-internet.de/zpo/xml.zip",
+  "abgerufen_am": "2026-07-16",
+  "frische_hinweis": "Gesetze ändern sich laufend (neue, geänderte, aufgehobene §§). Diese Registry ist eine Momentaufnahme zum abgerufen_am-Datum und vor produktiver Nutzung gegen den aktuellen Stand auf gesetze-im-internet.de abzugleichen; Neu-Erzeugung per generiere_registries.py. Analog zum Frische-Gate des gwg-risiko-check (D19).",
+  "stand": {
+    "paragraphen_aktiv": 1060,
+    "paragraphen_aufgehoben": 197
+  },
+  "normen": [
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "2"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "3"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "4"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "5"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "6"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "7"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "8"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "9"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "10",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "11"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "12"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "13"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "14",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "15"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "16"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "17"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "18"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "19"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "19a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "19b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "20"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "21"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "22"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "23"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "24"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "25"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "26"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "27"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "28"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "29"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "29a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "29b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "29c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "30"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "30a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "31"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "32"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "32a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "32b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "33"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "34"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "35"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "36"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "37"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "38"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "39"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "40"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "41"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "42"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "43"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "44"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "45"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "46"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "47"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "48"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "49"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "50"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "51"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "52"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "53"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "54"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "55"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "56"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "57"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "58"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "59"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "60"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "61"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "62"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "63"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "64"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "65"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "66"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "67"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "68"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "69"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "70"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "71"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "72"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "73"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "74"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "75"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "76"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "77"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "78"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "78a",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "78b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "78c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "79"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "80"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "81"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "82"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "83"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "84"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "85"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "86"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "87"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "88"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "89"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "90"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "91"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "91a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "92"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "93"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "93a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "93b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "94"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "95"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "96"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "97"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "98"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "99"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "100"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "101"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "102"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "103"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "104"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "105"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "106"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "107"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "108"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "109"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "110"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "111"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "112"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "113"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "114"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "115"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "116"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "117"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "118"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "119"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "120"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "120a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "121"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "122"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "123"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "124"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "125"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "126"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "127"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "128"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "128a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "129"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "129a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "130"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "130a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "130b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "130c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "130d"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "130e"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "131"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "132"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "133"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "134"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "135"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "136"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "137"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "138"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "139"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "140"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "141"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "142"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "143"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "144"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "145"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "146"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "147"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "148"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "149"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "150"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "151",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "152"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "153"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "154"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "155"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "156"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "157"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "158"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "159"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "160"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "160a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "161"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "162"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "163"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "164"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "165"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "166"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "167"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "168"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "169"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "170"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "170a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "171"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "172"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "173"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "174"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "175"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "176"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "177"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "178"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "179"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "180"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "181"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "182"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "183"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "184"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "185"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "186"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "187"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "188"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "189"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "190"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "191"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "192"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "193"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "193a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "194"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "195"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "214"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "215"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "216"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "217"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "218"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "219"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "220"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "221"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "222"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "223",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "224"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "225"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "226"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "227"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "228",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "229"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "230"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "231"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "232"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "233"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "234"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "235",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "236"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "237"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "238"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "239"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "240"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "241"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "242"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "243"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "244"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "245"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "246"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "247"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "248"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "249"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "250"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "251"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "251a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "252"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "253"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "254"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "255"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "256"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "257"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "258"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "259"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "260"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "261"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "262"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "263"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "264"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "265"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "266"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "267"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "268"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "269"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "270"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "271"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "272"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "273"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "273a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "274"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "275"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "276"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "277"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "278"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "278a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "279"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "280"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "281"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "282"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "283"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "283a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "284"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "285"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "286"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "287"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "288"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "289"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "290"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "291"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "292"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "292a",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "293"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "294"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "295"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "296"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "296a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "297"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "298"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "298a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "299"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "299a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "300"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "301"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "302"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "303"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "304"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "305"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "305a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "305b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "306"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "307"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "308"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "308a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "309"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "310"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "311"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "312"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "313"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "313a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "313b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "314"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "315"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "316",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "317"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "318"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "319"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "320"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "321"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "321a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "322"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "323"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "323a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "323b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "324"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "325"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "325a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "326"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "327"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "328"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "329"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "330"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "331"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "331a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "332"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "333"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "334"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "335"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "336"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "337"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "338"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "339"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "340"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "340a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "341"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "341a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "342"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "343"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "344"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "345"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "346"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "347"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "348"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "348a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "349"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "350"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "351",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "352",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "353",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "354",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "355"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "356"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "357"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "357a",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "358"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "358a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "359"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "360"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "361"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "362"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "363"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "364"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "365"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "366"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "367"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "368"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "369"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "370"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "371"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "371a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "371b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "372"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "372a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "373"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "374",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "375"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "376"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "377"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "378"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "379"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "380"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "381"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "382"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "383"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "384"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "385"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "386"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "387"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "388"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "389"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "390"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "391"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "392"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "393"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "394"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "395"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "396"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "397"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "398"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "399"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "400"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "401"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "402"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "403"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "404"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "404a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "405"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "406"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "407"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "407a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "408"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "409"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "410"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "411"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "411a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "412"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "413"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "414"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "415"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "416"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "416a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "417"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "418"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "419"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "420"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "421"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "422"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "423"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "424"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "425"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "426"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "427"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "428"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "429"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "430"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "431"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "432"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "433",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "434"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "435"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "436"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "437"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "438"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "439"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "440"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "441"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "442"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "443"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "444"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "445"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "446"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "447"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "448"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "449"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "450"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "451"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "452"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "453"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "454"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "455"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "456",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "457",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "458",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "459",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "460",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "461",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "462",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "463",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "464",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "465",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "466",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "467",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "468",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "469",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "470",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "471",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "472",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "473",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "474",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "475",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "476",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "477",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "478"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "479"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "480"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "481"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "482",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "483"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "484"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "485"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "486"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "487"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "488",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "489",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "490"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "491"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "492"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "493"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "494"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "494a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "495"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "495a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "496"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "497"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "498"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "499"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "504"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "505",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "506"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "507",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "508",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "509",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "510"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "510a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "510b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "510c",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "511"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "512"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "513"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "514"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "515"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "516"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "517"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "518"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "519"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "520"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "521"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "522"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "523"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "524"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "525"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "526"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "527"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "528"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "529"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "530"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "531"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "532"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "533"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "534"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "535"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "536"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "537"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "538"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "539"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "540"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "541"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "542"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "543"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "544"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "545"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "546"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "547"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "548"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "549"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "550"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "551"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "552"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "552a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "552b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "553"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "554"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "555"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "556"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "557"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "558"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "559"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "560"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "561"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "562"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "563"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "564"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "565"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "566"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "567"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "568"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "569"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "570"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "571"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "572"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "573"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "574"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "575"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "576"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "577"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "578"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "579"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "580"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "581"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "582"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "583"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "584"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "585"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "586"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "587"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "588"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "589"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "590"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "591"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "592"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "593"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "594",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "595"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "596"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "597"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "598"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "599"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "600"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "601",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "602"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "603"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "604"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "605"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "605a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "606"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "607"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "608"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "609"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "610"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "611"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "612"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "613"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "614"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "615",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "616",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "617",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "618",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "619",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "620",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "621",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "622",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "623",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "624",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "625",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "626",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "627",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "628",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "629",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "630",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "631",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "632",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "633",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "634",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "635",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "636",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "637",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "638",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "639",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "640",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "641",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "642",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "643",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "644",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "645",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "646",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "647",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "648",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "649",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "650",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "651",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "652",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "653",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "654",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "655",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "656",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "657",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "658",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "659",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "660",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "661",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "662",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "663",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "664",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "665",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "666",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "667",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "668",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "669",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "670",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "671",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "672",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "673",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "674",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "675",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "676",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "677",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "678",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "679",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "680",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "681",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "682",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "683",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "684",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "685",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "686",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "687",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "688"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "689"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "690"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "691"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "692"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "693"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "694"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "695"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "696"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "697"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "698"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "699"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "700"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "701"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "702"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "703"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "703a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "703b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "703c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "703d"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "704"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "705"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "706"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "707"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "708"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "709"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "710"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "711"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "712"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "713"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "714"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "715"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "716"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "717"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "718"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "719"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "720"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "720a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "721"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "722"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "723"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "724"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "725"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "726"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "727"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "728"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "729"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "730"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "731"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "732"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "733"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "734"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "735"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "736"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "737"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "738"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "739"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "740"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "741"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "742"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "743"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "744"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "744a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "745"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "746",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "747"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "748"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "749"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "750"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "751"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "752"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "753"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "753a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "754"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "754a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "755"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "756"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "757"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "757a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "758"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "758a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "759"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "760"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "761",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "762"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "763"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "764"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "765"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "765a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "766"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "767"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "768"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "769"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "770"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "771"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "772"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "773"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "774"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "775"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "776"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "777"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "778"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "779"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "780"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "781"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "782"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "783"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "784"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "785"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "786"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "786a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "787"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "788"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "789"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "790"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "791",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "792"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "793"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "794"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "794a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "795"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "795a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "795b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "796"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "796a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "796b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "796c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "797"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "797a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "798"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "798a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "799"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "799a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "800"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "800a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "801"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802d"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802e"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802f"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802g"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802h"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802i"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802j"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802k"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "802l"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "803"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "804"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "805"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "806"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "806a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "806b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "807"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "808"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "809"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "810"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "811"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "811a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "811b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "811c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "812"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "813"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "813a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "813b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "814"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "815"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "816"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "817"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "817a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "818"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "819"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "820",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "821"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "822"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "823"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "824"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "825"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "826"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "827"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "828"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "829"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "829a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "830"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "830a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "831"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "832"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "833"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "833a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "834"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "835"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "836"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "837"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "837a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "838"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "839"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "840"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "841"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "842"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "843"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "844"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "845"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "846"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "847"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "847a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "848"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "849"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850d"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850e"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850f"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850g"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850h"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850i"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850k"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "850l"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "851"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "851a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "851b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "851c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "851d"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "852"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "853"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "854"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "855"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "855a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "856"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "857"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "858"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "859"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "860"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "861",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "862",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "863"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "864"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "865"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "866"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "867"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "868"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "869"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "870"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "870a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "871"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "872"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "873"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "874"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "875"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "876"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "877"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "878"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "879"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "880"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "881"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882c"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882d"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882e"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882f"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882g"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882h"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "882i"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "883"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "884"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "885"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "885a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "886"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "887"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "888"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "888a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "889"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "890"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "891"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "892"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "893"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "894"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "895"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "896"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "897"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "898"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "899"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "900"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "901"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "902"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "903"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "904"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "905"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "906"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "907"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "908"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "909"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "910"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "911",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "912",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "913",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "914",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "915",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "916"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "917"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "918"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "919"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "920"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "921"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "922"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "923"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "924"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "925"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "926"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "927"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "928"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "929"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "930"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "931"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "932"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "933"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "934"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "935"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "936"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "937"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "938"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "939"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "940"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "940a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "941"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "942"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "943"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "944"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "945"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "945a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "945b"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "946"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "947"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "948"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "949"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "950"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "951"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "952"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "953"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "954"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "955"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "956"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "957"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "958"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "959"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "960",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "961",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "962",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "963",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "964",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "965",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "966",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "967",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "968",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "969",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "970",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "971",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "972",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "973",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "974",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "975",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "976",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "977",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "978",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "979",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "980",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "981",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "982",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "983",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "984",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "985",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "986",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "987",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "988",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "989",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "990",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "991",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "992",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "993",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "994",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "995",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "996",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "997",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "998",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "999",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1000",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1001",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1002",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1003",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1004",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1005",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1006",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1007",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1008",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1009",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1010",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1011",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1012",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1013",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1014",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1015",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1016",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1017",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1018",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1019",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1020",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1021",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1022",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1023",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1024",
+      "aufgehoben": true,
+      "bezeichnung": "(weggefallen)"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1025"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1026"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1027"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1028"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1029"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1030"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1031"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1032"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1033"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1034"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1035"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1036"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1037"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1038"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1039"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1040"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1041"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1042"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1043"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1044"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1045"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1046"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1047"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1048"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1049"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1050"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1051"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1052"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1053"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1054"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1055"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1056"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1057"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1058"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1059"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1060"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1061"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1062"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1063"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1064"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1065"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1066"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1067"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1068"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1069"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1070"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1071"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1072"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1073"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1074"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1075"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1076"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1077"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1078"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1079"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1080"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1081"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1082"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1083"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1084"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1085"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1086"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1087"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1088"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1089"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1090"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1091"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1092"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1092a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1093"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1094"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1095"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1096"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1097"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1098"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1099"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1100"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1101"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1102"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1103"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1104"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1104a"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1105"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1106"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1107"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1108"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1109"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1110"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1111"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1112"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1113"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1114"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1115"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1116"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1117"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1118"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1119"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1120"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1121"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1122"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1123"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1124"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1125"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1126"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1127"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1128"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1129"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1130"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1131"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1132"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1133"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1134"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1135"
+    },
+    {
+      "kuerzel": "ZPO",
+      "paragraph": "1136"
+    }
+  ],
+  "entscheidungen": [],
+  "fundstellen": []
+}
