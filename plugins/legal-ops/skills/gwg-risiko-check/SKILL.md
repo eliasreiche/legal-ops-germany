@@ -17,7 +17,7 @@ haftung: "Ersetzt keine GwG-Pflichtenprüfung; das Scoring ist ein Vorschlag zur
 > sind Platzhalter und vor produktiver Nutzung gegen die aktuelle
 > Gesetzesfassung zu prüfen. `status: getestet` wird erst nach dieser Prüfung
 > durch den Maintainer gesetzt (siehe
-> [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
+> [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
 
 **Hochrisiko-Länderliste — Quellen (✅ browser-verifiziert am 2026-07-13):**
 Die Datei [`core/calc/gwg/hochrisiko_drittstaaten.json`](../../core/calc/gwg/hochrisiko_drittstaaten.json)

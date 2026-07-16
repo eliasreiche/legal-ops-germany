@@ -38,7 +38,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-PRODID = "-//claude-for-legal-non-billable-germany//fristenrechner//DE"
+PRODID = "-//legal-ops-germany//fristenrechner//DE"
 UID_DOMAIN = "fristenrechner.legal-ops"
 # Zweitkontroll-Klausel (P5) — steht immer in Beschreibung und CSV.
 ZWEITKONTROLLE = ("Zweitkontrolle bleibt zwingend: Dieser Export ersetzt keinen "

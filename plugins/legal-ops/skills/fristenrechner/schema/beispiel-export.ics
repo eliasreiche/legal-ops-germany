@@ -1,6 +1,6 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//claude-for-legal-non-billable-germany//fristenrechner//DE
+PRODID:-//legal-ops-germany//fristenrechner//DE
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT

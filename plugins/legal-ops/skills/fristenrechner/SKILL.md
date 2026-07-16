@@ -17,7 +17,7 @@ haftung: "Zweitkontrolle, zwingend: Der Rechner ist das zweite Augenpaar, nie da
 > den Maintainer am 2026-07-15 (Real-World-Test: Berufungs- und
 > Berufungsbegründungsfrist aus zugestelltem LG-Urteil, Rechenkette und
 > iCal-/CSV-Export verifiziert). Keine Produktions-Garantie — Zweitkontrolle
-> bleibt Pflicht (siehe [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
+> bleibt Pflicht (siehe [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
 
 ## Zweck
 

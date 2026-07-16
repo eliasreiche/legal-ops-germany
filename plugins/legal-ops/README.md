@@ -37,4 +37,4 @@ Die Skills sind fachlich nach sieben Prozesskategorien gegliedert (das Feld
 
 Reifegrade und Wellen-Zuordnung stehen in der Status-Tabelle der
 [Repo-README](../../README.md). Hausregeln:
-[CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md).
+[CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md).

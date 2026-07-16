@@ -1,6 +1,6 @@
-# claude-for-legal-non-billable-germany
+# legal-ops-germany
 
-[![CI](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/actions/workflows/ci.yml/badge.svg)](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/actions/workflows/ci.yml)
+[![CI](https://github.com/eliasreiche/legal-ops-germany/actions/workflows/ci.yml/badge.svg)](https://github.com/eliasreiche/legal-ops-germany/actions/workflows/ci.yml)
 
 Open-Source-Library aus **Claude-Skills und deterministischen Python-Executors** für die
 **non-billable Workflows** deutscher Boutique- und Kleinkanzleien — Fristenberechnung
@@ -12,6 +12,12 @@ Funktionsweise ausschließlich nach deutschem Recht.
 > **Keine Rechtsberatung.** Diese Library unterstützt organisatorische und rechnerische
 > Abläufe der Kanzlei. Jedes Ergebnis unterliegt der Zweitkontrolle durch die Kanzlei;
 > Fristen- und Gebührenergebnisse ersetzen keine anwaltliche Kontrolle.
+
+> **Unofficial & in aktiver Entwicklung.** Unabhängiges Community-Projekt für
+> [Claude Code](https://claude.com/claude-code) — not affiliated with, endorsed,
+> or sponsored by Anthropic PBC; „Claude" und „Anthropic" sind Marken der
+> Anthropic PBC. Die Library wird laufend weiterentwickelt; **Feedback, Issues
+> und Erfahrungsberichte sind ausdrücklich willkommen.**
 
 ## Zulässigkeit & Grenzen
 
@@ -100,7 +106,7 @@ Cowork über AWS Bedrock, Region Frankfurt). Die Kanzlei lädt dieses Repo selbs
 kein Hosting und keine Datenhaltung durch die Library.
 
 ```bash
-git clone https://github.com/eliasreiche/claude-for-legal-non-billable-germany.git
+git clone https://github.com/eliasreiche/legal-ops-germany.git
 ```
 
 Einbindung als Claude-Code-/Cowork-Plugin über [`marketplace.json`](.claude-plugin/marketplace.json);

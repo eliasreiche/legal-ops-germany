@@ -109,7 +109,7 @@ liegen (z. B. e-Akte-Verweis).
 
 Skills, die `kontext/` lesen oder schreiben, deklarieren das optional im
 SKILL.md-Frontmatter (vom [Struktur-Lint](../verify/struktur_lint.py) geprüft,
-siehe dort und [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md)):
+siehe dort und [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md)):
 
 ```yaml
 kontext_reads:

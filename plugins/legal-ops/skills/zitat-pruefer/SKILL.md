@@ -20,14 +20,14 @@ haftung: "Ersetzt keine inhaltliche Prüfung der zitierten Quellen durch den Anw
 > **CI-interne Nutzung des Executors** (Zitiermarker-Konsistenzprüfung der
 > statischen Belehrungen anderer Skills) **bleibt unberührt**. Reaktivierung
 > setzt die frühere description und `status: beta` wieder ein (siehe
-> [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md),
+> [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md),
 > Reifegrad-Leiter).
 
 ## Zweck
 
 Extrahiert jede Norm-, Urteils- und Fundstellen-Angabe aus einem Text- oder
 Markdown-Dokument und markiert sie mit dem 3-Zustands-Marker aus
-[CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md#zitierdisziplin-3-zustands-marker):
+[CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md#zitierdisziplin-3-zustands-marker):
 
 - ✅ **verifiziert** — gegen eine mitgelieferte Quellen-Registry geprüft und bestätigt
 - ⚠️ **nicht prüfbar** — keine Registry-Angabe zu diesem Zitat vorhanden

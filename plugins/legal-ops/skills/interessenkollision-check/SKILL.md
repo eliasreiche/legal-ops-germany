@@ -16,7 +16,7 @@ haftung: "Kein Treffer ist kein Freibrief: Schreibweisen-Lücken möglich, absch
 > S1–S4 inkl. False-Positive-Grenzfälle, CSV-/JSON-Parsing, CLI). Noch
 > **nicht** händisch abgenommen — `status: getestet` vergibt erst der
 > Maintainer nach eigener Prüfung (siehe
-> [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
+> [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
 
 ## Zweck
 

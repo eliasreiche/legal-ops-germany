@@ -15,7 +15,7 @@ haftung: "Zweitkontrolle, zwingend: Das erzeugte EXTF ist vor dem Import in DATE
 > Golden-File-Tests, Reject-Tests, Idempotenz, `tests/`). Noch **nicht**
 > händisch abgenommen — `status: getestet` vergibt der Maintainer erst nach
 > einem echten DATEV-Import durch eine Steuerberatung (siehe
-> [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md),
+> [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md),
 > Reifegrad-Leiter).
 >
 > ⚠️ **Formatversion 700 ist nicht primärquellen-verifiziert.**

@@ -14,7 +14,7 @@ haftung: "Zweitkontrolle, zwingend: Der Rechner ersetzt keine anwaltliche Prüfu
 > **Status: `beta`** — automatisierte Tests laufen grün in CI (`tests/`,
 > inkl. Orakel-Fälle gegen borghei `legal_calc`). Noch **nicht** händisch
 > abgenommen — `status: getestet` vergibt erst der Maintainer nach eigener
-> Prüfung (siehe [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
+> Prüfung (siehe [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
 
 ## Zweck
 

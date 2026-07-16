@@ -15,7 +15,7 @@ haftung: "Der formulierte Text ist ein Entwurf — die Freigabe zur Rechnungsste
 > (`tests/`, inkl. Unit-Tests für `core/calc/zeit/`). Noch **nicht** händisch
 > abgenommen — `status: getestet` vergibt erst der Maintainer nach eigener
 > Prüfung (siehe
-> [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
+> [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
 
 ## Zweck
 
