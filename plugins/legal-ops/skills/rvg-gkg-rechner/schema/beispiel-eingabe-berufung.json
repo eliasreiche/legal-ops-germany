@@ -1,0 +1,31 @@
+{
+  "rvg": {
+    "auftragsdatum": "2026-03-01",
+    "streitwert": "10000.00",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Rechtsstreit erster Instanz",
+        "tatbestaende": [
+          {"nr": "3100"},
+          {"nr": "3104"}
+        ]
+      },
+      {
+        "bezeichnung": "Berufungsverfahren",
+        "tatbestaende": [
+          {"nr": "3200"},
+          {"nr": "3202"}
+        ]
+      }
+    ],
+    "auslagenpauschale": true,
+    "umsatzsteuer": true
+  },
+  "gkg": {
+    "verfahrenseinleitungsdatum": "2026-03-01",
+    "streitwert": "10000.00",
+    "positionen": [
+      {"nr": "1220"}
+    ]
+  }
+}

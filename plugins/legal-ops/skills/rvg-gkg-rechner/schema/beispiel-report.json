@@ -1,7 +1,7 @@
 {
   "meta": {
     "erzeugt_von": "core/calc/rvg/executor.py",
-    "quelle_datei": "plugins/legal-ops/skills/rvg-gkg-rechner/schema/beispiel-eingabe.json",
+    "quelle_datei": "beispiel-eingabe.json",
     "deterministik": "Alle Geldbeträge in diesem Report sind Executor-Ergebnisse (P3), nicht modellgeneriert.",
     "hinweis_getrennte_kostenarten": "RVG-Anwaltsvergütung und GKG-Gerichtskosten werden absichtlich NICHT zu einer Gesamtsumme addiert — unterschiedliche Forderungen mit unterschiedlichen Kostenschuldnern."
   },
@@ -44,7 +44,7 @@
         "positionen": [
           {
             "nr": "3100",
-            "bezeichnung": "Verfahrensgebühr",
+            "bezeichnung": "Verfahrensgebühr (erster Rechtszug)",
             "norm": "Nr. 3100 VV RVG",
             "satz": "1.3",
             "betrag": "460.85",
@@ -54,7 +54,7 @@
           },
           {
             "nr": "3104",
-            "bezeichnung": "Terminsgebühr",
+            "bezeichnung": "Terminsgebühr (erster Rechtszug)",
             "norm": "Nr. 3104 VV RVG",
             "satz": "1.2",
             "betrag": "425.40",
@@ -103,14 +103,14 @@
       {
         "schritt": 3,
         "norm": "Nr. 3100 VV RVG",
-        "beschreibung": "Angelegenheit 'Angelegenheit 1': Verfahrensgebühr (Nr. 3100 VV RVG): Satz 1.3 x 354.50 € = 460.85 €",
+        "beschreibung": "Angelegenheit 'Angelegenheit 1': Verfahrensgebühr (erster Rechtszug) (Nr. 3100 VV RVG): Satz 1.3 x 354.50 € = 460.85 €",
         "ergebnis": "460.85",
         "quelle": "executor"
       },
       {
         "schritt": 4,
         "norm": "Nr. 3104 VV RVG",
-        "beschreibung": "Angelegenheit 'Angelegenheit 1': Terminsgebühr (Nr. 3104 VV RVG): Satz 1.2 x 354.50 € = 425.40 €",
+        "beschreibung": "Angelegenheit 'Angelegenheit 1': Terminsgebühr (erster Rechtszug) (Nr. 3104 VV RVG): Satz 1.2 x 354.50 € = 425.40 €",
         "ergebnis": "425.40",
         "quelle": "executor"
       },

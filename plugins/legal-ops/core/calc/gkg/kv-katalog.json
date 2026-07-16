@@ -1,6 +1,6 @@
 {
   "bezeichnung": "Gebührentatbestands-Katalog Kostenverzeichnis (Anlage 1 GKG) — Auswahl",
-  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html (aktuelle Fassung) und einen Wayback-Machine-Schnappschuss (2025-01) für den Mindestbetrag von KV 1100 in der Vorfassung.",
+  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html (aktuelle Fassung) und einen Wayback-Machine-Schnappschuss (2025-01) für den Mindestbetrag von KV 1100 in der Vorfassung. Erweiterung um die Revision (KV 1230 Verfahren im Allgemeinen 5,0, KV 1232 Ermäßigung 3,0) web-verifiziert am 2026-07-17 gegen dieselbe Quelle — Fundstellen je Positions-Eintrag.",
   "positionen": {
     "1100": {
       "bezeichnung": "Mahnverfahren — Antrag auf Erlass eines Mahnbescheids oder eines Europäischen Zahlungsbefehls",
@@ -35,6 +35,20 @@
       "satz": "2.0",
       "ermaessigt_position": "1220",
       "hinweis": "Schließt sich mit KV 1220 gegenseitig aus — der Executor lehnt die gleichzeitige Angabe beider ab."
+    },
+    "1230": {
+      "bezeichnung": "Revision — Verfahren im Allgemeinen",
+      "norm": "KV 1230 GKG",
+      "satz": "5.0",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html, Teil 1 Hauptabschnitt 2 Abschnitt 3 (Revision), KV 1230: 'Verfahren im Allgemeinen' 5,0."
+    },
+    "1232": {
+      "bezeichnung": "Ermäßigung von KV 1230 bei Beendigung des gesamten Revisionsverfahrens ohne streitiges Urteil (sofern nicht KV 1231 einschlägig)",
+      "norm": "KV 1232 GKG",
+      "satz": "3.0",
+      "ermaessigt_position": "1230",
+      "hinweis": "Schließt sich mit KV 1230 gegenseitig aus — der Executor lehnt die gleichzeitige Angabe beider ab.",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html, KV 1232: Beendigung des gesamten Verfahrens (Rücknahme nach Begründung, Anerkenntnis-/Verzichtsurteil, Vergleich, übereinstimmende Erledigung), 'Die Gebühr 1230 ermäßigt sich auf' 3,0."
     }
   },
   "hinweis_allgemeine_mindestgebuehr": {

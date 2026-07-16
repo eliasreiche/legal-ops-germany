@@ -53,6 +53,20 @@ sind ein Eingabefehler, nie ein stilles Zusammenrechnen. Der Report weist je
 Angelegenheit einen Block aus plus eine Gesamtvergütung (Summe über die
 Angelegenheiten, gleicher Gläubiger — als solche beschriftet).
 
+**Instanzenzug (§ 17 Nr. 1 RVG):** Der Katalog deckt erste Instanz
+(Nr. 3100/3104), Berufung (Nr. 3200/3201/3202) und Revision (Nr. 3206–3210,
+mit erhöhtem Satz Nr. 3208/3209 bei BGH-Vertretungszwang in der Zivilrevision)
+ab. **Jeder Rechtszug ist eine eigene Angelegenheit** — Teil-3-Tatbestände
+verschiedener Instanzen in derselben Angelegenheit sind ein Eingabefehler (je
+Instanz eigene Auslagenpauschale Nr. 7002 und eigene USt-Basis); mehrere
+Instanzen gehören in getrennte `angelegenheiten`. Die Einigungsgebühr
+Nr. 1004 (erhöhter Satz) ist nur in einer Angelegenheit mit einem
+Berufungs-/Revisions-Tatbestand zulässig (sonst Nr. 1000/1003). Die Anrechnung
+(Vorbem. 3 Abs. 4 VV RVG) erfolgt ausschließlich auf die Verfahrensgebühr des
+**ersten** Rechtszugs (Nr. 3100), nie auf Nr. 3200/3206/3208 — eine
+Anrechnungs-Anforderung ohne Nr. 3100, aber mit höherinstanzlicher
+Verfahrensgebühr, wird als Eingabefehler abgelehnt.
+
 **Wert-Obergrenzen (Kappung, sichtbar):** Gegenstandswerte über 30 Mio. €
 werden nach § 22 Abs. 2 Satz 1 RVG bzw. § 39 Abs. 2 GKG auf 30 Mio. €
 **gekappt** — als eigene Rechenketten-Zeile mit Warnung und
@@ -71,7 +85,7 @@ Betrag.
 
 | Eingabe | Pflicht | Format | Beschreibung |
 |---|---|---|---|
-| RVG-/GKG-Anfrage | ja (mind. ein Block) | `.json` | Blöcke `rvg` und/oder `gkg`. Vollständiges Schema: [`schema/README.md`](schema/README.md), Beispiele: [`schema/beispiel-eingabe.json`](schema/beispiel-eingabe.json) (Grundfall, eine Angelegenheit), [`schema/beispiel-eingabe-anrechnung.json`](schema/beispiel-eingabe-anrechnung.json) (zwei Angelegenheiten, Anrechnung + Erhöhungsgebühr). |
+| RVG-/GKG-Anfrage | ja (mind. ein Block) | `.json` | Blöcke `rvg` und/oder `gkg`. Vollständiges Schema: [`schema/README.md`](schema/README.md), Beispiele: [`schema/beispiel-eingabe.json`](schema/beispiel-eingabe.json) (Grundfall, eine Angelegenheit), [`schema/beispiel-eingabe-anrechnung.json`](schema/beispiel-eingabe-anrechnung.json) (zwei Angelegenheiten, Anrechnung + Erhöhungsgebühr), [`schema/beispiel-eingabe-berufung.json`](schema/beispiel-eingabe-berufung.json) (Instanzenzug: erste Instanz + Berufung, GKG-Berufung). |
 
 Kurzfassung der Pflichtfelder:
 
@@ -80,12 +94,14 @@ Kurzfassung der Pflichtfelder:
   `tatbestaende`) **oder** `tatbestaende` flach (Kurzform für genau eine
   Angelegenheit). VV-RVG-Positionen aus dem
   [Katalog](../../core/calc/rvg/vv-katalog.json): `2300` (Teil 2),
-  `3100`, `3104` (Teil 3), `1000`, `1003`, `1008` (Teil 1, in jeder
-  Angelegenheit zulässig).
+  Teil 3 nach Instanz — erste Instanz `3100`/`3104`, Berufung
+  `3200`/`3201`/`3202`, Revision `3206`–`3210` (`3208`/`3209` bei
+  BGH-Vertretungszwang), `1000`, `1003`, `1004`, `1008` (Teil 1, in jeder
+  Angelegenheit zulässig; `1004` nur mit Berufungs-/Revisions-Tatbestand).
 - **`gkg`**: `verfahrenseinleitungsdatum` (ISO-Datum, **nicht** dasselbe wie
   `auftragsdatum`), `streitwert`, `positionen` (Liste von KV-GKG-Positionen
   aus dem [Katalog](../../core/calc/gkg/kv-katalog.json): `1100`,
-  `1210`, `1211`, `1220`, `1222`).
+  `1210`, `1211`, `1220`, `1222`, `1230`, `1232`).
 
 Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
 `float` — der Executor lehnt `float`-Eingaben strikt ab (Rundungsfehler wie
@@ -210,7 +226,41 @@ zeigt jede Angelegenheit getrennt (je eigene 7002-Pauschale und USt-Basis)
 und benennt die Gesamtvergütung ausdrücklich als Summe über getrennte
 Angelegenheiten.
 
-### Beispiel 3 — Scope-Ablehnung: Betragsrahmengebühr
+### Beispiel 3 — Instanzenzug: erste Instanz + Berufung (RVG + GKG)
+
+Eingabe ([`schema/beispiel-eingabe-berufung.json`](schema/beispiel-eingabe-berufung.json)):
+Streitwert 10.000 €, Stichtag 01.03.2026 (KostBRÄG 2025), **zwei
+Angelegenheiten** — „Rechtsstreit erster Instanz" (Verfahrensgebühr Nr. 3100,
+Terminsgebühr Nr. 3104) und „Berufungsverfahren" (Verfahrensgebühr Nr. 3200,
+Terminsgebühr Nr. 3202); dazu GKG-Berufung KV 1220. Report:
+[`schema/beispiel-report-berufung.json`](schema/beispiel-report-berufung.json).
+
+Von Claude präsentiertes Ergebnis (aus dem Report übernommen; 1,0-Gebühr RVG
+652,00 €):
+
+| Angelegenheit „Rechtsstreit erster Instanz" | Satz | Betrag |
+|---|---|---|
+| Verfahrensgebühr (Nr. 3100 VV RVG) | 1,3 | 847,60 € |
+| Terminsgebühr (Nr. 3104 VV RVG) | 1,2 | 782,40 € |
+| Auslagenpauschale (Nr. 7002 VV RVG) | 20 %, gedeckelt | 20,00 € |
+| **Gesamt erste Instanz (brutto, 19 % USt)** | | **1.963,50 €** |
+
+| Angelegenheit „Berufungsverfahren" | Satz | Betrag |
+|---|---|---|
+| Verfahrensgebühr (Nr. 3200 VV RVG) | 1,6 | 1.043,20 € |
+| Terminsgebühr (Nr. 3202 VV RVG) | 1,2 | 782,40 € |
+| Auslagenpauschale (Nr. 7002 VV RVG, **je Angelegenheit**) | 20 %, gedeckelt | 20,00 € |
+| **Gesamt Berufung (brutto, 19 % USt)** | | **2.196,26 €** |
+
+**Gesamtvergütung (Summe über beide Instanzen, gleicher Gläubiger):
+4.159,76 €.** Getrennt davon GKG-Berufung KV 1220 (4,0): **1.132,00 €**
+(1,0-Gebühr GKG 283,00 €). Jeder Rechtszug ist eine eigene Angelegenheit
+(§ 17 Nr. 1 RVG) mit eigener Auslagenpauschale und eigener USt-Basis; erste
+und zweite Instanz dürfen deshalb **nicht** in dieselbe Angelegenheit gelegt
+werden — der Executor lehnt das ab (Instanz-Kollisionsregel). RVG-Vergütung
+und GKG-Gerichtskosten bleiben getrennt.
+
+### Beispiel 4 — Scope-Ablehnung: Betragsrahmengebühr
 
 Anfrage mit `{"nr": "3102"}` (Verfahrensgebühr Sozialgericht,
 Betragsrahmengebühr) liefert Exit 2: „Nr. 3102 VV RVG ist nicht unterstützt

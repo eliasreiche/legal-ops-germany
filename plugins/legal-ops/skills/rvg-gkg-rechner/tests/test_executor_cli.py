@@ -105,6 +105,24 @@ def test_beispiel_report_synchron():
     assert erzeugt == gespeichert
 
 
+def test_beispiel_report_berufung_synchron():
+    ergebnis = subprocess.run(
+        [sys.executable, str(EXECUTOR),
+         "--input", str(SCHEMA / "beispiel-eingabe-berufung.json")],
+        capture_output=True, text=True)
+    assert ergebnis.returncode == 0, ergebnis.stderr
+    erzeugt = json.loads(ergebnis.stdout)
+    gespeichert = json.loads(
+        (SCHEMA / "beispiel-report-berufung.json").read_text(encoding="utf-8"))
+    erzeugt["meta"].pop("quelle_datei")
+    gespeichert["meta"].pop("quelle_datei")
+    assert erzeugt == gespeichert
+    # zwei Angelegenheiten (erste Instanz + Berufung), GKG-Berufung KV 1220.
+    assert len(erzeugt["rvg"]["angelegenheiten"]) == 2
+    assert erzeugt["rvg"]["ergebnis"]["gesamt_verguetung"] == "4159.76"
+    assert erzeugt["gkg"]["ergebnis"]["gesamt"] == "1132.00"
+
+
 def test_beispiel_eingabe_anrechnung_laeuft():
     ergebnis = subprocess.run(
         [sys.executable, str(EXECUTOR),

@@ -26,6 +26,17 @@ Angelegenheits-Grenze hinweg. Teil-1-Gebühren (1000/1003/1008) entstehen
 neben den Gebühren der anderen Teile (Vorbem. 1 VV RVG) und dürfen in jeder
 Angelegenheit stehen.
 
+**Instanzen-Grenze:** Der Katalog deckt den Zivilprozess-Instanzenzug ab —
+erste Instanz (Nr. 3100/3104), Berufung (Nr. 3200/3201/3202) und Revision
+(Nr. 3206–3210). Jeder Rechtszug ist eine eigene Angelegenheit (§ 17 Nr. 1
+RVG); Teil-3-Tatbestände verschiedener Instanzen in derselben Angelegenheit
+sind ein Eingabefehler (je Instanz eigene 7002/USt), analog zur Teil-2/Teil-3-
+Grenze. Die Einigungsgebühr Nr. 1004 (erhöhter Satz im Berufungs-/Revisions-
+verfahren) ist nur in einer Angelegenheit mit einem Berufungs-/Revisions-
+Tatbestand zulässig (sonst Nr. 1000/1003). Die Anrechnung nach Vorbem. 3
+Abs. 4 VV RVG erfolgt nur auf die Verfahrensgebühr des ersten Rechtszugs
+(Nr. 3100), nicht auf Nr. 3200/3206/3208.
+
 **Scope-Grenze (bewusst, siehe SKILL.md):** Nur Wertgebühren in Zivilsachen.
 Betragsrahmengebühren (Straf-/Sozialrecht), PKH-Vergütung (§ 49 RVG) und
 Beratungshilfe sind nicht im Katalog (`vv-katalog.json`) und werden als
@@ -196,6 +207,7 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
     basis_positionen: dict[str, Position] = {}
     erhoehungs_eintraege: list[dict[str, Any]] = []
     teile_vertreten: dict[int, str] = {}   # vv_teil -> erste Nr. dieses Teils
+    instanz_vertreten: dict[str, str] = {}  # instanz -> erste Teil-3-Nr. dieser Instanz
 
     for eintrag in tatbestaende:
         if not isinstance(eintrag, dict) or "nr" not in eintrag:
@@ -251,6 +263,27 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
                     f"aufteilen (siehe schema/README.md).")
             teile_vertreten.setdefault(teil, nr)
 
+        # Instanz-Kollision innerhalb Teil 3: jeder Rechtszug ist eine eigene
+        # Angelegenheit (§ 17 Nr. 1 RVG) — Berufungs-/Revisions- und
+        # erstinstanzliche Tatbestände dürfen nicht in derselben Angelegenheit
+        # stehen (sonst würden 7002/USt über die Instanz-Grenze hinweg still
+        # zusammengerechnet). Positionen derselben Instanz (z. B.
+        # Verfahrens- und Terminsgebühr) sind zulässig.
+        if teil == 3:
+            instanz = str(katalog_eintrag["instanz"])
+            for vorhandene_instanz, vorhandene_nr in instanz_vertreten.items():
+                if vorhandene_instanz != instanz:
+                    raise RVGEingabeFehler(
+                        f"{angelegenheit_label}: Nr. {vorhandene_nr} "
+                        f"(Instanz '{vorhandene_instanz}') und Nr. {nr} "
+                        f"(Instanz '{instanz}') in derselben Angelegenheit — "
+                        f"jeder Rechtszug ist eine eigene Angelegenheit "
+                        f"(§ 17 Nr. 1 RVG) mit je eigener Auslagenpauschale "
+                        f"Nr. 7002 und eigener USt-Basis. Die Anfrage über "
+                        f"'rvg.angelegenheiten' in getrennte Angelegenheiten "
+                        f"je Instanz aufteilen (siehe schema/README.md).")
+            instanz_vertreten.setdefault(instanz, nr)
+
         art = katalog_eintrag["art"]
         if art == "festsatz":
             katalog_satz = D(katalog_eintrag["satz"])
@@ -299,6 +332,20 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
                 f"(Nr. {nr} VV RVG): Satz {satz} x {einfachgebuehr} € = {betrag} €"
                 + (" (Mindestbetrag angewendet)" if mindest_gegriffen else ""),
                 str(betrag))
+
+    # --- Nr. 1004 (Einigungsgebühr im Berufungs-/Revisionsverfahren) nur in
+    #     einer Angelegenheit mit einem Berufungs-/Revisions-Tatbestand ---
+    if "1004" in basis_positionen:
+        erlaubte = positionen_katalog["1004"].get(
+            "nur_bei_instanz", ["berufung", "revision"])
+        if not any(i in erlaubte for i in instanz_vertreten):
+            raise RVGEingabeFehler(
+                f"{angelegenheit_label}: Nr. 1004 VV RVG (Einigungsgebühr im "
+                f"Berufungs-/Revisionsverfahren) ist nur in einer "
+                f"Angelegenheit mit einem Berufungs- oder Revisions-Tatbestand "
+                f"(Nr. 3200 ff. / 3206 ff.) zulässig. Für die Einigung in "
+                f"erster Instanz oder außergerichtlich gilt Nr. 1000 (1,5) "
+                f"bzw. Nr. 1003 (1,0).")
 
     # --- Erhöhungsgebühr Nr. 1008 ---
     erhoehungs_katalog = positionen_katalog["1008"]
@@ -473,6 +520,26 @@ def berechne(streitwert: Any, stichtag: _dt.date,
                      if "2300" in d["positionen"]]
         fund_3100 = [(d, d["positionen"]["3100"]) for d in angelegenheit_daten
                      if "3100" in d["positionen"]]
+        # Anrechnung ausschließlich auf die Verfahrensgebühr des ERSTEN
+        # Rechtszugs (Nr. 3100) — nicht auf eine Berufungs-/Revisions-
+        # Verfahrensgebühr (Vorbem. 3 Abs. 4 VV RVG; nach BGH die des ersten
+        # Rechtszugs). Gezielte Fehlermeldung, wenn nur eine höherinstanzliche
+        # Verfahrensgebühr vorliegt.
+        if not fund_3100:
+            hoehere_vg = sorted({
+                nr for d in angelegenheit_daten
+                for nr in ("3200", "3206", "3208") if nr in d["positionen"]})
+            if hoehere_vg:
+                raise RVGEingabeFehler(
+                    f"'anrechnung_2300_auf_3100' verlangt die "
+                    f"Verfahrensgebühr des ersten Rechtszugs (Nr. 3100). Die "
+                    f"Geschäftsgebühr wird nach Vorbem. 3 Abs. 4 VV RVG nur "
+                    f"auf die Verfahrensgebühr des ersten Rechtszugs "
+                    f"angerechnet, nicht auf eine Berufungs-/Revisions-"
+                    f"Verfahrensgebühr (hier vorhanden: Nr. "
+                    f"{', '.join(hoehere_vg)}). In der Berufungs-/Revisions-"
+                    f"instanz findet keine Anrechnung der erstinstanzlichen "
+                    f"Geschäftsgebühr statt.")
         if len(fund_2300) != 1 or len(fund_3100) != 1:
             raise RVGEingabeFehler(
                 "'anrechnung_2300_auf_3100' verlangt genau eine Nr. 2300 und "

@@ -1,6 +1,6 @@
 {
   "bezeichnung": "Gebührentatbestands-Katalog Vergütungsverzeichnis (Anlage 1 RVG) — nur Wertgebühren (Zivil), Auswahl",
-  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/rvg/anlage_1.html (aktuelle Fassung, Stand Fundstelle BGBl. I 2022, 633-664 zzgl. spätere Einzeländerungen).",
+  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/rvg/anlage_1.html (aktuelle Fassung, Stand Fundstelle BGBl. I 2022, 633-664 zzgl. spätere Einzeländerungen). Erweiterung um den Instanzenzug (Berufung Nr. 3200/3201/3202, Revision Nr. 3206–3210, Einigungsgebühr Nr. 1004) web-verifiziert am 2026-07-17 gegen dieselbe Quelle — Fundstellen je Positions-Eintrag im Feld `quelle_hinweis`.",
   "scope_hinweis": "Nur Wertgebühren-Tatbestände in Zivilsachen. Betragsrahmengebühren (Sozial-/Strafrecht), PKH-Vergütung (§ 49 RVG) und Beratungshilfe (Teil 2 Abschnitt 5 VV RVG) sind NICHT im Katalog und werden vom Executor als Scope-Fehler abgelehnt (siehe rechner.py).",
   "positionen": {
     "2300": {
@@ -14,18 +14,97 @@
       "vv_teil": 2
     },
     "3100": {
-      "bezeichnung": "Verfahrensgebühr",
+      "bezeichnung": "Verfahrensgebühr (erster Rechtszug)",
       "norm": "Nr. 3100 VV RVG",
       "art": "festsatz",
       "satz": "1.3",
-      "vv_teil": 3
+      "vv_teil": 3,
+      "instanz": "1"
     },
     "3104": {
-      "bezeichnung": "Terminsgebühr",
+      "bezeichnung": "Terminsgebühr (erster Rechtszug)",
       "norm": "Nr. 3104 VV RVG",
       "art": "festsatz",
       "satz": "1.2",
-      "vv_teil": 3
+      "vv_teil": 3,
+      "instanz": "1"
+    },
+    "3200": {
+      "bezeichnung": "Verfahrensgebühr (Berufung)",
+      "norm": "Nr. 3200 VV RVG",
+      "art": "festsatz",
+      "satz": "1.6",
+      "vv_teil": 3,
+      "instanz": "berufung",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Teil 3 Abschnitt 2 Unterabschnitt 1 (Vorbem. 3.2.1 — Berufung, bestimmte Beschwerden und Verfahren vor dem Finanzgericht): Verfahrensgebühr 1,6."
+    },
+    "3201": {
+      "bezeichnung": "Verfahrensgebühr (Berufung), ermäßigt bei vorzeitiger Beendigung",
+      "norm": "Nr. 3201 VV RVG",
+      "art": "festsatz",
+      "satz": "1.1",
+      "vv_teil": 3,
+      "instanz": "berufung",
+      "hinweis": "Ermäßigte Verfahrensgebühr; tritt anstelle von Nr. 3200, wenn der Auftrag vorzeitig endet oder sich die Tätigkeit einschränkt (Anm. zu Nr. 3201 VV RVG). Der Executor prüft die Voraussetzungen der Ermäßigung nicht — Nr. 3200 und Nr. 3201 stehen alternativ, nie kumulativ.",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 3201: 'Die Verfahrensgebühr 3200 beträgt' 1,1."
+    },
+    "3202": {
+      "bezeichnung": "Terminsgebühr (Berufung)",
+      "norm": "Nr. 3202 VV RVG",
+      "art": "festsatz",
+      "satz": "1.2",
+      "vv_teil": 3,
+      "instanz": "berufung",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 3202: Terminsgebühr 1,2."
+    },
+    "3206": {
+      "bezeichnung": "Verfahrensgebühr (Revision)",
+      "norm": "Nr. 3206 VV RVG",
+      "art": "festsatz",
+      "satz": "1.6",
+      "vv_teil": 3,
+      "instanz": "revision",
+      "hinweis": "Reguläre Revisions-Verfahrensgebühr ohne Vertretungszwang durch einen beim BGH zugelassenen Rechtsanwalt. Ist die Vertretung durch einen beim BGH zugelassenen Rechtsanwalt vorgeschrieben (Zivilrevision, § 78 Abs. 1 Satz 3 ZPO), gilt der erhöhte Satz nach Nr. 3208.",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Teil 3 Abschnitt 2 Unterabschnitt 2 (Vorbem. 3.2.2 — Revision, bestimmte Beschwerden und Rechtsbeschwerden), Nr. 3206: Verfahrensgebühr 1,6."
+    },
+    "3207": {
+      "bezeichnung": "Verfahrensgebühr (Revision), ermäßigt bei vorzeitiger Beendigung",
+      "norm": "Nr. 3207 VV RVG",
+      "art": "festsatz",
+      "satz": "1.1",
+      "vv_teil": 3,
+      "instanz": "revision",
+      "hinweis": "Ermäßigte Revisions-Verfahrensgebühr (Anm. zu Nr. 3207 VV RVG: 'Die Gebühr 3206 beträgt'); Voraussetzungen prüft der Executor nicht — Nr. 3206 und Nr. 3207 stehen alternativ, nie kumulativ.",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 3207: 'Die Gebühr 3206 beträgt' 1,1."
+    },
+    "3208": {
+      "bezeichnung": "Verfahrensgebühr (Revision), Vertretung durch beim BGH zugelassenen Rechtsanwalt vorgeschrieben",
+      "norm": "Nr. 3208 VV RVG",
+      "art": "festsatz",
+      "satz": "2.3",
+      "vv_teil": 3,
+      "instanz": "revision",
+      "hinweis": "Erhöhter Satz, wenn sich die Parteien nur durch einen beim Bundesgerichtshof zugelassenen Rechtsanwalt vertreten lassen können (Zivilrevision vor dem BGH, § 78 Abs. 1 Satz 3 ZPO). Tritt an die Stelle von Nr. 3206.",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 3208: 'Im Verfahren können sich die Parteien oder die Beteiligten nur durch einen beim Bundesgerichtshof zugelassenen Rechtsanwalt vertreten lassen: Die Gebühr 3206 beträgt' 2,3."
+    },
+    "3209": {
+      "bezeichnung": "Verfahrensgebühr (Revision, BGH-Vertretungszwang), ermäßigt bei vorzeitiger Beendigung",
+      "norm": "Nr. 3209 VV RVG",
+      "art": "festsatz",
+      "satz": "1.8",
+      "vv_teil": 3,
+      "instanz": "revision",
+      "hinweis": "Ermäßigte Fassung von Nr. 3208 bei vorzeitiger Beendigung; steht alternativ zu Nr. 3208, nie kumulativ.",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 3209: vorzeitige Beendigung im Fall des BGH-Vertretungszwangs, 'Die Gebühr 3206 beträgt' 1,8."
+    },
+    "3210": {
+      "bezeichnung": "Terminsgebühr (Revision)",
+      "norm": "Nr. 3210 VV RVG",
+      "art": "festsatz",
+      "satz": "1.5",
+      "vv_teil": 3,
+      "instanz": "revision",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 3210: Terminsgebühr 1,5."
     },
     "1000": {
       "bezeichnung": "Einigungsgebühr",
@@ -42,6 +121,16 @@
       "hinweis": "Gilt anstelle von Nr. 1000, wenn über den Gegenstand bereits ein anderes gerichtliches Verfahren (außer selbständigem Beweisverfahren) anhängig ist.",
       "vv_teil": 1
     },
+    "1004": {
+      "bezeichnung": "Einigungsgebühr im Berufungs-/Revisionsverfahren (erhöhter Satz)",
+      "norm": "Nr. 1004 VV RVG",
+      "art": "festsatz",
+      "satz": "1.3",
+      "vv_teil": 1,
+      "nur_bei_instanz": ["berufung", "revision"],
+      "hinweis": "Erhöhte Einigungsgebühr, wenn über den Gegenstand ein Berufungs- oder Revisionsverfahren anhängig ist. Nur in einer Angelegenheit mit einem Berufungs-/Revisions-Tatbestand (Nr. 3200 ff. / 3206 ff.) zulässig — der Executor lehnt Nr. 1004 in erster Instanz/außergerichtlich ab und verweist auf Nr. 1000 (1,5) bzw. Nr. 1003 (1,0).",
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 1004: 'Über den Gegenstand ist ein Berufungs- oder Revisionsverfahren anhängig' — Einigungsgebühr 1,3."
+    },
     "1008": {
       "bezeichnung": "Erhöhungsgebühr für weitere Auftraggeber",
       "norm": "Nr. 1008 VV RVG",
@@ -50,9 +139,13 @@
       "erhoehung_max_satz": "2.0",
       "anwendbar_auf": [
         "3100",
+        "3200",
+        "3206",
+        "3208",
         "2300"
       ],
-      "hinweis": "Erhöht die Verfahrens- oder Geschäftsgebühr um 0,3 je weiterem Auftraggeber, nur soweit der Gegenstand der anwaltlichen Tätigkeit derselbe ist (Anm. Abs. 1). Mehrere Erhöhungen dürfen einen Gebührensatz von 2,0 nicht übersteigen (Anm. Abs. 3) — der Executor kappt und weist die Kappung aus.",
+      "hinweis": "Erhöht die Verfahrens- oder Geschäftsgebühr um 0,3 je weiterem Auftraggeber, nur soweit der Gegenstand der anwaltlichen Tätigkeit derselbe ist (Anm. Abs. 1). Anwendbar auf die Verfahrensgebühr jedes Rechtszugs (Nr. 3100 erste Instanz, Nr. 3200 Berufung, Nr. 3206/3208 Revision) und die Geschäftsgebühr (Nr. 2300). Mehrere Erhöhungen dürfen einen Gebührensatz von 2,0 nicht übersteigen (Anm. Abs. 3) — der Executor kappt und weist die Kappung aus.",
+      "quelle_hinweis": "Anwendbarkeit auf die Berufungs-/Revisions-Verfahrensgebühren web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 1008: erhöht die 'Verfahrens- oder Geschäftsgebühr' — erfasst damit auch die Verfahrensgebühren der Teil-3-Abschnitte 2 (3200 ff.).",
       "vv_teil": 1
     },
     "7002": {
@@ -79,5 +172,7 @@
     "voraussetzung": "Geschäftsgebühr (Nr. 2300) und Verfahrensgebühr (Nr. 3100) desselben Gegenstands, hier: derselbe Streitwert in derselben Anfrage.",
     "hinweis": "Nur als optionaler, explizit angeforderter Rechenschritt (anrechnung_2300_auf_3100: true) — nie automatisch, da die Anrechnung von der anwaltlichen Einordnung abhängt (derselbe Gegenstand?)."
   },
-  "teil_hinweis": "`vv_teil` = Teil der Anlage 1 RVG (Gliederung web-verifiziert). Teil-2- und Teil-3-Tatbestände in DERSELBEN Angelegenheit sind ein Eingabefehler: außergerichtliche Vertretung und gerichtliches Verfahren sind verschiedene Angelegenheiten (§§ 16 ff. RVG; die Anrechnung nach Vorbem. 3 Abs. 4 VV RVG setzt zwei Angelegenheiten gerade voraus) — mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis. Teil-1-Gebühren entstehen neben den Gebühren der anderen Teile (Vorbem. 1 VV RVG) und lösen keine Kollisionsprüfung aus."
+  "teil_hinweis": "`vv_teil` = Teil der Anlage 1 RVG (Gliederung web-verifiziert). Teil-2- und Teil-3-Tatbestände in DERSELBEN Angelegenheit sind ein Eingabefehler: außergerichtliche Vertretung und gerichtliches Verfahren sind verschiedene Angelegenheiten (§§ 16 ff. RVG; die Anrechnung nach Vorbem. 3 Abs. 4 VV RVG setzt zwei Angelegenheiten gerade voraus) — mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis. Teil-1-Gebühren entstehen neben den Gebühren der anderen Teile (Vorbem. 1 VV RVG) und lösen keine Kollisionsprüfung aus.",
+  "instanz_hinweis": "`instanz` (nur bei Teil-3-Positionen) = Rechtszug: '1' (erste Instanz, Nr. 3100/3104), 'berufung' (Nr. 3200/3201/3202), 'revision' (Nr. 3206–3210). Teil-3-Tatbestände VERSCHIEDENER Instanzen in DERSELBEN Angelegenheit sind ein Eingabefehler: jeder Rechtszug ist eine eigene Angelegenheit (§ 17 Nr. 1 RVG) mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis — über 'angelegenheiten' in getrennte Angelegenheiten je Instanz aufteilen. `nur_bei_instanz` (bei Nr. 1004) = die Position ist nur in einer Angelegenheit mit einer der genannten Instanzen zulässig.",
+  "anrechnung_instanz_hinweis": "Die Anrechnung der Geschäftsgebühr (Vorbem. 3 Abs. 4 VV RVG) erfolgt ausschließlich auf die Verfahrensgebühr des ERSTEN Rechtszugs (Nr. 3100), nicht auf die Berufungs-/Revisions-Verfahrensgebühr (Nr. 3200/3206/3208) — der Executor lehnt eine Anrechnungs-Anforderung ohne Nr. 3100, aber mit einer höherinstanzlichen Verfahrensgebühr, als Eingabefehler ab. Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html (Vorbem. 3 Abs. 4: Anrechnung auf 'die Verfahrensgebühr des gerichtlichen Verfahrens' — nach BGH die des ersten Rechtszugs)."
 }

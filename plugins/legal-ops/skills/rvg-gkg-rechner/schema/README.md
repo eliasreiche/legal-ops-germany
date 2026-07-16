@@ -77,20 +77,50 @@ Kurzform für genau **eine** Angelegenheit (`tatbestaende` flach statt
 Nur Wertgebühren in Zivilsachen — Katalog liegt als Datendatei bei
 [`core/calc/rvg/vv-katalog.json`](../../../core/calc/rvg/vv-katalog.json):
 
-| Nr. | VV-Teil | Bezeichnung | Art | Satz | Zusatzfelder in `tatbestaende` |
-|---|---|---|---|---|---|
-| `2300` | 2 (außergerichtlich) | Geschäftsgebühr | Satzrahmen 0,5–2,5 | **Pflichtangabe** `satz` (keine stille Annahme des Regelsatzes 1,3) | `"satz": "1.3"` |
-| `3100` | 3 (gerichtlich) | Verfahrensgebühr | Festsatz | 1,3 | — (gesetzlich fix, `satz` darf nicht überschrieben werden) |
-| `3104` | 3 (gerichtlich) | Terminsgebühr | Festsatz | 1,2 | — |
-| `1000` | 1 (allgemein) | Einigungsgebühr | Festsatz | 1,5 | — |
-| `1003` | 1 (allgemein) | Einigungsgebühr bei anhängiger Sache | Festsatz | 1,0 | — |
-| `1008` | 1 (allgemein) | Erhöhungsgebühr für weitere Auftraggeber | Erhöhung | 0,3 je weiterem Auftraggeber, gekappt auf Gebührensatz 2,0 | `"erhoeht_position": "3100"` (oder `"2300"`), `"weitere_auftraggeber": 1` |
+| Nr. | VV-Teil | Instanz | Bezeichnung | Art | Satz | Zusatzfelder in `tatbestaende` |
+|---|---|---|---|---|---|---|
+| `2300` | 2 (außergerichtlich) | — | Geschäftsgebühr | Satzrahmen 0,5–2,5 | **Pflichtangabe** `satz` (keine stille Annahme des Regelsatzes 1,3) | `"satz": "1.3"` |
+| `3100` | 3 (gerichtlich) | 1 | Verfahrensgebühr (erster Rechtszug) | Festsatz | 1,3 | — (gesetzlich fix, `satz` darf nicht überschrieben werden) |
+| `3104` | 3 (gerichtlich) | 1 | Terminsgebühr (erster Rechtszug) | Festsatz | 1,2 | — |
+| `3200` | 3 (gerichtlich) | berufung | Verfahrensgebühr (Berufung) | Festsatz | 1,6 | — |
+| `3201` | 3 (gerichtlich) | berufung | Verfahrensgebühr (Berufung), ermäßigt bei vorzeitiger Beendigung | Festsatz | 1,1 | — (alternativ zu 3200, nie kumulativ) |
+| `3202` | 3 (gerichtlich) | berufung | Terminsgebühr (Berufung) | Festsatz | 1,2 | — |
+| `3206` | 3 (gerichtlich) | revision | Verfahrensgebühr (Revision, ohne BGH-Vertretungszwang) | Festsatz | 1,6 | — |
+| `3207` | 3 (gerichtlich) | revision | Verfahrensgebühr (Revision), ermäßigt | Festsatz | 1,1 | — (alternativ zu 3206) |
+| `3208` | 3 (gerichtlich) | revision | Verfahrensgebühr (Revision), BGH-Vertretungszwang (Zivilrevision, § 78 Abs. 1 S. 3 ZPO) | Festsatz | 2,3 | — (statt 3206) |
+| `3209` | 3 (gerichtlich) | revision | Verfahrensgebühr (Revision, BGH), ermäßigt | Festsatz | 1,8 | — (alternativ zu 3208) |
+| `3210` | 3 (gerichtlich) | revision | Terminsgebühr (Revision) | Festsatz | 1,5 | — |
+| `1000` | 1 (allgemein) | — | Einigungsgebühr | Festsatz | 1,5 | — |
+| `1003` | 1 (allgemein) | — | Einigungsgebühr bei anhängiger Sache | Festsatz | 1,0 | — |
+| `1004` | 1 (allgemein) | — | Einigungsgebühr im Berufungs-/Revisionsverfahren | Festsatz | 1,3 | — (**nur** in einer Angelegenheit mit einem Berufungs-/Revisions-Tatbestand) |
+| `1008` | 1 (allgemein) | — | Erhöhungsgebühr für weitere Auftraggeber | Erhöhung | 0,3 je weiterem Auftraggeber, gekappt auf Gebührensatz 2,0 | `"erhoeht_position": "3100"` (auch `"3200"`, `"3206"`, `"3208"` oder `"2300"`), `"weitere_auftraggeber": 1` |
+
+Alle Sätze der Berufungs-/Revisions-Positionen sowie Nr. 1004 sind am
+2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html web-verifiziert
+(Fundstelle je Eintrag im Katalog `vv-katalog.json`, Feld `quelle_hinweis`).
 
 **Teil-Kollisionsregel:** Teil-2- (`2300`) und Teil-3-Tatbestände
-(`3100`/`3104`) in **derselben** Angelegenheit sind ein Eingabefehler —
-außergerichtliche Vertretung und gerichtliches Verfahren sind verschiedene
-Angelegenheiten. Teil-1-Gebühren entstehen neben den Gebühren der anderen
-Teile (Vorbem. 1 VV RVG) und dürfen in jeder Angelegenheit stehen.
+(`3100`/`3104`/`3200` ff.) in **derselben** Angelegenheit sind ein
+Eingabefehler — außergerichtliche Vertretung und gerichtliches Verfahren sind
+verschiedene Angelegenheiten. Teil-1-Gebühren entstehen neben den Gebühren der
+anderen Teile (Vorbem. 1 VV RVG) und dürfen in jeder Angelegenheit stehen.
+
+**Instanz-Kollisionsregel:** Teil-3-Tatbestände **verschiedener Instanzen**
+(erste Instanz `3100`/`3104`, Berufung `3200`–`3202`, Revision `3206`–`3210`)
+in **derselben** Angelegenheit sind ein Eingabefehler — jeder Rechtszug ist
+eine eigene Angelegenheit (§ 17 Nr. 1 RVG) mit je eigener Auslagenpauschale
+Nr. 7002 und eigener USt-Basis. Positionen **derselben** Instanz
+(Verfahrens- + Terminsgebühr) sind zulässig. Mehrere Instanzen daher in
+**getrennte** `angelegenheiten` legen. Die Einigungsgebühr **`1004`** (erhöhter
+Satz) ist nur in einer Angelegenheit mit einem Berufungs-/Revisions-Tatbestand
+zulässig — sonst greift `1000` (1,5) bzw. `1003` (1,0).
+
+**Anrechnung nur auf den ersten Rechtszug:** `anrechnung_2300_auf_3100` rechnet
+die Geschäftsgebühr ausschließlich auf die Verfahrensgebühr des **ersten**
+Rechtszugs (`3100`) an (Vorbem. 3 Abs. 4 VV RVG, nach BGH der erste
+Rechtszug), nie auf `3200`/`3206`/`3208`. Eine Anrechnungs-Anforderung ohne
+`3100`, aber mit einer höherinstanzlichen Verfahrensgebühr, ist ein
+Eingabefehler.
 
 `7002` (Auslagenpauschale) und `7008` (Umsatzsteuer) sind **keine**
 `tatbestaende`-Einträge — sie werden über die Flags `auslagenpauschale` /
@@ -131,6 +161,13 @@ Katalog liegt bei
 | `1211` | Ermäßigung von `1210` (früher Verfahrensabschluss) | 1,0 | — |
 | `1220` | Berufung, Verfahren im Allgemeinen | 4,0 | Schließt sich mit `1222` aus. |
 | `1222` | Ermäßigung von `1220` | 2,0 | — |
+| `1230` | Revision, Verfahren im Allgemeinen | 5,0 | Schließt sich mit `1232` aus. |
+| `1232` | Ermäßigung von `1230` | 3,0 | — |
+
+`1230`/`1232` am 2026-07-17 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html
+web-verifiziert (Fundstelle je Eintrag im Katalog `kv-katalog.json`).
+Ausschlusspaare für dieselbe Instanz: `1210`/`1211`, `1220`/`1222`,
+`1230`/`1232` — je nur eine der beiden Positionen angeben.
 
 Gerichtsgebühren sind nicht umsatzsteuerpflichtig — der GKG-Block kennt keine
 7002-/7008-Entsprechung.

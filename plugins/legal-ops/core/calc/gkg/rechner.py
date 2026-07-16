@@ -40,7 +40,7 @@ KATALOG_PFAD = _GKG_DIR / "kv-katalog.json"
 
 # Positionspaare, die sich gegenseitig ausschließen (Regelfall vs. Ermäßigung
 # für dieselbe Instanz).
-_AUSSCHLUSSPAARE = [("1210", "1211"), ("1220", "1222")]
+_AUSSCHLUSSPAARE = [("1210", "1211"), ("1220", "1222"), ("1230", "1232")]
 
 
 class GKGEingabeFehler(WertgebuehrFehler):

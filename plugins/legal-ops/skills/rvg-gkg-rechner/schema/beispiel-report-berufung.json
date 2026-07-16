@@ -1,0 +1,316 @@
+{
+  "meta": {
+    "erzeugt_von": "core/calc/rvg/executor.py",
+    "quelle_datei": "beispiel-eingabe-berufung.json",
+    "deterministik": "Alle Geldbeträge in diesem Report sind Executor-Ergebnisse (P3), nicht modellgeneriert.",
+    "hinweis_getrennte_kostenarten": "RVG-Anwaltsvergütung und GKG-Gerichtskosten werden absichtlich NICHT zu einer Gesamtsumme addiert — unterschiedliche Forderungen mit unterschiedlichen Kostenschuldnern."
+  },
+  "rvg": {
+    "eingabe": {
+      "auftragsdatum": "2026-03-01",
+      "streitwert": "10000.00",
+      "angelegenheiten": [
+        {
+          "bezeichnung": "Rechtsstreit erster Instanz",
+          "tatbestaende": [
+            {
+              "nr": "3100"
+            },
+            {
+              "nr": "3104"
+            }
+          ]
+        },
+        {
+          "bezeichnung": "Berufungsverfahren",
+          "tatbestaende": [
+            {
+              "nr": "3200"
+            },
+            {
+              "nr": "3202"
+            }
+          ]
+        }
+      ],
+      "anrechnung_2300_auf_3100": false,
+      "auslagenpauschale": true,
+      "umsatzsteuer": true
+    },
+    "tabellenstand": {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 11 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109, 139; Anlage 2 RVG Fundstelle BGBl. 2025 I Nr. 109, S. 30"
+    },
+    "wertkappung": null,
+    "einfachgebuehr": "652.00",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Rechtsstreit erster Instanz",
+        "positionen": [
+          {
+            "nr": "3100",
+            "bezeichnung": "Verfahrensgebühr (erster Rechtszug)",
+            "norm": "Nr. 3100 VV RVG",
+            "satz": "1.3",
+            "betrag": "847.60",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [],
+            "quelle": "executor"
+          },
+          {
+            "nr": "3104",
+            "bezeichnung": "Terminsgebühr (erster Rechtszug)",
+            "norm": "Nr. 3104 VV RVG",
+            "satz": "1.2",
+            "betrag": "782.40",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [],
+            "quelle": "executor"
+          }
+        ],
+        "ergebnis": {
+          "zwischensumme_gebuehren": "1630.00",
+          "auslagenpauschale": "20.00",
+          "netto": "1650.00",
+          "ust_satz": "0.19",
+          "ust": "313.50",
+          "gesamt": "1963.50",
+          "quelle": "executor"
+        }
+      },
+      {
+        "bezeichnung": "Berufungsverfahren",
+        "positionen": [
+          {
+            "nr": "3200",
+            "bezeichnung": "Verfahrensgebühr (Berufung)",
+            "norm": "Nr. 3200 VV RVG",
+            "satz": "1.6",
+            "betrag": "1043.20",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [],
+            "quelle": "executor"
+          },
+          {
+            "nr": "3202",
+            "bezeichnung": "Terminsgebühr (Berufung)",
+            "norm": "Nr. 3202 VV RVG",
+            "satz": "1.2",
+            "betrag": "782.40",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [],
+            "quelle": "executor"
+          }
+        ],
+        "ergebnis": {
+          "zwischensumme_gebuehren": "1825.60",
+          "auslagenpauschale": "20.00",
+          "netto": "1845.60",
+          "ust_satz": "0.19",
+          "ust": "350.66",
+          "gesamt": "2196.26",
+          "quelle": "executor"
+        }
+      }
+    ],
+    "anrechnung": null,
+    "rechenkette": [
+      {
+        "schritt": 1,
+        "norm": "§ 60 Abs. 1 RVG",
+        "beschreibung": "Stichtag (Auftragserteilung) 2026-03-01 -> Tabellenstand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)' (gültig 2025-06-01 bis heute).",
+        "ergebnis": "kostbraeg_2025",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 2,
+        "norm": "§ 13 Abs. 1 RVG",
+        "beschreibung": "1,0-Gebühr (Einfachgebühr) für Gegenstandswert 10000.00 €.",
+        "ergebnis": "652.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 3,
+        "norm": "Nr. 3100 VV RVG",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz': Verfahrensgebühr (erster Rechtszug) (Nr. 3100 VV RVG): Satz 1.3 x 652.00 € = 847.60 €",
+        "ergebnis": "847.60",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 4,
+        "norm": "Nr. 3104 VV RVG",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz': Terminsgebühr (erster Rechtszug) (Nr. 3104 VV RVG): Satz 1.2 x 652.00 € = 782.40 €",
+        "ergebnis": "782.40",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 5,
+        "norm": "Nr. 3200 VV RVG",
+        "beschreibung": "Angelegenheit 'Berufungsverfahren': Verfahrensgebühr (Berufung) (Nr. 3200 VV RVG): Satz 1.6 x 652.00 € = 1043.20 €",
+        "ergebnis": "1043.20",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 6,
+        "norm": "Nr. 3202 VV RVG",
+        "beschreibung": "Angelegenheit 'Berufungsverfahren': Terminsgebühr (Berufung) (Nr. 3202 VV RVG): Satz 1.2 x 652.00 € = 782.40 €",
+        "ergebnis": "782.40",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 7,
+        "norm": "Zwischensumme",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz': Summe der Gebührenpositionen (nach Anrechnung, sofern angefordert).",
+        "ergebnis": "1630.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 8,
+        "norm": "Nr. 7002 VV RVG",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz': Auslagenpauschale — 20 % von 1630.00 € = 326.00 €, gedeckelt auf höchstens 20.00 € (je Angelegenheit).",
+        "ergebnis": "20.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 9,
+        "norm": "Netto",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz': Zwischensumme zzgl. Auslagenpauschale.",
+        "ergebnis": "1650.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 10,
+        "norm": "Nr. 7008 VV RVG",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz': Umsatzsteuer — 19 % von 1650.00 € = 313.50 €.",
+        "ergebnis": "313.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 11,
+        "norm": "Gesamt (Angelegenheit)",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz': Netto zzgl. Umsatzsteuer.",
+        "ergebnis": "1963.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 12,
+        "norm": "Zwischensumme",
+        "beschreibung": "Angelegenheit 'Berufungsverfahren': Summe der Gebührenpositionen (nach Anrechnung, sofern angefordert).",
+        "ergebnis": "1825.60",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 13,
+        "norm": "Nr. 7002 VV RVG",
+        "beschreibung": "Angelegenheit 'Berufungsverfahren': Auslagenpauschale — 20 % von 1825.60 € = 365.12 €, gedeckelt auf höchstens 20.00 € (je Angelegenheit).",
+        "ergebnis": "20.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 14,
+        "norm": "Netto",
+        "beschreibung": "Angelegenheit 'Berufungsverfahren': Zwischensumme zzgl. Auslagenpauschale.",
+        "ergebnis": "1845.60",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 15,
+        "norm": "Nr. 7008 VV RVG",
+        "beschreibung": "Angelegenheit 'Berufungsverfahren': Umsatzsteuer — 19 % von 1845.60 € = 350.66 €.",
+        "ergebnis": "350.66",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 16,
+        "norm": "Gesamt (Angelegenheit)",
+        "beschreibung": "Angelegenheit 'Berufungsverfahren': Netto zzgl. Umsatzsteuer.",
+        "ergebnis": "2196.26",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 17,
+        "norm": "Gesamtvergütung",
+        "beschreibung": "Summe über alle Angelegenheiten (gleicher Gläubiger — die Angelegenheiten bleiben gebührenrechtlich getrennt, nur die Vergütungsforderung wird addiert).",
+        "ergebnis": "4159.76",
+        "quelle": "executor"
+      }
+    ],
+    "ergebnis": {
+      "gesamt_verguetung": "4159.76",
+      "gesamt_hinweis": "Summe über alle Angelegenheiten (gleicher Gläubiger) — die Angelegenheiten bleiben gebührenrechtlich getrennt (je eigene Auslagenpauschale Nr. 7002 und eigene USt-Basis Nr. 7008).",
+      "quelle": "executor"
+    },
+    "warnungen": []
+  },
+  "gkg": {
+    "eingabe": {
+      "verfahrenseinleitungsdatum": "2026-03-01",
+      "streitwert": "10000.00",
+      "positionen": [
+        {
+          "nr": "1220"
+        }
+      ]
+    },
+    "tabellenstand": {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 5 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109, 139; Anlage 2 GKG Fundstelle BGBl. 2025 I Nr. 109, S. 11"
+    },
+    "wertkappung": null,
+    "einfachgebuehr": "283.00",
+    "positionen": [
+      {
+        "nr": "1220",
+        "bezeichnung": "Berufung — Verfahren im Allgemeinen",
+        "norm": "KV 1220 GKG",
+        "satz": "4.0",
+        "betrag": "1132.00",
+        "mindestbetrag_gegriffen": false,
+        "hinweise": [],
+        "quelle": "executor"
+      }
+    ],
+    "rechenkette": [
+      {
+        "schritt": 1,
+        "norm": "§ 71 Abs. 1 GKG",
+        "beschreibung": "Stichtag (Anhängigkeit der Rechtsstreitigkeit) 2026-03-01 -> Tabellenstand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)' (gültig 2025-06-01 bis heute).",
+        "ergebnis": "kostbraeg_2025",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 2,
+        "norm": "§ 34 Abs. 1 GKG",
+        "beschreibung": "1,0-Gebühr (Einfachgebühr) für Streitwert 10000.00 €.",
+        "ergebnis": "283.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 3,
+        "norm": "KV 1220 GKG",
+        "beschreibung": "Berufung — Verfahren im Allgemeinen (KV 1220 GKG): Satz 4.0 x 283.00 € = 1132.00 €",
+        "ergebnis": "1132.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 4,
+        "norm": "Gesamt",
+        "beschreibung": "Summe aller Gerichtskosten-Positionen (nicht umsatzsteuerpflichtig).",
+        "ergebnis": "1132.00",
+        "quelle": "executor"
+      }
+    ],
+    "ergebnis": {
+      "gesamt": "1132.00",
+      "umsatzsteuerpflichtig": false,
+      "quelle": "executor"
+    },
+    "warnungen": []
+  }
+}
