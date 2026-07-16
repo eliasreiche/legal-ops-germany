@@ -6,7 +6,7 @@ Open-Source-Library aus **Claude-Skills und deterministischen Python-Executors**
 **non-billable Workflows** deutscher Boutique- und Kleinkanzleien — Fristenberechnung
 (ZPO/BGB) mit Kalender-Export, Gebühren (RVG/GKG), GwG-Risikoklassifizierung mit
 verifizierter Hochrisiko-Länderliste, Aktenkopf-Extraktion, Interessenkollisions-Check,
-DATEV-EXTF-Export und mehr. **19 Skills, davon 1 `getestet` und 10 in `beta`** (Status-Tabelle unten).
+DATEV-EXTF-Export und mehr. **19 Skills, davon 1 `getestet` und 9 in `beta`** (Status-Tabelle unten).
 Funktionsweise ausschließlich nach deutschem Recht.
 
 > **Keine Rechtsberatung.** Diese Library unterstützt organisatorische und rechnerische
@@ -73,7 +73,7 @@ Tabelle wird generiert von [`plugins/legal-ops/core/verify/struktur_lint.py`](pl
 | Skill | Bereich | Welle | Status |
 |---|---|---|---|
 | [`fristenrechner`](plugins/legal-ops/skills/fristenrechner/SKILL.md) | `fristen-termine` | 1 | ✅ `getestet` |
-| [`zitat-pruefer`](plugins/legal-ops/skills/zitat-pruefer/SKILL.md) | `querschnitt` | 1 | 🧪 `beta` |
+| [`zitat-pruefer`](plugins/legal-ops/skills/zitat-pruefer/SKILL.md) | `querschnitt` | 1 | 🚧 `Work-in-progress` |
 | [`rvg-gkg-rechner`](plugins/legal-ops/skills/rvg-gkg-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🧪 `beta` |
 | [`gwg-risiko-check`](plugins/legal-ops/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
 | [`interessenkollision-check`](plugins/legal-ops/skills/interessenkollision-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |

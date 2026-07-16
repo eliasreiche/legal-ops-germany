@@ -1,7 +1,7 @@
 ---
 name: zitat-pruefer
-description: "Extrahiert jede Norm-, Urteils- und Fundstellenangabe aus einem Text/Markdown-Dokument und markiert sie mit 3-Zustands-Marker (verifiziert / nicht prüfbar / abweichend) gegen eine Quellen-Registry. Querschnitts-Skill, den andere Skills am Ende mitnutzen. Triggert bei Zitate prüfen, Fundstellen verifizieren, Normzitat-Check, Belege gegen Registry."
-status: beta
+description: "Zurückgestellt (2026-07-16) — bewusst geparkt durch den Maintainer, nicht verwenden; wird überarbeitet und später reaktiviert. Triggert auf keine Anfrage."
+status: Work-in-progress
 welle: 1
 bereich: querschnitt
 rdg_einordnung: "Reine Format- und Konsistenzprüfung von Zitaten gegen eine vom Nutzer mitgelieferte Quellen-Registry; keine rechtliche Bewertung des Inhalts einer Norm oder Entscheidung und keine Aussage zur Rechtslage."
@@ -11,10 +11,16 @@ haftung: "Ersetzt keine inhaltliche Prüfung der zitierten Quellen durch den Anw
 
 # zitat-pruefer
 
-> **Status: `beta`** — automatisierte Tests laufen grün in CI (`tests/test_executor.py`
-> und `tests/test_zitat_pruefer_encoding_und_registries.py`, 73 Fälle). Noch **nicht**
-> händisch abgenommen — dafür wird `status: getestet` erst nach
-> Prüfung durch den Maintainer gesetzt (siehe [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md),
+> **Status: `Work-in-progress` — bewusst zurückgestuft am 2026-07-16.** Der
+> Skill ist vom Maintainer geparkt und **nicht für den Einsatz freigegeben**;
+> die `description` ist neutralisiert, damit er nicht automatisch triggert.
+> Das ist eine Hold-Entscheidung, kein Reifegrad-Befund: die automatisierten
+> Tests laufen weiter grün in CI (`tests/test_executor.py` und
+> `tests/test_zitat_pruefer_encoding_und_registries.py`, 73 Fälle), und die
+> **CI-interne Nutzung des Executors** (Zitiermarker-Konsistenzprüfung der
+> statischen Belehrungen anderer Skills) **bleibt unberührt**. Reaktivierung
+> setzt die frühere description und `status: beta` wieder ein (siehe
+> [CONVENTIONS.md](https://github.com/eliasreiche/claude-for-legal-non-billable-germany/blob/main/CONVENTIONS.md),
 > Reifegrad-Leiter).
 
 ## Zweck
