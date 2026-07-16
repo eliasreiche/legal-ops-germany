@@ -1,0 +1,6 @@
+"EXTF";700;21;"Buchungsstapel";5;20260715080000000;;"RE";"Kanzlei Muster & Kollegen";;12345;100;20260101;4;20260101;20261231;"OPOS Demo 2026";;1;;;"EUR";;;;;;;;;
+"Umsatz (ohne Soll/Haben-Kz)";"Soll/Haben-Kennzeichen";"WKZ Umsatz";"Kurs";"Basis-Umsatz";"WKZ Basis-Umsatz";"Konto";"Gegenkonto (ohne BU-Schlüssel)";"BU-Schlüssel";"Belegdatum";"Belegfeld 1";"Belegfeld 2";"Skonto";"Buchungstext";"Postensperre";"Diverse Adressnummer";"Geschäftspartnerbank";"Sachverhalt";"Zinssperre";"Beleglink"
+1190,00;"S";;;;;10001;8400;;0104;"RE-2026-500";;;"Honorar Max Mustermann";;;;;;
+400,00;"H";;;;;10001;1200;;1005;"RE-2026-500";;;"Teilzahlung Mustermann";;;;;;
+595,00;"S";;;;;10002;8400;;0106;"RE-2026-501";;;"Honorar Beispiel GmbH";;;;;;
+300,00;"H";;;;;10099;1200;;1506;;;;"Zahlung ohne Belegfeld";;;;;;

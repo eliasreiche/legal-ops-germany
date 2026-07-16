@@ -1,0 +1,5 @@
+rechnungsnummer;mandant;aktenzeichen;rechnungsdatum;faelligkeitsdatum;betrag;bereits_gezahlt
+RE-2026-001;Max Mustermann;01/2026;2026-05-01;2026-05-15;1190,00;0
+RE-2026-002;Erika Musterfrau;07/2026;2026-06-01;2026-06-15;2380,00;1000,00
+RE-2026-003;Beispiel GmbH;12/2026;2026-07-01;2026-07-31;595,00;595,00
+RE-2026-004;Max Mustermann;01/2026;2026-07-10;2026-07-24;450,00;
