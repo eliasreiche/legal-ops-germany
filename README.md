@@ -105,12 +105,30 @@ Voraussetzung ist ein datenschutzkonformer Claude-Zugang der Kanzlei (z. B. Clau
 Cowork über AWS Bedrock, Region Frankfurt). Die Kanzlei lädt dieses Repo selbst — es gibt
 kein Hosting und keine Datenhaltung durch die Library.
 
-```bash
-git clone https://github.com/eliasreiche/legal-ops-germany.git
+**Weg 1 — mit Git (empfohlen, bekommt Updates):** in Claude Code
+
+```
+/plugin marketplace add eliasreiche/legal-ops-germany
+/plugin install legal-ops@legal-ops-germany
 ```
 
-Einbindung als Claude-Code-/Cowork-Plugin über [`marketplace.json`](.claude-plugin/marketplace.json);
-Details je Skill im jeweiligen `SKILL.md`.
+Aktualisieren später mit `claude plugin marketplace update legal-ops-germany`.
+
+**Weg 2 — per ZIP (ohne Git):** auf der
+[Releases-Seite](https://github.com/eliasreiche/legal-ops-germany/releases)
+beim aktuellen Release „Source code (zip)" laden, entpacken, dann in Claude Code:
+
+```
+/plugin marketplace add /pfad/zum/entpackten/ordner
+/plugin install legal-ops@legal-ops-germany
+```
+
+> Die ZIP-Installation ist ein **eingefrorener Stand** — sie aktualisiert sich
+> nicht. Für einen neuen Stand das ZIP des neuesten Release laden und den
+> Marketplace-Eintrag auf den neuen Ordner zeigen lassen.
+
+Details je Skill im jeweiligen `SKILL.md`; Manifest:
+[`marketplace.json`](.claude-plugin/marketplace.json).
 
 ### Voraussetzungen
 
