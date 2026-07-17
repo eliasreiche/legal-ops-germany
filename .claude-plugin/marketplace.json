@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Non-billable Workflows deutscher Kanzleien: Claude-Skills + deterministische Python-Executors. Keine Rechtsberatung.",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "plugins": [
     {
