@@ -49,12 +49,9 @@ Datenflusses ist Sache der Kanzlei.
   Microsoft 365), gebündelt in genau einem Skill (`kontext-sync`) — eigener
   Integrations-Code für Kanzleisoftware ist bewusst nicht enthalten (Verweis auf
   die API-Doku des Herstellers bzw. „Integration geplant").
-- **Kontext-Layer.** Ein per-Kanzlei-Ordner `kontext/` (Kanzlei-Profil,
-  `mandate/<az>.md`, Kontakte) ist die einzige Schnittstelle der Skills zu
-  Kanzlei-Wissen — befüllt per Datei-Adapter oder MCP-Sync, von einem Executor
-  validiert ([`plugins/legal-ops/core/context/`](plugins/legal-ops/core/context/)).
-  Aufbewahrungs-Hinweise nach § 50 BRAO liefert ein Retention-Executor — **gelöscht
-  wird nie automatisch**.
+- **Kontext-Layer.** Ein per-Kanzlei-Ordner `kontext/` (Mandate, Kontakte,
+  Kanzlei-Profil) ist die einzige Schnittstelle der Skills zu Kanzlei-Wissen —
+  Details im Abschnitt [Der Kontext-Layer](#der-kontext-layer).
 - **Ehrliche Labels.** Jeder Skill trägt sichtbar seinen Reifegrad:
   - 🚧 `Work-in-progress` — noch nicht entwickelt (Stub) oder Code vorhanden, aber noch kein Test-Run.
   - 🧪 `beta` — gegen Testdaten durch Agenten getestet (Tests/Orakel-Fälle laufen grün in CI).
@@ -70,6 +67,37 @@ plus Querschnitt gegliedert, Feld `bereich:` im Frontmatter) **und** die
 geteilten Rechner unter [`plugins/legal-ops/core/`](plugins/legal-ops/core/) —
 so ist `core/` Teil der Auslieferung und jeder Executor-Skill nach dem Install
 lauffähig.
+
+## Der Kontext-Layer
+
+Die Skills brauchen Kanzlei-Wissen — Mandate, Parteien, Fristen, Kontakte. Statt dass jeder Skill selbst Kanzleisoftware anspricht, gibt es genau eine Schnittstelle: einen Ordner `kontext/` mit Markdown-Dateien.
+
+**Kette:** Kanzleisoftware / M365 → Adapter oder MCP-Sync → `kontext/` → Skills. Kein Skill spricht Kanzleisoftware direkt an; ob dahinter DATEV, ein M365-Konnektor oder ein händischer Datei-Export steckt, ist den Skills egal.
+
+**Aufbau:**
+
+```
+kontext/
+  kanzlei.md        Kanzlei-Profil (Pflicht, formfrei — nur H1 wird geprüft)
+  kontakte.md       Kontaktliste (empfohlen, formfrei)
+  mandate/
+    2026-001.md     ein File je Mandat — das einzige streng geschemte Format
+  posteingang/      Rohdokumente eingehend (optional)
+  export/           ausgehende Schreiben (optional)
+```
+
+Nur die Mandats-Datei hat ein striktes Schema, weil Rechenketten darauf aufbauen: Frontmatter mit `az`, `mandant`, `stand` (Pflicht) sowie `gegenseite`, `streitwert`, `status`, `mandatsende`. Letzteres speist den Retention-Executor — dieser markiert nach § 50 Abs. 1 BRAO, welche Unterlagen löschbar wären, **löscht aber niemals automatisch**. Vier Pflicht-Abschnitte runden das Schema ab: Parteien, Kommunikation, Letzter Schritt, Nächste Frist.
+
+**Zwei bewusst defensive Grenzen:**
+
+- **PII-Minimierung:** „Kommunikation" ist eine reine Verweis-Liste (Datum — Betreff — Link auf `posteingang/`), nie Volltext-Duplikat. `kontext/` ist ein schlanker Index, keine zweite Aktenverwaltung.
+- **Keine Neuberechnung (P3):** „Nächste Frist" enthält nur die iCal-UID aus dem fristenrechner-Export — Fristen rechnet ausschließlich der Executor.
+
+**Validierung:** Nach jedem Sync läuft [`core/context/validator.py`](plugins/legal-ops/core/context/validator.py) (Exit 0 sauber / 1 Schema-Fehler / 2 Ziel fehlt). Claude liest nur den JSON-Report und entscheidet nie selbst über Schema-Konformität. Fehlende empfohlene Felder sind Warnungen — abhängige Rechenketten weisen das Mandat dann als „nicht bewertbar" aus, statt zu blockieren.
+
+**Befüllung:** Der Querschnitts-Skill `kontext-sync` speist zwei Wege: (1) vorhandene MCP-Konnektoren (z. B. Microsoft 365) oder (2) einen Filesystem-Referenzadapter für Daten, die schon als Dateien vorliegen — Pull/Push über Mapping-JSON mit Hash-Manifest für Idempotenz. Ein erkannter Konflikt wird nie automatisch aufgelöst — der Merge bleibt Kanzleisache. Der Filesystem-Adapter ist zugleich die Agnostik-Garantie: jeder künftige Adapter (DATEV, RA-MICRO, beA — „Integration geplant", kein Code im Repo) erfüllt denselben Vertrag und deklariert seine Fähigkeiten in einer `capabilities.json` (siehe [`core/adapters/`](plugins/legal-ops/core/adapters/)).
+
+**Governance:** Skills deklarieren ihre Zugriffe im Frontmatter (`kontext_reads`/`kontext_writes`) — vom Struktur-Lint in CI erzwungen. Details: [`core/context/README.md`](plugins/legal-ops/core/context/README.md).
 
 ## Skill-Status
 
