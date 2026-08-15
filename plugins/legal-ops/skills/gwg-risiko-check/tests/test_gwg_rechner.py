@@ -10,14 +10,11 @@ from __future__ import annotations
 import copy
 import json
 import re
-import sys
 from datetime import date
 from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from gwg import rechner  # noqa: E402
 from gwg.rechner import (  # noqa: E402
@@ -361,36 +358,17 @@ def test_fehlende_felder_werden_unklar():
 # (d) Frische-Logik über Monkeypatch des Datums, nicht der echten Systemzeit.
 # --------------------------------------------------------------------------
 
-def test_frische_frisch_kein_warnung():
-    hr = {"abgerufen_am": "2026-07-13"}
-    status = frische_status(hr, heute=date(2026, 7, 13))
-    assert status["warnung"] is False
-    assert status["fehler"] is False
-
-
-def test_frische_warnung_ab_4_monaten():
-    hr = {"abgerufen_am": "2026-01-01"}
-    status = frische_status(hr, heute=date(2026, 7, 13))  # ~6,3 Monate
-    assert status["warnung"] is True
-    assert status["fehler"] is False
-
-
-def test_frische_kein_warnung_knapp_unter_4_monaten():
-    hr = {"abgerufen_am": "2026-05-01"}
-    status = frische_status(hr, heute=date(2026, 7, 13))  # ~2,4 Monate
-    assert status["warnung"] is False
-
-
-def test_frische_fehler_ab_12_monaten():
-    hr = {"abgerufen_am": "2025-06-01"}
-    status = frische_status(hr, heute=date(2026, 7, 13))  # ~13,5 Monate
-    assert status["warnung"] is True
-    assert status["fehler"] is True
-
-
-def test_frische_fehlendes_datum_ist_fehler():
-    status = frische_status({}, heute=date(2026, 7, 13))
-    assert status["fehler"] is True
+@pytest.mark.parametrize("abgerufen_am, warnung, fehler", [
+    ("2026-07-13", False, False),   # taggleich abgerufen
+    ("2026-05-01", False, False),   # ~2,4 Monate — knapp unter der Warnschwelle
+    ("2026-01-01", True, False),    # ~6,3 Monate — Warnung ab 4 Monaten
+    ("2025-06-01", True, True),     # ~13,5 Monate — Fehler ab 12 Monaten
+    (None, True, True),             # abgerufen_am fehlt ganz
+])
+def test_frische_schwellen(abgerufen_am, warnung, fehler):
+    hochrisiko = {} if abgerufen_am is None else {"abgerufen_am": abgerufen_am}
+    status = frische_status(hochrisiko, heute=date(2026, 7, 13))
+    assert (status["warnung"], status["fehler"]) == (warnung, fehler)
 
 
 def test_frische_ueber_monkeypatch_heute(monkeypatch):

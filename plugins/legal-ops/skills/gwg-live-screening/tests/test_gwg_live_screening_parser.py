@@ -7,13 +7,10 @@ Keine echten Personendaten, kein Netzwerkzugriff.
 """
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "adapters"))
 
 from sanktionslisten import (  # noqa: E402
     QUELLE_EU,
@@ -21,7 +18,6 @@ from sanktionslisten import (  # noqa: E402
     TYP_ORGANISATION,
     TYP_PERSON,
     ParserFehler,
-    erkenne_format,
     parse_datei,
     parse_eu_fsf,
     parse_un_consolidated,
@@ -33,25 +29,21 @@ UN = FIXTURES / "un-consolidated-mini.xml"
 
 
 # --------------------------------------------------------------------------
-# Format-Erkennung
+# Format-Erkennung (über den Dispatcher parse_datei)
 # --------------------------------------------------------------------------
 
-def test_erkenne_format_eu_trotz_namespace():
-    assert erkenne_format(EU) == QUELLE_EU
-
-
-def test_erkenne_format_un():
-    assert erkenne_format(UN) == QUELLE_UN
-
-
-def test_unbekannte_wurzel_fehler():
+def test_unbekannte_wurzel_fehler(tmp_path):
+    pfad = tmp_path / "fremd.xml"
+    pfad.write_text("<foobar/>", encoding="utf-8")
     with pytest.raises(ParserFehler):
-        erkenne_format("<foobar/>")
+        parse_datei(pfad)
 
 
-def test_kaputtes_xml_fehler():
+def test_kaputtes_xml_fehler(tmp_path):
+    pfad = tmp_path / "kaputt.xml"
+    pfad.write_text("<nichtgeschlossen>", encoding="utf-8")
     with pytest.raises(ParserFehler):
-        erkenne_format("<nichtgeschlossen>")
+        parse_datei(pfad)
 
 
 # --------------------------------------------------------------------------

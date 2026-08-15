@@ -31,6 +31,12 @@ import re
 import sys
 from pathlib import Path
 
+_CORE_DIR = Path(__file__).resolve().parents[1]  # core/
+if str(_CORE_DIR) not in sys.path:
+    sys.path.insert(0, str(_CORE_DIR))
+
+from context.schema import KONTEXT_BEREICHE, lade_frontmatter  # noqa: E402
+
 # struktur_lint.py liegt in plugins/legal-ops/core/verify/ — der Repo-Anker ist
 # vier Ebenen höher (verify -> core -> legal-ops -> plugins -> REPO).
 REPO = Path(__file__).resolve().parents[4]
@@ -53,33 +59,31 @@ _LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 # Kontext-Layer (D11, D19): optionale Frontmatter-Felder eines Skills, der
 # kontext/ liest bzw. schreibt. Kein Pflichtfeld — bestehende Skills bleiben
 # ohne diese Felder gültig. Werte sind Pfad-Muster relativ zu kontext/, siehe
-# plugins/legal-ops/core/context/README.md.
+# plugins/legal-ops/core/context/README.md. Die zulässigen Bereiche
+# (KONTEXT_BEREICHE) kommen aus core/context/schema.py — eine Quelle.
 KONTEXT_FELDER = ("kontext_reads", "kontext_writes")
-KONTEXT_BEREICHE = ("kanzlei.md", "mandate/", "kontakte.md", "posteingang/", "export/")
 
 
 def frontmatter(text: str) -> dict[str, str] | None:
-    """Liest den YAML-Frontmatter-Block als flache key:value-Paare."""
-    m = re.match(r"\A---\n(.*?)\n---\n", text, re.DOTALL)
-    if not m:
+    """Liest den YAML-Frontmatter-Block als flache key:value-Paare —
+    dünne Sicht auf `context.schema.lade_frontmatter` (das zusätzlich
+    Zeilennummern führt und YAML-null als `None` liefert)."""
+    felder = lade_frontmatter(text)
+    if felder is None:
         return None
-    felder: dict[str, str] = {}
-    for zeile in m.group(1).splitlines():
-        km = re.match(r"^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$", zeile)
-        if km:
-            wert = km.group(2).strip()
-            if len(wert) >= 2 and wert[0] == wert[-1] and wert[0] in "'\"":
-                wert = wert[1:-1]
-            felder[km.group(1)] = wert
-    return felder
+    return {name: (wert or "") for name, (wert, _zeile) in felder.items()}
 
 
 def liste_feld(text: str, feld: str) -> list[str] | None:
-    """Liest ein optionales YAML-Listenfeld im Frontmatter-Block (Flow-Stil
-    `feld: [a, b]`, Block-Stil `feld:\\n  - a\\n  - b` oder ein einzelner
-    Skalar `feld: a`). Gibt `None` zurück, wenn das Feld nicht vorkommt —
+    """Liest ein optionales YAML-Listenfeld im Frontmatter-Block im Block-Stil
+    (`feld:\\n  - a\\n  - b`). Gibt `None` zurück, wenn das Feld nicht vorkommt —
     unabhängig von `frontmatter()`, weil die dort verwendete flache
-    key:value-Struktur keine Listen abbildet."""
+    key:value-Struktur keine Listen abbildet.
+
+    Flow-Stil (`feld: [a, b]`) und einzelne Skalare (`feld: a`) sind bewusst
+    NICHT zulässig und lösen einen `ValueError` aus (der Aufrufer meldet ihn
+    als Lint-Verstoß) — eine Schreibweise je Feld, sonst driften die SKILL.md
+    auseinander."""
     m = re.match(r"\A---\n(.*?)\n---\n", text, re.DOTALL)
     if not m:
         return None
@@ -89,11 +93,10 @@ def liste_feld(text: str, feld: str) -> list[str] | None:
         if not km:
             continue
         rest = km.group(1).strip()
-        if rest.startswith("[") and rest.endswith("]"):
-            innen = rest[1:-1].strip()
-            return [] if not innen else [t.strip().strip("'\"") for t in innen.split(",")]
         if rest:
-            return [rest.strip("'\"")]
+            raise ValueError(
+                f"`{feld}` muss im YAML-Block-Stil stehen (`{feld}:` gefolgt von "
+                f"Zeilen `  - <muster>`) — gefunden: `{feld}: {rest}`")
         werte: list[str] = []
         for folge in zeilen[i + 1:]:
             fm2 = re.match(r"^\s*-\s*(.+)$", folge)
@@ -110,7 +113,11 @@ def pruefe_kontext_felder(text: str, ref: object, fehler: list[str]) -> None:
     dokumentierten kontext/-Bereich beginnen (kein Pflichtfeld, siehe
     core/context/README.md)."""
     for feld in KONTEXT_FELDER:
-        werte = liste_feld(text, feld)
+        try:
+            werte = liste_feld(text, feld)
+        except ValueError as exc:
+            fehler.append(f"{ref}: {exc}")
+            continue
         if werte is None:
             continue
         if not werte:
@@ -126,7 +133,7 @@ def pruefe_kontext_felder(text: str, ref: object, fehler: list[str]) -> None:
 
 
 def skill_dirs() -> list[Path]:
-    # Ein Plugin `legal-ops`; alle Skills (inkl. zitat-pruefer) liegen unter
+    # Ein Plugin `legal-ops`; alle Skills liegen unter
     # plugins/legal-ops/skills/*. core/ enthält nur noch geteilte Rechner/Verifier
     # ohne eigenes SKILL.md.
     return [p.parent for p in sorted(REPO.glob("plugins/*/skills/*/SKILL.md"))]
@@ -252,7 +259,9 @@ def pruefe_skill(skill: Path, fehler: list[str]) -> dict[str, str] | None:
 
 def pruefe_plugins(fehler: list[str]) -> None:
     for plugin in sorted((REPO / "plugins").iterdir()):
-        if not plugin.is_dir():
+        # __pycache__ (aus plugins/conftest.py) und Punkt-Ordner sind keine
+        # Plugins — sonst meldet der Lint sie als Plugin ohne plugin.json.
+        if not plugin.is_dir() or plugin.name.startswith((".", "__")):
             continue
         if not (plugin / ".claude-plugin" / "plugin.json").is_file():
             fehler.append(f"plugins/{plugin.name}: .claude-plugin/plugin.json fehlt")

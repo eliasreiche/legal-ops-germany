@@ -8,11 +8,6 @@ die Kombination beider zu `finde_kandidaten()` inkl. `kein_treffer`-Lücke
 """
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from zuordnung import Dokument, Kandidat, Mandat, finde_kandidaten  # noqa: E402
 from zuordnung.az import az_gefunden_in_text, normalisiere_az  # noqa: E402

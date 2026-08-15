@@ -14,44 +14,29 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
+
+from conftest import lauf, report as _executor_report, schreibe  # noqa: E402
 
 SKILL = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL / "executor.py"
 SCHEMA = SKILL / "schema"
 
 
-def _schreibe_json(pfad: Path, daten) -> None:
-    if isinstance(daten, str):
-        pfad.write_text(daten, encoding="utf-8")
-    else:
-        pfad.write_text(json.dumps(daten), encoding="utf-8")
-
-
 def _rechne(daten, tmp_path: Path) -> subprocess.CompletedProcess:
-    eingabe = tmp_path / "leistungen.json"
-    _schreibe_json(eingabe, daten)
-    return subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(eingabe)],
-        capture_output=True, text=True)
+    return lauf(EXECUTOR, "--input",
+                schreibe(tmp_path / "leistungen.json", daten))
 
 
 def _report(daten, tmp_path: Path) -> dict:
-    ergebnis = _rechne(daten, tmp_path)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    return json.loads(ergebnis.stdout)
+    return _executor_report(EXECUTOR, "--input",
+                            schreibe(tmp_path / "leistungen.json", daten))
 
 
 def _pruefe(text: str, report: dict, tmp_path: Path) -> subprocess.CompletedProcess:
-    text_pfad = tmp_path / "entwurf.md"
-    text_pfad.write_text(text, encoding="utf-8")
-    report_pfad = tmp_path / "report.json"
-    report_pfad.write_text(json.dumps(report), encoding="utf-8")
-    return subprocess.run(
-        [sys.executable, str(EXECUTOR), "--pruefe-text", str(text_pfad),
-         "--report", str(report_pfad)],
-        capture_output=True, text=True)
+    return lauf(EXECUTOR,
+                "--pruefe-text", schreibe(tmp_path / "entwurf.md", text),
+                "--report", schreibe(tmp_path / "report.json", report))
 
 
 def _minimal_eintrag(**overrides) -> dict:
@@ -152,11 +137,9 @@ def test_rechnen_zusammenfassung_summen(tmp_path):
 
 def test_rechnen_output_datei(tmp_path):
     eingabe = tmp_path / "leistungen.json"
-    _schreibe_json(eingabe, {"eintraege": [_minimal_eintrag()]})
+    schreibe(eingabe, {"eintraege": [_minimal_eintrag()]})
     ziel = tmp_path / "report.json"
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(eingabe), "--output", str(ziel)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", eingabe, "--output", ziel)
     assert ergebnis.returncode == 0, ergebnis.stderr
     report = json.loads(ziel.read_text(encoding="utf-8"))
     assert report["zusammenfassung"]["anzahl_eintraege"] == 1
@@ -174,9 +157,7 @@ def test_rechnen_fehler_kaputtes_json(tmp_path):
 
 
 def test_rechnen_fehler_datei_fehlt(tmp_path):
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(tmp_path / "nix.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", tmp_path / "nix.json")
     assert ergebnis.returncode == 2
     assert "nicht gefunden" in ergebnis.stderr
 
@@ -361,10 +342,7 @@ def test_pruefe_nicht_normalisierbare_stunden(tmp_path):
 def test_pruefe_fehler_report_datei_fehlt(tmp_path):
     text_pfad = tmp_path / "entwurf.md"
     text_pfad.write_text("Text", encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--pruefe-text", str(text_pfad),
-         "--report", str(tmp_path / "nix.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--pruefe-text", text_pfad, "--report", tmp_path / "nix.json")
     assert ergebnis.returncode == 2
     assert "nicht gefunden" in ergebnis.stderr
 
@@ -372,10 +350,7 @@ def test_pruefe_fehler_report_datei_fehlt(tmp_path):
 def test_pruefe_fehler_text_datei_fehlt(tmp_path):
     report_pfad = tmp_path / "report.json"
     report_pfad.write_text("{}", encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--pruefe-text", str(tmp_path / "nix.md"),
-         "--report", str(report_pfad)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--pruefe-text", tmp_path / "nix.md", "--report", report_pfad)
     assert ergebnis.returncode == 2
     assert "nicht gefunden" in ergebnis.stderr
 
@@ -385,10 +360,7 @@ def test_pruefe_fehler_fremder_report_wird_abgelehnt(tmp_path):
     text_pfad.write_text("Text ohne Belang.", encoding="utf-8")
     report_pfad = tmp_path / "report.json"
     report_pfad.write_text(json.dumps({"meta": {"erzeugt_von": "modell"}}), encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--pruefe-text", str(text_pfad),
-         "--report", str(report_pfad)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--pruefe-text", text_pfad, "--report", report_pfad)
     assert ergebnis.returncode == 2
     assert "Traceback" not in ergebnis.stderr
 
@@ -398,10 +370,7 @@ def test_pruefe_fehler_kaputtes_report_json(tmp_path):
     text_pfad.write_text("Text", encoding="utf-8")
     report_pfad = tmp_path / "report.json"
     report_pfad.write_text("{kein json", encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--pruefe-text", str(text_pfad),
-         "--report", str(report_pfad)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--pruefe-text", text_pfad, "--report", report_pfad)
     assert ergebnis.returncode == 2
     assert "JSON" in ergebnis.stderr
 
@@ -411,29 +380,24 @@ def test_pruefe_fehler_kaputtes_report_json(tmp_path):
 # --------------------------------------------------------------------------
 
 def test_cli_ohne_modus_argument_exit_2(tmp_path):
-    ergebnis = subprocess.run([sys.executable, str(EXECUTOR)], capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR)
     assert ergebnis.returncode == 2
     assert "Traceback" not in ergebnis.stderr
 
 
 def test_cli_beide_modi_gleichzeitig_exit_2(tmp_path):
     eingabe = tmp_path / "leistungen.json"
-    _schreibe_json(eingabe, {"eintraege": []})
+    schreibe(eingabe, {"eintraege": []})
     text_pfad = tmp_path / "entwurf.md"
     text_pfad.write_text("Text", encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(eingabe),
-         "--pruefe-text", str(text_pfad), "--report", str(eingabe)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", eingabe, "--pruefe-text", text_pfad, "--report", eingabe)
     assert ergebnis.returncode == 2
 
 
 def test_cli_pruefe_text_ohne_report_exit_2(tmp_path):
     text_pfad = tmp_path / "entwurf.md"
     text_pfad.write_text("Text", encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--pruefe-text", str(text_pfad)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--pruefe-text", text_pfad)
     assert ergebnis.returncode == 2
 
 
@@ -442,9 +406,7 @@ def test_cli_pruefe_text_ohne_report_exit_2(tmp_path):
 # --------------------------------------------------------------------------
 
 def test_beispiel_report_synchron():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(SCHEMA / "beispiel-leistungen.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-leistungen.json")
     assert ergebnis.returncode == 0, ergebnis.stderr
     erzeugt = json.loads(ergebnis.stdout)
     gespeichert = json.loads((SCHEMA / "beispiel-report.json").read_text("utf-8"))
@@ -454,11 +416,7 @@ def test_beispiel_report_synchron():
 
 
 def test_beispiel_pruef_report_synchron():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--pruefe-text", str(SCHEMA / "beispiel-entwurf.md"),
-         "--report", str(SCHEMA / "beispiel-report.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--pruefe-text", SCHEMA / "beispiel-entwurf.md", "--report", SCHEMA / "beispiel-report.json")
     assert ergebnis.returncode == 0, ergebnis.stderr
     erzeugt = json.loads(ergebnis.stdout)
     gespeichert = json.loads((SCHEMA / "beispiel-pruef-report.json").read_text("utf-8"))
@@ -470,9 +428,7 @@ def test_beispiel_pruef_report_synchron():
 
 
 def test_beispiel_leistungen_round_trip_kernwerte():
-    report = json.loads(subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(SCHEMA / "beispiel-leistungen.json")],
-        capture_output=True, text=True).stdout)
+    report = json.loads(lauf(EXECUTOR, "--input", SCHEMA / "beispiel-leistungen.json").stdout)
     assert report["zusammenfassung"]["anzahl_eintraege"] == 5
     assert report["zusammenfassung"]["anzahl_ohne_az"] == 1
     assert report["summen"]["je_az"] == {"12/2026": 78, "34/2026": 42}

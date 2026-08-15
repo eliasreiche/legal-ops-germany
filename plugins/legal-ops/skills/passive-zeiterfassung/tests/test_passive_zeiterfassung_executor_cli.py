@@ -14,44 +14,30 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import BEISPIEL_KONTEXT, lauf, report, schreibe  # noqa: E402
+
 SKILL = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL / "executor.py"
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
 
 
-def _schreibe(pfad: Path, daten) -> None:
-    if isinstance(daten, str):
-        pfad.write_text(daten, encoding="utf-8")
-    else:
-        pfad.write_text(json.dumps(daten), encoding="utf-8")
+def _argumente(tmp_path: Path, *, termine=None, mails=None, config=None,
+               kontext=BEISPIEL_KONTEXT) -> list:
+    args = ["--kontext", kontext]
+    for flag, daten in (("--termine", termine), ("--mails", mails),
+                        ("--config", config)):
+        if daten is not None:
+            args += [flag, schreibe(tmp_path / f"{flag[2:]}.json", daten)]
+    return args
 
 
-def _lauf(tmp_path: Path, *, termine=None, mails=None, config=None,
-          kontext=BEISPIEL_KONTEXT) -> subprocess.CompletedProcess:
-    args = [sys.executable, str(EXECUTOR), "--kontext", str(kontext)]
-    if termine is not None:
-        p = tmp_path / "termine.json"
-        _schreibe(p, termine)
-        args += ["--termine", str(p)]
-    if mails is not None:
-        p = tmp_path / "mails.json"
-        _schreibe(p, mails)
-        args += ["--mails", str(p)]
-    if config is not None:
-        p = tmp_path / "config.json"
-        _schreibe(p, config)
-        args += ["--config", str(p)]
-    return subprocess.run(args, capture_output=True, text=True)
+def _lauf(tmp_path: Path, **kwargs) -> subprocess.CompletedProcess:
+    return lauf(EXECUTOR, *_argumente(tmp_path, **kwargs))
 
 
 def _report(tmp_path: Path, **kwargs) -> dict:
-    ergebnis = _lauf(tmp_path, **kwargs)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    return json.loads(ergebnis.stdout)
+    return report(EXECUTOR, *_argumente(tmp_path, **kwargs))
 
 
 def _termin(**overrides) -> dict:
@@ -199,9 +185,7 @@ def test_fehler_ende_gleich_start(tmp_path):
 
 
 def test_fehler_keine_quelle(tmp_path):
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--kontext", str(BEISPIEL_KONTEXT)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--kontext", BEISPIEL_KONTEXT)
     assert ergebnis.returncode == 2
     assert "termine" in ergebnis.stderr and "mails" in ergebnis.stderr
 
@@ -269,13 +253,10 @@ def test_fehler_wurzel_falsches_feld(tmp_path):
 # --------------------------------------------------------------------------
 
 def test_output_datei(tmp_path):
-    t = tmp_path / "termine.json"
-    _schreibe(t, {"termine": [_termin()]})
+    t = schreibe(tmp_path / "termine.json", {"termine": [_termin()]})
     ziel = tmp_path / "report.json"
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--termine", str(t),
-         "--kontext", str(BEISPIEL_KONTEXT), "--output", str(ziel)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--termine", t,
+                    "--kontext", BEISPIEL_KONTEXT, "--output", ziel)
     assert ergebnis.returncode == 0, ergebnis.stderr
     report = json.loads(ziel.read_text(encoding="utf-8"))
     assert report["meta"]["erzeugt_von"].endswith("passive-zeiterfassung/executor.py")

@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import math
+from collections import Counter
 from dataclasses import dataclass
 from typing import Any
 
@@ -105,16 +106,15 @@ class ZeitEintrag:
 
 def summe_je_az(eintraege: list[ZeitEintrag]) -> dict[str, int]:
     """Summiert `minuten` je Aktenzeichen `az`."""
-    summen: dict[str, int] = {}
+    summen: Counter[str] = Counter()
     for e in eintraege:
-        summen[e.az] = summen.get(e.az, 0) + e.minuten
-    return summen
+        summen[e.az] += e.minuten
+    return dict(summen)
 
 
 def summe_je_az_und_datum(eintraege: list[ZeitEintrag]) -> dict[tuple[str, str], int]:
     """Summiert `minuten` je (Aktenzeichen, Datum)."""
-    summen: dict[tuple[str, str], int] = {}
+    summen: Counter[tuple[str, str]] = Counter()
     for e in eintraege:
-        schluessel = (e.az, e.datum)
-        summen[schluessel] = summen.get(schluessel, 0) + e.minuten
-    return summen
+        summen[(e.az, e.datum)] += e.minuten
+    return dict(summen)

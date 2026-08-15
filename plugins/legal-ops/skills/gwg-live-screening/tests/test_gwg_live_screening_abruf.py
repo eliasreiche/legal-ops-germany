@@ -7,12 +7,8 @@ lokale Schreiben/Mergen von abruf-meta.json (schreibe_meta). Der echte Abruf
 from __future__ import annotations
 
 import json
-import sys
-from pathlib import Path
 from urllib.parse import urlparse
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "adapters"))
 
 from sanktionslisten import abruf  # noqa: E402
 
@@ -47,8 +43,3 @@ def test_schreibe_meta_merge_erhaelt_andere_liste(tmp_path):
     daten = json.loads(meta_pfad.read_text(encoding="utf-8"))
     assert set(daten) == {"eu-fsf.xml", "un-consolidated.xml"}
     assert daten["eu-fsf.xml"]["abgerufen_am"] == "2026-07-01"
-
-
-def test_heute_iso_format():
-    heute = abruf._heute_iso()
-    assert len(heute) == 10 and heute[4] == "-" and heute[7] == "-"

@@ -22,7 +22,7 @@ Der Ordnername unter `plugins/legal-ops/skills/` (== `name:`-Frontmatter, Lint-e
 
 - **Deutschsprachig** — wie der Rest der Doku (siehe Sprache & Zielgruppe oben).
 - **Funktion statt Implementierung** — der Slug benennt, was der Skill für die
-  Kanzlei tut (`fristenrechner`, `zitat-pruefer`, `sachstandsmitteilung`),
+  Kanzlei tut (`fristenrechner`, `sachstandsmitteilung`),
   nicht wie oder womit er es tut. Kein Technologie-Wort im Namen, das das
   nächste Refactoring bricht.
 - **Kein `-de`-Suffix** — der deutsche Rechtsraum ist der Scope des gesamten
@@ -68,8 +68,7 @@ Jede Norm-, Urteils- oder Fundstellen-Angabe in generierten Texten trägt einen 
 - ⚠️ **nicht prüfbar** — Quelle lag nicht vor; Angabe stammt aus dem Input
 - ❌ **abweichend** — Prüfung ergab eine Abweichung (mit Fundstelle)
 
-Unmarkierte Zitate sind ein Lint-/Review-Fehler. Der Querschnitts-Skill
-[`zitat-pruefer`](plugins/legal-ops/skills/zitat-pruefer/SKILL.md) automatisiert die Prüfung.
+Unmarkierte Zitate sind ein Lint-/Review-Fehler.
 
 ## Anti-Halluzination
 

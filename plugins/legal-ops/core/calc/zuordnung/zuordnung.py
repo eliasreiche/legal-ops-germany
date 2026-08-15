@@ -32,7 +32,6 @@ from dataclasses import dataclass
 
 from .az import az_gefunden_in_text
 from .parteisuche import (
-    STUFE_MOEGLICH,
     STUFE_TREFFER,
     SCHWELLE_MOEGLICH_DEFAULT,
     suche_name_in_text,

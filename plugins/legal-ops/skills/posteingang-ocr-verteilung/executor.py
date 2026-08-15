@@ -53,30 +53,35 @@ CLI:
 from __future__ import annotations
 
 import argparse
-import datetime
 import json
 import re
 import shutil
 import sys
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-# Self-relativ innerhalb des Plugins: skill -> skills -> <plugin-root>/core.
-_SKILL_DIR = Path(__file__).resolve().parent
-_CORE_DIR = _SKILL_DIR.parents[1] / "core"
-_CALC_DIR = _CORE_DIR / "calc"
-for _pfad in (_CORE_DIR, _CALC_DIR):
-    if str(_pfad) not in sys.path:
-        sys.path.insert(0, str(_pfad))
+# Plugin-Wurzel: skills/<skill>/executor.py -> <plugin>/core.
+_CORE = Path(__file__).resolve().parents[2] / "core"
+sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
+                if str(p) not in sys.path]
 
-from context.schema import lese_mandate  # noqa: E402
-from zuordnung import Dokument, Kandidat, Mandat, finde_kandidaten  # noqa: E402
+from cli import CliFehler, schreibe_report  # noqa: E402
+from context.schema import lese_kontext_mandate  # noqa: E402
+from slug import slug as _slug  # noqa: E402
+from verify.provenienz import (  # noqa: E402
+    STATUS_BELEGT,
+    STATUS_NICHT_BELEGT,
+    finde_beleg,
+    leer as _leer,
+    luecken_felder as _luecken_felder,
+    nichtleer as _nichtleer,
+    pruefe_provenienz as _pruefe_provenienz,
+)
+from zuordnung import Dokument, Mandat, finde_kandidaten  # noqa: E402
 from zuordnung import SCHWELLE_MOEGLICH_DEFAULT, STUFE_TREFFER  # noqa: E402
 
 ERZEUGT_VON = "posteingang-ocr-verteilung/executor.py"
-
-STATUS_BELEGT = "belegt"
-STATUS_NICHT_BELEGT = "nicht_belegt"
 
 FRISTRELEVANT_HINWEIS = (
     "Mindestens ein Frist-Indikator ist provenienzgeprüft belegt — dieser "
@@ -93,122 +98,14 @@ class EingabeFehler(Exception):
 
 
 # --------------------------------------------------------------------------
-# Normalisierung — Datum (identisches Muster wie aktenkopf-extraktor/executor.py;
-# bewusst NICHT importiert: core/calc darf nicht von plugins/legal-ops/skills/*
-# abhängen, und skill-lokale Executor-Module importieren einander nicht — siehe
-# core/calc/zuordnung/az.py für dieselbe Wiederverwendungs-Entscheidung. Die
-# Normalisierung selbst ist mit wenigen Zeilen trivial und stabil.)
-# --------------------------------------------------------------------------
-
-_ISO_RAW = r"(\d{4})-(\d{1,2})-(\d{1,2})"
-_DE_RAW = r"(\d{1,2})\.(\d{1,2})\.(\d{2,4})"
-_DATUM_ISO = re.compile(r"\b" + _ISO_RAW + r"\b")
-_DATUM_DE = re.compile(r"(?<!\d)" + _DE_RAW + r"(?!\d)")
-
-
-def _norm_jahr(j: str) -> str:
-    if len(j) == 2:
-        jj = int(j)
-        return ("20" if jj <= 69 else "19") + j
-    return j.zfill(4)
-
-
-def _kanon_datum(jahr: str, monat: str, tag: str) -> str | None:
-    j = _norm_jahr(jahr)
-    try:
-        datetime.date(int(j), int(monat), int(tag))
-    except ValueError:
-        return None
-    return f"{int(j):04d}-{int(monat):02d}-{int(tag):02d}"
-
-
-def _datum_kanon_wert(wert: str) -> str | None:
-    wert = wert.strip()
-    mi = re.fullmatch(_ISO_RAW, wert)
-    if mi:
-        return _kanon_datum(mi.group(1), mi.group(2), mi.group(3))
-    md = re.fullmatch(_DE_RAW, wert)
-    if md:
-        return _kanon_datum(md.group(3), md.group(2), md.group(1))
-    return None
-
-
-def _datum_kanons_in_zeile(zeile: str) -> set[str]:
-    res: set[str] = set()
-    for m in _DATUM_ISO.finditer(zeile):
-        k = _kanon_datum(m.group(1), m.group(2), m.group(3))
-        if k:
-            res.add(k)
-    for m in _DATUM_DE.finditer(zeile):
-        k = _kanon_datum(m.group(3), m.group(2), m.group(1))
-        if k:
-            res.add(k)
-    return res
-
-
-# --------------------------------------------------------------------------
-# Normalisierung — Aktenzeichen / Zitat (Whitespace-Kollabierung, wie
-# aktenkopf-extraktor/executor.py:_ws_collapse)
-# --------------------------------------------------------------------------
-
-def _ws_collapse(s: str) -> str:
-    return re.sub(r"\s+", " ", s).strip()
-
-
-def _kanon_ziel(wert: str, typ: str) -> str | None:
-    if typ == "datum":
-        return _datum_kanon_wert(wert)
-    if typ in ("aktenzeichen", "zitat"):
-        return _ws_collapse(wert) or None
-    return None
-
-
-def _zeile_belegt(zeile: str, typ: str, ziel: str) -> bool:
-    if typ == "datum":
-        return ziel in _datum_kanons_in_zeile(zeile)
-    if typ in ("aktenzeichen", "zitat"):
-        return ziel in _ws_collapse(zeile)
-    return False
-
-
-def finde_beleg(wert: str, typ: str,
-                quellen: list[tuple[str, list[str]]]) -> dict[str, Any] | None:
-    """Sucht den ersten Beleg für `wert` in den Quelldateien. Rückgabe:
-    Fundstelle `{datei, zeile, zitat}` oder None (nicht belegt)."""
-    ziel = _kanon_ziel(wert, typ)
-    if not ziel:
-        return None
-    for datei, zeilen in quellen:
-        for i, zeile in enumerate(zeilen, start=1):
-            if _zeile_belegt(zeile, typ, ziel):
-                return {"datei": datei, "zeile": i, "zitat": zeile.strip()}
-    return None
-
-
-# --------------------------------------------------------------------------
 # Schema-Prüfung (Eingang, Lücken-Disziplin)
+#
+# Datum-/Aktenzeichen-/Zitat-Normalisierung und die Beleg-Suche stehen in
+# core/verify/provenienz (STANDARD_TYPEN deckt alle drei Typen dieses Skills).
 # --------------------------------------------------------------------------
 
 LUECKE_PFLICHT_EINGANG = ["absender", "datum_schreiben", "betreff"]
 AZ_FELDER_OPTIONAL = ["aktenzeichen_fremd", "aktenzeichen_eigen"]
-
-
-def _leer(v: Any) -> bool:
-    return v is None or (isinstance(v, str) and v.strip() == "")
-
-
-def _nichtleer(v: Any) -> bool:
-    return isinstance(v, str) and v.strip() != ""
-
-
-def _luecken_felder(eingang: dict[str, Any]) -> set[str]:
-    felder: set[str] = set()
-    luecken = eingang.get("luecken")
-    if isinstance(luecken, list):
-        for l in luecken:
-            if isinstance(l, dict) and isinstance(l.get("feld"), str):
-                felder.add(l["feld"].strip())
-    return felder
 
 
 def pruefe_schema(eingang: dict[str, Any]) -> list[str]:
@@ -307,24 +204,7 @@ def sammle_kritische_werte(eingang: dict[str, Any]) -> list[dict[str, str]]:
 
 def pruefe_provenienz(eingang: dict[str, Any],
                       quellen: list[tuple[str, list[str]]]) -> list[dict[str, Any]]:
-    ergebnisse: list[dict[str, Any]] = []
-    for kw in sammle_kritische_werte(eingang):
-        beleg = finde_beleg(kw["wert"], kw["typ"], quellen)
-        if beleg is not None:
-            ergebnisse.append({
-                "pfad": kw["pfad"], "typ": kw["typ"], "wert": kw["wert"],
-                "status": STATUS_BELEGT, "fundstelle": beleg,
-                "begruendung": f"wörtlich in Quelle gefunden (Normalisierung: {kw['typ']})",
-            })
-        else:
-            ergebnisse.append({
-                "pfad": kw["pfad"], "typ": kw["typ"], "wert": kw["wert"],
-                "status": STATUS_NICHT_BELEGT, "fundstelle": None,
-                "begruendung": ("kein Vorkommen in den Quelldateien "
-                                f"(Normalisierung: {kw['typ']}) — Wert streichen "
-                                "oder als Lücke ausweisen"),
-            })
-    return ergebnisse
+    return _pruefe_provenienz(sammle_kritische_werte(eingang), quellen)
 
 
 def bestimme_fristrelevant(provenienz: list[dict[str, Any]]) -> bool:
@@ -339,32 +219,6 @@ def bestimme_fristrelevant(provenienz: list[dict[str, Any]]) -> bool:
 # --------------------------------------------------------------------------
 # Mandats-Zuordnung (delegiert an core/calc/zuordnung/, wie email-akten-zuordnung)
 # --------------------------------------------------------------------------
-
-def lese_kontext_mandate(kontext_dir: Path) -> tuple[list[Mandat], list[str]]:
-    """Wie email-akten-zuordnung/executor.py:lese_kontext_mandate — bewusst
-    dupliziert (skill-lokal), keine Abhängigkeit zwischen Skill-Executors."""
-    warnungen: list[str] = []
-    mandate: list[Mandat] = []
-    for pfad, fm in lese_mandate(kontext_dir):
-        az = (fm.get("az") or (None, None))[0]
-        if not az:
-            warnungen.append(f"{pfad}: kein Aktenzeichen im Frontmatter — Mandat wird "
-                              f"übersprungen (nicht zuordenbar)")
-            continue
-        mandant = (fm.get("mandant") or (None, None))[0] or ""
-        gegenseite = (fm.get("gegenseite") or (None, None))[0]
-        try:
-            datei_rel = str(pfad.relative_to(kontext_dir))
-        except ValueError:
-            datei_rel = str(pfad)
-        mandate.append(Mandat(az=az, mandant=mandant, gegenseite=gegenseite, datei=datei_rel))
-    return mandate, warnungen
-
-
-def _kandidat_dict(k: Kandidat) -> dict[str, Any]:
-    return {"az": k.az, "datei": k.datei, "stufe": k.stufe, "kategorie": k.kategorie,
-            "score": k.score, "begruendung": k.begruendung}
-
 
 def baue_zuordnung(eingang: dict[str, Any], quelltext_gesamt: str,
                    mandate: list[Mandat], schwelle: float) -> dict[str, Any]:
@@ -395,7 +249,7 @@ def baue_zuordnung(eingang: dict[str, Any], quelltext_gesamt: str,
         hinweis = None
 
     return {
-        "kandidaten": [_kandidat_dict(k) for k in kandidaten],
+        "kandidaten": [asdict(k) for k in kandidaten],
         "kein_treffer": not kandidaten,
         "eindeutig": eindeutig,
         "az_fuer_routing": az_fuer_routing,
@@ -407,22 +261,6 @@ def baue_zuordnung(eingang: dict[str, Any], quelltext_gesamt: str,
 # --------------------------------------------------------------------------
 # Routing-Plan (Dry-Run default; --ausfuehren kopiert tatsächlich)
 # --------------------------------------------------------------------------
-
-SLUG_MAX_LEN = 60
-_SLUG_UMLAUT = str.maketrans({"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss",
-                              "Ä": "Ae", "Ö": "Oe", "Ü": "Ue"})
-_SLUG_NICHT_ERLAUBT_RE = re.compile(r"[^a-z0-9]+")
-
-
-def _slug(text: str, fallback: str) -> str:
-    """Slug-Regel (identisch zu email-akten-zuordnung/executor.py:betreff_slug,
-    hier auf den Absender angewandt): Umlaute transliterieren, kleinschreiben,
-    alles außer a-z/0-9 zu '-' kollabieren, Ränder trimmen, kürzen."""
-    basis = (text or "").translate(_SLUG_UMLAUT).lower()
-    slug = _SLUG_NICHT_ERLAUBT_RE.sub("-", basis).strip("-")
-    slug = slug[:SLUG_MAX_LEN].rstrip("-")
-    return slug or fallback
-
 
 def baue_routing_plan(eingang: dict[str, Any], zuordnung: dict[str, Any],
                       scan_dateien: list[Path], kontext_dir: Path,
@@ -622,15 +460,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Fehler: Routing konnte nicht ausgeführt werden: {exc}", file=sys.stderr)
         return 2
 
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        try:
-            Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-        except OSError as exc:
-            print(f"Fehler: Report konnte nicht geschrieben werden: {exc}", file=sys.stderr)
-            return 2
-    else:
-        print(ausgabe)
+    try:
+        schreibe_report(report, args.output)
+    except CliFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
 
     return 0 if report_ist_sauber(report) else 1
 

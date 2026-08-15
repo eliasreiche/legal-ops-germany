@@ -131,13 +131,7 @@ def suche_name_in_text(name: str, text: str,
     tokens_name = tokenisiere(name)
     tokens_text = tokenisiere(text)
 
-    for pruefung in (
-        lambda: _z1_phrase(norm_name, norm_text),
-        lambda: _z2_token_menge(tokens_name, tokens_text),
-        lambda: _z3_phonetik(tokens_name, tokens_text),
-        lambda: _z4_fuzzy(tokens_name, tokens_text, schwelle),
-    ):
-        treffer = pruefung()
-        if treffer is not None:
-            return treffer
-    return None
+    return (_z1_phrase(norm_name, norm_text)
+            or _z2_token_menge(tokens_name, tokens_text)
+            or _z3_phonetik(tokens_name, tokens_text)
+            or _z4_fuzzy(tokens_name, tokens_text, schwelle))

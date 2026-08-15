@@ -8,17 +8,14 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
-from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
-VALIDATOR = REPO / "plugins" / "legal-ops" / "core" / "context" / "validator.py"
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
+from conftest import BEISPIEL_KONTEXT, CORE, lauf  # noqa: E402
+
+VALIDATOR = CORE / "context" / "validator.py"
 
 
 def _lauf(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(VALIDATOR), *args],
-                          capture_output=True, text=True)
+    return lauf(VALIDATOR, *args)
 
 
 def test_kontext_beispiel_ist_sauber_exit_0():

@@ -139,12 +139,6 @@ def _lade_wurzel(quelle: str | Path) -> ET.Element:
     return wurzel
 
 
-def erkenne_format(quelle: str | Path) -> str:
-    """Ermittelt anhand der XML-Wurzel das Format (QUELLE_EU | QUELLE_UN)."""
-    wurzel = _lade_wurzel(quelle)
-    return _format_aus_wurzel(wurzel)
-
-
 def _format_aus_wurzel(wurzel: ET.Element) -> str:
     tag = _lokal(wurzel.tag)
     if tag == "export":

@@ -30,11 +30,11 @@
       },
       "zuordnung": {
         "az": "2026-001",
-        "datei": "mandate/2026-001.md",
         "stufe": "Z0",
         "kategorie": "treffer",
         "score": 1.0,
-        "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+        "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden",
+        "datei": "mandate/2026-001.md"
       },
       "status": "zu_bestaetigen"
     },
@@ -56,11 +56,11 @@
       },
       "zuordnung": {
         "az": "2026-001",
-        "datei": "mandate/2026-001.md",
         "stufe": "Z1",
         "kategorie": "treffer",
         "score": 1.0,
-        "begruendung": "Partei 'Muster AG' (Rolle: gegenseite) per Stufe Z1 im Feld 'betreff' gefunden: Name 'muster' als zusammenhängende Phrase im Text gefunden"
+        "begruendung": "Partei 'Muster AG' (Rolle: gegenseite) per Stufe Z1 im Feld 'betreff' gefunden: Name 'muster' als zusammenhängende Phrase im Text gefunden",
+        "datei": "mandate/2026-001.md"
       },
       "status": "zu_bestaetigen"
     },
@@ -81,11 +81,11 @@
       },
       "zuordnung": {
         "az": "2026-002",
-        "datei": "mandate/2026-002.md",
         "stufe": "Z0",
         "kategorie": "treffer",
         "score": 1.0,
-        "begruendung": "Aktenzeichen '2026-002' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+        "begruendung": "Aktenzeichen '2026-002' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden",
+        "datei": "mandate/2026-002.md"
       },
       "status": "zu_bestaetigen"
     },
@@ -107,11 +107,11 @@
       },
       "zuordnung": {
         "az": "2026-001",
-        "datei": "mandate/2026-001.md",
         "stufe": "Z0",
         "kategorie": "treffer",
         "score": 1.0,
-        "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+        "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden",
+        "datei": "mandate/2026-001.md"
       },
       "status": "zu_bestaetigen"
     },
@@ -133,11 +133,11 @@
       },
       "zuordnung": {
         "az": "2026-001",
-        "datei": "mandate/2026-001.md",
         "stufe": "Z1",
         "kategorie": "treffer",
         "score": 1.0,
-        "begruendung": "Partei 'Muster AG' (Rolle: gegenseite) per Stufe Z1 im Feld 'absender_name' gefunden: Name 'muster' als zusammenhängende Phrase im Text gefunden"
+        "begruendung": "Partei 'Muster AG' (Rolle: gegenseite) per Stufe Z1 im Feld 'absender_name' gefunden: Name 'muster' als zusammenhängende Phrase im Text gefunden",
+        "datei": "mandate/2026-001.md"
       },
       "status": "zu_bestaetigen"
     }
@@ -150,19 +150,19 @@
       "kandidaten": [
         {
           "az": "2026-001",
-          "datei": "mandate/2026-001.md",
           "stufe": "Z0",
           "kategorie": "treffer",
           "score": 1.0,
-          "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+          "begruendung": "Aktenzeichen '2026-001' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden",
+          "datei": "mandate/2026-001.md"
         },
         {
           "az": "2026-002",
-          "datei": "mandate/2026-002.md",
           "stufe": "Z0",
           "kategorie": "treffer",
           "score": 1.0,
-          "begruendung": "Aktenzeichen '2026-002' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden"
+          "begruendung": "Aktenzeichen '2026-002' wörtlich (nach Whitespace-Normalisierung) im Feld 'betreff' gefunden",
+          "datei": "mandate/2026-002.md"
         }
       ],
       "hinweis": "Mehr als eine Akte kommt in Frage — die Kanzlei entscheidet, keine automatische Zuordnung."

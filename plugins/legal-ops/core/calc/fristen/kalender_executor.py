@@ -31,8 +31,10 @@ Exit-Codes: 0 = Export erzeugt, 2 = Eingabefehler (kein Traceback).
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as _dt
 import hashlib
+import io
 import json
 import sys
 from pathlib import Path
@@ -46,11 +48,14 @@ ZWEITKONTROLLE = ("Zweitkontrolle bleibt zwingend: Dieser Export ersetzt keinen 
                   "im Zielsystem verantwortet die Kanzlei.")
 
 # Statische Norm-Belehrungen dieses Moduls (Notfrist-/Einspruchs-Hinweis in
-# der Kalender-Beschreibung) — als benannte Konstanten, damit der
-# CI-Marker-Konsistenz-Test (tests/test_zitiermarker_statisch.py) sie ohne
-# fragiles Quelltext-Grep über STATISCHE_NORM_BELEHRUNGEN abgreifen kann.
-# Rein additiv/Umbenennung — _beschreibungszeilen() nutzt dieselben Texte
-# unverändert weiter.
+# der Kalender-Beschreibung) — als benannte Konstanten über
+# STATISCHE_NORM_BELEHRUNGEN abgreifbar, statt per fragilem Quelltext-Grep.
+# tests/test_zitiermarker_statisch.py prüft darüber die KONSISTENZ des Markers
+# gegen die handgepflegte Quellen-Registry tests/fixtures/
+# statische_normen_registry.json (✅ nur, wenn die Registry die zitierte Norm
+# führt); die inhaltliche Verifikation der Fundstelle ist Maintainer-Abnahme
+# und in der Registry dokumentiert.
+# _beschreibungszeilen() nutzt dieselben Texte unverändert weiter.
 NOTFRIST_BELEHRUNG = ("✅ Notfrist — nicht verlängerbar (§ 224 Abs. 2 ZPO); bei "
                      "Versäumung nur Wiedereinsetzung (§§ 233 ff. ZPO).")
 KEIN_TECHNISCHES_FRISTENDE_BELEHRUNG = (
@@ -107,16 +112,21 @@ def _datum(iso: str, feld: str) -> _dt.date:
 # Abgeleitete Werte (P3: hier, nicht im Modell)
 # --------------------------------------------------------------------------
 
-def _vorlauftage(wert: int | str | None) -> int:
-    if wert is None:
-        return 3
+def vorlauftage_arg(wert: str) -> int:
+    """argparse-`type`: ganze Zahl >= 0.
+
+    Öffentlicher Name, weil argparse ihn bei nicht-numerischer Eingabe in die
+    Fehlermeldung schreibt ("invalid vorlauftage_arg value") — ein privater
+    `_name` würde dort als Interna durchschlagen.
+    """
     try:
         n = int(wert)
-    except (ValueError, TypeError):
-        raise ExportEingabeFehler(f"'vorlauftage' muss eine ganze Zahl ≥ 0 sein, "
-                                  f"nicht {wert!r}")
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"'vorlauftage' muss eine ganze Zahl >= 0 sein: {wert!r}")
     if n < 0:
-        raise ExportEingabeFehler(f"'vorlauftage' darf nicht negativ sein: {n}")
+        raise argparse.ArgumentTypeError(
+            f"'vorlauftage' darf nicht negativ sein: {n}")
     return n
 
 
@@ -294,13 +304,6 @@ CSV_SPALTEN = [
 ]
 
 
-def _csv_feld(wert: Any) -> str:
-    s = "" if wert is None else str(wert)
-    if any(c in s for c in ';"\r\n'):
-        s = '"' + s.replace('"', '""') + '"'
-    return s
-
-
 def baue_csv(report: dict[str, Any], *, aktenzeichen: str | None,
              bezeichnung: str | None, vorlauftage: int) -> str:
     k = _kontext(report, aktenzeichen, bezeichnung, vorlauftage)
@@ -320,9 +323,11 @@ def baue_csv(report: dict[str, Any], *, aktenzeichen: str | None,
         "uid": _uid(report, aktenzeichen),
         "quelle": "executor",
     }
-    kopf = ";".join(CSV_SPALTEN)
-    werte = ";".join(_csv_feld(zeile[s]) for s in CSV_SPALTEN)
-    return kopf + "\r\n" + werte + "\r\n"
+    puffer = io.StringIO()
+    schreiber = csv.writer(puffer, delimiter=";", lineterminator="\r\n")
+    schreiber.writerow(CSV_SPALTEN)
+    schreiber.writerow([zeile[s] for s in CSV_SPALTEN])
+    return puffer.getvalue()
 
 
 # --------------------------------------------------------------------------
@@ -347,15 +352,14 @@ def main(argv: list[str] | None = None) -> int:
                         help="Zielordner für --format beide (Dateiname aus UID)")
     parser.add_argument("--aktenzeichen", help="Aktenzeichen (Label, kein Rechenwert)")
     parser.add_argument("--bezeichnung", help="Freie Terminbezeichnung (Label)")
-    parser.add_argument("--vorlauftage", default=3,
+    parser.add_argument("--vorlauftage", type=vorlauftage_arg, default=3,
                         help="Vorfrist-Vorlauf in Tagen (Default: 3)")
     args = parser.parse_args(argv)
 
     try:
         report = _lade_report(Path(args.report))
-        vorlauftage = _vorlauftage(args.vorlauftage)
         opts = dict(aktenzeichen=args.aktenzeichen,
-                    bezeichnung=args.bezeichnung, vorlauftage=vorlauftage)
+                    bezeichnung=args.bezeichnung, vorlauftage=args.vorlauftage)
 
         if args.format == "beide":
             if not args.output_dir:

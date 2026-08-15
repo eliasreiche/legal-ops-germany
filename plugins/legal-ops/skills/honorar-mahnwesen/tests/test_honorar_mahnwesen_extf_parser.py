@@ -15,20 +15,17 @@ from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-CALC = REPO / "plugins" / "legal-ops" / "core" / "calc"
+from conftest import SKILLS  # noqa: E402
 # Nur core/calc auf den Pfad — Importe strikt paket-qualifiziert (extf.executor,
 # extf.parser), nie bare `import executor`/`import parser`: mehrere Skills
 # tragen ein Modul namens `executor`, ein bare-Import würde sys.modules
 # vergiften und fremde Tests (z. B. zitat-pruefer) im Vollauf brechen.
-if str(CALC) not in sys.path:
-    sys.path.insert(0, str(CALC))
 
 from extf import executor as extf_executor  # core/calc/extf/executor.py (Writer = Orakel)
 from extf.parser import (ExtfParseFehler, ExtfStapel, parse_extf,
                          parse_extf_datei)
 
-GOLDEN = REPO / "plugins" / "legal-ops" / "skills" / "datev-export" / "tests" / "golden"
+GOLDEN = SKILLS / "datev-export" / "tests" / "golden"
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
 GRUNDFALL = {

@@ -43,18 +43,17 @@ import argparse
 import datetime as _dt
 import json
 import sys
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-# Self-relativ innerhalb des Plugins: skill -> skills -> <plugin-root>/core.
-_SKILL_DIR = Path(__file__).resolve().parent
-_CORE_DIR = _SKILL_DIR.parents[1] / "core"
-_CALC_DIR = _CORE_DIR / "calc"
-for _pfad in (_CORE_DIR, _CALC_DIR):
-    if str(_pfad) not in sys.path:
-        sys.path.insert(0, str(_pfad))
+# Plugin-Wurzel: skills/<skill>/executor.py -> <plugin>/core.
+_CORE = Path(__file__).resolve().parents[2] / "core"
+sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
+                if str(p) not in sys.path]
 
-from context.schema import lese_mandate  # noqa: E402
+from cli import CliFehler, schreibe_report  # noqa: E402
+from context.schema import lese_kontext_mandate  # noqa: E402
 from zeit.rechner import (  # noqa: E402
     ZeitEingabeFehler,
     ZeitEintrag,
@@ -244,40 +243,8 @@ def _lade_json(pfad: Path) -> Any:
 
 
 # --------------------------------------------------------------------------
-# Mandatsliste (kontext/mandate/*.md über core/context/schema.py)
-# --------------------------------------------------------------------------
-
-def lese_kontext_mandate(kontext_dir: Path) -> tuple[list[Mandat], list[str]]:
-    """Liest `kontext/mandate/*.md` über `lese_mandate()`. Mandate ohne
-    Aktenzeichen können nicht zugeordnet werden — sie werden übersprungen und
-    als Warnung ausgewiesen, statt geraten zu werden (wie in
-    email-akten-zuordnung)."""
-    warnungen: list[str] = []
-    mandate: list[Mandat] = []
-    for pfad, fm in lese_mandate(kontext_dir):
-        az = (fm.get("az") or (None, None))[0]
-        if not az:
-            warnungen.append(f"{pfad.name}: kein Aktenzeichen im Frontmatter — Mandat wird "
-                             f"übersprungen (nicht zuordenbar)")
-            continue
-        mandant = (fm.get("mandant") or (None, None))[0] or ""
-        gegenseite = (fm.get("gegenseite") or (None, None))[0]
-        try:
-            datei_rel = str(pfad.relative_to(kontext_dir))
-        except ValueError:
-            datei_rel = pfad.name
-        mandate.append(Mandat(az=az, mandant=mandant, gegenseite=gegenseite, datei=datei_rel))
-    return mandate, warnungen
-
-
-# --------------------------------------------------------------------------
 # Zuordnung + Stichworte
 # --------------------------------------------------------------------------
-
-def _beleg(k: Kandidat) -> dict[str, Any]:
-    return {"az": k.az, "datei": k.datei, "stufe": k.stufe, "kategorie": k.kategorie,
-            "score": k.score, "begruendung": k.begruendung}
-
 
 def klassifiziere(dokument: Dokument, mandate: list[Mandat]
                   ) -> tuple[str, list[Kandidat], list[Kandidat]]:
@@ -352,26 +319,33 @@ def baue_report(termine: list[dict[str, Any]], mails: list[dict[str, Any]],
     nicht_zuordenbar: list[dict[str, Any]] = []
     ohne_zeitwert: list[dict[str, Any]] = []
 
+    def _route(basis: dict[str, Any], status: str, kandidaten: list[Kandidat],
+               treffer: list[Kandidat], leistung: dict[str, Any]) -> None:
+        """Ein Eintrag in genau einen Ausgabekanal — für Termine wie für Mails
+        dieselbe Regel: eindeutig -> Vorschlag, mehrdeutig -> Rückfrage, sonst
+        Lücke."""
+        if status == "eindeutig":
+            vorschlaege.append({**basis, "leistung": leistung,
+                                "zuordnung": asdict(treffer[0]),
+                                "status": "zu_bestaetigen"})
+        elif status == "mehrdeutig":
+            mehrdeutig.append({**basis, "kandidaten": [asdict(k) for k in kandidaten],
+                               "hinweis": MEHRDEUTIG_HINWEIS})
+        else:
+            nicht_zuordenbar.append({**basis, "hinweis": NICHT_ZUORDENBAR_HINWEIS})
+
     # --- Termine (haben immer einen Zeitwert aus start/ende) ---
     for termin in termine:
         dokument = Dokument(betreff=termin["betreff"],
                             textauszug=" ".join(termin["teilnehmer"]))
         status, kandidaten, treffer = klassifiziere(dokument, mandate)
-        basis = {"quelle_typ": "kalender", "betreff": termin["betreff"],
-                 "datum": termin["datum"]}
-        if status == "eindeutig":
-            leistung = {
-                "datum": termin["datum"], "az": treffer[0].az, "minuten": None,
+        _route({"quelle_typ": "kalender", "betreff": termin["betreff"],
+                "datum": termin["datum"]},
+               status, kandidaten, treffer,
+               {"datum": termin["datum"],
+                "az": treffer[0].az if treffer else None, "minuten": None,
                 "start": termin["start"], "ende": termin["ende"],
-                "stichworte": _termin_stichworte(termin), "quelle": "kalender",
-            }
-            vorschlaege.append({**basis, "leistung": leistung,
-                                "zuordnung": _beleg(treffer[0]), "status": "zu_bestaetigen"})
-        elif status == "mehrdeutig":
-            mehrdeutig.append({**basis, "kandidaten": [_beleg(k) for k in kandidaten],
-                               "hinweis": MEHRDEUTIG_HINWEIS})
-        else:
-            nicht_zuordenbar.append({**basis, "hinweis": NICHT_ZUORDENBAR_HINWEIS})
+                "stichworte": _termin_stichworte(termin), "quelle": "kalender"})
 
     # --- Mails (Zeitwert nur aus der Kanzlei-Pauschale, sonst Lücke) ---
     for mail in mails:
@@ -384,23 +358,15 @@ def baue_report(termine: list[dict[str, Any]], mails: list[dict[str, Any]],
                 **basis, "richtung": mail["richtung"],
                 "zuordnung_status": status,
                 "az": treffer[0].az if status == "eindeutig" else None,
-                "kandidaten": [_beleg(k) for k in kandidaten],
+                "kandidaten": [asdict(k) for k in kandidaten],
                 "hinweis": OHNE_ZEITWERT_HINWEIS,
             })
             continue
-        if status == "eindeutig":
-            leistung = {
-                "datum": mail["datum"], "az": treffer[0].az, "minuten": pauschale,
+        _route(basis, status, kandidaten, treffer,
+               {"datum": mail["datum"],
+                "az": treffer[0].az if treffer else None, "minuten": pauschale,
                 "start": None, "ende": None,
-                "stichworte": _mail_stichworte(mail), "quelle": "mail",
-            }
-            vorschlaege.append({**basis, "leistung": leistung,
-                                "zuordnung": _beleg(treffer[0]), "status": "zu_bestaetigen"})
-        elif status == "mehrdeutig":
-            mehrdeutig.append({**basis, "kandidaten": [_beleg(k) for k in kandidaten],
-                               "hinweis": MEHRDEUTIG_HINWEIS})
-        else:
-            nicht_zuordenbar.append({**basis, "hinweis": NICHT_ZUORDENBAR_HINWEIS})
+                "stichworte": _mail_stichworte(mail), "quelle": "mail"})
 
     warnungen = _ueberlappungen(termine)
 
@@ -482,15 +448,11 @@ def main(argv: list[str] | None = None) -> int:
         str(args.termine) if args.termine else None,
         str(args.mails) if args.mails else None, str(kontext_dir))
 
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        try:
-            Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-        except OSError as exc:
-            print(f"Fehler: Datei konnte nicht geschrieben werden: {exc}", file=sys.stderr)
-            return 2
-    else:
-        print(ausgabe)
+    try:
+        schreibe_report(report, args.output)
+    except CliFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
     return 0
 
 

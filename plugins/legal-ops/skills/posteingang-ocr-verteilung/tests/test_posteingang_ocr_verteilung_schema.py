@@ -14,6 +14,8 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
+from verify.provenienz import kanon_ziel  # noqa: E402
+
 SKILL_DIR = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL_DIR / "executor.py"
 
@@ -135,13 +137,13 @@ def _quelle(text: str) -> list[tuple[str, list[str]]]:
 
 
 def test_datum_kanon_iso_und_deutsch_sind_gleich():
-    assert executor._datum_kanon_wert("2026-07-01") == "2026-07-01"
-    assert executor._datum_kanon_wert("01.07.2026") == "2026-07-01"
-    assert executor._datum_kanon_wert("1.7.2026") == "2026-07-01"
+    assert kanon_ziel("2026-07-01", "datum") == "2026-07-01"
+    assert kanon_ziel("01.07.2026", "datum") == "2026-07-01"
+    assert kanon_ziel("1.7.2026", "datum") == "2026-07-01"
 
 
 def test_aktenzeichen_whitespace_wird_kollabiert():
-    assert executor._ws_collapse("VB-2026  \t 77") == "VB-2026 77"
+    assert kanon_ziel("VB-2026  \t 77", "aktenzeichen") == "VB-2026 77"
 
 
 def test_beleg_datum_andere_schreibweise_wird_gefunden():

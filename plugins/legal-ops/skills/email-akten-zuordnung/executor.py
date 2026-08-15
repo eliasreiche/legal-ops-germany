@@ -67,20 +67,20 @@ import argparse
 import json
 import re
 import sys
+from dataclasses import asdict
 from email import policy
 from email.parser import BytesParser
 from pathlib import Path
 from typing import Any
 
-# Self-relativ innerhalb des Plugins: skill -> skills -> <plugin-root>/core.
-_SKILL_DIR = Path(__file__).resolve().parent
-_CORE_DIR = _SKILL_DIR.parents[1] / "core"
-_CALC_DIR = _CORE_DIR / "calc"
-for _pfad in (_CORE_DIR, _CALC_DIR):
-    if str(_pfad) not in sys.path:
-        sys.path.insert(0, str(_pfad))
+# Plugin-Wurzel: skills/<skill>/executor.py -> <plugin>/core.
+_CORE = Path(__file__).resolve().parents[2] / "core"
+sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
+                if str(p) not in sys.path]
 
-from context.schema import lese_mandate  # noqa: E402
+from cli import CliFehler, schreibe_report  # noqa: E402
+from context.schema import lese_kontext_mandate  # noqa: E402
+from slug import SLUG_MAX_LEN, slug  # noqa: E402
 from zuordnung import Dokument, Kandidat, Mandat, finde_kandidaten  # noqa: E402
 from zuordnung import SCHWELLE_MOEGLICH_DEFAULT, STUFE_TREFFER  # noqa: E402
 
@@ -99,10 +99,6 @@ FRISTVERDACHT_HINWEIS = (
     "Dies ist KEINE Fristberechnung und KEIN Normzitat."
 )
 
-SLUG_MAX_LEN = 60
-_SLUG_UMLAUT = str.maketrans({"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss",
-                              "Ä": "Ae", "Ö": "Oe", "Ü": "Ue"})
-_SLUG_NICHT_ERLAUBT_RE = re.compile(r"[^a-z0-9]+")
 _ISO_DATUM_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
@@ -284,13 +280,8 @@ def prioritaet(hat_fristverdacht: bool, kandidaten: list[Kandidat]) -> str:
 # --------------------------------------------------------------------------
 
 def betreff_slug(betreff: str) -> str:
-    """Slug-Regel: Umlaute transliterieren, kleinschreiben, alles außer
-    a-z/0-9 zu '-' kollabieren, Ränder trimmen, auf `SLUG_MAX_LEN` kürzen.
-    Leerer/fehlender Betreff ergibt `ohne-betreff` (kein erfundener Titel)."""
-    basis = (betreff or "").translate(_SLUG_UMLAUT).lower()
-    slug = _SLUG_NICHT_ERLAUBT_RE.sub("-", basis).strip("-")
-    slug = slug[:SLUG_MAX_LEN].rstrip("-")
-    return slug or "ohne-betreff"
+    """Slug-Regel (core/calc/slug), Fallback `ohne-betreff` — kein erfundener Titel."""
+    return slug(betreff, "ohne-betreff")
 
 
 def baue_ablage_vorschlag(datum: str | None, betreff: str) -> dict[str, Any]:
@@ -324,40 +315,8 @@ def baue_ablage_vorschlag(datum: str | None, betreff: str) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------
-# Mandatsliste (kontext/mandate/*.md über core/context/schema.py)
-# --------------------------------------------------------------------------
-
-def lese_kontext_mandate(kontext_dir: Path) -> tuple[list[Mandat], list[str]]:
-    """Liest `kontext/mandate/*.md` über `lese_mandate()` (keine erneute
-    Schema-Prüfung, dafür ist `core/context/validator.py` zuständig). Mandate
-    ohne Aktenzeichen können nicht zugeordnet werden — sie werden
-    übersprungen und als Warnung ausgewiesen, statt geraten zu werden."""
-    warnungen: list[str] = []
-    mandate: list[Mandat] = []
-    for pfad, fm in lese_mandate(kontext_dir):
-        az = (fm.get("az") or (None, None))[0]
-        if not az:
-            warnungen.append(f"{pfad}: kein Aktenzeichen im Frontmatter — Mandat wird "
-                              f"übersprungen (nicht zuordenbar)")
-            continue
-        mandant = (fm.get("mandant") or (None, None))[0] or ""
-        gegenseite = (fm.get("gegenseite") or (None, None))[0]
-        try:
-            datei_rel = str(pfad.relative_to(kontext_dir))
-        except ValueError:
-            datei_rel = str(pfad)
-        mandate.append(Mandat(az=az, mandant=mandant, gegenseite=gegenseite, datei=datei_rel))
-    return mandate, warnungen
-
-
-# --------------------------------------------------------------------------
 # Report
 # --------------------------------------------------------------------------
-
-def _kandidat_dict(k: Kandidat) -> dict[str, Any]:
-    return {"az": k.az, "datei": k.datei, "stufe": k.stufe, "kategorie": k.kategorie,
-            "score": k.score, "begruendung": k.begruendung}
-
 
 def baue_dokument_eintrag(doc_meta: dict[str, Any], mandate: list[Mandat],
                            schwelle: float) -> dict[str, Any]:
@@ -380,7 +339,7 @@ def baue_dokument_eintrag(doc_meta: dict[str, Any], mandate: list[Mandat],
         "textauszug": dokument.textauszug,
         "textauszug_gekuerzt": doc_meta.get("textauszug_gekuerzt", False),
         "datum": doc_meta.get("datum"),
-        "kandidaten": [_kandidat_dict(k) for k in kandidaten],
+        "kandidaten": [asdict(k) for k in kandidaten],
         "kein_treffer": not kandidaten,
         "fristverdacht": hat_fristverdacht,
         "fristverdacht_hinweis": FRISTVERDACHT_HINWEIS if hat_fristverdacht else None,
@@ -448,11 +407,11 @@ def main(argv: list[str] | None = None) -> int:
     report = baue_report(dokumente_meta, mandate, mandat_warnungen,
                           args.schwelle_moeglich, quelle_typ, str(kontext_dir))
 
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-    else:
-        print(ausgabe)
+    try:
+        schreibe_report(report, args.output)
+    except CliFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
     return 0
 
 

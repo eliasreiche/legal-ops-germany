@@ -30,7 +30,7 @@ from wertgebuehr_formel import D, WertgebuehrFehler, parse_datum_strikt  # noqa:
 __all__ = [
     "ExtfFormatFehler", "D", "parse_datum_strikt", "parse_datumzeit_strikt",
     "dezimal_komma", "datum_jjjjmmtt", "datum_ttmm", "datumzeit_kompakt",
-    "pruefe_cp1252", "quote_text", "bare_zahl", "leer", "pruefe_konto",
+    "pruefe_cp1252", "quote_text", "bare_zahl", "LEER", "pruefe_konto",
     "pruefe_belegfeld",
 ]
 
@@ -110,20 +110,18 @@ def pruefe_cp1252(text: str, feld: str) -> str:
     return text
 
 
-def quote_text(wert: str | None, feld: str, *, laenge: int | None = None) -> str:
+def quote_text(wert: str | None, feld: str) -> str:
     """DATEV-Quoting für Textfelder: immer in doppelte Anführungszeichen,
     enthaltene '\"' werden verdoppelt. `None`/leer → leerer, unquotierter
     Token (reservierte/optionale Felder müssen laut Referenzstruktur
-    vollständig leer bleiben, nicht `\"\"`)."""
+    vollständig leer bleiben, nicht `\"\"`).
+
+    Längen- und CP1252-Prüfung passieren einmal bei der Feldvalidierung
+    (executor._text bzw. pruefe_belegfeld) — hier wird nur gequotet."""
     if wert is None or wert == "":
         return ""
     if not isinstance(wert, str):
         raise ExtfFormatFehler(f"'{feld}' muss ein Text (String) sein, nicht {wert!r}")
-    if laenge is not None and len(wert) > laenge:
-        raise ExtfFormatFehler(
-            f"'{feld}' ist zu lang: {len(wert)} Zeichen, erlaubt sind "
-            f"höchstens {laenge}: {wert!r}")
-    pruefe_cp1252(wert, feld)
     escaped = wert.replace('"', '""')
     return f'"{escaped}"'
 
@@ -133,9 +131,8 @@ def bare_zahl(wert: Any) -> str:
     return "" if wert is None else str(wert)
 
 
-def leer() -> str:
-    """Reservierte/nicht implementierte Spalte — immer ein leerer Token."""
-    return ""
+# Reservierte/nicht implementierte Spalte — immer ein leerer Token.
+LEER = ""
 
 
 # --------------------------------------------------------------------------

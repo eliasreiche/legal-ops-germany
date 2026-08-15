@@ -49,30 +49,28 @@ Exit-Codes: 0 = Report erzeugt, 2 = Eingabefehler, 3 = Frische-Gate verletzt.
 from __future__ import annotations
 
 import argparse
-import csv
 import datetime as _dt
-import io
+import functools
 import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-# core/calc auf den Importpfad legen (matching-Bibliothek) und core/adapters
-# für den Sanktionslisten-Parser. Self-relativ: skill -> skills -> plugin-root.
-_SKILL_DIR = Path(__file__).resolve().parent
-_PLUGIN_ROOT = _SKILL_DIR.parents[1]
-for _p in (_PLUGIN_ROOT / "core" / "calc", _PLUGIN_ROOT / "core" / "adapters"):
-    if str(_p) not in sys.path:
-        sys.path.insert(0, str(_p))
+# Plugin-Wurzel: skills/<skill>/executor.py -> <plugin>/core.
+_CORE = Path(__file__).resolve().parents[2] / "core"
+sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
+                if str(p) not in sys.path]
 
+from cli import CliFehler, schreibe_report  # noqa: E402
 from matching import (  # noqa: E402
-    koelner_code,
-    normalisiere,
-    sequenz_ratio,
-    token_alignment_ratio,
-    tokenisiere,
+    STUFE_MOEGLICH,
+    STUFE_TREFFER,
+    NamensTreffer,
+    vergleiche_namen,
 )
+from parteien import Partei  # noqa: E402
+from parteien import lese_parteien_csv as _lese_parteien_csv_core  # noqa: E402
 from sanktionslisten import (  # noqa: E402
     ParserFehler,
     Sanktionsliste,
@@ -83,8 +81,6 @@ from sanktionslisten import (  # noqa: E402
 SCHWELLE_MOEGLICH_DEFAULT = 0.80
 WARN_ALTER_TAGE = 7
 
-STUFE_TREFFER = "treffer"
-STUFE_MOEGLICH = "moeglicher_treffer"
 STUFE_KEIN = "kein_treffer"
 
 
@@ -96,45 +92,19 @@ class FrischeFehler(Exception):
     """Frische-Gate verletzt (fehlendes Datum) — Exit 3, kein Report."""
 
 
-@dataclass
-class Partei:
-    name: str
-    typ: str | None = None
-
-
-@dataclass
-class Kandidat:
-    regel: str      # "S1" | "S2" | "S3" | "S4"
-    stufe: str      # treffer | moeglicher_treffer
-    score: float
-    begruendung: str
+# Der Kandidat dieses Reports ist genau das Ergebnis des Namensvergleichs.
+Kandidat = NamensTreffer
 
 
 # --------------------------------------------------------------------------
 # Parteien einlesen (CSV oder JSON)
 # --------------------------------------------------------------------------
 
-def _lese_parteien_csv(pfad: Path) -> list[Partei]:
-    try:
-        text = pfad.read_text(encoding="utf-8-sig")
-    except UnicodeDecodeError as exc:
-        raise EingabeFehler(f"{pfad}: keine gültige UTF-8-Datei ({exc})") from exc
-    reader = csv.DictReader(io.StringIO(text), delimiter=";")
-    fieldnames = [h.strip() for h in (reader.fieldnames or [])]
-    if "name" not in fieldnames:
-        raise EingabeFehler(
-            f"{pfad}: Pflichtspalte 'name' fehlt (vorhanden: {', '.join(fieldnames)})")
-    parteien: list[Partei] = []
-    for i, zeile in enumerate(reader, start=2):
-        werte = {(h or "").strip(): (v or "").strip() if v is not None else ""
-                 for h, v in zeile.items()}
-        name = werte.get("name", "")
-        if not name:
-            raise EingabeFehler(f"{pfad}, Zeile {i}: Pflichtfeld 'name' fehlt oder ist leer")
-        parteien.append(Partei(name=name, typ=werte.get("typ") or None))
-    if not parteien:
-        raise EingabeFehler(f"{pfad}: keine Einträge (nur Kopfzeile)")
-    return parteien
+_lese_parteien_csv = functools.partial(
+    _lese_parteien_csv_core, fehler=EingabeFehler,
+    # `typ` wird hier — anders als beim interessenkollision-check — nicht gegen
+    # eine Werteliste geprüft: er dient nur der Dokumentation im Report.
+    zusatz=lambda zeile, ort: {"typ": zeile.get("typ") or None})
 
 
 def _lese_parteien_json(pfad: Path) -> list[Partei]:
@@ -251,50 +221,9 @@ def lade_listen_verzeichnis(pfad: Path, heute: _dt.date) -> list[GeladeneListe]:
 
 
 # --------------------------------------------------------------------------
-# Match-Stufen S1-S4 (analog interessenkollision-check, über core/calc/matching)
+# Match-Stufen S1-S4 (Kaskade in core/calc/matching, geteilt mit
+# interessenkollision-check)
 # --------------------------------------------------------------------------
-
-def _vergleiche(name_a: str, name_b: str, schwelle: float) -> Kandidat | None:
-    """Erste greifende Stufe S1->S2->S3->S4 gewinnt (sonst None = kein_treffer)."""
-    norm_a, norm_b = normalisiere(name_a), normalisiere(name_b)
-    tokens_a, tokens_b = tokenisiere(name_a), tokenisiere(name_b)
-
-    # S1 exakt nach Normalisierung
-    if norm_a and norm_b and norm_a == norm_b:
-        return Kandidat("S1", STUFE_TREFFER, 1.0,
-                        f"exakter Treffer nach Normalisierung: '{norm_a}' = '{norm_b}'")
-    # S2 Token-Mengen-Gleichheit / -Teilmenge
-    menge_a, menge_b = set(tokens_a), set(tokens_b)
-    if menge_a and menge_b:
-        if menge_a == menge_b:
-            return Kandidat("S2", STUFE_TREFFER, 1.0,
-                            "Token-Mengen-Gleichheit nach Normalisierung "
-                            f"(Wortreihenfolge unerheblich): {{{', '.join(sorted(menge_a))}}}")
-        if menge_a <= menge_b or menge_b <= menge_a:
-            kleiner, groesser = ((menge_a, menge_b) if len(menge_a) <= len(menge_b)
-                                 else (menge_b, menge_a))
-            score = round(len(kleiner) / len(groesser), 4)
-            return Kandidat("S2", STUFE_TREFFER, score,
-                            f"Token-Teilmenge: {{{', '.join(sorted(kleiner))}}} "
-                            f"⊆ {{{', '.join(sorted(groesser))}}}")
-    # S3 Kölner Phonetik je Token identisch
-    if tokens_a and len(tokens_a) == len(tokens_b):
-        codes_a = sorted(koelner_code(t) for t in tokens_a)
-        codes_b = sorted(koelner_code(t) for t in tokens_b)
-        if all(codes_a) and all(codes_b) and codes_a == codes_b:
-            if len(codes_a) == 1:
-                begr = f"phonetisch identisch nach Kölner Phonetik: {codes_a[0]} = {codes_b[0]}"
-            else:
-                begr = ("phonetisch identisch nach Kölner Phonetik je Token: "
-                        f"[{', '.join(codes_a)}] = [{', '.join(codes_b)}]")
-            return Kandidat("S3", STUFE_MOEGLICH, 1.0, begr)
-    # S4 Fuzzy-Ratio >= Schwelle
-    score = max(sequenz_ratio(norm_a, norm_b), token_alignment_ratio(tokens_a, tokens_b))
-    if score >= schwelle:
-        return Kandidat("S4", STUFE_MOEGLICH, round(score, 4),
-                        f"Ähnlichkeit {score:.2f} ≥ Schwelle {schwelle:.2f}")
-    return None
-
 
 def _bester_kandidat_gegen_eintrag(
         partei: Partei, eintrag: SanktionsEintrag, schwelle: float
@@ -304,7 +233,7 @@ def _bester_kandidat_gegen_eintrag(
     bestes: tuple[int, dict[str, Any]] | None = None
     for feld, gelisteter_name in [("primaername", eintrag.primaername),
                                   *[("alias", a) for a in eintrag.aliase]]:
-        kandidat = _vergleiche(partei.name, gelisteter_name, schwelle)
+        kandidat = vergleiche_namen(partei.name, gelisteter_name, schwelle)
         if kandidat is None:
             continue
         gewicht = rang[kandidat.regel]
@@ -459,11 +388,11 @@ def main(argv: list[str] | None = None) -> int:
                          parteien_datei=str(parteien_pfad),
                          listen_verzeichnis=str(listen_pfad))
 
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-    else:
-        print(ausgabe)
+    try:
+        schreibe_report(report, args.output)
+    except CliFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
     if report["warnungen"]:
         for w in report["warnungen"]:
             print(f"Warnung: {w}", file=sys.stderr)

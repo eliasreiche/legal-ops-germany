@@ -67,7 +67,13 @@ if str(_CALC_DIR) not in sys.path:
 # bloßer Modulname würde im sys.modules-Cache mit gkg.tabelle kollidieren
 # (beide Pakete haben eine gleichnamige tabelle.py), und je nach Importreihen-
 # folge stillschweigend die falsche Gebührentabelle liefern.
-from wertgebuehr_formel import D, WertgebuehrFehler, rundung_cent  # noqa: E402
+from wertgebuehr_formel import (  # noqa: E402
+    D,
+    Position,
+    WertgebuehrFehler,
+    rundung_cent,
+)
+from rechenschritt import RechenSchritt  # noqa: E402
 from rvg.tabelle import einfachgebuehr as _einfachgebuehr_stichtag  # noqa: E402
 
 KATALOG_PFAD = _RVG_DIR / "vv-katalog.json"
@@ -92,37 +98,6 @@ class RVGEingabeFehler(WertgebuehrFehler):
 
 def lade_katalog(pfad: Path | None = None) -> dict[str, Any]:
     return json.loads((pfad or KATALOG_PFAD).read_text(encoding="utf-8"))
-
-
-@dataclass
-class RechenSchritt:
-    schritt: int
-    norm: str
-    beschreibung: str
-    ergebnis: str | None
-    quelle: str = "executor"
-
-    def as_dict(self) -> dict[str, Any]:
-        return {"schritt": self.schritt, "norm": self.norm,
-                "beschreibung": self.beschreibung, "ergebnis": self.ergebnis,
-                "quelle": self.quelle}
-
-
-@dataclass
-class Position:
-    nr: str
-    bezeichnung: str
-    norm: str
-    satz: Decimal
-    betrag: Decimal
-    mindestbetrag_gegriffen: bool = False
-    hinweise: list[str] = field(default_factory=list)
-
-    def as_dict(self) -> dict[str, Any]:
-        return {"nr": self.nr, "bezeichnung": self.bezeichnung, "norm": self.norm,
-                "satz": str(self.satz), "betrag": str(self.betrag),
-                "mindestbetrag_gegriffen": self.mindestbetrag_gegriffen,
-                "hinweise": list(self.hinweise), "quelle": "executor"}
 
 
 @dataclass

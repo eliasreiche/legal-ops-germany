@@ -5,7 +5,8 @@ Kanzleisoftware oder eines anderen Systems) und `kontext/`, gesteuert über ein
 Mapping. Beweist die Agnostik-Garantie (D11a): `kontext/` funktioniert mit
 reinen Dateien — jeder künftige Live-Adapter erfüllt denselben Vertrag.
 
-Fähigkeiten: [`capabilities.json`](capabilities.json).
+Fähigkeiten: Dokumente in beide Richtungen (`pull` und `push`) — keine
+Kalender-, keine Mail-Daten.
 
 ## CLI
 

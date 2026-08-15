@@ -17,14 +17,10 @@ Streitwert 5.000 €, erste Instanz (3100+3104), brutto 1.078,44 €.
 from __future__ import annotations
 
 import datetime as dt
-import sys
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from rvg.rechner import RVGEingabeFehler, berechne  # noqa: E402
 

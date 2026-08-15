@@ -51,10 +51,14 @@ NORM_HINWEIS = (
     "zwingend anwaltlich prüfen — dieser Executor löscht nie."
 )
 
-# Statische Norm-Belehrungen dieses Moduls, für den CI-Marker-Konsistenz-Test
-# (tests/test_zitiermarker_statisch.py) als benannte Konstante statt fragilem
-# Quelltext-Grep. Rein additiv — NORM_HINWEIS wird weiterhin unverändert in
-# baue_report()/baue_markdown() verwendet, kein Verhaltens-Impact.
+# Statische Norm-Belehrungen dieses Moduls — als benannte Konstante statt
+# fragilem Quelltext-Grep. tests/test_zitiermarker_statisch.py prüft darüber
+# die KONSISTENZ des Markers gegen die handgepflegte Quellen-Registry
+# tests/fixtures/statische_normen_registry.json (✅ nur, wenn die Registry die
+# zitierte Norm führt). Ob die Fundstelle inhaltlich stimmt, ist die
+# Maintainer-Abnahme und in der Registry dokumentiert, nicht maschinell
+# geprüft. NORM_HINWEIS wird unverändert in baue_report()/baue_markdown()
+# verwendet.
 STATISCHE_NORM_BELEHRUNGEN: list[dict[str, str]] = [
     {"marker": "✅", "text": NORM_HINWEIS},
 ]
@@ -68,10 +72,6 @@ EINORDNUNG_NICHT_ANWENDBAR = "nicht_anwendbar"
 
 class RetentionEingabeFehler(ValueError):
     """Eingabefehler → Exit 2 mit klarer Meldung, nie Traceback."""
-
-
-def _iso(datum: _dt.date) -> str:
-    return datum.isoformat()
 
 
 def _parse_iso(wert: str, feld: str) -> _dt.date:
@@ -149,8 +149,8 @@ def baue_report(kontext_dir: Path, stichtag: _dt.date) -> dict[str, Any]:
             anzahl_noch_nicht += 1
         eintraege.append({
             **basis,
-            "retention_bis": _iso(retention_bis),
-            "loeschbar_ab": _iso(loeschbar_ab),
+            "retention_bis": retention_bis.isoformat(),
+            "loeschbar_ab": loeschbar_ab.isoformat(),
             "einordnung": EINORDNUNG_UEBERFAELLIG if ueberfaellig else EINORDNUNG_NOCH_NICHT,
             "quelle": "executor",
         })
@@ -159,7 +159,7 @@ def baue_report(kontext_dir: Path, stichtag: _dt.date) -> dict[str, Any]:
         "meta": {
             "erzeugt_von": "plugins/legal-ops/core/calc/retention/executor.py",
             "kontext_dir": str(kontext_dir),
-            "stichtag": _iso(stichtag),
+            "stichtag": stichtag.isoformat(),
             "norm_hinweis": NORM_HINWEIS,
             "loescht_nie": True,
             "quelle": "executor",

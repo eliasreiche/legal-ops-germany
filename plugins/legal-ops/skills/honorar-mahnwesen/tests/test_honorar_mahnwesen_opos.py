@@ -10,25 +10,19 @@ from __future__ import annotations
 
 import datetime as dt
 import json
-import subprocess
-import sys
 from decimal import Decimal
 from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-CALC = REPO / "plugins" / "legal-ops" / "core" / "calc"
-for p in (str(CALC),):
-    if p not in sys.path:
-        sys.path.insert(0, p)
+from conftest import SKILLS, lauf  # noqa: E402
 
 from opos.rechner import (MAHNSTUFEN_DEFAULT, OposEingabeFehler, Posten,
                           bewerte, lade_mahnstufen_config, lade_opos_csv,
                           stapel_zu_posten)
 from extf.parser import parse_extf_datei
 
-EXECUTOR = REPO / "plugins" / "legal-ops" / "skills" / "honorar-mahnwesen" / "executor.py"
+EXECUTOR = SKILLS / "honorar-mahnwesen" / "executor.py"
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 OPOS_CSV = FIXTURES / "beispiel-opos.csv"
 EXTF_FIXTURE = FIXTURES / "beispiel-buchungsstapel.csv"
@@ -182,7 +176,7 @@ def test_extf_aggregation_belegfeld1():
 
 def test_extf_skonto_auf_haben_verrechnet():
     # golden erwartet_2: RE-2026-101 nur Haben 238,95 + Skonto 5,00 -> -243,95
-    stapel = parse_extf_datei(REPO / "plugins" / "legal-ops" / "skills" /
+    stapel = parse_extf_datei(SKILLS /
                               "datev-export" / "tests" / "golden" / "erwartet_2.csv")
     posten, _ = stapel_zu_posten(stapel, zahlungsziel_tage=14)
     nach_nr = {p.rechnungsnummer: p for p in posten}
@@ -222,11 +216,8 @@ def test_mahnstufen_config_reject(cfg):
 
 def _cli(args, tmp_path, *, mit_output=True):
     output = tmp_path / "report.json"
-    cmd = [sys.executable, str(EXECUTOR)] + args
-    if mit_output:
-        cmd += ["--output", str(output)]
-    erg = subprocess.run(cmd, capture_output=True, text=True)
-    return erg, output
+    extra = ["--output", output] if mit_output else []
+    return lauf(EXECUTOR, *args, *extra), output
 
 
 def test_cli_opos_csv_erfolg(tmp_path):
@@ -253,8 +244,9 @@ def test_cli_extf_erfolg(tmp_path):
 def test_cli_idempotenz_gleiche_eingabe_gleicher_report(tmp_path):
     erg1, out1 = _cli(["--opos-csv", str(OPOS_CSV), "--stichtag", "2026-07-16"], tmp_path)
     out2 = tmp_path / "report2.json"
-    subprocess.run([sys.executable, str(EXECUTOR), "--opos-csv", str(OPOS_CSV),
-                    "--stichtag", "2026-07-16", "--output", str(out2)], check=True)
+    erg2 = lauf(EXECUTOR, "--opos-csv", OPOS_CSV,
+                "--stichtag", "2026-07-16", "--output", out2)
+    assert erg2.returncode == 0, erg2.stderr
     assert out1.read_text() == out2.read_text()
 
 

@@ -33,14 +33,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# core/calc auf den Importpfad legen (gwg-Paket liegt dort, nicht im Skill).
-# Self-relativ innerhalb des Plugins: skill -> skills -> <plugin-root>/core/calc.
-_SKILL_DIR = Path(__file__).resolve().parent
-_PLUGIN_ROOT = _SKILL_DIR.parents[1]
-_CALC_DIR = _PLUGIN_ROOT / "core" / "calc"
-if str(_CALC_DIR) not in sys.path:
-    sys.path.insert(0, str(_CALC_DIR))
+# Plugin-Wurzel: skills/<skill>/executor.py -> <plugin>/core.
+_CORE = Path(__file__).resolve().parents[2] / "core"
+sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
+                if str(p) not in sys.path]
 
+from cli import CliFehler, schreibe_report  # noqa: E402
 from gwg.rechner import GwGEingabeFehler, klassifiziere  # noqa: E402
 
 
@@ -94,16 +92,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2
 
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        try:
-            Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-        except OSError as exc:
-            print(f"Fehler: Report-Datei kann nicht geschrieben werden: {exc}",
-                  file=sys.stderr)
-            return 2
-    else:
-        print(ausgabe)
+    try:
+        schreibe_report(report, args.output)
+    except CliFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
     return 0
 
 

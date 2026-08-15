@@ -10,13 +10,12 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import BEISPIEL_KONTEXT, lauf  # noqa: E402
+
 SKILL_DIR = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL_DIR / "executor.py"
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
 
 _GUELTIGER_EINGANG = {
     "eingang": {
@@ -32,8 +31,7 @@ _GUELTIGER_EINGANG = {
 
 
 def _lauf(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run(
-        [sys.executable, str(EXECUTOR), *args], capture_output=True, text=True)
+    return lauf(EXECUTOR, *args)
 
 
 def _schreibe(pfad: Path, inhalt: str) -> Path:

@@ -83,13 +83,6 @@ EXECUTOR_SKILLS = [
         "exit": 0,
     },
     {
-        "id": "zitat-pruefer",
-        "executor": "skills/zitat-pruefer/executor.py",
-        "args": ["--input", "skills/zitat-pruefer/schema/beispiel-eingabe.md",
-                 "--registry", "skills/zitat-pruefer/schema/beispiel-registry.json"],
-        "exit": 0,
-    },
-    {
         # Kontext-Layer-Fundament (D19): Schema-Validator gegen die
         # Beispiel-Fixture — muss core/context/schema.py aus dem reinen
         # Plugin-Cache heraus importieren können (kein Repo-Root im Pfad).
@@ -176,15 +169,3 @@ def test_alle_executor_skills_laufen_im_cache(tmp_path):
             assert pruef(report), (
                 f"{skill['id']}: Ergebnis-Assertion verletzt "
                 f"({skill.get('assert_desc')})")
-
-
-def test_fristenrechner_liefert_bekanntes_fristende(tmp_path):
-    """Expliziter Kern-Nachweis des ausgelieferten Artefakts (Brief-Vorgabe)."""
-    cache = _install_cache(tmp_path)
-    neutral = tmp_path / "cwd"
-    neutral.mkdir()
-    skill = next(s for s in EXECUTOR_SKILLS if s["id"] == "fristenrechner")
-    res = _lauf(cache, skill, neutral)
-    assert res.returncode == 0, res.stderr
-    report = json.loads(res.stdout)
-    assert report["ergebnis"]["fristende"] == "2026-02-16", report["ergebnis"]

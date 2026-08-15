@@ -97,6 +97,49 @@ def rundung_cent(betrag: Decimal) -> Decimal:
     return betrag.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
 
+def stand_fuer_stichtag(stichtag: _dt.date, tabelle: dict[str, Any], *,
+                        fehler: type[Exception], fehlertext: str) -> dict[str, Any]:
+    """Wählt aus `tabelle["staende"]` den am `stichtag` geltenden Stand.
+
+    Identisch für § 13 RVG und § 34 GKG — verschieden sind nur der maßgebliche
+    Stichtag (§ 60 Abs. 1 RVG: Auftragserteilung; § 71 Abs. 1 GKG:
+    Anhängigkeit) und der Wortlaut der Fehlermeldung; beides liefert der
+    Aufrufer (`core/calc/{rvg,gkg}/tabelle.py`).
+
+    Liegt der Stichtag vor dem ältesten oder in einer Lücke zwischen den
+    hinterlegten Ständen, wird `fehler` mit `fehlertext` geworfen (Platzhalter
+    `{stichtag}` und `{aelteste_ab}`) — es wird nie mit einer unbekannten
+    Fassung gerechnet.
+    """
+    staende = sorted(tabelle["staende"], key=lambda s: s["gueltig_ab"])
+    for stand in staende:
+        ab = _dt.date.fromisoformat(stand["gueltig_ab"])
+        bis = (_dt.date.fromisoformat(stand["gueltig_bis"])
+               if stand.get("gueltig_bis") else None)
+        if stichtag >= ab and (bis is None or stichtag <= bis):
+            return stand
+    raise fehler(fehlertext.format(stichtag=stichtag.isoformat(),
+                                   aelteste_ab=staende[0]["gueltig_ab"]))
+
+
+@dataclass
+class Position:
+    """Eine berechnete Gebührenposition (VV RVG bzw. KV GKG)."""
+    nr: str
+    bezeichnung: str
+    norm: str
+    satz: Decimal
+    betrag: Decimal
+    mindestbetrag_gegriffen: bool = False
+    hinweise: list[str] = field(default_factory=list)
+
+    def as_dict(self) -> dict[str, Any]:
+        return {"nr": self.nr, "bezeichnung": self.bezeichnung, "norm": self.norm,
+                "satz": str(self.satz), "betrag": str(self.betrag),
+                "mindestbetrag_gegriffen": self.mindestbetrag_gegriffen,
+                "hinweise": list(self.hinweise), "quelle": "executor"}
+
+
 @dataclass
 class StufenSchritt:
     """Ein Glied der Herleitung der 1,0-Gebühr (für die Rechenkette)."""

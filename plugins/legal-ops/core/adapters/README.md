@@ -27,27 +27,14 @@ Adapter oder MCP-Sync nach `kontext/`.
   Kontext-Layers geplant (Datenquelle für `gwg-live-screening`, Welle 4,
   keine Kanzlei-Wissens-Anbindung im Sinne von D11).
 
-## `capabilities.json`-Vertrag
+## Was die Adapter können
 
-Jeder Adapter dokumentiert seine Fähigkeiten in einer `capabilities.json`
-neben seinem CLI:
-
-```json
-{
-  "adapter": "<name>",
-  "dokumente": true,
-  "kalender": false,
-  "mail": false,
-  "push": true
-}
-```
-
-- `dokumente` / `kalender` / `mail` — welche Datenklassen der Adapter
-  synchronisiert.
-- `push` — ob er auch in Richtung Kanzleisoftware schreiben kann (`false` =
-  reines `pull`, nur Auslesen).
-
-Beispiel: [`filesystem/capabilities.json`](filesystem/capabilities.json).
+- **`filesystem/`** — synchronisiert Dokumente in beide Richtungen (`pull` und
+  `push`) zwischen einem externen Datei-Export und `kontext/`; keine Kalender-
+  oder Mail-Daten. Details: [`filesystem/README.md`](filesystem/README.md).
+- **`sanktionslisten/`** — lädt die offiziellen EU-/UN-Listen als XML herunter
+  und parst sie; reines Lesen, kein `push`, kein `kontext/`-Bezug. Details:
+  [`sanktionslisten/README.md`](sanktionslisten/README.md).
 
 ## Grundsatz (unverändert)
 

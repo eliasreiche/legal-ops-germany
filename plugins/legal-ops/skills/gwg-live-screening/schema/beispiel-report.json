@@ -65,7 +65,7 @@
           "regel": "S4",
           "stufe": "moeglicher_treffer",
           "score": 0.8276,
-          "begruendung": "Ähnlichkeit 0.83 ≥ Schwelle 0.80"
+          "begruendung": "Ähnlichkeit 0.83 ≥ Schwelle 0.80 (Zeichenketten-Vergleich)"
         }
       ]
     },

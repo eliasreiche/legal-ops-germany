@@ -6,8 +6,8 @@ Open-Source-Library aus **Claude-Skills und deterministischen Python-Executors**
 **non-billable Workflows** deutscher Boutique- und Kleinkanzleien — Fristenberechnung
 (ZPO/BGB) mit Kalender-Export, Gebühren (RVG/GKG), GwG-Risikoklassifizierung mit
 verifizierter Hochrisiko-Länderliste, Aktenkopf-Extraktion, Interessenkollisions-Check,
-DATEV-EXTF-Export und mehr. **19 Skills, davon 1 `getestet` und 9 in `beta`** (Status-Tabelle unten).
-Funktionsweise ausschließlich nach deutschem Recht.
+DATEV-EXTF-Export und mehr. Reifegrad je Skill: siehe generierte
+[Status-Tabelle](#skill-status). Funktionsweise ausschließlich nach deutschem Recht.
 
 > **Keine Rechtsberatung.** Diese Library unterstützt organisatorische und rechnerische
 > Abläufe der Kanzlei. Jedes Ergebnis unterliegt der Zweitkontrolle durch die Kanzlei;
@@ -95,7 +95,7 @@ Nur die Mandats-Datei hat ein striktes Schema, weil Rechenketten darauf aufbauen
 
 **Validierung:** Nach jedem Sync läuft [`core/context/validator.py`](plugins/legal-ops/core/context/validator.py) (Exit 0 sauber / 1 Schema-Fehler / 2 Ziel fehlt). Claude liest nur den JSON-Report und entscheidet nie selbst über Schema-Konformität. Fehlende empfohlene Felder sind Warnungen — abhängige Rechenketten weisen das Mandat dann als „nicht bewertbar" aus, statt zu blockieren.
 
-**Befüllung:** Der Querschnitts-Skill `kontext-sync` speist zwei Wege: (1) vorhandene MCP-Konnektoren (z. B. Microsoft 365) oder (2) einen Filesystem-Referenzadapter für Daten, die schon als Dateien vorliegen — Pull/Push über Mapping-JSON mit Hash-Manifest für Idempotenz. Ein erkannter Konflikt wird nie automatisch aufgelöst — der Merge bleibt Kanzleisache. Der Filesystem-Adapter ist zugleich die Agnostik-Garantie: jeder künftige Adapter (DATEV, RA-MICRO, beA — „Integration geplant", kein Code im Repo) erfüllt denselben Vertrag und deklariert seine Fähigkeiten in einer `capabilities.json` (siehe [`core/adapters/`](plugins/legal-ops/core/adapters/)).
+**Befüllung:** Der Querschnitts-Skill `kontext-sync` speist zwei Wege: (1) vorhandene MCP-Konnektoren (z. B. Microsoft 365) oder (2) einen Filesystem-Referenzadapter für Daten, die schon als Dateien vorliegen — Pull/Push über Mapping-JSON mit Hash-Manifest für Idempotenz. Ein erkannter Konflikt wird nie automatisch aufgelöst — der Merge bleibt Kanzleisache. Der Filesystem-Adapter ist zugleich die Agnostik-Garantie: jeder künftige Adapter (DATEV, RA-MICRO, beA — „Integration geplant", kein Code im Repo) erfüllt denselben Vertrag und beschreibt seine Fähigkeiten in seinem README (siehe [`core/adapters/`](plugins/legal-ops/core/adapters/)).
 
 **Governance:** Skills deklarieren ihre Zugriffe im Frontmatter (`kontext_reads`/`kontext_writes`) — vom Struktur-Lint in CI erzwungen. Details: [`core/context/README.md`](plugins/legal-ops/core/context/README.md).
 
@@ -103,11 +103,12 @@ Nur die Mandats-Datei hat ein striktes Schema, weil Rechenketten darauf aufbauen
 
 Tabelle wird generiert von [`plugins/legal-ops/core/verify/struktur_lint.py`](plugins/legal-ops/core/verify/struktur_lint.py) (`--write-readme`).
 
+> `zitat-pruefer`: geparkt — aus dem Baum entfernt, vollständig in der Git-History.
+
 <!-- skill-status:start -->
 | Skill | Bereich | Welle | Status |
 |---|---|---|---|
 | [`fristenrechner`](plugins/legal-ops/skills/fristenrechner/SKILL.md) | `fristen-termine` | 1 | ✅ `getestet` |
-| [`zitat-pruefer`](plugins/legal-ops/skills/zitat-pruefer/SKILL.md) | `querschnitt` | 1 | 🚧 `Work-in-progress` |
 | [`rvg-gkg-rechner`](plugins/legal-ops/skills/rvg-gkg-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🧪 `beta` |
 | [`gwg-risiko-check`](plugins/legal-ops/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
 | [`interessenkollision-check`](plugins/legal-ops/skills/interessenkollision-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |

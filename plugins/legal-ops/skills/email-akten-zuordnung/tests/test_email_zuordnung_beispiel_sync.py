@@ -9,38 +9,25 @@ interessenkollision-check/schema/beispiel-report.json).
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import BEISPIEL_KONTEXT, neutralisiere, report  # noqa: E402
+
 SKILL_DIR = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL_DIR / "executor.py"
 SCHEMA = SKILL_DIR / "schema"
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
 
-
-def _neutralisiert(report: dict) -> dict:
-    """`kontext_verzeichnis` und `quelle` je Dokument enthalten den beim
-    Aufruf übergebenen Pfad-Präfix (absolut oder relativ, je nach cwd/
-    Invocation) — für den Inhaltsvergleich auf den Dateinamen reduzieren,
-    alles andere muss exakt übereinstimmen."""
-    report = json.loads(json.dumps(report))  # tiefe Kopie
-    report["meta"]["kontext_verzeichnis"] = "NEUTRALISIERT"
-    for doc in report["dokumente"]:
-        doc["quelle"] = Path(doc["quelle"]).name
-    return report
+# Pfad-Felder dieses Reports, die vom Aufruf abhängen (siehe neutralisiere).
+PFADFELDER = ("kontext_verzeichnis", "quelle")
 
 
 def test_beispiel_report_ist_aktuell():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--eml", str(SCHEMA),
-         "--kontext", str(BEISPIEL_KONTEXT)],
-        capture_output=True, text=True)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    frisch = _neutralisiert(json.loads(ergebnis.stdout))
-    checked_in = _neutralisiert(
-        json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8")))
+    frisch = neutralisiere(
+        report(EXECUTOR, "--eml", SCHEMA, "--kontext", BEISPIEL_KONTEXT),
+        PFADFELDER)
+    checked_in = neutralisiere(
+        json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8")),
+        PFADFELDER)
 
     assert frisch == checked_in, (
         "schema/beispiel-report.json ist veraltet — neu erzeugen mit:\n"

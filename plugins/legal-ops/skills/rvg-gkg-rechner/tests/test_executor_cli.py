@@ -10,31 +10,22 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-EXECUTOR = REPO / "plugins" / "legal-ops" / "core" / "calc" / "rvg" / "executor.py"
+from conftest import CALC, lauf, report, schreibe  # noqa: E402
+
+EXECUTOR = CALC / "rvg" / "executor.py"
 SCHEMA = Path(__file__).resolve().parents[1] / "schema"
 
 
 def _lauf(eingabe, tmp_path: Path) -> subprocess.CompletedProcess:
-    eingabe_pfad = tmp_path / "anfrage.json"
-    if isinstance(eingabe, str):
-        eingabe_pfad.write_text(eingabe, encoding="utf-8")
-    else:
-        eingabe_pfad.write_text(json.dumps(eingabe), encoding="utf-8")
-    return subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(eingabe_pfad)],
-        capture_output=True, text=True)
+    return lauf(EXECUTOR, "--input", schreibe(tmp_path / "anfrage.json", eingabe))
 
 
 def _report(eingabe: dict, tmp_path: Path) -> dict:
-    ergebnis = _lauf(eingabe, tmp_path)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    return json.loads(ergebnis.stdout)
+    return report(EXECUTOR, "--input", schreibe(tmp_path / "anfrage.json", eingabe))
 
 
 # --------------------------------------------------------------------------
@@ -79,10 +70,7 @@ def test_output_datei(tmp_path):
                                            "tatbestaende": [{"nr": "3100"}]}}),
                        encoding="utf-8")
     ziel = tmp_path / "report.json"
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(eingabe),
-         "--output", str(ziel)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", eingabe, "--output", ziel)
     assert ergebnis.returncode == 0, ergebnis.stderr
     report = json.loads(ziel.read_text(encoding="utf-8"))
     assert report["rvg"]["ergebnis"]["gesamt_verguetung"]
@@ -93,10 +81,7 @@ def test_output_datei(tmp_path):
 # --------------------------------------------------------------------------
 
 def test_beispiel_report_synchron():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--input", str(SCHEMA / "beispiel-eingabe.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe.json")
     assert ergebnis.returncode == 0, ergebnis.stderr
     erzeugt = json.loads(ergebnis.stdout)
     gespeichert = json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8"))
@@ -106,10 +91,7 @@ def test_beispiel_report_synchron():
 
 
 def test_beispiel_report_berufung_synchron():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--input", str(SCHEMA / "beispiel-eingabe-berufung.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-berufung.json")
     assert ergebnis.returncode == 0, ergebnis.stderr
     erzeugt = json.loads(ergebnis.stdout)
     gespeichert = json.loads(
@@ -124,10 +106,7 @@ def test_beispiel_report_berufung_synchron():
 
 
 def test_beispiel_eingabe_anrechnung_laeuft():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--input", str(SCHEMA / "beispiel-eingabe-anrechnung.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-anrechnung.json")
     assert ergebnis.returncode == 0, ergebnis.stderr
     report = json.loads(ergebnis.stdout)
     assert report["rvg"]["anrechnung"] is not None
@@ -146,9 +125,7 @@ def test_fehler_kaputtes_json(tmp_path):
 
 
 def test_fehler_datei_fehlt(tmp_path):
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(tmp_path / "nix.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", tmp_path / "nix.json")
     assert ergebnis.returncode == 2
     assert "nicht gefunden" in ergebnis.stderr
 

@@ -11,10 +11,10 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import lauf  # noqa: E402
+
 SKILL_DIR = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL_DIR / "executor.py"
 SCHEMA = SKILL_DIR / "schema"
@@ -22,8 +22,7 @@ FIXTURES = SKILL_DIR / "tests" / "fixtures"
 
 
 def _lauf(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run(
-        [sys.executable, str(EXECUTOR), *args], capture_output=True, text=True)
+    return lauf(EXECUTOR, *args)
 
 
 def _listen_dir(tmp_path: Path, abgerufen_am: str = "2026-07-15") -> Path:

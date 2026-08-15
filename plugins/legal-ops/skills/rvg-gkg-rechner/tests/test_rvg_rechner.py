@@ -6,14 +6,10 @@ from __future__ import annotations
 
 import copy
 import datetime as dt
-import sys
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from rvg.rechner import (  # noqa: E402
     RVGEingabeFehler,

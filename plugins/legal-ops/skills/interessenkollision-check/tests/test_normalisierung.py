@@ -7,13 +7,8 @@ Token-Sortierfunktion für den Wortreihenfolge-Vergleich.
 """
 from __future__ import annotations
 
-import sys
-from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
-
-from matching.normalisierung import normalisiere, sortierte_tokens, tokenisiere  # noqa: E402
+from matching.normalisierung import normalisiere, tokenisiere  # noqa: E402
 
 
 # --------------------------------------------------------------------------
@@ -100,23 +95,11 @@ def test_interpunktion_wird_zu_leerzeichen():
 def test_leere_eingabe():
     assert normalisiere("") == ""
     assert tokenisiere("") == []
-    assert sortierte_tokens("") == ()
 
 
 # --------------------------------------------------------------------------
-# Tokenisierung und Token-Sortierung (Wortreihenfolge-Vergleich)
+# Tokenisierung
 # --------------------------------------------------------------------------
 
 def test_tokenisiere_zerlegt_normalisierten_text():
     assert tokenisiere("  Auto   Müller GmbH ") == ["auto", "mueller"]
-
-
-def test_sortierte_tokens_macht_wortreihenfolge_unerheblich():
-    a = sortierte_tokens("Auto Müller GmbH")
-    b = sortierte_tokens("Müller Auto GmbH")
-    c = sortierte_tokens("GmbH Müller Auto")
-    assert a == b == c == ("auto", "mueller")
-
-
-def test_sortierte_tokens_unterschiedliche_namen_bleiben_unterschiedlich():
-    assert sortierte_tokens("Auto Müller GmbH") != sortierte_tokens("Auto Schulze GmbH")

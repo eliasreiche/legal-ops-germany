@@ -25,19 +25,14 @@ hier als unabhängiges Orakel gegen unsere eigene Implementierung übertragen
 from __future__ import annotations
 
 import datetime as dt
-import sys
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 import feiertage  # noqa: E402
 from fristen import (  # noqa: E402
     FristEingabeFehler,
     berechne_frist,
-    naechster_werktag,
 )
 
 
@@ -186,12 +181,6 @@ def test_orakel_feiertag_rollover_land():
     assert r_by.fristende == dt.date(2026, 1, 7)
     assert not r_be.verschoben
     assert r_be.fristende == dt.date(2026, 1, 6)
-
-
-def test_orakel_naechster_werktag():
-    # borghei: test_naechster_werktag — Sa 03.01.2026 -> Mo 05.01.2026
-    # (borghei: BUND; hier NW — 4./5. Januar sind nirgends Feiertag).
-    assert naechster_werktag(dt.date(2026, 1, 3), "NW") == dt.date(2026, 1, 5)
 
 
 def test_orakel_invalid_inputs():

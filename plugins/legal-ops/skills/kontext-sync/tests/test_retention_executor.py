@@ -13,11 +13,10 @@ import json
 import subprocess
 import sys
 from datetime import date
-from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
-EXECUTOR = REPO / "plugins" / "legal-ops" / "core" / "calc" / "retention" / "executor.py"
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
+from conftest import BEISPIEL_KONTEXT, CALC, lauf  # noqa: E402
+
+EXECUTOR = CALC / "retention" / "executor.py"
 
 # Bewusst NICHT `sys.path.insert(...); import executor` — der Modulname
 # "executor" ist im Repo mehrfach vergeben (jeder Skill hat sein eigenes
@@ -117,8 +116,7 @@ def test_executor_veraendert_keine_dateien_im_kontext(tmp_path):
 # --------------------------------------------------------------------------
 
 def _lauf(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(EXECUTOR), *args],
-                          capture_output=True, text=True)
+    return lauf(EXECUTOR, *args)
 
 
 def test_cli_gegen_beispiel_kontext_exit_0():

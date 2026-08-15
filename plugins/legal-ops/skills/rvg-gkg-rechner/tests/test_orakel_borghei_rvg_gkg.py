@@ -63,14 +63,10 @@ Weitere dokumentierte Unterschiede (keine Zahlenabweichungen):
 from __future__ import annotations
 
 import datetime as dt
-import sys
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from wertgebuehr_formel import WertgebuehrFehler, einfachgebuehr  # noqa: E402
 from rvg.tabelle import lade_tabelle as rvg_lade_tabelle  # noqa: E402

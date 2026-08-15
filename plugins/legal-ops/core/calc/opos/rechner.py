@@ -131,7 +131,7 @@ def lade_opos_csv(quelle: str | Path | bytes) -> list[Posten]:
     in eine Postenliste. Strenge Validierung mit Zeilenangabe — fehlende
     Pflichtspalten, ungültige Beträge/Daten oder eine doppelte
     Rechnungsnummer sind ein Fehler, keine stille Reparatur."""
-    if isinstance(quelle, (str, Path)) and Path(str(quelle)).is_file() and not isinstance(quelle, bytes):
+    if isinstance(quelle, (str, Path)) and Path(str(quelle)).is_file():
         text = Path(quelle).read_text(encoding="utf-8")
     elif isinstance(quelle, bytes):
         text = quelle.decode("utf-8")

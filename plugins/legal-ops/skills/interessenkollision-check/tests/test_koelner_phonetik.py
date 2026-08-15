@@ -9,13 +9,8 @@ abzusichern.
 """
 from __future__ import annotations
 
-import sys
-from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
-
-from matching.koelner_phonetik import code, phonetisch_gleich  # noqa: E402
+from matching.koelner_phonetik import code  # noqa: E402
 
 
 # --------------------------------------------------------------------------
@@ -40,19 +35,11 @@ def test_schmidt_schmitt_gleiche_klasse():
     assert code("Schmidt") == code("Schmitt") == "862"
 
 
-def test_phonetisch_gleich_hilfsfunktion():
-    assert phonetisch_gleich("Meyer", "Maier") is True
-    assert phonetisch_gleich("Schmidt", "Schmitt") is True
-    assert phonetisch_gleich("Meyer", "Schmidt") is False
-
-
-def test_phonetisch_gleich_leere_codes_zaehlen_nie_als_treffer():
-    # Zwei Wörter ohne kodierbare Buchstaben (z. B. nur Ziffern/Symbole)
-    # sollen sich nicht fälschlich als "phonetisch identisch" ausgeben.
+def test_unkodierbare_woerter_ergeben_leeren_code():
+    # Wörter ohne kodierbare Buchstaben (z. B. nur Ziffern/Symbole) ergeben
+    # einen leeren Code — der Vergleich (Stufe S3) verwirft ihn.
     assert code("123") == ""
     assert code("") == ""
-    assert phonetisch_gleich("123", "456") is False
-    assert phonetisch_gleich("", "") is False
 
 
 # --------------------------------------------------------------------------

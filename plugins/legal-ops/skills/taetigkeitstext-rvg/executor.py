@@ -24,6 +24,13 @@ erzwingt das maschinell in zwei Schritten:
 Nur Standardbibliothek. Kein Netzwerkzugriff. Liest ausschließlich lokale
 Dateien.
 
+Datums-Kanonisierung in Modus 2: `core/calc/datum` (eine Regel für alle
+Skills). Sie ist minimal toleranter als die frühere skill-lokale Variante —
+ISO-Daten mit einstelligem Monat/Tag (`2026-3-1`) und drei- oder einstellige
+Jahresangaben werden jetzt ebenfalls erkannt und geprüft, statt unbemerkt
+durchzurutschen. Ein erkanntes Datum bleibt in beiden Fällen nur dann
+`belegt`, wenn es als Executor-Wert im Report steht.
+
 Exit-Codes:
     Modus 1: 0 = Report erzeugt, 2 = Eingabefehler.
     Modus 2: 0 = sauber (keine Befunde), 1 = mindestens ein Befund,
@@ -41,14 +48,13 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-# core/calc auf den Importpfad legen (zeit-Paket liegt dort, nicht im Skill).
-# Self-relativ innerhalb des Plugins: skill -> skills -> <plugin-root>/core/calc.
-_SKILL_DIR = Path(__file__).resolve().parent
-_PLUGIN_ROOT = _SKILL_DIR.parents[1]
-_CALC_DIR = _PLUGIN_ROOT / "core" / "calc"
-if str(_CALC_DIR) not in sys.path:
-    sys.path.insert(0, str(_CALC_DIR))
+# Plugin-Wurzel: skills/<skill>/executor.py -> <plugin>/core.
+_CORE = Path(__file__).resolve().parents[2] / "core"
+sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
+                if str(p) not in sys.path]
 
+from cli import CliFehler, schreibe_report  # noqa: E402
+from datum import DE_RAW, ISO_RAW, kanon_datum as _kanon_datum  # noqa: E402
 from zeit.rechner import (  # noqa: E402
     ZeitEingabeFehler,
     ZeitEintrag,
@@ -235,25 +241,15 @@ def baue_report(daten: Any, eingabe_datei: str) -> dict[str, Any]:
 
 _MINUTEN_RE = re.compile(r"(\d+)\s*(?:Minuten|Minute|Min\.)")
 _STUNDEN_RE = re.compile(r"(\d+(?:,\d+)?)\s*(?:Stunden|Stunde|Std\.)")
-_DATUM_ISO_RE = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
-_DATUM_DE_RE = re.compile(r"(?<!\d)(\d{1,2})\.(\d{1,2})\.(\d{2,4})(?!\d)")
+# Datums-Muster und -Kanonisierung kommen aus core/calc/datum (dieselbe Regel
+# wie im Provenienz-Gate der anderen Skills).
+_DATUM_ISO_RE = re.compile(r"\b" + ISO_RAW + r"\b")
+_DATUM_DE_RE = re.compile(r"(?<!\d)" + DE_RAW + r"(?!\d)")
 # Aktenzeichen-Heuristik dieses Skills: Ziffern/Jahr (z. B. „12/2026"), die
 # Repo-Konvention für das interne `az`-Feld (siehe schema/README.md). Andere
 # Kanzlei-Formate (Gerichts-Aktenzeichen wie „12 O 345/26") erkennt dieses
 # Muster nicht — dokumentierte Grenze, siehe SKILL.md „Grenzen".
 _AZ_RE = re.compile(r"\b\d{1,5}/\d{4}\b")
-
-
-def _kanon_datum(jahr: str, monat: str, tag: str) -> str | None:
-    j = jahr
-    if len(j) == 2:
-        jj = int(j)
-        j = ("20" if jj <= 69 else "19") + j
-    try:
-        _dt.date(int(j), int(monat), int(tag))
-    except ValueError:
-        return None
-    return f"{int(j):04d}-{int(monat):02d}-{int(tag):02d}"
 
 
 def _sammle_report_werte(report: dict[str, Any]) -> tuple[set[int], set[str], set[str]]:
@@ -391,15 +387,11 @@ def pruefe_text(text: str, report: dict[str, Any], text_datei: str,
 # --------------------------------------------------------------------------
 
 def _ausgabe(report: dict[str, Any], output: str | None) -> bool:
-    text = json.dumps(report, ensure_ascii=False, indent=2)
-    if output:
-        try:
-            Path(output).write_text(text + "\n", encoding="utf-8")
-        except OSError as exc:
-            print(f"Fehler: Datei konnte nicht geschrieben werden: {exc}", file=sys.stderr)
-            return False
-    else:
-        print(text)
+    try:
+        schreibe_report(report, output)
+    except CliFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return False
     return True
 
 

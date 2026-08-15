@@ -123,9 +123,7 @@ Executor-Werte ein (Platzhalter in `{}`):
 
 Jeder Norm-Verweis im Entwurf trägt einen 3-Zustands-Marker
 (CONVENTIONS.md): § 286 BGB ⚠️ (nicht prüfbar — der Executor prüft keinen
-Verzug), § 288 BGB ⚠️ (bewusst nicht berechnet). Verifizierbar über die
-BGB-Standard-Registry des Querschnitts-Skills
-[`zitat-pruefer`](../zitat-pruefer/SKILL.md).
+Verzug), § 288 BGB ⚠️ (bewusst nicht berechnet).
 
 ## Grenzen (bewusst)
 

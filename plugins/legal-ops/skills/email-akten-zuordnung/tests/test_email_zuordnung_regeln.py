@@ -8,10 +8,10 @@ from __future__ import annotations
 
 import importlib.util
 import sys
-from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
-SKILL_DIR = REPO / "plugins" / "legal-ops" / "skills" / "email-akten-zuordnung"
+from conftest import SKILLS  # noqa: E402
+
+SKILL_DIR = SKILLS / "email-akten-zuordnung"
 
 _SPEC = importlib.util.spec_from_file_location(
     "email_akten_zuordnung_executor", SKILL_DIR / "executor.py")

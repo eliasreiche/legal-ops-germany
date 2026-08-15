@@ -11,12 +11,12 @@ from __future__ import annotations
 
 import importlib.util
 import sys
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-SKILL_DIR = REPO / "plugins" / "legal-ops" / "skills" / "interessenkollision-check"
+from conftest import SKILLS  # noqa: E402
+
+SKILL_DIR = SKILLS / "interessenkollision-check"
 
 # Modul unter eindeutigem Namen laden (nicht "executor"): mehrere Skills in
 # diesem Repo haben je ein eigenes executor.py und importieren es unter dem
@@ -281,3 +281,15 @@ def test_baue_report_sortiert_treffer_vor_moeglichen_treffern():
     stufen = [k["stufe"] for k in report["kandidaten"]]
     assert stufen[0] == executor.STUFE_TREFFER
     assert stufen[-1] == executor.STUFE_MOEGLICH
+
+
+def test_s3_greift_nicht_ohne_kodierbare_buchstaben():
+    """Guard in core/calc/matching/vergleich.py: Tokens ohne kodierbare
+    Buchstaben ergeben je einen LEEREN Kölner Code. Ohne den Guard wären zwei
+    beliebige rein numerische Namen 'phonetisch identisch' ('' == '') — ein
+    S3-Falschtreffer, der in GwG-/Kollisions-Reports als möglicher Treffer
+    landen würde."""
+    from matching import koelner_code, vergleiche_namen
+
+    assert koelner_code("123") == ""
+    assert vergleiche_namen("123 456", "789 012", 0.85) is None

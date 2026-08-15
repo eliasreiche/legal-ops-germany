@@ -28,9 +28,17 @@ from wertgebuehr_formel import (  # noqa: E402
     EinfachgebuehrErgebnis,
     WertgebuehrFehler,
     einfachgebuehr as _einfachgebuehr_formel,
+    stand_fuer_stichtag as _stand_fuer_stichtag,
 )
 
 TABELLE_PFAD = Path(__file__).resolve().parent / "gebuehrentabelle.json"
+
+_KEIN_STAND = (
+    "kein GKG-Tabellenstand für Stichtag {stichtag} "
+    "hinterlegt — dieser Rechner unterstützt Verfahren, die ab "
+    "{aelteste_ab} anhängig geworden sind (KostRÄG 2021). Für ältere "
+    "Stichtage: keine Berechnung möglich, anwaltlich/manuell nach der "
+    "damals geltenden Fassung prüfen (§ 71 Abs. 1 GKG).")
 
 
 class GKGTabellenFehler(WertgebuehrFehler):
@@ -49,21 +57,8 @@ def streitwert_hoechstgrenze(tabelle: dict[str, Any] | None = None) -> Any:
 def stand_fuer_stichtag(stichtag: _dt.date, tabelle: dict[str, Any] | None = None) -> dict[str, Any]:
     """Wählt den Tabellenstand, der am `stichtag` gilt (§ 71 Abs. 1 GKG:
     Zeitpunkt, zu dem die Rechtsstreitigkeit anhängig geworden ist)."""
-    tab = tabelle or lade_tabelle()
-    staende = sorted(tab["staende"], key=lambda s: s["gueltig_ab"])
-    for stand in staende:
-        ab = _dt.date.fromisoformat(stand["gueltig_ab"])
-        bis = (_dt.date.fromisoformat(stand["gueltig_bis"])
-               if stand.get("gueltig_bis") else None)
-        if stichtag >= ab and (bis is None or stichtag <= bis):
-            return stand
-    aelteste_ab = staende[0]["gueltig_ab"]
-    raise GKGTabellenFehler(
-        f"kein GKG-Tabellenstand für Stichtag {stichtag.isoformat()} "
-        f"hinterlegt — dieser Rechner unterstützt Verfahren, die ab "
-        f"{aelteste_ab} anhängig geworden sind (KostRÄG 2021). Für ältere "
-        f"Stichtage: keine Berechnung möglich, anwaltlich/manuell nach der "
-        f"damals geltenden Fassung prüfen (§ 71 Abs. 1 GKG).")
+    return _stand_fuer_stichtag(stichtag, tabelle or lade_tabelle(),
+                                fehler=GKGTabellenFehler, fehlertext=_KEIN_STAND)
 
 
 def einfachgebuehr(streitwert: Any, stichtag: _dt.date,

@@ -51,10 +51,6 @@ QUELLEN: dict[str, dict[str, str]] = {
 }
 
 
-def _heute_iso() -> str:
-    return _dt.date.today().isoformat()
-
-
 def _lade(url: str, ziel: Path) -> int:
     """Lädt `url` nach `ziel`; gibt die Bytegröße zurück. Nur hier: Netzwerk."""
     req = Request(url, headers={"User-Agent": "legal-ops-germany/sanktionslisten-abruf"})
@@ -100,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
     ziel_dir.mkdir(parents=True, exist_ok=True)
 
     zu_laden = [args.nur] if args.nur else ["eu", "un"]
-    heute = _heute_iso()
+    heute = _dt.date.today().isoformat()
     neue_meta: dict[str, dict[str, str]] = {}
     for schluessel in zu_laden:
         quelle = QUELLEN[schluessel]

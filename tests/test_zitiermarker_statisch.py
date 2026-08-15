@@ -1,59 +1,44 @@
-"""CI-Test (Maintainer-Entscheidung 2026-07-14): Marker-Konsistenz für
-statische Norm-Belehrungen in Executor-Outputs.
+"""CI-Test: Marker-Konsistenz für statische Norm-Belehrungen in Executor-Outputs.
 
-Hintergrund: Zwei D12-Reviews (Kalender-Export-PR, Kontext-Layer-PR) haben
-denselben Minor notiert — statische Norm-Belehrungen in Executor-Outputs
-(`core/calc/fristen/kalender_executor.py`, `core/calc/retention/executor.py`)
-tragen ein hartkodiertes ⚠️-Präfix statt eines echten 3-Zustands-
-Zitiermarkers nach CONVENTIONS.md ("Zitierdisziplin"). Die Normzitate selbst
-sind korrekt; ⚠️ ("nicht prüfbar") ist aber semantisch falsch, sobald eine
-Quellen-Registry die Norm tatsächlich kennt — und ✅ ("verifiziert") wäre nur
-mit maschineller Absicherung ehrlich.
+Hintergrund: Statische Norm-Belehrungen in Executor-Outputs
+(`core/calc/retention/executor.py`, `core/calc/fristen/kalender_executor.py`,
+`core/calc/fristen/executor.py`) tragen einen 3-Zustands-Zitiermarker nach
+CONVENTIONS.md ("Zitierdisziplin"). ⚠️ ("nicht prüfbar") ist semantisch falsch,
+sobald eine Quellen-Registry die zitierte Norm führt; ✅ ("verifiziert") ist
+umgekehrt nur ehrlich, wenn die Norm dort auch wirklich steht.
 
-Dieser Test schließt die Lücke: er liest die je Modul exportierte
-`STATISCHE_NORM_BELEHRUNGEN`-Konstante (kein fragiles Quelltext-Grep), jagt
-jeden Belehrungstext durch den echten `zitat-pruefer`-Executor gegen eine
-dedizierte Test-Registry (`tests/fixtures/statische_normen_registry.json`)
-und erzwingt Konsistenz in BEIDE Richtungen zwischen dem im Quelltext
-deklarierten Marker und dem vom Executor bestimmten Zustand:
+**Was dieser Test prüft — und was nicht.** Er prüft ausschließlich
+*Konsistenz* zwischen dem im Quelltext deklarierten Marker und der
+handgepflegten Registry `tests/fixtures/statische_normen_registry.json`:
 
-  (a) ein nicht verifizierbares Zitat darf kein ✅ tragen,
-  (b) ein maschinell verifiziertes Zitat darf kein ⚠️ mehr tragen.
+  (a) jede Belehrung mit ✅ zitiert nur Normen, die die Registry führt,
+  (b) jede Belehrung, deren Zitate die Registry vollständig führt, trägt
+      kein ⚠️ mehr,
+  (c) jede Belehrung mit einem nicht geführten Zitat trägt ⚠️.
 
-Mehrere Normzitate innerhalb einer einzigen Belehrung (z. B. "§ 224 Abs. 2
-ZPO" und "§§ 233 ff. ZPO" im selben Fließtext) werden — wie beim
-zitat-pruefer selbst für i.V.m.-Ketten — nach Worst-Case aggregiert: der
-"schlechteste" Teilzustand bestimmt den für die gesamte Belehrung erwarteten
-Marker.
+Er prüft **nicht** inhaltlich, ob eine Fundstelle stimmt — das ist die
+Maintainer-Abnahme, dokumentiert in der Registry selbst (`geprueft_am`,
+`geprueft_von`, `quelle` je Eintrag). Der frühere Weg über den
+`zitat-pruefer`-CLI ist entfallen (Skill 2026-07-16 zurückgestellt); diese
+Fassung kommt ohne ihn aus und liest nur die Registry.
 
-Stand 2026-07-14 (siehe Report des Inventar-Agenten): Die Test-Registry
-deckt § 50 Abs. 1 BRAO, § 224 ZPO, § 233 ZPO, § 694 ZPO, § 520 ZPO und
-§ 551 ZPO ab. Die Marker in allen drei Modulen (inkl. core/calc/fristen/
-executor.py — Notfrist- und Verlängerbar-Hinweis in den `hinweise` der
-Fristberechnung) sind maschinell gedeckt: dieser Test erzwingt Konsistenz
-in beide Richtungen (verifizierbares Zitat mit ⚠️ = rot, nicht
-verifizierbares Zitat mit ✅ = rot). Historie: eingeführt zusammen mit der
-Marker-Umstellung ⚠️→✅ (2026-07-14); core/calc/fristen/executor.py
-nachträglich ergänzt (2026-07-14, Notfrist-/Verlängerbar-Belehrungen).
+Die Belehrungen kommen aus der je Modul exportierten Konstante
+`STATISCHE_NORM_BELEHRUNGEN` (kein fragiles Quelltext-Grep). Mehrere
+Normzitate in einer Belehrung (z. B. "§ 224 Abs. 2 ZPO" und "§§ 233 ff. ZPO"
+im selben Fließtext) werden nach Worst Case aggregiert: ein einziges nicht
+geführtes Zitat macht die ganze Belehrung zu ⚠️.
 """
 from __future__ import annotations
 
 import importlib.util
 import json
-import subprocess
-import sys
+import re
 from pathlib import Path
 from types import ModuleType
 
 REPO = Path(__file__).resolve().parents[1]
 CALC_DIR = REPO / "plugins" / "legal-ops" / "core" / "calc"
-ZITAT_PRUEFER_EXECUTOR = (
-    REPO / "plugins" / "legal-ops" / "skills" / "zitat-pruefer" / "executor.py")
 REGISTRY = Path(__file__).resolve().parent / "fixtures" / "statische_normen_registry.json"
-
-# Zustands-/Marker-Rangfolge wie im zitat-pruefer-Executor selbst (siehe dort
-# _RANG): der "schlechteste" Marker gewinnt bei mehreren Zitaten in einem Text.
-_MARKER_RANG = {"❌": 2, "⚠️": 1, "✅": 0}
 
 # Module, deren STATISCHE_NORM_BELEHRUNGEN-Konstante dieser Test prüft.
 _MODULE = [
@@ -62,12 +47,22 @@ _MODULE = [
     ("core/calc/fristen/executor.py", CALC_DIR / "fristen" / "executor.py"),
 ]
 
+# Normzitat im Fließtext: "§ 694 ZPO", "§ 224 Abs. 1 Satz 2 ZPO",
+# "§§ 233 ff. ZPO", "§ 50 Abs. 1 BRAO". Bewusst eng — ein Zitat in einer
+# hier nicht erfassten Schreibweise fällt nicht still durch, sondern lässt die
+# Belehrung als "kein Normzitat erkannt" auflaufen (siehe Test unten).
+_NORM_RE = re.compile(
+    r"§§?\s*(\d+[a-z]?)"
+    r"(?:\s+Abs\.\s*\d+)?"
+    r"(?:\s+Satz\s*\d+)?"
+    r"(?:\s+ff\.)?"
+    r"\s+([A-ZÄÖÜ][A-Za-zÄÖÜ]{1,9})")
+
 
 def _lade_modul_isoliert(pfad: Path, name: str) -> ModuleType:
-    """Lädt ein Executor-Modul über einen eindeutigen Namen (nicht als
-    'executor'), damit core/calc/retention/executor.py und
-    core/calc/fristen/kalender_executor.py nicht mit dem gleichnamigen
-    skills/zitat-pruefer/executor.py in sys.modules kollidieren."""
+    """Lädt ein Executor-Modul unter eindeutigem Namen (nicht als 'executor'),
+    damit die gleichnamigen executor.py mehrerer Skills sich in sys.modules
+    nicht gegenseitig überschreiben."""
     spec = importlib.util.spec_from_file_location(name, pfad)
     assert spec and spec.loader, f"Modul nicht ladbar: {pfad}"
     modul = importlib.util.module_from_spec(spec)
@@ -75,48 +70,32 @@ def _lade_modul_isoliert(pfad: Path, name: str) -> ModuleType:
     return modul
 
 
-def _pruefe_text_gegen_zitat_pruefer(tmp_path: Path, text: str) -> dict:
-    """Führt `text` durch den echten zitat-pruefer-CLI-Executor gegen die
-    dedizierte Test-Registry und gibt den geparsten JSON-Report zurück."""
-    eingabe = tmp_path / "belehrung.md"
-    eingabe.write_text(text, encoding="utf-8")
-    ausgabe = tmp_path / "report.json"
-    ergebnis = subprocess.run(
-        [sys.executable, str(ZITAT_PRUEFER_EXECUTOR),
-         "--input", str(eingabe), "--registry", str(REGISTRY),
-         "--output", str(ausgabe)],
-        capture_output=True, text=True)
-    assert ergebnis.returncode == 0, (
-        f"zitat-pruefer-Executor fehlgeschlagen (exit {ergebnis.returncode}): "
-        f"{ergebnis.stderr}")
-    return json.loads(ausgabe.read_text(encoding="utf-8"))
+def _zitate(text: str) -> list[tuple[str, str]]:
+    """Alle Normzitate eines Belehrungstexts als (kuerzel, paragraph)."""
+    return [(kuerzel, paragraph) for paragraph, kuerzel in _NORM_RE.findall(text)]
 
 
-def _worst_case_marker(report: dict) -> str | None:
-    """Aggregiert alle Norm-Zitate im Report zum 'schlechtesten' Marker.
-    None, wenn der Text gar kein Normzitat enthält (Konfigurationsfehler in
-    der Test-Konstante, kein Marker-Konsistenz-Fall)."""
-    normzitate = [z for z in report["zitate"] if z["typ"] == "norm"]
-    if not normzitate:
-        return None
-    return max((z["marker"] for z in normzitate), key=lambda m: _MARKER_RANG[m])
+def _gefuehrte_normen() -> set[tuple[str, str]]:
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    return {(n["kuerzel"], str(n["paragraph"])) for n in registry["normen"]}
 
 
 def test_registry_fixture_vorhanden():
     assert REGISTRY.is_file(), (
-        f"Test-Registry fehlt: {REGISTRY} — ohne sie bleibt jedes Zitat "
-        "nicht_pruefbar und der Test ist witzlos")
+        f"Test-Registry fehlt: {REGISTRY} — ohne sie ist der Test witzlos")
+    assert _gefuehrte_normen(), "Test-Registry führt keine einzige Norm"
 
 
-def test_statische_norm_belehrungen_tragen_konsistenten_marker(tmp_path):
-    """Kernprüfung: deklarierter Marker (Quelltext-Konstante) muss mit dem
-    von zitat-pruefer bestimmten Marker übereinstimmen — in beide Richtungen
-    (a) kein ✅ ohne maschinelle Bestätigung, (b) kein ⚠️ mehr, sobald die
-    Registry das Zitat bestätigt."""
+def test_statische_norm_belehrungen_tragen_konsistenten_marker():
+    """Kernprüfung: deklarierter Marker == Marker, den die Registry-Deckung
+    hergibt — in beide Richtungen (kein ✅ ohne Registry-Eintrag, kein ⚠️
+    trotz vollständiger Deckung)."""
+    gefuehrt = _gefuehrte_normen()
     abweichungen: list[str] = []
 
     for modul_label, modul_pfad in _MODULE:
-        modul = _lade_modul_isoliert(modul_pfad, f"_test_{modul_pfad.stem}_{modul_label!r}")
+        modul = _lade_modul_isoliert(modul_pfad, f"_zitiermarker_{modul_pfad.stem}_"
+                                                 f"{modul_pfad.parent.name}")
         belehrungen = getattr(modul, "STATISCHE_NORM_BELEHRUNGEN", None)
         assert belehrungen, (
             f"{modul_label}: STATISCHE_NORM_BELEHRUNGEN fehlt oder ist leer — "
@@ -125,22 +104,36 @@ def test_statische_norm_belehrungen_tragen_konsistenten_marker(tmp_path):
         for eintrag in belehrungen:
             deklariert = eintrag["marker"]
             text = eintrag["text"]
-            report = _pruefe_text_gegen_zitat_pruefer(tmp_path, text)
-            erwartet = _worst_case_marker(report)
+            zitate = _zitate(text)
 
-            if erwartet is None:
+            if not zitate:
                 abweichungen.append(
                     f"{modul_label}: kein Normzitat im Belehrungstext erkannt "
                     f"(Text: {text!r})")
                 continue
 
+            fehlend = [z for z in zitate if z not in gefuehrt]
+            erwartet = "⚠️" if fehlend else "✅"
             if deklariert != erwartet:
+                grund = (f"nicht in der Registry: "
+                         f"{', '.join(f'§ {p} {k}' for k, p in fehlend)}"
+                         if fehlend else "alle Zitate sind in der Registry geführt")
                 abweichungen.append(
-                    f"{modul_label}: deklarierter Marker {deklariert!r} != "
-                    f"von zitat-pruefer bestimmter Marker {erwartet!r} "
-                    f"— Text: {text!r}")
+                    f"{modul_label}: Marker {deklariert!r} deklariert, "
+                    f"{erwartet!r} erwartet ({grund}) — Text: {text!r}")
 
     assert not abweichungen, (
         "Marker-Inkonsistenz zwischen statischer Norm-Belehrung und "
-        "zitat-pruefer-Executor (Zitierdisziplin, CONVENTIONS.md):\n"
+        "Quellen-Registry (Zitierdisziplin, CONVENTIONS.md):\n"
         + "\n".join(f"  - {a}" for a in abweichungen))
+
+
+def test_erkennung_und_bewertung_greifen():
+    """Selbstkontrolle: der Zitat-Extraktor erkennt die im Repo vorkommenden
+    Schreibweisen, und eine nicht geführte Norm kippt die Bewertung auf ⚠️."""
+    assert _zitate("✅ Notfrist (§ 224 Abs. 1 Satz 2 ZPO), sonst §§ 233 ff. ZPO.") == [
+        ("ZPO", "224"), ("ZPO", "233")]
+    assert _zitate("✅ § 50 Abs. 1 BRAO — Handakten") == [("BRAO", "50")]
+    gefuehrt = _gefuehrte_normen()
+    assert ("ZPO", "999") not in gefuehrt
+    assert [z for z in _zitate("§ 999 ZPO") if z not in gefuehrt] == [("ZPO", "999")]

@@ -14,14 +14,10 @@ web-verifizierter Satz × 1,0-Gebühr.
 from __future__ import annotations
 
 import datetime as dt
-import sys
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from gkg.rechner import GKGEingabeFehler, berechne  # noqa: E402
 

@@ -11,8 +11,9 @@ from __future__ import annotations
 import importlib.util
 import json
 import subprocess
-import sys
 from pathlib import Path
+
+from conftest import lauf, schreibe  # noqa: E402
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -62,14 +63,10 @@ def _basis_aktenkopf() -> dict:
 
 def _lauf(aktenkopf: dict, quelle_text: str, tmp_path: Path,
           output: Path | None = None) -> subprocess.CompletedProcess:
-    ak = tmp_path / "aktenkopf.json"
-    ak.write_text(json.dumps(aktenkopf), encoding="utf-8")
-    q = tmp_path / "quelle.md"
-    q.write_text(quelle_text, encoding="utf-8")
-    argv = [sys.executable, str(EXECUTOR), "--aktenkopf", str(ak), "--quelle", str(q)]
-    if output is not None:
-        argv += ["--output", str(output)]
-    return subprocess.run(argv, capture_output=True, text=True)
+    ak = schreibe(tmp_path / "aktenkopf.json", aktenkopf)
+    q = schreibe(tmp_path / "quelle.md", quelle_text)
+    extra = ["--output", output] if output is not None else []
+    return lauf(EXECUTOR, "--aktenkopf", ak, "--quelle", q, *extra)
 
 
 # --------------------------------------------------------------------------
@@ -77,19 +74,21 @@ def _lauf(aktenkopf: dict, quelle_text: str, tmp_path: Path,
 # --------------------------------------------------------------------------
 
 def test_datum_kanon_iso_und_deutsch_sind_gleich():
-    assert executor._datum_kanon_wert("2026-03-01") == "2026-03-01"
-    assert executor._datum_kanon_wert("01.03.2026") == "2026-03-01"
-    assert executor._datum_kanon_wert("1.3.2026") == "2026-03-01"
+    assert executor._kanon_ziel("2026-03-01", "datum") == "2026-03-01"
+    assert executor._kanon_ziel("01.03.2026", "datum") == "2026-03-01"
+    assert executor._kanon_ziel("1.3.2026", "datum") == "2026-03-01"
 
 
 def test_datum_kanon_lehnt_unfug_ab():
-    assert executor._datum_kanon_wert("2026-13-40") is None
-    assert executor._datum_kanon_wert("kein datum") is None
+    assert executor._kanon_ziel("2026-13-40", "datum") is None
+    assert executor._kanon_ziel("kein datum", "datum") is None
 
 
 def test_datum_in_zeile_findet_beide_formate():
-    assert "2026-03-01" in executor._datum_kanons_in_zeile("... am 01.03.2026 ...")
-    assert "2026-03-01" in executor._datum_kanons_in_zeile("... am 2026-03-01 ...")
+    assert executor.finde_beleg("2026-03-01", "datum",
+                                _quelle("... am 01.03.2026 ...")) is not None
+    assert executor.finde_beleg("2026-03-01", "datum",
+                                _quelle("... am 2026-03-01 ...")) is not None
 
 
 def test_geld_kanon_varianten_sind_gleich():
@@ -106,7 +105,7 @@ def test_iban_email_telefon_normalisierung():
 
 
 def test_aktenzeichen_whitespace_wird_kollabiert():
-    assert executor._ws_collapse("12   O\t345/26") == "12 O 345/26"
+    assert executor._kanon_ziel("12   O\t345/26", "aktenzeichen") == "12 O 345/26"
 
 
 # --------------------------------------------------------------------------
@@ -282,9 +281,7 @@ def test_cli_schema_fehler_exit1(tmp_path):
 def test_cli_fehlende_aktenkopf_datei_exit2(tmp_path):
     q = tmp_path / "quelle.md"
     q.write_text("x\n", encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--aktenkopf", str(tmp_path / "fehlt.json"),
-         "--quelle", str(q)], capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--aktenkopf", tmp_path / "fehlt.json", "--quelle", q)
     assert ergebnis.returncode == 2
     assert "nicht gefunden" in ergebnis.stderr
     assert "Traceback" not in ergebnis.stderr
@@ -293,9 +290,7 @@ def test_cli_fehlende_aktenkopf_datei_exit2(tmp_path):
 def test_cli_fehlende_quelle_exit2(tmp_path):
     ak = tmp_path / "aktenkopf.json"
     ak.write_text(json.dumps(_basis_aktenkopf()), encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--aktenkopf", str(ak),
-         "--quelle", str(tmp_path / "fehlt.md")], capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--aktenkopf", ak, "--quelle", tmp_path / "fehlt.md")
     assert ergebnis.returncode == 2
     assert "Quelldatei nicht gefunden" in ergebnis.stderr
 
@@ -305,9 +300,7 @@ def test_cli_kaputtes_json_exit2(tmp_path):
     ak.write_text("{kein valides json", encoding="utf-8")
     q = tmp_path / "quelle.md"
     q.write_text("x\n", encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--aktenkopf", str(ak), "--quelle", str(q)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--aktenkopf", ak, "--quelle", q)
     assert ergebnis.returncode == 2
     assert "JSON" in ergebnis.stderr
     assert "Traceback" not in ergebnis.stderr
@@ -323,9 +316,7 @@ def test_cli_mehrere_quellen_werden_durchsucht(tmp_path):
     q1.write_text("Eingang am 14.04.2026.\n", encoding="utf-8")
     q2 = tmp_path / "anlage.md"
     q2.write_text("Der Betrag lautet 1234,56 EUR.\n", encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--aktenkopf", str(ak_pfad),
-         "--quelle", str(q1), "--quelle", str(q2)], capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--aktenkopf", ak_pfad, "--quelle", q1, "--quelle", q2)
     assert ergebnis.returncode == 0, ergebnis.stderr
     report = json.loads(ergebnis.stdout)
     beleg = next(p for p in report["provenienz"] if p["pfad"] == "betraege[0].betrag")

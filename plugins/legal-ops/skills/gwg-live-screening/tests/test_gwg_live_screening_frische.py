@@ -14,7 +14,6 @@ from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
 SKILL_DIR = Path(__file__).resolve().parents[1]
 
 # Executor als Modul laden (liegt nicht auf dem Importpfad).

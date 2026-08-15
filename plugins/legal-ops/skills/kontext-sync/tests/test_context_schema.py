@@ -6,17 +6,12 @@ ISO-Datumsformate, status-Enum, Pflicht-Abschnitte, Verweis-Integrität
 """
 from __future__ import annotations
 
-import sys
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core"))
+from conftest import BEISPIEL_KONTEXT  # noqa: E402
 
 from context import schema  # noqa: E402
-
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
 
 
 # --------------------------------------------------------------------------

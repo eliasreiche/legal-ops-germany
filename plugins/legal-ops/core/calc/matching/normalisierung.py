@@ -11,20 +11,18 @@ Normalisierungs-Pipeline (in dieser Reihenfolge, siehe `normalisiere()`):
   2. Umlaut-/ß-Transliteration: ä→ae, ö→oe, ü→ue, ß→ss (auch Großschreibung,
      die durch Schritt 1 bereits auf ä/ö/ü/ß reduziert wurde).
   3. Titel-Stripping (Personen): bekannte akademische Titel/Grade werden als
-     eigene Tokens entfernt, siehe `TITEL`.
+     eigene Tokens entfernt, siehe `_TITEL_PATTERNS`.
   4. Rechtsform-Stripping (juristische Personen): bekannte Rechtsform-Zusätze
-     werden entfernt, siehe `RECHTSFORMEN`. Mehrwort-Formen ("GmbH & Co. KG")
-     werden vor ihren Einzel-Bestandteilen geprüft, damit sie als Ganzes
-     erkannt werden, statt in Reste zu zerfallen.
+     werden entfernt, siehe `_RECHTSFORM_PATTERNS`. Mehrwort-Formen
+     ("GmbH & Co. KG") werden vor ihren Einzel-Bestandteilen geprüft, damit
+     sie als Ganzes erkannt werden, statt in Reste zu zerfallen.
   5. Verbleibende Interpunktion wird durch Leerzeichen ersetzt, mehrfache
      Leerzeichen werden zusammengefasst, führende/folgende Leerzeichen
      entfernt.
 
-Die Token-Sortierung (`sortierte_tokens`) ist bewusst eine **separate**
-Funktion, keine Stufe der Pipeline: Sie dient ausschließlich dem
-Wortreihenfolge-Vergleich ("Auto Müller GmbH" ↔ "Müller Auto GmbH") und wird
-vom Matching-Executor gezielt für diesen einen Vergleich aufgerufen, nicht
-für die Basis-Normalisierung.
+Der Wortreihenfolge-Vergleich ("Auto Müller GmbH" ↔ "Müller Auto GmbH")
+läuft nicht über eine Sortier-Stufe dieser Pipeline, sondern über den
+Token-**Mengen**-Vergleich in `matching/vergleich.py` (Stufe S2).
 
 Bewusste Grenzen (siehe auch schema/README.md des Skills):
 
@@ -52,24 +50,6 @@ import re
 # zerfallen und nur "GmbH" träfe, "KG" bliebe als eigenes, sinnloses Token
 # stehen). Alle Muster arbeiten auf bereits kleingeschriebenem,
 # transliteriertem Text (ä→ae usw., siehe Modul-Docstring).
-
-RECHTSFORMEN: tuple[str, ...] = (
-    "GmbH & Co. KG",
-    "PartG mbB",
-    "UG (haftungsbeschränkt)",
-    "GmbH",
-    "mbH",
-    "AG",
-    "KG",
-    "OHG",
-    "GbR",
-    "UG",
-    "e.V.",
-    "e.K.",
-    "PartG",
-    "SE",
-    "Stiftung",
-)
 
 _RECHTSFORM_PATTERNS: tuple[str, ...] = (
     r"\bgmbh\s*(?:&|und)\s*co\.?\s*kg\b",
@@ -100,24 +80,6 @@ _RECHTSFORM_RE = re.compile("|".join(_RECHTSFORM_PATTERNS))
 # Kuratierte, nicht erschöpfende Auswahl akademischer Titel/Grade, wie sie in
 # Mandanten-/Gegnerlisten deutscher Kanzleien typischerweise vorkommen.
 # Mehrwort-/zusammengesetzte Formen zuerst (gleiches Prinzip wie oben).
-
-TITEL: tuple[str, ...] = (
-    "Dr. Dr. h.c.",
-    "Dr. h.c.",
-    "Dr. med.",
-    "Dr. jur.",
-    "Dr. rer. nat.",
-    "Prof. Dr.",
-    "Dipl.-Ing.",
-    "Dipl.-Kfm.",
-    "Dipl.-Volksw.",
-    "Dipl.-Oec.",
-    "Dr.",
-    "Prof.",
-    "Mag.",
-    "Ing.",
-    "LL.M.",
-)
 
 _TITEL_PATTERNS: tuple[str, ...] = (
     r"\bdr\.?\s*dr\.?\s*h\.?\s*c\.?\b",
@@ -170,14 +132,3 @@ def tokenisiere(text: str) -> list[str]:
     """Normalisiert und zerlegt in Tokens (whitespace-getrennt)."""
     normalisiert = normalisiere(text)
     return normalisiert.split() if normalisiert else []
-
-
-def sortierte_tokens(text: str) -> tuple[str, ...]:
-    """Normalisierte Tokens in alphabetisch sortierter Reihenfolge.
-
-    Separate Funktion (siehe Modul-Docstring) für den Wortreihenfolge-
-    Vergleich: "Auto Müller GmbH" und "Müller Auto GmbH" ergeben nach
-    Normalisierung die Tokens {"auto", "mueller"} bzw. {"mueller", "auto"} —
-    erst die Sortierung macht sie als Tupel direkt vergleichbar.
-    """
-    return tuple(sorted(tokenisiere(text)))

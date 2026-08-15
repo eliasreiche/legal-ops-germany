@@ -10,14 +10,7 @@ selben pytest-Lauf nicht mit gleichnamigen Tests anderer Skills kollidiert.
 """
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
 import pytest
-
-_CALC_DIR = Path(__file__).resolve().parents[3] / "core" / "calc"
-if str(_CALC_DIR) not in sys.path:
-    sys.path.insert(0, str(_CALC_DIR))
 
 from zeit.rechner import (  # noqa: E402
     ZeitEingabeFehler,

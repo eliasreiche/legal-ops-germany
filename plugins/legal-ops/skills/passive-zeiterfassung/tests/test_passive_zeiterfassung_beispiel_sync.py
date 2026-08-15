@@ -14,44 +14,33 @@
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import (BEISPIEL_KONTEXT, SKILLS, lauf,  # noqa: E402
+                      neutralisiere, report, schreibe)
+
 SKILL = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL / "executor.py"
 SCHEMA = SKILL / "schema"
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
-TT_EXECUTOR = REPO / "plugins" / "legal-ops" / "skills" / "taetigkeitstext-rvg" / "executor.py"
+TT_EXECUTOR = SKILLS / "taetigkeitstext-rvg" / "executor.py"
+
+# Pfad-Felder dieses Reports, die vom Aufruf abhängen (siehe neutralisiere).
+PFADFELDER = ("quelle_termine", "quelle_mails", "kontext_verzeichnis")
 
 
 def _erzeuge_report() -> dict:
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--termine", str(SCHEMA / "beispiel-termine.json"),
-         "--mails", str(SCHEMA / "beispiel-mails.json"),
-         "--config", str(SCHEMA / "beispiel-config.json"),
-         "--kontext", str(BEISPIEL_KONTEXT)],
-        capture_output=True, text=True)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    return json.loads(ergebnis.stdout)
-
-
-def _neutralisiert(report: dict) -> dict:
-    """Pfad-Präfixe in meta hängen vom Aufruf ab — für den Inhaltsvergleich
-    auf den Dateinamen reduzieren, alles andere muss exakt stimmen."""
-    report = json.loads(json.dumps(report))
-    for feld in ("quelle_termine", "quelle_mails", "kontext_verzeichnis"):
-        if report["meta"].get(feld):
-            report["meta"][feld] = Path(report["meta"][feld]).name
-    return report
+    return report(EXECUTOR,
+                  "--termine", SCHEMA / "beispiel-termine.json",
+                  "--mails", SCHEMA / "beispiel-mails.json",
+                  "--config", SCHEMA / "beispiel-config.json",
+                  "--kontext", BEISPIEL_KONTEXT)
 
 
 def test_beispiel_report_ist_aktuell():
-    frisch = _neutralisiert(_erzeuge_report())
-    gespeichert = _neutralisiert(
-        json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8")))
+    frisch = neutralisiere(_erzeuge_report(), PFADFELDER)
+    gespeichert = neutralisiere(
+        json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8")),
+        PFADFELDER)
     assert frisch == gespeichert, (
         "schema/beispiel-report.json ist veraltet — neu erzeugen mit --output "
         f"{SCHEMA / 'beispiel-report.json'}")
@@ -83,12 +72,9 @@ def test_round_trip_durch_taetigkeitstext_rvg(tmp_path):
     report = _erzeuge_report()
     leistungen = {"eintraege": [v["leistung"] for v in report["vorschlaege"]],
                   "config": {"takt_minuten": None}}
-    leistungen_pfad = tmp_path / "leistungen.json"
-    leistungen_pfad.write_text(json.dumps(leistungen), encoding="utf-8")
+    leistungen_pfad = schreibe(tmp_path / "leistungen.json", leistungen)
 
-    ergebnis = subprocess.run(
-        [sys.executable, str(TT_EXECUTOR), "--input", str(leistungen_pfad)],
-        capture_output=True, text=True)
+    ergebnis = lauf(TT_EXECUTOR, "--input", leistungen_pfad)
     # Exit 0: das Format des Zulieferers ist für den Abnehmer gültig.
     assert ergebnis.returncode == 0, ergebnis.stderr
     tt_report = json.loads(ergebnis.stdout)
@@ -105,10 +91,6 @@ def test_round_trip_durch_taetigkeitstext_rvg(tmp_path):
 def test_round_trip_mit_beispiel_leistungen_datei():
     """Die eingecheckte beispiel-leistungen.json läuft direkt durch den
     Abnehmer-Executor (Golden-File-Kompatibilität)."""
-    ergebnis = subprocess.run(
-        [sys.executable, str(TT_EXECUTOR), "--input", str(SCHEMA / "beispiel-leistungen.json")],
-        capture_output=True, text=True)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    tt_report = json.loads(ergebnis.stdout)
+    tt_report = report(TT_EXECUTOR, "--input", SCHEMA / "beispiel-leistungen.json")
     assert tt_report["zusammenfassung"]["anzahl_ohne_az"] == 0
     assert tt_report["summen"]["je_az"] == {"2026-001": 117, "2026-002": 45}

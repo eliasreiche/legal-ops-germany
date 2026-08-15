@@ -29,9 +29,17 @@ from wertgebuehr_formel import (  # noqa: E402
     EinfachgebuehrErgebnis,
     WertgebuehrFehler,
     einfachgebuehr as _einfachgebuehr_formel,
+    stand_fuer_stichtag as _stand_fuer_stichtag,
 )
 
 TABELLE_PFAD = Path(__file__).resolve().parent / "gebuehrentabelle.json"
+
+_KEIN_STAND = (
+    "kein RVG-Tabellenstand für Stichtag {stichtag} "
+    "hinterlegt — dieser Rechner unterstützt Aufträge ab {aelteste_ab} "
+    "(KostRÄG 2021). Für ältere Stichtage: keine Berechnung möglich, "
+    "anwaltlich/manuell nach der damals geltenden Fassung prüfen "
+    "(§ 60 Abs. 1 RVG).")
 
 
 class RVGTabellenFehler(WertgebuehrFehler):
@@ -50,21 +58,8 @@ def stand_fuer_stichtag(stichtag: _dt.date, tabelle: dict[str, Any] | None = Non
     einer Lücke zwischen den unterstützten Ständen liegt (kein Rechnen mit
     unbekannten Fassungen).
     """
-    tab = tabelle or lade_tabelle()
-    staende = sorted(tab["staende"], key=lambda s: s["gueltig_ab"])
-    for stand in staende:
-        ab = _dt.date.fromisoformat(stand["gueltig_ab"])
-        bis = (_dt.date.fromisoformat(stand["gueltig_bis"])
-               if stand.get("gueltig_bis") else None)
-        if stichtag >= ab and (bis is None or stichtag <= bis):
-            return stand
-    aelteste_ab = staende[0]["gueltig_ab"]
-    raise RVGTabellenFehler(
-        f"kein RVG-Tabellenstand für Stichtag {stichtag.isoformat()} "
-        f"hinterlegt — dieser Rechner unterstützt Aufträge ab {aelteste_ab} "
-        f"(KostRÄG 2021). Für ältere Stichtage: keine Berechnung möglich, "
-        f"anwaltlich/manuell nach der damals geltenden Fassung prüfen "
-        f"(§ 60 Abs. 1 RVG).")
+    return _stand_fuer_stichtag(stichtag, tabelle or lade_tabelle(),
+                                fehler=RVGTabellenFehler, fehlertext=_KEIN_STAND)
 
 
 def einfachgebuehr(gegenstandswert: Any, stichtag: _dt.date,

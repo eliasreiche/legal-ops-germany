@@ -52,6 +52,7 @@ from feiertage import (  # noqa: E402
     ist_feiertag,
     jahres_hinweise,
 )
+from rechenschritt import RechenSchritt  # noqa: E402
 
 EINHEITEN = ("tage", "wochen", "monate", "jahre")
 FRISTTYP_EREIGNIS = "ereignis"   # § 187 Abs. 1 BGB
@@ -88,19 +89,6 @@ class Verschiebung:
         d["von"] = self.von.isoformat()
         d["auf"] = self.auf.isoformat()
         return d
-
-
-@dataclass
-class RechenSchritt:
-    """Ein Glied der nachvollziehbaren Rechenkette (P3: quelle=executor)."""
-    schritt: int
-    norm: str
-    beschreibung: str
-    ergebnis: str | None          # ISO-Datum des Zwischenergebnisses
-    quelle: str = "executor"
-
-    def as_dict(self) -> dict[str, Any]:
-        return asdict(self)
 
 
 @dataclass
@@ -420,12 +408,3 @@ def _berechne_kern(ereignis_datum: _dt.date, dauer: int, einheit: str,
         rechenkette=kette,
         warnungen=warnungen,
     )
-
-
-def naechster_werktag(datum: _dt.date, bundesland: str) -> _dt.date:
-    """Nächster Werktag (Mo–Fr, kein landesweiter gesetzlicher Feiertag) am
-    oder nach `datum` — Hilfsfunktion, teilgebietliche Feiertage zählen hier
-    bewusst nicht (siehe berechne_frist für die ehrliche Doppel-Ausweisung)."""
-    ende, _ = _verschiebe_193(datum, bundesland.strip().upper(),
-                              mit_teilgebietlichen=False)
-    return ende

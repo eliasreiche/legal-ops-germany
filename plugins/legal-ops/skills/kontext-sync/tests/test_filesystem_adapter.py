@@ -9,16 +9,15 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
-ADAPTER = REPO / "plugins" / "legal-ops" / "core" / "adapters" / "filesystem" / "adapter.py"
+from conftest import ADAPTERS, lauf  # noqa: E402
+
+ADAPTER = ADAPTERS / "filesystem" / "adapter.py"
 
 
 def _lauf(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(ADAPTER), *args],
-                          capture_output=True, text=True)
+    return lauf(ADAPTER, *args)
 
 
 def _setup(tmp_path: Path) -> tuple[Path, Path, Path, Path]:

@@ -5,14 +5,10 @@ Konto-Format, Belegfeld-Zeichensatz (P3/P4).
 from __future__ import annotations
 
 import datetime as dt
-import sys
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from extf.formate import (  # noqa: E402
     ExtfFormatFehler,
@@ -118,11 +114,6 @@ def test_quote_text_verdoppelt_interne_anfuehrungszeichen():
 
 def test_quote_text_none_wird_leer():
     assert quote_text(None, "feld") == ""
-
-
-def test_quote_text_zu_lang_abgelehnt():
-    with pytest.raises(ExtfFormatFehler, match="zu lang"):
-        quote_text("x" * 31, "feld", laenge=30)
 
 
 # --------------------------------------------------------------------------

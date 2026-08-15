@@ -55,32 +55,28 @@ Exit-Codes: 0 = Report erzeugt, 2 = Eingabefehler (kein Traceback).
 from __future__ import annotations
 
 import argparse
-import csv
-import io
+import functools
 import json
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-# Self-relativ innerhalb des Plugins: skill -> skills -> <plugin-root>/core/calc.
-_SKILL_DIR = Path(__file__).resolve().parent
-_CALC_DIR = _SKILL_DIR.parents[1] / "core" / "calc"
-if str(_CALC_DIR) not in sys.path:
-    sys.path.insert(0, str(_CALC_DIR))
+# Plugin-Wurzel: skills/<skill>/executor.py -> <plugin>/core.
+_CORE = Path(__file__).resolve().parents[2] / "core"
+sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
+                if str(p) not in sys.path]
 
+from cli import CliFehler, schreibe_report  # noqa: E402
 from matching import (  # noqa: E402
-    koelner_code,
-    normalisiere,
-    sequenz_ratio,
-    token_alignment_ratio,
-    tokenisiere,
+    STUFE_MOEGLICH,
+    STUFE_TREFFER,
+    NamensTreffer,
+    vergleiche_namen,
 )
+from parteien import Partei  # noqa: E402
+from parteien import lese_parteien_csv as _lese_parteien_csv  # noqa: E402
 
 SCHWELLE_MOEGLICH_DEFAULT = 0.85
-
-STUFE_TREFFER = "treffer"
-STUFE_MOEGLICH = "moeglicher_treffer"
 
 ROLLEN = {"mandant", "gegner", "sonstige"}
 TYPEN = {"natuerlich", "juristisch"}
@@ -92,40 +88,16 @@ class EingabeFehler(Exception):
     """Strukturell ungültige Eingabedatei — CLI fängt sie sauber ab (Exit 2)."""
 
 
-@dataclass
-class Partei:
-    name: str
-    rolle: str | None = None
-    typ: str | None = None
-    az: str | None = None
-    notiz: str | None = None
+# Der Kandidat dieses Reports ist genau das Ergebnis des Namensvergleichs
+# (regel/stufe/score/begruendung) — kein eigener Typ nötig.
+Kandidat = NamensTreffer
 
-
-@dataclass
-class Kandidat:
-    regel: str      # "S1" | "S2" | "S3" | "S4"
-    stufe: str      # "treffer" | "moeglicher_treffer"
-    score: float
-    begruendung: str
+lese_parteien_csv = functools.partial(_lese_parteien_csv, fehler=EingabeFehler)
 
 
 # --------------------------------------------------------------------------
 # CSV/JSON-Einlesen
 # --------------------------------------------------------------------------
-
-def _lese_csv_zeilen(pfad: Path) -> tuple[list[str], list[dict[str, str]]]:
-    try:
-        text = pfad.read_text(encoding="utf-8-sig")
-    except UnicodeDecodeError as exc:
-        raise EingabeFehler(f"{pfad}: keine gültige UTF-8-Datei ({exc})") from exc
-    reader = csv.DictReader(io.StringIO(text), delimiter=";")
-    fieldnames = [h.strip() for h in (reader.fieldnames or [])]
-    if not fieldnames:
-        raise EingabeFehler(f"{pfad}: CSV ist leer oder hat keine Kopfzeile")
-    zeilen = [{(h or "").strip(): (v or "").strip() if v is not None else ""
-               for h, v in zeile.items()} for zeile in reader]
-    return fieldnames, zeilen
-
 
 def _pruefe_rolle(rolle: str, pfad: Path, ort: str, pflicht: bool) -> str | None:
     if not rolle:
@@ -149,50 +121,27 @@ def _pruefe_typ(typ: str, pfad: Path, ort: str, pflicht: bool) -> str | None:
     return typ
 
 
+def _zusatzfelder(pfad: Path, pflicht: bool):
+    """Callback für `core/calc/parteien`: rolle/typ validieren, az/notiz roh."""
+    def felder(zeile: dict[str, str], ort: str) -> dict[str, Any]:
+        return {
+            "rolle": _pruefe_rolle(zeile.get("rolle", ""), pfad, ort, pflicht),
+            "typ": _pruefe_typ(zeile.get("typ", ""), pfad, ort, pflicht),
+            "az": zeile.get("az") or None,
+            "notiz": zeile.get("notiz") or None,
+        }
+    return felder
+
+
 def lese_mandantenliste(pfad: Path) -> list[Partei]:
     """Mandanten-/Gegnerliste: name;rolle;typ Pflicht, az;notiz optional."""
-    fieldnames, zeilen = _lese_csv_zeilen(pfad)
-    fehlend = [s for s in LISTE_PFLICHTSPALTEN if s not in fieldnames]
-    if fehlend:
-        raise EingabeFehler(
-            f"{pfad}: Pflichtspalte(n) fehlen: {', '.join(fehlend)} "
-            f"(vorhanden: {', '.join(fieldnames)})")
-    parteien: list[Partei] = []
-    for i, zeile in enumerate(zeilen, start=2):  # Zeile 1 = Kopfzeile
-        ort = f"Zeile {i}"
-        name = zeile.get("name", "")
-        if not name:
-            raise EingabeFehler(f"{pfad}, {ort}: Pflichtfeld 'name' fehlt oder ist leer")
-        rolle = _pruefe_rolle(zeile.get("rolle", ""), pfad, ort, pflicht=True)
-        typ = _pruefe_typ(zeile.get("typ", ""), pfad, ort, pflicht=True)
-        az = zeile.get("az") or None
-        notiz = zeile.get("notiz") or None
-        parteien.append(Partei(name=name, rolle=rolle, typ=typ, az=az, notiz=notiz))
-    if not parteien:
-        raise EingabeFehler(f"{pfad}: keine Einträge (nur Kopfzeile)")
-    return parteien
+    return lese_parteien_csv(pfad, zusatz=_zusatzfelder(pfad, pflicht=True),
+                             pflichtspalten=LISTE_PFLICHTSPALTEN)
 
 
 def lese_neue_parteien_csv(pfad: Path) -> list[Partei]:
     """Neue Parteien als CSV: nur 'name' Pflicht, rolle/typ/az/notiz optional."""
-    fieldnames, zeilen = _lese_csv_zeilen(pfad)
-    if "name" not in fieldnames:
-        raise EingabeFehler(
-            f"{pfad}: Pflichtspalte 'name' fehlt (vorhanden: {', '.join(fieldnames)})")
-    parteien: list[Partei] = []
-    for i, zeile in enumerate(zeilen, start=2):
-        ort = f"Zeile {i}"
-        name = zeile.get("name", "")
-        if not name:
-            raise EingabeFehler(f"{pfad}, {ort}: Pflichtfeld 'name' fehlt oder ist leer")
-        rolle = _pruefe_rolle(zeile.get("rolle", ""), pfad, ort, pflicht=False)
-        typ = _pruefe_typ(zeile.get("typ", ""), pfad, ort, pflicht=False)
-        az = zeile.get("az") or None
-        notiz = zeile.get("notiz") or None
-        parteien.append(Partei(name=name, rolle=rolle, typ=typ, az=az, notiz=notiz))
-    if not parteien:
-        raise EingabeFehler(f"{pfad}: keine Einträge (nur Kopfzeile)")
-    return parteien
+    return lese_parteien_csv(pfad, zusatz=_zusatzfelder(pfad, pflicht=False))
 
 
 def lese_neue_parteien_json(pfad: Path) -> list[Partei]:
@@ -240,80 +189,12 @@ def lese_neue_parteien(pfad: Path) -> list[Partei]:
 
 
 # --------------------------------------------------------------------------
-# Match-Stufen S1-S4
+# Match-Stufen S1-S4 (Kaskade in core/calc/matching, geteilt mit gwg-live-screening)
 # --------------------------------------------------------------------------
-
-def _s1_exakt(norm_a: str, norm_b: str) -> Kandidat | None:
-    if norm_a and norm_b and norm_a == norm_b:
-        return Kandidat("S1", STUFE_TREFFER, 1.0,
-                         f"exakter Treffer nach Normalisierung: '{norm_a}' = '{norm_b}'")
-    return None
-
-
-def _s2_token_mengen(tokens_a: list[str], tokens_b: list[str]) -> Kandidat | None:
-    menge_a, menge_b = set(tokens_a), set(tokens_b)
-    if not menge_a or not menge_b:
-        return None
-    if menge_a == menge_b:
-        anzeige = ", ".join(sorted(menge_a))
-        return Kandidat("S2", STUFE_TREFFER, 1.0,
-                         f"Token-Mengen-Gleichheit nach Normalisierung (Wortreihenfolge "
-                         f"unerheblich): {{{anzeige}}}")
-    if menge_a <= menge_b or menge_b <= menge_a:
-        kleinere, groessere = (menge_a, menge_b) if len(menge_a) <= len(menge_b) else (menge_b, menge_a)
-        score = round(len(kleinere) / len(groessere), 4)
-        return Kandidat("S2", STUFE_TREFFER, score,
-                         f"Token-Teilmenge nach Normalisierung: {{{', '.join(sorted(kleinere))}}} "
-                         f"⊆ {{{', '.join(sorted(groessere))}}}")
-    return None
-
-
-def _s3_phonetik(tokens_a: list[str], tokens_b: list[str]) -> Kandidat | None:
-    if not tokens_a or len(tokens_a) != len(tokens_b):
-        return None
-    codes_a = sorted(koelner_code(t) for t in tokens_a)
-    codes_b = sorted(koelner_code(t) for t in tokens_b)
-    if any(c == "" for c in codes_a) or any(c == "" for c in codes_b):
-        return None
-    if codes_a != codes_b:
-        return None
-    if len(codes_a) == 1:
-        begruendung = f"phonetisch identisch nach Kölner Phonetik: {codes_a[0]} = {codes_b[0]}"
-    else:
-        begruendung = ("phonetisch identisch nach Kölner Phonetik je Token: "
-                        f"[{', '.join(codes_a)}] = [{', '.join(codes_b)}]")
-    return Kandidat("S3", STUFE_MOEGLICH, 1.0, begruendung)
-
-
-def _s4_fuzzy(norm_a: str, norm_b: str, tokens_a: list[str], tokens_b: list[str],
-              schwelle: float) -> Kandidat | None:
-    score_zeichen = sequenz_ratio(norm_a, norm_b)
-    score_token = token_alignment_ratio(tokens_a, tokens_b)
-    score = max(score_zeichen, score_token)
-    if score < schwelle:
-        return None
-    verfahren = "Zeichenketten-Vergleich" if score_zeichen >= score_token else "Token-Alignment"
-    return Kandidat("S4", STUFE_MOEGLICH, round(score, 4),
-                     f"Ähnlichkeit {score:.2f} ≥ Schwelle {schwelle:.2f} ({verfahren})")
-
 
 def vergleiche(neue_partei: Partei, listeneintrag: Partei, schwelle: float) -> Kandidat | None:
     """Prüft ein Paar gegen S1->S2->S3->S4; die erste zutreffende Stufe gewinnt."""
-    norm_a = normalisiere(neue_partei.name)
-    norm_b = normalisiere(listeneintrag.name)
-    tokens_a = tokenisiere(neue_partei.name)
-    tokens_b = tokenisiere(listeneintrag.name)
-
-    for pruefung in (
-        lambda: _s1_exakt(norm_a, norm_b),
-        lambda: _s2_token_mengen(tokens_a, tokens_b),
-        lambda: _s3_phonetik(tokens_a, tokens_b),
-        lambda: _s4_fuzzy(norm_a, norm_b, tokens_a, tokens_b, schwelle),
-    ):
-        kandidat = pruefung()
-        if kandidat is not None:
-            return kandidat
-    return None
+    return vergleiche_namen(neue_partei.name, listeneintrag.name, schwelle)
 
 
 # --------------------------------------------------------------------------
@@ -417,11 +298,11 @@ def main(argv: list[str] | None = None) -> int:
     report = baue_report(neue_parteien, liste, args.schwelle_moeglich,
                           liste_datei=str(liste_pfad), parteien_datei=str(parteien_pfad))
 
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-    else:
-        print(ausgabe)
+    try:
+        schreibe_report(report, args.output)
+    except CliFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
     return 0
 
 

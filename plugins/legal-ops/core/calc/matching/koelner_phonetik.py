@@ -66,8 +66,9 @@ Kodierung nicht (Referenzfall unten).
   Namen (nicht-deutsche Aussprachekonventionen) ist die Trefferqualität nicht
   belastbar — dokumentierte Grenze, kein Ausschluss.
 - Wörter ohne kodierbare Buchstaben (z. B. reine Zahlen/Symbole) ergeben
-  einen leeren Code `""`; `phonetisch_gleich()` behandelt zwei leere Codes
-  bewusst **nicht** als Treffer (siehe dortige Begründung).
+  einen leeren Code `""`. Zwei leere Codes sind bewusst **kein** Treffer —
+  der Vergleich in `matching/vergleich.py` (Stufe S3) verwirft sie, sonst
+  gälten zwei beliebige unkodierbare Tokens als phonetisch identisch.
 """
 from __future__ import annotations
 
@@ -152,15 +153,3 @@ def code(wort: str) -> str:
     ziffernkette = "".join(ziffern)
     reduziert = _reduziere_wiederholungen(ziffernkette)
     return _entferne_nullen_ausser_erster(reduziert)
-
-
-def phonetisch_gleich(a: str, b: str) -> bool:
-    """True, wenn beide Wörter denselben (nicht-leeren) Kölner-Phonetik-Code haben.
-
-    Zwei leere Codes (z. B. bei Eingaben ohne kodierbare Buchstaben) gelten
-    bewusst **nicht** als Treffer — sonst würden zwei völlig unkodierbare,
-    inhaltlich beliebige Tokens (z. B. reine Zahlen) fälschlich als
-    phonetisch identisch markiert.
-    """
-    ca, cb = code(a), code(b)
-    return bool(ca) and ca == cb

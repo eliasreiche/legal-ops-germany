@@ -50,23 +50,28 @@ Exit-Codes: 0 = EXTF-Datei + Report erzeugt, 2 = Eingabe-/Formatfehler
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import sys
 from pathlib import Path
 from typing import Any
 
 _EXTF_DIR = Path(__file__).resolve().parent
-if str(_EXTF_DIR) not in sys.path:
-    sys.path.insert(0, str(_EXTF_DIR))
+_CALC_DIR = _EXTF_DIR.parent
+for _pfad in (_EXTF_DIR, _CALC_DIR):
+    if str(_pfad) not in sys.path:
+        sys.path.insert(0, str(_pfad))
 
 from formate import (  # noqa: E402
-    D, ExtfFormatFehler, WertgebuehrFehler, bare_zahl, datum_jjjjmmtt,
-    datum_ttmm, datumzeit_kompakt, dezimal_komma, leer, parse_datum_strikt,
+    D, LEER, ExtfFormatFehler, WertgebuehrFehler, bare_zahl, datum_jjjjmmtt,
+    datum_ttmm, datumzeit_kompakt, dezimal_komma, parse_datum_strikt,
     parse_datumzeit_strikt, pruefe_belegfeld, pruefe_cp1252, pruefe_konto,
     quote_text,
 )
+from cli import CliFehler, lese_json_objekt, pflichtfeld, schreibe_report  # noqa: E402
 
-HEADER_SPEC = json.loads((_EXTF_DIR / "header_format_700.json").read_text(encoding="utf-8"))
+# Die 31 Header-Felder stehen als Doku in header_format_700.json; für den
+# Export zählt nur ihre Position 1-31 (siehe _header_zeile).
 SPALTEN_SPEC = json.loads((_EXTF_DIR / "buchungssatz_spalten_700.json").read_text(encoding="utf-8"))
 
 _HEADER_ERLAUBTE_FELDER = {
@@ -83,10 +88,7 @@ _BUCHUNG_ERLAUBTE_FELDER = {
 }
 
 
-def _pflichtfeld(eingabe: dict[str, Any], feld: str, kontext: str) -> Any:
-    if feld not in eingabe or eingabe[feld] in (None, ""):
-        raise ExtfFormatFehler(f"Pflichtfeld '{kontext}.{feld}' fehlt oder ist leer")
-    return eingabe[feld]
+_pflichtfeld = functools.partial(pflichtfeld, fehler=ExtfFormatFehler)
 
 
 def _nur_erlaubte_felder(eingabe: dict[str, Any], erlaubt: set[str], kontext: str) -> None:
@@ -176,7 +178,13 @@ def _baue_header(eingabe: dict[str, Any]) -> dict[str, Any]:
 
 
 def _header_zeile(h: dict[str, Any]) -> list[str]:
-    """Baut die 31 Header-Token in der Reihenfolge von header_format_700.json."""
+    """Baut die 31 Header-Token in Positions-Reihenfolge 1..31.
+
+    Die Reihenfolge steht hier als Literal, nicht als Ableitung aus
+    `header_format_700.json`. Dass die JSON-Spec dieselbe Positionsfolge trägt
+    (`pos` == 1..31, lückenlos und in Reihenfolge), prüft
+    `skills/datev-export/tests/test_extf_executor_cli.py`.
+    """
     werte_nach_pos = {
         1: quote_text("EXTF", "Kennzeichen"),
         2: bare_zahl(700),
@@ -184,10 +192,10 @@ def _header_zeile(h: dict[str, Any]) -> list[str]:
         4: quote_text("Buchungsstapel", "Formatname"),
         5: bare_zahl(h["formatversion"]),
         6: bare_zahl(datumzeit_kompakt(h["erzeugt_am"])),
-        7: leer(),
+        7: LEER,
         8: quote_text(h["herkunft"], "Herkunft"),
         9: quote_text(h["exportiert_von"], "Exportiert von"),
-        10: leer(),
+        10: LEER,
         11: bare_zahl(h["beraternummer"]),
         12: bare_zahl(h["mandantennummer"]),
         13: bare_zahl(datum_jjjjmmtt(h["wirtschaftsjahresbeginn"])),
@@ -195,15 +203,15 @@ def _header_zeile(h: dict[str, Any]) -> list[str]:
         15: bare_zahl(datum_jjjjmmtt(h["buchungszeitraum_von"])),
         16: bare_zahl(datum_jjjjmmtt(h["buchungszeitraum_bis"])),
         17: quote_text(h["bezeichnung"], "Bezeichnung"),
-        18: quote_text(h["diktatkuerzel"], "Diktatkuerzel") if h["diktatkuerzel"] else leer(),
+        18: quote_text(h["diktatkuerzel"], "Diktatkuerzel") if h["diktatkuerzel"] else LEER,
         19: bare_zahl(h["buchungstyp"]),
-        20: leer(),
-        21: leer(),
+        20: LEER,
+        21: LEER,
         22: quote_text(h["waehrung"], "Waehrungskennzeichen"),
-        23: leer(), 24: leer(), 25: leer(), 26: leer(), 27: leer(),
-        28: leer(), 29: leer(), 30: leer(), 31: leer(),
+        23: LEER, 24: LEER, 25: LEER, 26: LEER, 27: LEER,
+        28: LEER, 29: LEER, 30: LEER, 31: LEER,
     }
-    return [werte_nach_pos[f["pos"]] for f in HEADER_SPEC["felder"]]
+    return [werte_nach_pos[pos] for pos in range(1, 32)]
 
 
 def _spaltenkopf_zeile() -> list[str]:
@@ -305,19 +313,19 @@ def _baue_buchungszeile(buchung: dict[str, Any], index: int,
     tokens = [
         bare_zahl(dezimal_komma(umsatz, 2)),
         quote_text(soll_haben, f"{kontext}.soll_haben"),
-        quote_text(wkz_umsatz, f"{kontext}.wkz_umsatz") if wkz_umsatz else leer(),
-        bare_zahl(dezimal_komma(kurs, 6)) if kurs is not None else leer(),
-        bare_zahl(dezimal_komma(basisumsatz, 2)) if basisumsatz is not None else leer(),
-        quote_text(wkz_basisumsatz, f"{kontext}.wkz_basisumsatz") if wkz_basisumsatz else leer(),
+        quote_text(wkz_umsatz, f"{kontext}.wkz_umsatz") if wkz_umsatz else LEER,
+        bare_zahl(dezimal_komma(kurs, 6)) if kurs is not None else LEER,
+        bare_zahl(dezimal_komma(basisumsatz, 2)) if basisumsatz is not None else LEER,
+        quote_text(wkz_basisumsatz, f"{kontext}.wkz_basisumsatz") if wkz_basisumsatz else LEER,
         bare_zahl(konto),
         bare_zahl(gegenkonto),
-        quote_text(bu_schluessel, f"{kontext}.bu_schluessel") if bu_schluessel else leer(),
+        quote_text(bu_schluessel, f"{kontext}.bu_schluessel") if bu_schluessel else LEER,
         bare_zahl(datum_ttmm(belegdatum)),
-        quote_text(belegfeld1, f"{kontext}.belegfeld1") if belegfeld1 else leer(),
-        quote_text(belegfeld2, f"{kontext}.belegfeld2") if belegfeld2 else leer(),
-        bare_zahl(dezimal_komma(skonto, 2)) if skonto is not None else leer(),
-        quote_text(buchungstext, f"{kontext}.buchungstext") if buchungstext else leer(),
-        leer(), leer(), leer(), leer(), leer(), leer(),  # Spalten 15-20: v1 nicht unterstützt
+        quote_text(belegfeld1, f"{kontext}.belegfeld1") if belegfeld1 else LEER,
+        quote_text(belegfeld2, f"{kontext}.belegfeld2") if belegfeld2 else LEER,
+        bare_zahl(dezimal_komma(skonto, 2)) if skonto is not None else LEER,
+        quote_text(buchungstext, f"{kontext}.buchungstext") if buchungstext else LEER,
+        LEER, LEER, LEER, LEER, LEER, LEER,  # Spalten 15-20: v1 nicht unterstützt
     ]
     assert len(tokens) == len(SPALTEN_SPEC["spalten"]) == 20
 
@@ -413,20 +421,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     input_pfad = Path(args.input)
-    if not input_pfad.is_file():
-        print(f"Fehler: Eingabedatei nicht gefunden: {input_pfad}", file=sys.stderr)
-        return 2
-
     try:
-        eingabe = json.loads(input_pfad.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        print(f"Fehler: Eingabedatei ist kein gültiges JSON: {exc}", file=sys.stderr)
-        return 2
-
-    try:
+        eingabe = lese_json_objekt(input_pfad)
         inhalt, report = baue_export(eingabe, quelle_datei=str(input_pfad))
-    except (ExtfFormatFehler, WertgebuehrFehler, ValueError, ArithmeticError,
-            OverflowError) as exc:
+    except (CliFehler, ExtfFormatFehler, WertgebuehrFehler, ValueError,
+            ArithmeticError) as exc:
         # Fail-fast VOR jedem Dateizugriff: bei einem Formatfehler wird
         # weder die EXTF-Datei noch der Report geschrieben (Maintainer-
         # Entscheidung D20: kein defektes EXTF beim Steuerberater).
@@ -439,19 +438,15 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Fehler: EXTF-Datei kann nicht geschrieben werden: {exc}", file=sys.stderr)
         return 2
 
-    report_json = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output_report:
-        try:
-            Path(args.output_report).write_text(report_json + "\n", encoding="utf-8")
-        except OSError as exc:
-            # Kein Teil-Ergebnis stehen lassen: die EXTF-Datei wurde bereits
-            # geschrieben, aber ohne Report ist Exit 2 kein sauberer Zustand
-            # (D20: entweder beide Artefakte oder keins).
-            Path(args.output).unlink(missing_ok=True)
-            print(f"Fehler: Report-Datei kann nicht geschrieben werden: {exc}", file=sys.stderr)
-            return 2
-    else:
-        print(report_json)
+    try:
+        schreibe_report(report, args.output_report)
+    except CliFehler as exc:
+        # Kein Teil-Ergebnis stehen lassen: die EXTF-Datei wurde bereits
+        # geschrieben, aber ohne Report ist Exit 2 kein sauberer Zustand
+        # (D20: entweder beide Artefakte oder keins).
+        Path(args.output).unlink(missing_ok=True)
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
     return 0
 
 

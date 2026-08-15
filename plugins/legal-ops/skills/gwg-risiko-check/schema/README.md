@@ -96,18 +96,18 @@ Vollständiges Beispiel: [`beispiel-report.json`](beispiel-report.json)
 
 - **`marker`** (3-Zustands-Marker, CONVENTIONS.md): der Executor prüft nicht
   gegen den Gesetzestext, daher stets ⚠️ „nicht prüfbar". Die §-Fundstellen
-  werden im letzten Skill-Schritt durch `zitat-pruefer` gegen
-  [`quellen-registry.json`](quellen-registry.json) verifiziert; die
+  werden im letzten Skill-Schritt gegen
+  [`quellen-registry.json`](quellen-registry.json) abgeglichen; die
   Anlagen-Fundstellen bleiben ⚠️ und sind bei der händischen Abnahme zu prüfen.
 - **`quelle: "executor"`** kennzeichnet jeden Wert als Rechner-Ergebnis (P3) —
   kein Wert wird vom Modell erzeugt.
 
-## Zitat-Prüfer-Integration
+## Quellen-Registry
 
 [`quellen-registry.json`](quellen-registry.json) listet alle GwG-`§`-Normen,
 die die gerenderte Doku zitiert. Der SKILL.md-Ablauf sieht als letzten Schritt
-vor, die erzeugte Markdown-Doku durch `zitat-pruefer` mit dieser Registry
-zu prüfen.
+vor, die §-Zitate der erzeugten Markdown-Doku gegen diese Registry
+abzugleichen.
 
 ## Bewusste Grenzen
 

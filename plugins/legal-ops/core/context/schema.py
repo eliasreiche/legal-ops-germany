@@ -19,7 +19,12 @@ PyYAML, damit der Validator ohne Installation läuft (wie der Struktur-Lint).
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # nur für die Typannotation von lese_kontext_mandate()
+    from zuordnung import Mandat
 
 # --------------------------------------------------------------------------
 # Konstanten (Schema-Kontrakt)
@@ -34,9 +39,9 @@ PFLICHTFELDER_MANDAT = ("az", "mandant", "stand")
 EMPFOHLENE_SCHLUESSEL_MANDAT = ("gegenseite", "mandatsende", "streitwert", "status")
 ABSCHNITTE_MANDAT = ("## Parteien", "## Kommunikation", "## Letzter Schritt",
                     "## Nächste Frist")
-# Dokumentierte Bereiche des kontext/-Ordners (auch vom Struktur-Lint für
-# kontext_reads/kontext_writes referenziert, dort als eigene Konstante
-# gepflegt, um core/verify nicht von core/context abhängig zu machen).
+# Dokumentierte Bereiche des kontext/-Ordners — einzige Quelle; der
+# Struktur-Lint (core/verify/struktur_lint.py) importiert sie von hier für
+# die Prüfung von kontext_reads/kontext_writes.
 KONTEXT_BEREICHE = ("kanzlei.md", "mandate/", "kontakte.md", "posteingang/", "export/")
 
 ISO_DATUM_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -229,3 +234,40 @@ def lese_mandate(kontext: Path) -> list[tuple[Path, dict[str, tuple[str | None, 
         if fm is not None:
             ergebnis.append((datei, fm))
     return ergebnis
+
+
+def lese_kontext_mandate(kontext: Path) -> tuple[list[Mandat], list[str]]:
+    """`kontext/mandate/*.md` als Zuordnungs-Mandatsliste (keine erneute
+    Schema-Prüfung, dafür ist `validator.py` zuständig).
+
+    Mandate ohne Aktenzeichen können nicht zugeordnet werden — sie werden
+    übersprungen und als Warnung ausgewiesen, statt geraten zu werden.
+    Genutzt von `email-akten-zuordnung`, `passive-zeiterfassung` und
+    `posteingang-ocr-verteilung`.
+    """
+    # `Mandat` liegt in core/calc/zuordnung — erst hier importiert (Pfad-Muster
+    # wie core/verify/provenienz.py). Modulglobal würde jeder Importeur dieses
+    # Schema-Moduls (u. a. core/verify/struktur_lint.py) die halbe
+    # Rechen-Bibliothek mitladen, obwohl er nur den Frontmatter-Parser braucht.
+    _calc_dir = str(Path(__file__).resolve().parents[1] / "calc")
+    if _calc_dir not in sys.path:
+        sys.path.insert(0, _calc_dir)
+    from zuordnung import Mandat
+
+    warnungen: list[str] = []
+    mandate: list[Mandat] = []
+    for pfad, fm in lese_mandate(kontext):
+        az = (fm.get("az") or (None, None))[0]
+        if not az:
+            warnungen.append(f"{pfad}: kein Aktenzeichen im Frontmatter — Mandat "
+                             f"wird übersprungen (nicht zuordenbar)")
+            continue
+        mandant = (fm.get("mandant") or (None, None))[0] or ""
+        gegenseite = (fm.get("gegenseite") or (None, None))[0]
+        try:
+            datei_rel = str(pfad.relative_to(kontext))
+        except ValueError:
+            datei_rel = str(pfad)
+        mandate.append(Mandat(az=az, mandant=mandant, gegenseite=gegenseite,
+                              datei=datei_rel))
+    return mandate, warnungen

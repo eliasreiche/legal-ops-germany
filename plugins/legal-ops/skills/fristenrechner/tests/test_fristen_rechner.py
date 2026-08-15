@@ -10,20 +10,15 @@ Feiertagen, die nachvollziehbare Rechenkette (P3) und die Validierung.
 from __future__ import annotations
 
 import datetime as dt
-import sys
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from fristen import (  # noqa: E402
     FristEingabeFehler,
     berechne_frist,
     fristart_nach_id,
     lade_katalog,
-    naechster_werktag,
 )
 
 
@@ -307,11 +302,6 @@ def test_fristart_nach_id_unbekannt():
 def test_widerspruch_mahnbescheid_gekennzeichnet():
     f = fristart_nach_id("widerspruch_mahnbescheid")
     assert f.get("kein_technisches_fristende") is True
-
-
-def test_naechster_werktag():
-    assert naechster_werktag(dt.date(2026, 1, 3), "NW") == dt.date(2026, 1, 5)
-    assert naechster_werktag(dt.date(2026, 1, 5), "NW") == dt.date(2026, 1, 5)
 
 
 # --------------------------------------------------------------------------

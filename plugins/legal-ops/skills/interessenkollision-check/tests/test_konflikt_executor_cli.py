@@ -10,18 +10,17 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import lauf  # noqa: E402
+
 SKILL_DIR = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL_DIR / "executor.py"
 SCHEMA = SKILL_DIR / "schema"
 
 
 def _lauf(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run(
-        [sys.executable, str(EXECUTOR), *args], capture_output=True, text=True)
+    return lauf(EXECUTOR, *args)
 
 
 def _liste_csv(tmp_path: Path) -> Path:

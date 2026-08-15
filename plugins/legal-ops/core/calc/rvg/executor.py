@@ -52,8 +52,7 @@ Exit-Codes: 0 = Report erzeugt, 2 = Eingabefehler.
 """
 from __future__ import annotations
 
-import argparse
-import json
+import functools
 import sys
 from pathlib import Path
 from typing import Any
@@ -63,15 +62,19 @@ _CALC_DIR = _RVG_DIR.parent
 if str(_CALC_DIR) not in sys.path:
     sys.path.insert(0, str(_CALC_DIR))
 
+from cli import (  # noqa: E402
+    CliFehler,
+    lese_json_objekt,
+    pflichtfeld,
+    schreibe_report,
+    standard_parser,
+)
 from wertgebuehr_formel import WertgebuehrFehler, parse_datum_strikt  # noqa: E402
 from rvg.rechner import RVGEingabeFehler, berechne as rvg_berechne  # noqa: E402
 from gkg.rechner import GKGEingabeFehler, berechne as gkg_berechne  # noqa: E402
 
 
-def _pflichtfeld(eingabe: dict[str, Any], feld: str) -> Any:
-    if feld not in eingabe or eingabe[feld] in (None, ""):
-        raise WertgebuehrFehler(f"Pflichtfeld '{feld}' fehlt oder ist leer")
-    return eingabe[feld]
+_pflichtfeld = functools.partial(pflichtfeld, fehler=WertgebuehrFehler)
 
 
 def _tabellenstand_kurz(stand: dict[str, Any]) -> dict[str, Any]:
@@ -231,49 +234,22 @@ def baue_report(eingabe: dict[str, Any], quelle_datei: str) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--input", required=True,
-                        help="JSON-Eingabedatei (RVG-/GKG-Anfrage)")
-    parser.add_argument("--output",
-                        help="Zieldatei für den JSON-Report (Default: stdout)")
-    args = parser.parse_args(argv)
+    args = standard_parser(__doc__,
+                           "JSON-Eingabedatei (RVG-/GKG-Anfrage)").parse_args(argv)
 
     input_pfad = Path(args.input)
-    if not input_pfad.is_file():
-        print(f"Fehler: Eingabedatei nicht gefunden: {input_pfad}", file=sys.stderr)
-        return 2
-
     try:
-        eingabe = json.loads(input_pfad.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        print(f"Fehler: Eingabedatei ist kein gültiges JSON: {exc}", file=sys.stderr)
-        return 2
-    if not isinstance(eingabe, dict):
-        print("Fehler: Eingabe muss ein JSON-Objekt sein", file=sys.stderr)
-        return 2
-
-    try:
+        eingabe = lese_json_objekt(input_pfad)
         report = baue_report(eingabe, quelle_datei=str(input_pfad))
-    except (WertgebuehrFehler, RVGEingabeFehler, GKGEingabeFehler,
-            ValueError, ArithmeticError, OverflowError) as exc:
-        # WertgebuehrFehler/RVGEingabeFehler/GKGEingabeFehler sind der
-        # Regelfall; ValueError/ArithmeticError/OverflowError als
-        # Sicherheitsnetz (u. a. decimal.InvalidOperation), damit nie ein
-        # Traceback statt Exit 2 erscheint.
+        schreibe_report(report, args.output)
+    except (CliFehler, WertgebuehrFehler, RVGEingabeFehler, GKGEingabeFehler,
+            ValueError, ArithmeticError) as exc:
+        # CliFehler/WertgebuehrFehler/RVGEingabeFehler/GKGEingabeFehler sind
+        # der Regelfall; ValueError/ArithmeticError als Sicherheitsnetz
+        # (u. a. decimal.InvalidOperation), damit nie ein Traceback statt
+        # Exit 2 erscheint.
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2
-
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        try:
-            Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-        except OSError as exc:
-            print(f"Fehler: Report-Datei kann nicht geschrieben werden: {exc}",
-                  file=sys.stderr)
-            return 2
-    else:
-        print(ausgabe)
     return 0
 
 

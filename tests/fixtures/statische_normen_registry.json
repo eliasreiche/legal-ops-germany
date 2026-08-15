@@ -1,5 +1,7 @@
 {
-  "_hinweis": "Dedizierte Quellen-Registry für tests/test_zitiermarker_statisch.py — deckt genau die Normen ab, die in den STATISCHE_NORM_BELEHRUNGEN-Konstanten von core/calc/retention/executor.py, core/calc/fristen/kalender_executor.py und core/calc/fristen/executor.py zitiert werden. Bewusst getrennt von skills/zitat-pruefer/schema/beispiel-registry.json, damit dieser Test dessen Fixtures nicht mitbeeinflusst.",
+  "_hinweis": "Handgepflegte Quellen-Registry für tests/test_zitiermarker_statisch.py — deckt genau die Normen ab, die in den STATISCHE_NORM_BELEHRUNGEN-Konstanten von core/calc/retention/executor.py, core/calc/fristen/kalender_executor.py und core/calc/fristen/executor.py zitiert werden. Der Test prüft ausschließlich KONSISTENZ: Marker ✅ genau dann, wenn jedes Normzitat der Belehrung hier geführt ist. Die INHALTLICHE Verifikation der Fundstellen ist Maintainer-Abnahme und in dieser Datei dokumentiert ('geprueft_am', 'geprueft_von', 'quelle' je Eintrag) — wer eine Norm hier einträgt, bestätigt damit, sie gegen die Quelle geprüft zu haben.",
+  "geprueft_am": "2026-07-14",
+  "geprueft_von": "Maintainer, händisch gegen gesetze-im-internet.de",
   "normen": [
     {"kuerzel": "BRAO", "paragraph": "50", "bezeichnung": "Handakten (Aufbewahrungs- und Herausgabepflicht)", "quelle": "https://www.gesetze-im-internet.de/brao/__50.html"},
     {"kuerzel": "ZPO", "paragraph": "224", "bezeichnung": "Notfristen", "quelle": "https://www.gesetze-im-internet.de/zpo/__224.html"},

@@ -10,46 +10,32 @@ email-akten-zuordnung/tests/test_email_zuordnung_beispiel_sync.py).
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import BEISPIEL_KONTEXT, neutralisiere, report  # noqa: E402
+
 SKILL_DIR = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL_DIR / "executor.py"
 SCHEMA = SKILL_DIR / "schema"
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
 
-
-def _neutralisiert(report: dict) -> dict:
-    """`eingang_datei`, `quelldateien` und `kontext_verzeichnis` enthalten den
-    beim Aufruf übergebenen Pfad-Präfix (absolut oder relativ, je nach cwd/
-    Invocation) — für den Inhaltsvergleich auf den Dateinamen reduzieren,
-    alles andere muss exakt übereinstimmen."""
-    report = json.loads(json.dumps(report))  # tiefe Kopie
-    report["meta"]["eingang_datei"] = Path(report["meta"]["eingang_datei"]).name
-    report["meta"]["quelldateien"] = [Path(p).name for p in report["meta"]["quelldateien"]]
-    report["meta"]["kontext_verzeichnis"] = "NEUTRALISIERT"
-    for datei in report["routing_plan"].get("dateien", []):
-        datei["quelle"] = Path(datei["quelle"]).name
-    for eintrag in report["provenienz"]:
-        if eintrag.get("fundstelle"):
-            eintrag["fundstelle"]["datei"] = Path(eintrag["fundstelle"]["datei"]).name
-    return report
+# Pfad-Felder dieses Reports, die vom Aufruf abhängen (siehe neutralisiere):
+# meta.eingang_datei/quelldateien/kontext_verzeichnis, routing_plan.dateien[].quelle
+# und provenienz[].fundstelle.datei.
+PFADFELDER = ("eingang_datei", "quelldateien", "kontext_verzeichnis",
+              "quelle", "datei")
 
 
 def test_beispiel_report_ist_aktuell():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--eingang", str(SCHEMA / "beispiel-eingang.json"),
-         "--quelle", str(SCHEMA / "beispiel-scan.txt"),
-         "--kontext", str(BEISPIEL_KONTEXT),
-         "--scan-datei", str(SCHEMA / "beispiel-scan.txt")],
-        capture_output=True, text=True)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    frisch = _neutralisiert(json.loads(ergebnis.stdout))
-    checked_in = _neutralisiert(
-        json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8")))
+    frisch = neutralisiere(
+        report(EXECUTOR,
+               "--eingang", SCHEMA / "beispiel-eingang.json",
+               "--quelle", SCHEMA / "beispiel-scan.txt",
+               "--kontext", BEISPIEL_KONTEXT,
+               "--scan-datei", SCHEMA / "beispiel-scan.txt"),
+        PFADFELDER)
+    checked_in = neutralisiere(
+        json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8")),
+        PFADFELDER)
 
     assert frisch == checked_in, (
         "schema/beispiel-report.json ist veraltet — neu erzeugen mit:\n"

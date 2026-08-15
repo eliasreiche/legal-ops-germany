@@ -8,13 +8,9 @@ nie stillschweigend), Eingabe-Validierung und Verlässlichkeits-Hinweise.
 from __future__ import annotations
 
 import datetime as dt
-import sys
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 import feiertage  # noqa: E402
 

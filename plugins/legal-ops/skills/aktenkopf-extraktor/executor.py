@@ -40,6 +40,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import functools
 import json
 import re
 import sys
@@ -47,10 +48,23 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
-ERZEUGT_VON = "aktenkopf-extraktor/executor.py"
+# Plugin-Wurzel: skills/<skill>/executor.py -> <plugin>/core.
+_CORE = Path(__file__).resolve().parents[2] / "core"
+sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
+                if str(p) not in sys.path]
 
-STATUS_BELEGT = "belegt"
-STATUS_NICHT_BELEGT = "nicht_belegt"
+from cli import CliFehler, schreibe_report  # noqa: E402
+from verify import provenienz as prov  # noqa: E402
+from verify.provenienz import (  # noqa: E402
+    STANDARD_TYPEN,
+    STATUS_BELEGT,
+    STATUS_NICHT_BELEGT,
+    leer as _leer,
+    luecken_felder as _luecken_felder,
+    nichtleer,
+)
+
+ERZEUGT_VON = "aktenkopf-extraktor/executor.py"
 
 ROLLEN = {"mandant", "gegner", "sonstige"}
 PARTEI_TYPEN = {"natuerlich", "juristisch"}
@@ -58,58 +72,6 @@ PARTEI_TYPEN = {"natuerlich", "juristisch"}
 # Kontakt-Unterfelder, die als kritische Werte auf Provenienz geprüft werden,
 # mit ihrem Normalisierungstyp.
 KONTAKT_KRITISCH = {"email": "email", "telefon": "telefon", "iban": "iban"}
-
-
-# --------------------------------------------------------------------------
-# Normalisierung — Datum
-# --------------------------------------------------------------------------
-
-_ISO_RAW = r"(\d{4})-(\d{1,2})-(\d{1,2})"
-_DE_RAW = r"(\d{1,2})\.(\d{1,2})\.(\d{2,4})"
-_DATUM_ISO = re.compile(r"\b" + _ISO_RAW + r"\b")
-_DATUM_DE = re.compile(r"(?<!\d)" + _DE_RAW + r"(?!\d)")
-
-
-def _norm_jahr(j: str) -> str:
-    if len(j) == 2:
-        jj = int(j)
-        return ("20" if jj <= 69 else "19") + j
-    return j.zfill(4)
-
-
-def _kanon_datum(jahr: str, monat: str, tag: str) -> str | None:
-    """Kanonisiert ein Datum auf `JJJJ-MM-TT`; None, wenn kein gültiges Kalenderdatum."""
-    j = _norm_jahr(jahr)
-    try:
-        datetime.date(int(j), int(monat), int(tag))
-    except ValueError:
-        return None
-    return f"{int(j):04d}-{int(monat):02d}-{int(tag):02d}"
-
-
-def _datum_kanon_wert(wert: str) -> str | None:
-    """Kanonform eines einzelnen Datumswerts (ISO `01.03.2026` ↔ `2026-03-01`)."""
-    wert = wert.strip()
-    mi = re.fullmatch(_ISO_RAW, wert)
-    if mi:
-        return _kanon_datum(mi.group(1), mi.group(2), mi.group(3))
-    md = re.fullmatch(_DE_RAW, wert)
-    if md:
-        return _kanon_datum(md.group(3), md.group(2), md.group(1))
-    return None
-
-
-def _datum_kanons_in_zeile(zeile: str) -> set[str]:
-    res: set[str] = set()
-    for m in _DATUM_ISO.finditer(zeile):
-        k = _kanon_datum(m.group(1), m.group(2), m.group(3))
-        if k:
-            res.add(k)
-    for m in _DATUM_DE.finditer(zeile):
-        k = _kanon_datum(m.group(3), m.group(2), m.group(1))
-        if k:
-            res.add(k)
-    return res
 
 
 # --------------------------------------------------------------------------
@@ -147,12 +109,9 @@ def _geld_kanons_in_zeile(zeile: str) -> set[str]:
 
 
 # --------------------------------------------------------------------------
-# Normalisierung — Aktenzeichen / IBAN / E-Mail / Telefon
+# Normalisierung — IBAN / Telefon (Datum, Aktenzeichen und die Whitespace-
+# Kollabierung kommen aus core/verify/provenienz)
 # --------------------------------------------------------------------------
-
-def _ws_collapse(s: str) -> str:
-    return re.sub(r"\s+", " ", s).strip()
-
 
 def _iban_norm(s: str) -> str:
     return re.sub(r"\s+", "", s).upper()
@@ -163,64 +122,28 @@ def _tel_norm(s: str) -> str:
     return re.sub(r"[\s/().\-]", "", s)
 
 
-def _kanon_ziel(wert: str, typ: str) -> str | None:
-    if typ == "datum":
-        return _datum_kanon_wert(wert)
-    if typ == "geld":
-        return _geld_kanon(wert)
-    if typ == "email":
-        return wert.strip().lower() or None
-    if typ == "telefon":
-        return _tel_norm(wert) or None
-    if typ == "iban":
-        return _iban_norm(wert) or None
-    if typ == "aktenzeichen":
-        return _ws_collapse(wert) or None
-    return None
+# Normalisierer je Typ (siehe core/verify/provenienz): Datum, Aktenzeichen und
+# Zitat kommen aus dem Standard, Geld/E-Mail/Telefon/IBAN sind skill-eigen.
+TYPEN = STANDARD_TYPEN | {
+    "geld": (_geld_kanon, _geld_kanons_in_zeile),
+    "email": (lambda w: w.strip().lower() or None, str.lower),
+    "telefon": (lambda w: _tel_norm(w) or None, _tel_norm),
+    "iban": (lambda w: _iban_norm(w) or None, _iban_norm),
+}
 
-
-def _zeile_belegt(zeile: str, typ: str, ziel: str) -> bool:
-    if typ == "datum":
-        return ziel in _datum_kanons_in_zeile(zeile)
-    if typ == "geld":
-        return ziel in _geld_kanons_in_zeile(zeile)
-    if typ == "email":
-        return ziel in zeile.lower()
-    if typ == "telefon":
-        return ziel in _tel_norm(zeile)
-    if typ == "iban":
-        return ziel in _iban_norm(zeile)
-    if typ == "aktenzeichen":
-        return ziel in _ws_collapse(zeile)
-    return False
+_kanon_ziel = functools.partial(prov.kanon_ziel, typen=TYPEN)
+finde_beleg = functools.partial(prov.finde_beleg, typen=TYPEN)
 
 
 # --------------------------------------------------------------------------
 # Provenienz-Prüfung
 # --------------------------------------------------------------------------
 
-def finde_beleg(wert: str, typ: str,
-                quellen: list[tuple[str, list[str]]]) -> dict[str, Any] | None:
-    """Sucht den ersten Beleg für `wert` in den Quelldateien. Rückgabe:
-    Fundstelle `{datei, zeile, zitat}` oder None (nicht belegt)."""
-    ziel = _kanon_ziel(wert, typ)
-    if not ziel:
-        return None
-    for datei, zeilen in quellen:
-        for i, zeile in enumerate(zeilen, start=1):
-            if _zeile_belegt(zeile, typ, ziel):
-                return {"datei": datei, "zeile": i, "zitat": zeile.strip()}
-    return None
-
-
 def sammle_kritische_werte(aktenkopf: dict[str, Any]) -> list[dict[str, str]]:
     """Läuft die bekannten Fundorte kritischer Werte defensiv ab (überspringt
     fehlerhaft getypte Strukturen, damit auch bei Schema-Fehlern kein Traceback
     entsteht) und liefert `[{pfad, typ, wert}]`."""
     werte: list[dict[str, str]] = []
-
-    def nichtleer(v: Any) -> bool:
-        return isinstance(v, str) and v.strip() != ""
 
     ak = aktenkopf.get("aktenkopf")
     if isinstance(ak, dict) and nichtleer(ak.get("eingangsdatum")):
@@ -265,24 +188,7 @@ def sammle_kritische_werte(aktenkopf: dict[str, Any]) -> list[dict[str, str]]:
 
 def pruefe_provenienz(aktenkopf: dict[str, Any],
                       quellen: list[tuple[str, list[str]]]) -> list[dict[str, Any]]:
-    ergebnisse: list[dict[str, Any]] = []
-    for kw in sammle_kritische_werte(aktenkopf):
-        beleg = finde_beleg(kw["wert"], kw["typ"], quellen)
-        if beleg is not None:
-            ergebnisse.append({
-                "pfad": kw["pfad"], "typ": kw["typ"], "wert": kw["wert"],
-                "status": STATUS_BELEGT, "fundstelle": beleg,
-                "begruendung": f"wörtlich in Quelle gefunden (Normalisierung: {kw['typ']})",
-            })
-        else:
-            ergebnisse.append({
-                "pfad": kw["pfad"], "typ": kw["typ"], "wert": kw["wert"],
-                "status": STATUS_NICHT_BELEGT, "fundstelle": None,
-                "begruendung": ("kein Vorkommen in den Quelldateien "
-                                f"(Normalisierung: {kw['typ']}) — Wert streichen "
-                                "oder als Lücke ausweisen"),
-            })
-    return ergebnisse
+    return prov.pruefe_provenienz(sammle_kritische_werte(aktenkopf), quellen, TYPEN)
 
 
 # --------------------------------------------------------------------------
@@ -303,20 +209,6 @@ def _ist_iso(s: Any) -> bool:
         return True
     except ValueError:
         return False
-
-
-def _leer(v: Any) -> bool:
-    return v is None or (isinstance(v, str) and v.strip() == "")
-
-
-def _luecken_felder(aktenkopf: dict[str, Any]) -> set[str]:
-    felder: set[str] = set()
-    luecken = aktenkopf.get("luecken")
-    if isinstance(luecken, list):
-        for l in luecken:
-            if isinstance(l, dict) and isinstance(l.get("feld"), str):
-                felder.add(l["feld"].strip())
-    return felder
 
 
 def pruefe_schema(aktenkopf: dict[str, Any]) -> list[str]:
@@ -501,15 +393,11 @@ def main(argv: list[str] | None = None) -> int:
 
     report = baue_report(aktenkopf, quellen, aktenkopf_datei=str(aktenkopf_pfad))
 
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        try:
-            Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-        except OSError as exc:
-            print(f"Fehler: Report konnte nicht geschrieben werden: {exc}", file=sys.stderr)
-            return 2
-    else:
-        print(ausgabe)
+    try:
+        schreibe_report(report, args.output)
+    except CliFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
 
     return 0 if report_ist_sauber(report) else 1
 

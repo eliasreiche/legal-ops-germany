@@ -3,10 +3,20 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "verify"))
 
 import struktur_lint  # noqa: E402
+
+
+def _fehler(pruefung, *args) -> list[str]:
+    """Ruft eine Lint-Prüfung mit frischer Fehlerliste auf und liefert
+    sie zurück — die Liste ist bei allen Prüfungen das letzte Argument."""
+    fehler: list[str] = []
+    pruefung(*args, fehler)
+    return fehler
 
 
 def test_frontmatter_liest_quoted_werte():
@@ -22,8 +32,9 @@ def test_frontmatter_fehlt():
 
 def test_alle_skills_gefunden():
     # 18 Skill-Kandidaten sind von Anfang an sichtbar (D8); #19 kontext-sync
-    # kommt mit dem Kontext-Layer-Fundament (D19) hinzu.
-    assert len(struktur_lint.skill_dirs()) == 19
+    # kam mit dem Kontext-Layer-Fundament (D19) hinzu, zitat-pruefer ist
+    # geparkt und aus dem Baum entfernt (nur in der Git-History).
+    assert len(struktur_lint.skill_dirs()) == 18
 
 
 def _skill(tmp_path, name, status, extra="", mit_tests=False):
@@ -45,8 +56,7 @@ def test_pruefe_skill_meldet_fehlende_pflichtfelder(tmp_path):
     (skill / "tests").mkdir(parents=True)
     (skill / "SKILL.md").write_text(
         "---\nname: kaputter-skill\nstatus: stable\n---\n# x\n", encoding="utf-8")
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(skill, fehler)
+    fehler = _fehler(struktur_lint.pruefe_skill, skill)
     meldungen = "\n".join(fehler)
     assert "description" in meldungen   # Pflicht seit 197a96f (Skill-Discovery)
     assert "rdg_einordnung" in meldungen
@@ -67,38 +77,36 @@ def test_altes_plugin_feld_meldet_umbenennung(tmp_path):
         'plugin: intake\n'
         'rdg_einordnung: "x"\ndaten_hinweis: "x"\nhaftung: "x"\n---\n# x\n',
         encoding="utf-8")
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(skill, fehler)
+    fehler = _fehler(struktur_lint.pruefe_skill, skill)
     meldungen = "\n".join(fehler)
     assert "`plugin:` heißt seit 2026-07-14 `bereich:`" in meldungen
     assert "Pflichtfeld `bereich` fehlt" not in meldungen
 
 
 def test_beta_verlangt_echte_tests(tmp_path):
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(_skill(tmp_path, "leerer-skill", "beta"), fehler)
+    fehler = _fehler(
+        struktur_lint.pruefe_skill, _skill(tmp_path, "leerer-skill", "beta"))
     assert any("ohne Testdateien" in f for f in fehler)
 
 
 def test_beta_mit_tests_ist_sauber(tmp_path):
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(
-        _skill(tmp_path, "beta-skill", "beta", mit_tests=True), fehler)
+    fehler = _fehler(struktur_lint.pruefe_skill,
+                     _skill(tmp_path, "beta-skill", "beta", mit_tests=True))
     assert fehler == []
 
 
 def test_getestet_verlangt_haendische_abnahme(tmp_path):
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(
-        _skill(tmp_path, "auto-skill", "getestet", mit_tests=True), fehler)
+    fehler = _fehler(
+        struktur_lint.pruefe_skill,
+        _skill(tmp_path, "auto-skill", "getestet", mit_tests=True))
     assert any("haendisch_getestet" in f for f in fehler)
 
 
 def test_getestet_mit_abnahme_und_tests_ist_sauber(tmp_path):
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(
+    fehler = _fehler(
+        struktur_lint.pruefe_skill,
         _skill(tmp_path, "fertig-skill", "getestet",
-               extra="haendisch_getestet: 2026-07-11\n", mit_tests=True), fehler)
+               extra="haendisch_getestet: 2026-07-11\n", mit_tests=True))
     assert fehler == []
 
 
@@ -137,16 +145,14 @@ def test_containment_akzeptiert_plugin_relative_referenzen(tmp_path):
           "[Konvention](https://example.org/CONVENTIONS.md).\n")
     skill = _plugin_skill(tmp_path, skill_md=md,
                           core_files=["core/calc/fristen/executor.py"])
-    fehler: list[str] = []
-    struktur_lint.pruefe_containment(skill, fehler)
+    fehler = _fehler(struktur_lint.pruefe_containment, skill)
     assert fehler == [], fehler
 
 
 def test_containment_meldet_escape_doku_link(tmp_path):
     md = "# demo\nSiehe [CONVENTIONS](../../../../CONVENTIONS.md).\n"
     skill = _plugin_skill(tmp_path, skill_md=md)
-    fehler: list[str] = []
-    struktur_lint.pruefe_containment(skill, fehler)
+    fehler = _fehler(struktur_lint.pruefe_containment, skill)
     assert any("verlässt die Plugin-Grenze" in f for f in fehler), fehler
 
 
@@ -154,8 +160,7 @@ def test_containment_meldet_cwd_relativen_executor(tmp_path):
     md = "# demo\npython3 core/calc/fristen/executor.py --input x.json\n"
     skill = _plugin_skill(tmp_path, skill_md=md,
                           core_files=["core/calc/fristen/executor.py"])
-    fehler: list[str] = []
-    struktur_lint.pruefe_containment(skill, fehler)
+    fehler = _fehler(struktur_lint.pruefe_containment, skill)
     assert any("nicht plugin-relativ" in f for f in fehler), fehler
 
 
@@ -163,8 +168,7 @@ def test_containment_meldet_fehlenden_executor(tmp_path):
     md = ("# demo\n"
           "python3 ${CLAUDE_PLUGIN_ROOT}/core/calc/fehlt/executor.py --input x.json\n")
     skill = _plugin_skill(tmp_path, skill_md=md)
-    fehler: list[str] = []
-    struktur_lint.pruefe_containment(skill, fehler)
+    fehler = _fehler(struktur_lint.pruefe_containment, skill)
     assert any("existiert nicht" in f for f in fehler), fehler
 
 
@@ -172,19 +176,27 @@ def test_containment_meldet_fehlenden_executor(tmp_path):
 # Kontext-Layer (D11, D19) — optionale kontext_reads/kontext_writes-Felder.
 # --------------------------------------------------------------------------
 
-def test_liste_feld_flow_stil():
-    text = "---\nkontext_reads: [mandate/*.md, kontakte.md]\n---\n# x\n"
-    assert struktur_lint.liste_feld(text, "kontext_reads") == ["mandate/*.md", "kontakte.md"]
-
-
 def test_liste_feld_block_stil():
     text = "---\nkontext_writes:\n  - mandate/*.md\n  - kontakte.md\n---\n# x\n"
     assert struktur_lint.liste_feld(text, "kontext_writes") == ["mandate/*.md", "kontakte.md"]
 
 
-def test_liste_feld_einzelner_skalar():
+def test_liste_feld_flow_stil_ist_fehler():
+    text = "---\nkontext_reads: [mandate/*.md, kontakte.md]\n---\n# x\n"
+    with pytest.raises(ValueError, match="Block-Stil"):
+        struktur_lint.liste_feld(text, "kontext_reads")
+
+
+def test_liste_feld_einzelner_skalar_ist_fehler():
     text = "---\nkontext_reads: mandate/*.md\n---\n# x\n"
-    assert struktur_lint.liste_feld(text, "kontext_reads") == ["mandate/*.md"]
+    with pytest.raises(ValueError, match="Block-Stil"):
+        struktur_lint.liste_feld(text, "kontext_reads")
+
+
+def test_pruefe_kontext_felder_flow_stil_meldet_lint_fehler():
+    text = "---\nkontext_reads: [mandate/*.md]\n---\n"
+    fehler = _fehler(struktur_lint.pruefe_kontext_felder, text, "ref")
+    assert any("Block-Stil" in f for f in fehler), fehler
 
 
 def test_liste_feld_nicht_vorhanden_ist_none():
@@ -193,56 +205,51 @@ def test_liste_feld_nicht_vorhanden_ist_none():
 
 
 def test_pruefe_kontext_felder_gueltige_muster_sind_sauber():
-    text = "---\nkontext_reads: [mandate/*.md, kanzlei.md]\nkontext_writes: [export/*]\n---\n"
-    fehler: list[str] = []
-    struktur_lint.pruefe_kontext_felder(text, "ref", fehler)
+    text = ("---\nkontext_reads:\n  - mandate/*.md\n  - kanzlei.md\n"
+            "kontext_writes:\n  - export/*\n---\n")
+    fehler = _fehler(struktur_lint.pruefe_kontext_felder, text, "ref")
     assert fehler == []
 
 
 def test_pruefe_kontext_felder_leere_liste_ist_fehler():
-    text = "---\nkontext_reads: []\n---\n"
-    fehler: list[str] = []
-    struktur_lint.pruefe_kontext_felder(text, "ref", fehler)
+    text = "---\nkontext_reads:\nkontext_writes:\n---\n"
+    fehler = _fehler(struktur_lint.pruefe_kontext_felder, text, "ref")
     assert any("leer" in f for f in fehler)
 
 
 def test_pruefe_kontext_felder_muster_ohne_dokumentierten_bereich_ist_fehler():
-    text = "---\nkontext_reads: [irgendwo/x.md]\n---\n"
-    fehler: list[str] = []
-    struktur_lint.pruefe_kontext_felder(text, "ref", fehler)
+    text = "---\nkontext_reads:\n  - irgendwo/x.md\n---\n"
+    fehler = _fehler(struktur_lint.pruefe_kontext_felder, text, "ref")
     assert any("dokumentierten kontext/-Bereich" in f for f in fehler)
 
 
 def test_pruefe_kontext_felder_leeres_muster_ist_fehler():
-    text = "---\nkontext_reads: [mandate/*.md, \"\"]\n---\n"
-    fehler: list[str] = []
-    struktur_lint.pruefe_kontext_felder(text, "ref", fehler)
+    text = "---\nkontext_reads:\n  - mandate/*.md\n  - \"\"\n---\n"
+    fehler = _fehler(struktur_lint.pruefe_kontext_felder, text, "ref")
     assert any("leeres Muster" in f for f in fehler)
 
 
 def test_pruefe_skill_ohne_kontext_felder_bleibt_gueltig(tmp_path):
     # Kein Pflichtfeld — bestehende Skills ohne kontext_reads/writes bleiben
     # gültig (Regressionsschutz für die 18 bestehenden Skills).
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(_skill(tmp_path, "beta-skill", "beta", mit_tests=True), fehler)
+    fehler = _fehler(struktur_lint.pruefe_skill,
+                     _skill(tmp_path, "beta-skill", "beta", mit_tests=True))
     assert fehler == []
 
 
 def test_pruefe_skill_mit_gueltigen_kontext_feldern_bleibt_gueltig(tmp_path):
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(
+    fehler = _fehler(
+        struktur_lint.pruefe_skill,
         _skill(tmp_path, "beta-skill", "beta", mit_tests=True,
-               extra="kontext_reads: [mandate/*.md]\nkontext_writes: [kontakte.md]\n"),
-        fehler)
+               extra="kontext_reads:\n  - mandate/*.md\nkontext_writes:\n  - kontakte.md\n"))
     assert fehler == []
 
 
 def test_pruefe_skill_mit_ungueltigem_kontext_feld_meldet_fehler(tmp_path):
-    fehler: list[str] = []
-    struktur_lint.pruefe_skill(
+    fehler = _fehler(
+        struktur_lint.pruefe_skill,
         _skill(tmp_path, "beta-skill", "beta", mit_tests=True,
-               extra="kontext_reads: [irgendwo/x.md]\n"),
-        fehler)
+               extra="kontext_reads:\n  - irgendwo/x.md\n"))
     assert any("dokumentierten kontext/-Bereich" in f for f in fehler)
 
 
@@ -256,6 +263,5 @@ def test_containment_meldet_mehrzeilige_cwd_relative_invocation(tmp_path):
           "  --input x.json\n")
     skill = _plugin_skill(tmp_path, skill_md=md,
                           core_files=["core/calc/fristen/executor.py"])
-    fehler: list[str] = []
-    struktur_lint.pruefe_containment(skill, fehler)
+    fehler = _fehler(struktur_lint.pruefe_containment, skill)
     assert any("nicht plugin-relativ" in f for f in fehler), fehler

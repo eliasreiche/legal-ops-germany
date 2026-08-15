@@ -9,31 +9,22 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-EXECUTOR = REPO / "plugins" / "legal-ops" / "core" / "calc" / "fristen" / "executor.py"
+from conftest import CALC, lauf, report, schreibe  # noqa: E402
+
+EXECUTOR = CALC / "fristen" / "executor.py"
 SCHEMA = Path(__file__).resolve().parents[1] / "schema"
 
 
 def _lauf(eingabe: dict | str, tmp_path: Path) -> subprocess.CompletedProcess:
-    eingabe_pfad = tmp_path / "anfrage.json"
-    if isinstance(eingabe, str):
-        eingabe_pfad.write_text(eingabe, encoding="utf-8")
-    else:
-        eingabe_pfad.write_text(json.dumps(eingabe), encoding="utf-8")
-    return subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(eingabe_pfad)],
-        capture_output=True, text=True)
+    return lauf(EXECUTOR, "--input", schreibe(tmp_path / "anfrage.json", eingabe))
 
 
 def _report(eingabe: dict, tmp_path: Path) -> dict:
-    ergebnis = _lauf(eingabe, tmp_path)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    return json.loads(ergebnis.stdout)
+    return report(EXECUTOR, "--input", schreibe(tmp_path / "anfrage.json", eingabe))
 
 
 # --------------------------------------------------------------------------
@@ -109,10 +100,7 @@ def test_output_datei(tmp_path):
                                    "fristart": "berufung",
                                    "bundesland": "NW"}), encoding="utf-8")
     ziel = tmp_path / "report.json"
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(eingabe),
-         "--output", str(ziel)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", eingabe, "--output", ziel)
     assert ergebnis.returncode == 0, ergebnis.stderr
     report = json.loads(ziel.read_text(encoding="utf-8"))
     assert report["ergebnis"]["fristende"] == "2026-02-16"
@@ -123,10 +111,7 @@ def test_output_datei(tmp_path):
 # --------------------------------------------------------------------------
 
 def test_beispiel_report_synchron():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--input", str(SCHEMA / "beispiel-eingabe.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe.json")
     assert ergebnis.returncode == 0, ergebnis.stderr
     erzeugt = json.loads(ergebnis.stdout)
     gespeichert = json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8"))
@@ -137,10 +122,7 @@ def test_beispiel_report_synchron():
 
 
 def test_beispiel_eingabe_frei_laeuft():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--input", str(SCHEMA / "beispiel-eingabe-frei.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-frei.json")
     assert ergebnis.returncode == 0, ergebnis.stderr
     report = json.loads(ergebnis.stdout)
     assert report["ergebnis"]["fristende_bei_teilgebietlichem_feiertag"] == "2025-08-18"
@@ -196,9 +178,7 @@ def test_fehler_kaputtes_json(tmp_path):
 
 
 def test_fehler_datei_fehlt(tmp_path):
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(tmp_path / "nix.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", tmp_path / "nix.json")
     assert ergebnis.returncode == 2
     assert "nicht gefunden" in ergebnis.stderr
 
@@ -262,10 +242,7 @@ def test_befund4_output_pfad_nicht_schreibbar(tmp_path):
     eingabe.write_text(json.dumps({"ereignis_datum": "2026-01-15",
                                    "fristart": "berufung",
                                    "bundesland": "NW"}), encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(eingabe),
-         "--output", str(tmp_path / "gibt-es-nicht" / "report.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", eingabe, "--output", tmp_path / "gibt-es-nicht" / "report.json")
     assert ergebnis.returncode == 2
     assert "Traceback" not in ergebnis.stderr
     assert "geschrieben" in ergebnis.stderr

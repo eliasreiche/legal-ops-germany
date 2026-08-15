@@ -50,6 +50,7 @@ import argparse
 import datetime as _dt
 import hashlib
 import json
+import shutil
 import sys
 from pathlib import Path
 from typing import Any
@@ -148,7 +149,7 @@ def sync(richtung: str, quelle_dir: Path, kontext_dir: Path,
         if ziel_geaendert and ziel_hash_vorher != source_hash:
             konflikt_pfad = ziel_pfad.with_name(ziel_pfad.name + ".conflict")
             konflikt_pfad.parent.mkdir(parents=True, exist_ok=True)
-            konflikt_pfad.write_bytes(source_pfad.read_bytes())
+            shutil.copyfile(source_pfad, konflikt_pfad)
             eintrag_konflikt = {"eintrag": key, "konflikt_datei": str(konflikt_pfad),
                                 "hinweis": ("beide Seiten seit letztem Sync geändert (oder "
                                            "kein Sync-Verlauf, Ziel weicht ab) — Zieldatei "
@@ -161,10 +162,11 @@ def sync(richtung: str, quelle_dir: Path, kontext_dir: Path,
         # Sicher: Quelle -> Ziel kopieren (Ziel unverändert seit letztem Sync
         # bzw. identisch mit der neuen Quelle).
         ziel_pfad.parent.mkdir(parents=True, exist_ok=True)
-        ziel_pfad.write_bytes(source_pfad.read_bytes())
+        shutil.copyfile(source_pfad, ziel_pfad)
+        # Nach der Kopie sind beide Seiten byte-identisch -> derselbe Hash.
         eintraege[key] = {
-            "quelle_hash": _hash_datei(quelle_pfad),
-            "kontext_hash": _hash_datei(kontext_pfad),
+            "quelle_hash": source_hash,
+            "kontext_hash": source_hash,
             "letzter_sync": jetzt,
             "richtung": richtung,
         }

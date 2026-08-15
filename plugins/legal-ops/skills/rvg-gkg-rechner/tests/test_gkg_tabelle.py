@@ -8,14 +8,10 @@ Streitwert-Höchstgrenze (§ 39 Abs. 2 GKG, 30 Mio. €).
 from __future__ import annotations
 
 import datetime as dt
-import sys
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-sys.path.insert(0, str(REPO / "plugins" / "legal-ops" / "core" / "calc"))
 
 from gkg.tabelle import GKGTabellenFehler, einfachgebuehr, stand_fuer_stichtag  # noqa: E402
 from wertgebuehr_formel import WertgebuehrFehler  # noqa: E402

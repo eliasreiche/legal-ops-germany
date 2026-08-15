@@ -1,39 +1,28 @@
-"""Tests für den Skill-Executor (CLI, P2) und die Zitat-Prüfer-Integration.
+"""Tests für den Skill-Executor (CLI, P2).
 
 Deckt ab: CLI über subprocess (Mandat rein → Report raus), Beispieldateien-
 Round-Trip, adversariale Inputs (kaputtes JSON, unbekanntes Feld, unzulässiger
-Wert) mit sauberem Exit 2 ohne Traceback, sowie den abschließenden
-zitat-pruefer-Lauf über die mitgelieferte quellen-registry.json.
+Wert) mit sauberem Exit 2 ohne Traceback.
 """
 from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import lauf, report, schreibe  # noqa: E402
+
 SKILL = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL / "executor.py"
 SCHEMA = SKILL / "schema"
-VERIFIER = REPO / "plugins" / "legal-ops" / "skills" / "zitat-pruefer" / "executor.py"
 
 
 def _lauf(eingabe, tmp_path: Path) -> subprocess.CompletedProcess:
-    pfad = tmp_path / "mandat.json"
-    if isinstance(eingabe, str):
-        pfad.write_text(eingabe, encoding="utf-8")
-    else:
-        pfad.write_text(json.dumps(eingabe), encoding="utf-8")
-    return subprocess.run(
-        [sys.executable, str(EXECUTOR), "--mandat", str(pfad)],
-        capture_output=True, text=True)
+    return lauf(EXECUTOR, "--mandat", schreibe(tmp_path / "mandat.json", eingabe))
 
 
 def _report(eingabe, tmp_path: Path) -> dict:
-    ergebnis = _lauf(eingabe, tmp_path)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    return json.loads(ergebnis.stdout)
+    return report(EXECUTOR, "--mandat", schreibe(tmp_path / "mandat.json", eingabe))
 
 
 # --------------------------------------------------------------------------
@@ -56,12 +45,9 @@ def test_cli_alle_werte_aus_executor(tmp_path):
 
 
 def test_cli_output_datei(tmp_path):
-    mandat = tmp_path / "mandat.json"
-    mandat.write_text(json.dumps({"kataloggeschaeft": "keins"}), encoding="utf-8")
+    mandat = schreibe(tmp_path / "mandat.json", {"kataloggeschaeft": "keins"})
     ziel = tmp_path / "report.json"
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--mandat", str(mandat),
-         "--output", str(ziel)], capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--mandat", mandat, "--output", ziel)
     assert ergebnis.returncode == 0, ergebnis.stderr
     report = json.loads(ziel.read_text(encoding="utf-8"))
     assert report["klassifikationsvorschlag"] in (
@@ -73,12 +59,7 @@ def test_cli_output_datei(tmp_path):
 # --------------------------------------------------------------------------
 
 def test_beispiel_report_synchron():
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR),
-         "--mandat", str(SCHEMA / "beispiel-mandat.json")],
-        capture_output=True, text=True)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    erzeugt = json.loads(ergebnis.stdout)
+    erzeugt = report(EXECUTOR, "--mandat", SCHEMA / "beispiel-mandat.json")
     gespeichert = json.loads((SCHEMA / "beispiel-report.json").read_text("utf-8"))
     erzeugt["meta"].pop("quelle_datei")
     gespeichert["meta"].pop("quelle_datei")
@@ -105,9 +86,7 @@ def test_fehler_kaputtes_json(tmp_path):
 
 
 def test_fehler_datei_fehlt(tmp_path):
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--mandat", str(tmp_path / "nix.json")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--mandat", tmp_path / "nix.json")
     assert ergebnis.returncode == 2
     assert "nicht gefunden" in ergebnis.stderr
 
@@ -131,37 +110,9 @@ def test_fehler_kein_objekt(tmp_path):
     assert "JSON-Objekt" in ergebnis.stderr
 
 
-# --------------------------------------------------------------------------
-# Zitat-Prüfer-Integration (letzter Skill-Schritt)
-# --------------------------------------------------------------------------
-
-def test_zitat_pruefer_verifiziert_gwg_normen(tmp_path):
-    # Die gerenderte Doku zitiert die GwG-§§; mit der mitgelieferten Registry
-    # müssen sie ✅ verifiziert (kein ❌ abweichend) sein.
-    doku = tmp_path / "doku.md"
-    doku.write_text(
-        "GwG-Risiko-Dokumentation\n\n"
-        "Anwendbarkeit nach § 2 GwG. Allgemeine Sorgfaltspflichten § 10 GwG, "
-        "vereinfachte § 14 GwG, verstärkte § 15 GwG. Verdachtsmeldung § 43 GwG.\n",
-        encoding="utf-8")
-    ergebnis = subprocess.run(
-        [sys.executable, str(VERIFIER), "--input", str(doku),
-         "--registry", str(SCHEMA / "quellen-registry.json")],
-        capture_output=True, text=True)
-    assert ergebnis.returncode == 0, ergebnis.stderr
-    report = json.loads(ergebnis.stdout)
-    assert report["zusammenfassung"]["abweichend"] == 0
-    gwg_zitate = [z for z in report["zitate"]
-                  if z["typ"] == "norm" and "GwG" in z["roh"]]
-    assert gwg_zitate
-    for z in gwg_zitate:
-        assert z["zustand"] == "verifiziert", z
-
-
-def test_quellen_registry_gueltiges_format():
-    # Registry lädt fehlerfrei durch den Verifier (strukturell gültig).
-    sys.path.insert(0, str(VERIFIER.parent))
-    import executor as verifier_exec  # noqa: E402
-    daten = verifier_exec.lade_registry(SCHEMA / "quellen-registry.json")
-    assert {n["paragraph"] for n in daten["normen"]} >= {
-        "2", "10", "14", "15", "43"}
+def test_quellen_registry_deckt_die_zitierten_gwg_normen():
+    """Die Registry ist die Belegliste für die händische Normprüfung — sie muss
+    parsebar sein und die vom Executor zitierten §§ GwG führen."""
+    registry = json.loads((SCHEMA / "quellen-registry.json").read_text(encoding="utf-8"))
+    gefuehrt = {(n["kuerzel"], n["paragraph"]) for n in registry["normen"]}
+    assert {("GwG", p) for p in ("2", "10", "14", "15", "43")} <= gefuehrt

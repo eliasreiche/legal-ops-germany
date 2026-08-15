@@ -14,13 +14,13 @@ from __future__ import annotations
 import copy
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[5]
-EXECUTOR = REPO / "plugins" / "legal-ops" / "core" / "calc" / "extf" / "executor.py"
+from conftest import CALC, lauf, schreibe  # noqa: E402
+
+EXECUTOR = CALC / "extf" / "executor.py"
 SCHEMA = Path(__file__).resolve().parents[1] / "schema"
 GOLDEN = Path(__file__).resolve().parent / "golden"
 
@@ -51,19 +51,12 @@ GRUNDFALL = {
 
 def _lauf(eingabe, tmp_path: Path, *, output: str = "stapel.csv",
           output_report: str | None = "report.json") -> tuple[subprocess.CompletedProcess, Path, Path | None]:
-    eingabe_pfad = tmp_path / "eingabe.json"
-    if isinstance(eingabe, str):
-        eingabe_pfad.write_text(eingabe, encoding="utf-8")
-    else:
-        eingabe_pfad.write_text(json.dumps(eingabe), encoding="utf-8")
+    eingabe_pfad = schreibe(tmp_path / "eingabe.json", eingabe)
     ausgabe_pfad = tmp_path / output
-    args = [sys.executable, str(EXECUTOR), "--input", str(eingabe_pfad),
-            "--output", str(ausgabe_pfad)]
-    report_pfad = None
-    if output_report:
-        report_pfad = tmp_path / output_report
-        args += ["--output-report", str(report_pfad)]
-    ergebnis = subprocess.run(args, capture_output=True, text=True)
+    report_pfad = tmp_path / output_report if output_report else None
+    extra = ["--output-report", report_pfad] if report_pfad else []
+    ergebnis = lauf(EXECUTOR, "--input", eingabe_pfad,
+                    "--output", ausgabe_pfad, *extra)
     return ergebnis, ausgabe_pfad, report_pfad
 
 
@@ -163,20 +156,14 @@ def test_beispiel_stapel_synchron(tmp_path):
     aus schema/beispiel-eingabe.json entsprechen (Golden-File im Skill).
     Schreibt bewusst in ein tmp_path-Ziel, nie in die Schema-Fixture selbst."""
     ziel = tmp_path / "stapel.csv"
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(SCHEMA / "beispiel-eingabe.json"),
-         "--output", str(ziel)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe.json", "--output", ziel)
     assert ergebnis.returncode == 0, ergebnis.stderr
     assert ziel.read_bytes() == (SCHEMA / "beispiel-stapel.csv").read_bytes()
 
 
 def test_beispiel_report_synchron(tmp_path):
     ziel = tmp_path / "stapel.csv"
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(SCHEMA / "beispiel-eingabe.json"),
-         "--output", str(ziel)],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe.json", "--output", ziel)
     assert ergebnis.returncode == 0, ergebnis.stderr
     erzeugt = json.loads(ergebnis.stdout)
     gespeichert = json.loads((SCHEMA / "beispiel-report.json").read_text(encoding="utf-8"))
@@ -375,10 +362,7 @@ def test_reject_kaputtes_json(tmp_path):
 
 
 def test_reject_eingabedatei_fehlt(tmp_path):
-    ergebnis = subprocess.run(
-        [sys.executable, str(EXECUTOR), "--input", str(tmp_path / "nix.json"),
-         "--output", str(tmp_path / "out.csv")],
-        capture_output=True, text=True)
+    ergebnis = lauf(EXECUTOR, "--input", tmp_path / "nix.json", "--output", tmp_path / "out.csv")
     assert ergebnis.returncode == 2
     assert "nicht gefunden" in ergebnis.stderr
 
@@ -456,3 +440,11 @@ def test_typfuzz_strukturebene_nie_traceback(tmp_path):
             _pruefe_typfuzz_kontrakt(eingabe, tmp_path, nr,
                                      f"{mutation}={wert!r}", erwarte_exit=(2,))
             nr += 1
+
+
+def test_header_spec_positionen_sind_1_bis_31_in_reihenfolge():
+    """Drift-Wächter JSON↔Code: `_header_zeile()` baut die Token hart über
+    range(1, 32); die Spec-Datei muss dieselbe Positionsfolge tragen."""
+    spec = json.loads(
+        (CALC / "extf" / "header_format_700.json").read_text(encoding="utf-8"))
+    assert [f["pos"] for f in spec["felder"]] == list(range(1, 32))

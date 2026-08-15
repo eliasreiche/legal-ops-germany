@@ -25,9 +25,8 @@ Exit-Codes: 0 = Report erzeugt, 2 = Eingabefehler.
 """
 from __future__ import annotations
 
-import argparse
 import datetime as _dt
-import json
+import functools
 import re
 import sys
 from pathlib import Path
@@ -35,6 +34,13 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from cli import (  # noqa: E402
+    CliFehler,
+    lese_json_objekt,
+    pflichtfeld,
+    schreibe_report,
+    standard_parser,
+)
 from fristen.rechner import (  # noqa: E402
     FRISTTYP_EREIGNIS,
     FristEingabeFehler,
@@ -45,11 +51,11 @@ from fristen.rechner import (  # noqa: E402
 from feiertage import STAND as FEIERTAGE_STAND  # noqa: E402
 
 # Statische Norm-Belehrungen dieses Moduls (Notfrist- und Verlängerbar-Hinweis
-# in den `hinweise`) — als benannte Vorlagen-Konstanten, damit der
-# CI-Marker-Konsistenz-Test (tests/test_zitiermarker_statisch.py) sie ohne
-# fragiles Quelltext-Grep über STATISCHE_NORM_BELEHRUNGEN abgreifen kann.
-# Wortlaut unverändert bis auf das vorangestellte ✅-Präfix (Muster aus
-# kalender_executor.py); baue_report() nutzt dieselben Vorlagen per .format().
+# in den `hinweise`) — als benannte Vorlagen-Konstanten, damit die Marker-
+# Konsistenz über STATISCHE_NORM_BELEHRUNGEN nachvollziehbar bleibt, ohne
+# fragiles Quelltext-Grep. Wortlaut unverändert bis auf das vorangestellte
+# ✅-Präfix (Muster aus kalender_executor.py); baue_report() nutzt dieselben
+# Vorlagen per .format().
 NOTFRIST_BELEHRUNG_VORLAGE = (
     "✅ {bezeichnung} ist eine Notfrist "
     "(§ 224 Abs. 1 Satz 2 ZPO); sie kann nicht verlängert werden "
@@ -60,14 +66,17 @@ VERLAENGERBAR_BELEHRUNG_VORLAGE = (
     "verlängerbar ({norm}) — Verlängerung ist eine "
     "anwaltliche Entscheidung, nicht Teil dieser Berechnung.")
 
-# Für den CI-Marker-Konsistenz-Test: Notfrist-Vorlage roh (der
-# {bezeichnung}-Platzhalter enthält kein Zitat und stört den zitat-pruefer
-# nicht) plus je Katalog-Fristart mit `verlaengerbar: true` eine instanziierte
-# Verlängerbar-Belehrung (bezeichnung + norm aus fristarten.json, über
-# dieselbe lade_katalog()-Funktion wie baue_report() geladen — keine neue
-# Lade-Abstraktion). Effekt: eine künftige verlängerbare Katalog-Fristart mit
-# nicht in tests/fixtures/statische_normen_registry.json registrierter Norm
-# lässt den CI-Test rot werden — das ist gewollt.
+# Maschinenlesbare Liste der statischen Norm-Belehrungen: Notfrist-Vorlage roh
+# (der {bezeichnung}-Platzhalter enthält kein Zitat) plus je Katalog-Fristart
+# mit `verlaengerbar: true` eine instanziierte Verlängerbar-Belehrung
+# (bezeichnung + norm aus fristarten.json, über dieselbe lade_katalog()-
+# Funktion wie baue_report() geladen — keine neue Lade-Abstraktion).
+# tests/test_zitiermarker_statisch.py prüft darüber die KONSISTENZ des Markers
+# gegen die handgepflegte Quellen-Registry tests/fixtures/
+# statische_normen_registry.json: eine künftige verlängerbare Katalog-Fristart,
+# deren Norm dort nicht geführt ist, lässt den Test rot laufen. Ob die
+# Fundstelle inhaltlich stimmt, ist Maintainer-Abnahme und in der Registry
+# dokumentiert, nicht maschinell geprüft.
 STATISCHE_NORM_BELEHRUNGEN: list[dict[str, str]] = [
     {"marker": "✅", "text": NOTFRIST_BELEHRUNG_VORLAGE},
 ] + [
@@ -77,10 +86,7 @@ STATISCHE_NORM_BELEHRUNGEN: list[dict[str, str]] = [
 ]
 
 
-def _pflichtfeld(eingabe: dict[str, Any], feld: str) -> Any:
-    if feld not in eingabe or eingabe[feld] in (None, ""):
-        raise FristEingabeFehler(f"Pflichtfeld '{feld}' fehlt oder ist leer")
-    return eingabe[feld]
+_pflichtfeld = functools.partial(pflichtfeld, fehler=FristEingabeFehler)
 
 
 _DATUM_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -211,45 +217,19 @@ def baue_report(eingabe: dict[str, Any], quelle_datei: str) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", required=True,
-                        help="JSON-Eingabedatei (Fristanfrage)")
-    parser.add_argument("--output",
-                        help="Zieldatei für den JSON-Report (Default: stdout)")
-    args = parser.parse_args(argv)
+    args = standard_parser(__doc__, "JSON-Eingabedatei (Fristanfrage)").parse_args(argv)
 
     input_pfad = Path(args.input)
-    if not input_pfad.is_file():
-        print(f"Fehler: Eingabedatei nicht gefunden: {input_pfad}", file=sys.stderr)
-        return 2
-
     try:
-        eingabe = json.loads(input_pfad.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        print(f"Fehler: Eingabedatei ist kein gültiges JSON: {exc}", file=sys.stderr)
-        return 2
-    if not isinstance(eingabe, dict):
-        print("Fehler: Eingabe muss ein JSON-Objekt sein", file=sys.stderr)
-        return 2
-
-    try:
+        eingabe = lese_json_objekt(input_pfad)
         report = baue_report(eingabe, quelle_datei=str(input_pfad))
-    except (FristEingabeFehler, ValueError, OverflowError) as exc:
-        # FristEingabeFehler ist der Regelfall; ValueError/OverflowError als
-        # Sicherheitsnetz, damit nie ein Traceback statt Exit 2 erscheint.
+        schreibe_report(report, args.output)
+    except (CliFehler, FristEingabeFehler, ValueError, OverflowError) as exc:
+        # CliFehler/FristEingabeFehler sind der Regelfall; ValueError/
+        # OverflowError als Sicherheitsnetz, damit nie ein Traceback statt
+        # Exit 2 erscheint.
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2
-
-    ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
-    if args.output:
-        try:
-            Path(args.output).write_text(ausgabe + "\n", encoding="utf-8")
-        except OSError as exc:
-            print(f"Fehler: Report-Datei kann nicht geschrieben werden: {exc}",
-                  file=sys.stderr)
-            return 2
-    else:
-        print(ausgabe)
     return 0
 
 

@@ -12,8 +12,9 @@ import sys
 from email.message import EmailMessage
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
-SKILL_DIR = REPO / "plugins" / "legal-ops" / "skills" / "email-akten-zuordnung"
+from conftest import SKILLS  # noqa: E402
+
+SKILL_DIR = SKILLS / "email-akten-zuordnung"
 
 # Eindeutiger Modul-Name (nicht "executor") - siehe Begründung in
 # interessenkollision-check/tests/test_konflikt_executor.py: mehrere Skills

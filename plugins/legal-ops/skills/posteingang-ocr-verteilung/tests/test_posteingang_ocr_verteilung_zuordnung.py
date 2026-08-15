@@ -14,11 +14,11 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[5]
+from conftest import BEISPIEL_KONTEXT  # noqa: E402
+
 SKILL_DIR = Path(__file__).resolve().parents[1]
 EXECUTOR = SKILL_DIR / "executor.py"
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
-BEISPIEL_KONTEXT = REPO / "plugins" / "legal-ops" / "core" / "context" / "beispiel-kontext"
 
 _spec = importlib.util.spec_from_file_location("posteingang_ocr_verteilung_executor_z", EXECUTOR)
 executor = importlib.util.module_from_spec(_spec)

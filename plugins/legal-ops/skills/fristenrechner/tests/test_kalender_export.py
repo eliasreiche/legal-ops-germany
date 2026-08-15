@@ -9,35 +9,27 @@ Fristberechnungs-Executor erzeugt (End-to-End: calc → export).
 """
 from __future__ import annotations
 
-import json
 import subprocess
-import sys
 from pathlib import Path
 
-import pytest
+from conftest import CALC, lauf, schreibe  # noqa: E402
 
-REPO = Path(__file__).resolve().parents[5]
-CALC = REPO / "plugins" / "legal-ops" / "core" / "calc" / "fristen" / "executor.py"
-EXPORT = REPO / "plugins" / "legal-ops" / "core" / "calc" / "fristen" / "kalender_executor.py"
+BERECHNE = CALC / "fristen" / "executor.py"
+EXPORT = CALC / "fristen" / "kalender_executor.py"
 SCHEMA = Path(__file__).resolve().parents[1] / "schema"
 
 
 def _report(eingabe: dict, tmp_path: Path, name: str = "report") -> Path:
     """Erzeugt einen echten Executor-Report als Datei (P3-Quelle)."""
-    anfrage = tmp_path / f"anfrage-{name}.json"
-    anfrage.write_text(json.dumps(eingabe), encoding="utf-8")
+    anfrage = schreibe(tmp_path / f"anfrage-{name}.json", eingabe)
     ziel = tmp_path / f"{name}.json"
-    res = subprocess.run(
-        [sys.executable, str(CALC), "--input", str(anfrage), "--output", str(ziel)],
-        capture_output=True, text=True)
+    res = lauf(BERECHNE, "--input", anfrage, "--output", ziel)
     assert res.returncode == 0, res.stderr
     return ziel
 
 
 def _export(report: Path, *extra: str) -> subprocess.CompletedProcess:
-    return subprocess.run(
-        [sys.executable, str(EXPORT), "--report", str(report), *extra],
-        capture_output=True, text=True)
+    return lauf(EXPORT, "--report", report, *extra)
 
 
 def _stdout_ics(report: Path, *extra: str) -> str:
@@ -196,9 +188,8 @@ def test_fehler_report_fehlt(tmp_path):
 
 def test_fehler_kein_executor_report(tmp_path):
     # Modellgenerierter „Report" ohne Executor-Marke wird abgelehnt (P3).
-    fake = tmp_path / "fake.json"
-    fake.write_text(json.dumps({"ergebnis": {"fristende": "2026-02-16"}}),
-                    encoding="utf-8")
+    fake = schreibe(tmp_path / "fake.json",
+                    {"ergebnis": {"fristende": "2026-02-16"}})
     res = _export(fake)
     assert res.returncode == 2
     assert "quelle" in res.stderr

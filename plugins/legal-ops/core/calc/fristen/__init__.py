@@ -14,5 +14,4 @@ from .rechner import (  # noqa: F401
     berechne_frist,
     fristart_nach_id,
     lade_katalog,
-    naechster_werktag,
 )

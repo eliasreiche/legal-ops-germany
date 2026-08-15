@@ -24,6 +24,7 @@ from __future__ import annotations
 import csv
 import datetime as _dt
 import io
+import json
 import sys
 from dataclasses import dataclass
 from decimal import Decimal
@@ -48,14 +49,12 @@ _FORMATNAME = "Buchungsstapel"
 _HEADER_FELDER = 31
 _SPALTEN = 20
 
-# Erwartete Spaltenköpfe (Zeile 2) — 1:1 aus buchungssatz_spalten_700.json.
+# Erwartete Spaltenköpfe (Zeile 2) — aus derselben Spaltendefinition wie der
+# Writer (executor.py), damit Reader und Writer nie auseinanderlaufen.
 _ERWARTETE_KOEPFE = [
-    "Umsatz (ohne Soll/Haben-Kz)", "Soll/Haben-Kennzeichen", "WKZ Umsatz",
-    "Kurs", "Basis-Umsatz", "WKZ Basis-Umsatz", "Konto",
-    "Gegenkonto (ohne BU-Schlüssel)", "BU-Schlüssel", "Belegdatum",
-    "Belegfeld 1", "Belegfeld 2", "Skonto", "Buchungstext", "Postensperre",
-    "Diverse Adressnummer", "Geschäftspartnerbank", "Sachverhalt",
-    "Zinssperre", "Beleglink",
+    s["feld"] for s in json.loads(
+        (_EXTF_DIR / "buchungssatz_spalten_700.json").read_text(encoding="utf-8")
+    )["spalten"]
 ]
 
 
