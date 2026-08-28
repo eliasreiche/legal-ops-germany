@@ -47,8 +47,15 @@ Genau **eine** Quelle je Lauf (vollständiges Schema: [`schema/README.md`](schem
 
 | Quelle | Flag | Format | Charakter |
 |---|---|---|---|
-| OPOS-Liste | `--opos-csv` | `.csv` (Semikolon, Komma-Dezimal, Kopfzeile) | **präzise Primärquelle** — je Zeile ein Posten mit Fälligkeitsdatum |
-| Buchungsstapel | `--extf` | DATEV-EXTF (Format 700, Kategorie 21) | **ergänzend** — vereinfachte Belegfeld-1-Aggregation, kein Fälligkeitsdatum im EXTF |
+| OPOS-Liste | `--opos-csv` | `.csv` (Semikolon, Komma-Dezimal, Kopfzeile) | **Normalweg und präzise Primärquelle** — je Zeile ein Posten mit Fälligkeitsdatum |
+| Buchungsstapel | `--extf` | DATEV-EXTF (Format 700, Kategorie 21) | **Sonderweg, nur bei DATEV-Anbindung** — vereinfachte Belegfeld-1-Aggregation, kein Fälligkeitsdatum im EXTF |
+
+> **EXTF ist der Sonderweg, keine gleichwertige Zweitquelle.** EXTF-Buchungs-
+> stapel entstehen nur dort, wo eine DATEV-Anbindung besteht (Export aus DATEV
+> bzw. vom Steuerberater). Kleine Kanzleien ohne DATEV haben so eine Datei
+> schlicht nicht — für sie ist die OPOS-/Debitorenliste als CSV der reguläre
+> Weg. Liegt kein echtes EXTF vor: keins nachbauen, sondern `--opos-csv`
+> nutzen.
 
 Zusätzlich immer `--stichtag JJJJ-MM-TT` (Bezugstag für „Tage seit
 Fälligkeit" — aus der Eingabe, **nie** aus der Wall-Clock, damit gleiche
@@ -129,8 +136,10 @@ Verzug), § 288 BGB ⚠️ (bewusst nicht berechnet).
 
 - **Keine Verzugszinsen** (§ 288 BGB ⚠️) und **keine** rechtliche
   Verzugsfeststellung (§ 286 BGB ⚠️) — nur „Tage seit Fälligkeit".
-- **EXTF-Quelle ist vereinfacht** (Belegfeld-1-Saldo, Zahlungsziel-Annahme
-  statt echtem Fälligkeitsdatum) — präzise Quelle ist die OPOS-CSV.
+- **EXTF ist Sonderweg und vereinfacht** — er setzt eine DATEV-Anbindung
+  voraus (ohne die es keinen Buchungsstapel gibt) und rechnet mit
+  Belegfeld-1-Saldo und Zahlungsziel-Annahme statt echtem Fälligkeitsdatum.
+  Normalweg und präzise Quelle ist die OPOS-CSV.
 - **Kein Inkasso, keine Rechtsdienstleistung** — nur eigenes
   Forderungsmanagement der Kanzlei.
 - **Kein Versand** — der Skill erzeugt Entwürfe; Mahnung/Versand entscheidet

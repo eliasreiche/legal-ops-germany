@@ -9,8 +9,8 @@ Genau **eine** der beiden Quellen wird angegeben:
 
 | Quelle | Flag | Charakter |
 |---|---|---|
-| OPOS-CSV | `--opos-csv` | **präzise Primärquelle** — je Zeile ein offener Posten mit Fälligkeitsdatum |
-| EXTF-Buchungsstapel | `--extf` | **ergänzend** — vereinfachte Belegfeld-1-Aggregation, siehe unten |
+| OPOS-CSV | `--opos-csv` | **Normalweg und präzise Primärquelle** — je Zeile ein offener Posten mit Fälligkeitsdatum |
+| EXTF-Buchungsstapel | `--extf` | **Sonderweg, nur bei DATEV-Anbindung** — vereinfachte Belegfeld-1-Aggregation, siehe unten |
 
 Zusätzlich immer `--stichtag JJJJ-MM-TT` (Bezugstag für „Tage seit
 Fälligkeit" — kommt aus der Eingabe, **nie** aus der Wall-Clock, damit gleiche
@@ -43,6 +43,14 @@ Exit 2 mit Zeilenangabe, **keine** Reparatur.
 Ein DATEV-EXTF-Buchungsstapel (Format 700, Kategorie 21 — wie ihn der Skill
 [`datev-export`](../../datev-export/SKILL.md) erzeugt), gelesen vom strikten
 Parser [`core/calc/extf/parser.py`](../../../core/calc/extf/parser.py).
+
+**Wer diese Quelle überhaupt hat:** nur Kanzleien mit DATEV-Anbindung — der
+Stapel kommt aus DATEV bzw. vom Steuerberater. Ohne DATEV existiert keine
+solche Datei; dann ist Quelle 1 (OPOS-CSV) der reguläre und einzige Weg. Ein
+EXTF für diesen Skill zu bauen, nur um ihn zu füttern, lohnt nicht — die
+CSV-Quelle ist ohnehin präziser (echtes Fälligkeitsdatum statt Belegfeld-1-
+Aggregation; optional auch Mandant und Aktenzeichen für die Anrede/den
+Aktenbezug im Schreiben-Entwurf).
 
 **Vereinfachte Aggregation (v1, bewusste Grenze):** Buchungen werden über
 **Belegfeld 1** (den OPOS-Schlüssel) gruppiert. Je Gruppe:
@@ -121,7 +129,8 @@ gemahnt wird, entscheidet die Kanzlei.
 
 - **Keine Verzugszinsen** (§ 288 BGB) und **keine** rechtliche
   Verzugsfeststellung (§ 286 BGB) — nur „Tage seit Fälligkeit".
-- **EXTF-Quelle ist vereinfacht** (Belegfeld-1-Saldo, Zahlungsziel-Annahme)
-  — die präzise Quelle ist die OPOS-CSV.
+- **EXTF ist Sonderweg und vereinfacht** — er setzt eine DATEV-Anbindung
+  voraus (Belegfeld-1-Saldo, Zahlungsziel-Annahme statt Fälligkeitsdatum).
+  Normalweg und präzise Quelle ist die OPOS-CSV.
 - **Kein Versand** — der Skill draftet allenfalls Entwürfe; Mahnung/Versand
   entscheidet die Kanzlei.

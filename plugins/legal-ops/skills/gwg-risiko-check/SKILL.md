@@ -39,8 +39,10 @@ führt drei Listen zusammen:
 
 **Pflege-Hinweis:** Quartals-Review nach jedem FATF-Plenum (ca.
 Februar/Juni/Oktober) sowie bei neuen EU-Änderungsverordnungen zu
-2016/1675. Ein automatisierter Test warnt (nicht blockierend), wenn
-`abgerufen_am` älter als 4 Monate ist, und schlägt hart fehl ab 12 Monaten
+2016/1675. Das Alter der Liste (`abgerufen_am`) wird **bei jedem Lauf** gegen
+die Schwellen geprüft und als `warnungen`-Eintrag in den Report geschrieben
+(ab 4 Monaten; ab 12 Monaten als „überfällig") — zusätzlich auf stderr. Der
+CI-Test schlägt ab 12 Monaten hart fehl
 (`tests/test_gwg_rechner.py::test_gwg_hochrisiko_liste_ist_nicht_ueberfaellig`).
 
 ## Zweck
@@ -77,7 +79,12 @@ Die Katalogfaktoren (Fundstelle + Paraphrase) liegen als Daten in
 1. **Claude füllt den Fragebogen** ausschließlich aus dem, was Nutzer oder Akte
    hergeben. Was nicht belegt ist, bleibt `unklar` — **nie raten** (P-Anti-
    Halluzination). Ergebnis: eine Mandatsdatei nach
-   [`schema/README.md`](schema/README.md).
+   [`schema/README.md`](schema/README.md). Bei juristischen Personen und
+   trust-ähnlichen Strukturen gehört dazu die Frage nach Sitz/Wohnsitz **und
+   Staatsangehörigkeit der wirtschaftlich Berechtigten**
+   (`wirtschaftlich_berechtigte_laender`, Mehrzahl möglich) — ohne sie prüft
+   das Länder-Gate nur den Mandantensitz, und der Report weist das als Lücke
+   aus.
 
 2. **Der Executor rechnet und klassifiziert** (kein eigenes Scoring durch das
    Modell, P3):
@@ -85,20 +92,32 @@ Die Katalogfaktoren (Fundstelle + Paraphrase) liegen als Daten in
    ```bash
    python3 ${CLAUDE_PLUGIN_ROOT}/skills/gwg-risiko-check/executor.py \
      --mandat <mandat.json> \
-     [--output <report.json>]
+     [--output <report.json>] \
+     [--heute <JJJJ-MM-TT>]
    ```
 
    Der regelbasierte Rechner ([`core/calc/gwg/rechner.py`](../../core/calc/gwg/rechner.py))
    entscheidet über die erste greifende Regel: Anwendbarkeits-Gate
    (§ 2 Abs. 1 Nr. 10 GwG) → kritische Lücken → § 15 (PEP/Hochrisiko-Drittstaat)
-   → nur Anlage-1-Faktoren → sonst. Claude liest **nur** den erzeugten Report
-   und übernimmt Status, Faktoren und Fundstellen unverändert.
+   → nur Anlage-1-Faktoren → sonst. Das Länder-Gate wertet dabei
+   Mandantensitz **und** alle angegebenen Länder der wirtschaftlich
+   Berechtigten aus; das risikoreichste Land entscheidet. Claude liest **nur**
+   den erzeugten Report und übernimmt Status, Faktoren und Fundstellen
+   unverändert.
+
+   **Frische-Gate (Muster gwg-live-screening):** `--heute` ist das Bezugsdatum
+   (Default: Systemdatum, nur für Tests zu setzen). Ist die hinterlegte
+   Hochrisiko-Länderliste älter als 4 bzw. 12 Monate, steht das im Report unter
+   `warnungen` und auf stderr; der Report wird trotzdem erzeugt (Exit 0).
+   Claude gibt jede `warnungen`-Zeile in der Akten-Dokumentation wieder.
 
 3. **Claude rendert den Report als Akten-Dokumentation** (Markdown):
    Anwendbarkeit, Faktoren-Tabelle mit Fundstellen (jede mit ihrem
    3-Zustands-Marker), Klassifikationsvorschlag mit Begründung, Pflichten-
-   Hinweise (§§ 10/14/15/43 GwG) und Lücken. Jeder Zahlen-/Status-/
-   Fundstellenwert stammt aus dem Report, nicht aus dem Modell.
+   Hinweise (§§ 10/14/15/43 GwG), Lücken und `warnungen`. Bei geografischen
+   Faktoren immer die `herkunft` mitschreiben (Mandantensitz vs. wirtschaftlich
+   Berechtigter). Jeder Zahlen-/Status-/Fundstellenwert stammt aus dem Report,
+   nicht aus dem Modell.
 
 4. **Zitat-Kontrolle** als letzter Schritt: Die §-Zitate der gerenderten
    Markdown-Doku sind gegen die mitgelieferte Registry
@@ -139,6 +158,12 @@ BaFin-Allgemeinverfügung. Der Länder-Treffer wird immer mit dem Vorbehalt
 weist im Feld `laender_listen_treffer` aus, welche der drei Listen (EU,
 FATF-schwarz, FATF-grau) im Detail getroffen haben.
 
+### Beispiel 3 — nicht verpflichtet
+
+Ist `kataloggeschaeft: "keins"`, ist der Rechtsanwalt insoweit kein
+Verpflichteter (§ 2 Abs. 1 Nr. 10 GwG): Ergebnis `nicht_verpflichtet`, keine
+Risikoklasse, mit dem Vorbehalt „Einordnung prüfen".
+
 ### Beispiel 4 — hoch, aber Haus-Einstufung (nur FATF-Grauliste)
 
 Ist `sitz_land` z. B. `KW` (Kuwait) — nur auf der FATF-Grauliste, nicht auf der
@@ -151,11 +176,15 @@ konservative Haus-Einstufung nach BaFin-Rundschreiben 07/2026. Ist das Land
 zugleich EU-Mitgliedstaat (z. B. Bulgarien), ergänzt ein Vorbehalt, dass es
 begrifflich schon kein „Drittstaat" i. S. d. § 15 Abs. 3 Nr. 2 GwG sein kann.
 
-### Beispiel 3 — nicht verpflichtet
+### Beispiel 5 — EU-Holding mit Hochrisiko-UBO (Länder-Gate greift über den wirtschaftlich Berechtigten)
 
-Ist `kataloggeschaeft: "keins"`, ist der Rechtsanwalt insoweit kein
-Verpflichteter (§ 2 Abs. 1 Nr. 10 GwG): Ergebnis `nicht_verpflichtet`, keine
-Risikoklasse, mit dem Vorbehalt „Einordnung prüfen".
+Eine Ltd. mit `sitz_land: "CY"` (EU-Mitgliedstaat) und
+`wirtschaftlich_berechtigte_laender: ["RU"]` ergibt `hoch`: Russland steht auf
+der EU-Hochrisiko-Liste, der Treffer ist ein gesetzlicher § 15-Abs.-3-Nr.-2-
+Trigger, auch wenn der Mandantensitz in der EU liegt. `laender_listen_treffer`
+weist `herkunft: "Sitz/Staatsangehörigkeit des wirtschaftlich Berechtigten"`
+aus. Ohne das Feld bliebe es (wie vor der Ergänzung) bei `mittel` — der Report
+führt die fehlende Angabe dann als Lücke.
 
 ## Gewichtungs-Entscheidung: alle drei Listen lösen `hoch` aus (Maintainer, konservativ)
 
@@ -186,3 +215,8 @@ Details im Docstring von
 - **Keine PEP-Ermittlung, kein Sanktionslisten-Abgleich, keine
   Identifizierung** — dafür ist der Live-Screening-Pfad bzw. eine eigene
   Prüfung nötig.
+- **Der Länderbezug des wirtschaftlich Berechtigten wird nicht ermittelt,
+  sondern eingegeben** — der Skill prüft nur die angegebenen Länder gegen die
+  Listen; Beteiligungsketten, Kontrollverhältnisse und Zwischengesellschaften
+  bleiben Sache der Identifizierung nach § 10 Abs. 1 Nr. 2 GwG. Fehlt die
+  Angabe, ist das eine Lücke im Report, keine Entwarnung.

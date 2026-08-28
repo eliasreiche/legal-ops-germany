@@ -59,7 +59,10 @@ def test_cli_output_datei(tmp_path):
 # --------------------------------------------------------------------------
 
 def test_beispiel_report_synchron():
-    erzeugt = report(EXECUTOR, "--mandat", SCHEMA / "beispiel-mandat.json")
+    # Festes Bezugsdatum (Muster gwg-live-screening): sonst wandert das
+    # Frische-Gate der Länderliste täglich durch den Beispiel-Report.
+    erzeugt = report(EXECUTOR, "--mandat", SCHEMA / "beispiel-mandat.json",
+                     "--heute", "2026-07-16")
     gespeichert = json.loads((SCHEMA / "beispiel-report.json").read_text("utf-8"))
     erzeugt["meta"].pop("quelle_datei")
     gespeichert["meta"].pop("quelle_datei")
@@ -77,6 +80,24 @@ def test_beispiel_mandat_round_trip(tmp_path):
 # --------------------------------------------------------------------------
 # Eingabefehler → Exit 2, klare Meldung, kein Traceback
 # --------------------------------------------------------------------------
+
+def test_frische_warnung_auf_stderr_report_bleibt(tmp_path):
+    # Veraltete Länderliste: Report wird trotzdem erzeugt (Exit 0), die
+    # Warnung steht im Report UND auf stderr.
+    mandat = schreibe(tmp_path / "mandat.json", {"kataloggeschaeft": "keins"})
+    ergebnis = lauf(EXECUTOR, "--mandat", mandat, "--heute", "2027-08-01")
+    assert ergebnis.returncode == 0, ergebnis.stderr
+    assert "überfällig" in ergebnis.stderr
+    assert json.loads(ergebnis.stdout)["warnungen"]
+
+
+def test_fehler_ungueltiges_heute(tmp_path):
+    mandat = schreibe(tmp_path / "mandat.json", {"kataloggeschaeft": "keins"})
+    ergebnis = lauf(EXECUTOR, "--mandat", mandat, "--heute", "16.07.2026")
+    assert ergebnis.returncode == 2
+    assert "JJJJ-MM-TT" in ergebnis.stderr
+    assert "Traceback" not in ergebnis.stderr
+
 
 def test_fehler_kaputtes_json(tmp_path):
     ergebnis = _lauf("{kein json", tmp_path)

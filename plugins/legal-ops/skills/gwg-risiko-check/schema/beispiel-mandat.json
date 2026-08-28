@@ -4,6 +4,7 @@
   "sitz_land": "DE",
   "pep": "nein",
   "wirtschaftlich_berechtigter_geklaert": "ja",
+  "wirtschaftlich_berechtigte_laender": ["DE"],
   "bargeldintensiv": "ja",
   "komplexe_eigentumsstruktur": "nein",
   "distanzgeschaeft": "nein",

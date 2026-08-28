@@ -16,7 +16,8 @@ Strukturierter Fragebogen zu einem Mandat. **Fehlende Felder werden als
 |---|---|---|
 | `kataloggeschaeft` | `immobilien_gewerbe_kauf`, `vermoegensverwaltung`, `konten_depot`, `gesellschaft_mittelbeschaffung`, `treuhand_gesellschaft`, `finanz_immobilien_transaktion`, `keins`, `unklar` | Anwendbarkeits-Gate § 2 Abs. 1 Nr. 10 GwG. `keins` → `nicht_verpflichtet`; `unklar` → `unvollstaendig`. |
 | `mandant_typ` | `natuerliche_person`, `juristische_person`, `trust_aehnlich`, `unklar` | Dokumentation; fließt in die Lücken-Ausweisung ein. |
-| `sitz_land` | ISO-3166-alpha-2 (z. B. `DE`) oder `unklar` | Geografie: EU-Mitgliedstaat (Anlage 1 Nr. 3 Buchst. a) bzw. Treffer auf einer der drei Hochrisiko-Listen (EU/FATF-schwarz/FATF-grau, Anlage 2 Nr. 3 Buchst. a bei EU-Treffer). **Kritische Angabe.** |
+| `sitz_land` | ISO-3166-alpha-2 (z. B. `DE`) oder `unklar` | Geografie **des Mandanten**: EU-Mitgliedstaat (Anlage 1 Nr. 3 Buchst. a) bzw. Treffer auf einer der drei Hochrisiko-Listen (EU/FATF-schwarz/FATF-grau, Anlage 2 Nr. 3 Buchst. a bei EU-Treffer). **Kritische Angabe.** |
+| `wirtschaftlich_berechtigte_laender` | Liste von ISO-3166-alpha-2-Codes, z. B. `["CY", "RU"]` (optional, Default `[]`) | Geografie **der wirtschaftlich Berechtigten** — Sitz/Wohnsitz *und/oder* Staatsangehörigkeit, mehrere möglich (§ 10 Abs. 1 Nr. 2 GwG). Fließt in dasselbe Länder-Gate wie `sitz_land`; das **risikoreichste** Land entscheidet. Fehlt die Angabe bei `mandant_typ: juristische_person`/`trust_aehnlich`, steht sie als nicht-kritische **Lücke** im Report — sie wird nie geraten. |
 | `pep` | `ja`, `nein`, `unklar` | Politisch exponierte Person (§ 15 Abs. 3 Nr. 1 GwG). **Kritische Angabe.** |
 | `wirtschaftlich_berechtigter_geklaert` | `ja`, `nein`, `unklar` | Klärung des wB (§ 10 Abs. 1 Nr. 2 GwG). **Kritisch** — nur `ja` erlaubt eine Klassifikation. |
 | `bargeldintensiv` | `ja`, `nein`, `unklar` | Anlage 2 Nr. 1 Buchst. e GwG. |
@@ -49,6 +50,15 @@ Erste greifende Regel entscheidet (Details im Rechner-Docstring):
    *möglich*).
 4. **Sonst** → `mittel` (§ 10 GwG).
 
+Das Länder-Gate der Regeln 2/3 wertet **Mandantensitz und alle angegebenen
+Länder der wirtschaftlich Berechtigten** aus; es entscheidet das
+risikoreichste Land. Konsequenz in beide Richtungen: ein Listen-Treffer beim
+wirtschaftlich Berechtigten löst `hoch` aus, auch wenn der Mandantensitz in der
+EU liegt; die Anlage-1-Vergünstigung „EU-Sitz" greift nur, wenn Mandantensitz
+**und** alle angegebenen Länder der wirtschaftlich Berechtigten EU sind. Ohne
+das (optionale) Feld bleibt es bei der reinen Mandantensitz-Prüfung —
+unverändert zu vorher, aber mit Lücken-Hinweis.
+
 ## Ausgabe: JSON-Report
 
 Vollständiges Beispiel: [`beispiel-report.json`](beispiel-report.json)
@@ -75,24 +85,40 @@ Vollständiges Beispiel: [`beispiel-report.json`](beispiel-report.json)
   "pflichten_hinweise": [ { "norm": "§ 10 GwG", "hinweis": "…", "marker": "⚠️", "…": "…" } ],
   "luecken": [ { "feld": "pep", "frage": "…", "kritisch": true } ],
   "vorbehalte": [ "…" ],
+  "warnungen": [ "Hochrisiko-Länderliste älter als 4 Monate: …" ],
   "stand": { "anlage1": "…", "anlage2": "…",
              "hochrisiko_drittstaaten": { "eu-hochrisiko": "…", "fatf-blacklist": "…", "fatf-greylist": "…" },
-             "hochrisiko_abgerufen_am": "2026-07-13", "hinweis": "…" },
+             "hochrisiko_abgerufen_am": "2026-07-13", "hochrisiko_alter_tage": 3,
+             "hochrisiko_warnung_veraltet": false, "hochrisiko_ueberfaellig": false,
+             "hinweis": "…" },
   "laender_listen_treffer": {
-    "iso2": "IR", "land": "Iran", "listen": ["eu-hochrisiko", "fatf-blacklist"],
+    "iso2": "IR", "land": "Iran", "herkunft": "Sitzland",
+    "listen": ["eu-hochrisiko", "fatf-blacklist"],
     "je_liste": [ { "liste": "eu-hochrisiko", "bezeichnung": "…", "rechtsfolge": "…", "stand_quelle": "…", "url": "…" } ]
   }
 }
 ```
 
-- **`laender_listen_treffer`** — `null`, solange `sitz_land` auf keiner der
-  drei Listen (EU-Hochrisiko, FATF-Schwarzliste, FATF-Grauliste) in
+- **`laender_listen_treffer`** — `null`, solange keines der geprüften Länder
+  (Mandantensitz + wirtschaftlich Berechtigte) auf einer der drei Listen
+  (EU-Hochrisiko, FATF-Schwarzliste, FATF-Grauliste) in
   [`core/calc/gwg/hochrisiko_drittstaaten.json`](../../../core/calc/gwg/hochrisiko_drittstaaten.json)
-  steht; sonst ein Objekt mit `listen` (welche Liste(n) getroffen haben) und
-  `je_liste` (Rechtsfolge/Quelle je Liste). Nur ein EU-Hochrisiko-Treffer ist
-  ein gesetzlicher Trigger nach § 15 Abs. 3 Nr. 2 GwG — ein reiner
-  FATF-Treffer ohne EU-Listung ist eine konservative Haus-Einstufung (siehe
-  [SKILL.md](../SKILL.md), Abschnitt „Gewichtungs-Entscheidung").
+  steht; sonst der **risikoreichste** Treffer mit `listen` (welche Liste(n)
+  getroffen haben), `je_liste` (Rechtsfolge/Quelle je Liste) und `herkunft`
+  (`Sitzland` oder `Sitz/Staatsangehörigkeit des wirtschaftlich Berechtigten`).
+  Eine EU-Listung geht dabei einem reinen FATF-Treffer vor; treffen **mehrere**
+  Länder, steht jedes einzeln als geografischer Faktor in
+  `angewandte_faktoren` (mit `detail`, das Land und Herkunft nennt). Nur ein
+  EU-Hochrisiko-Treffer ist ein gesetzlicher Trigger nach § 15 Abs. 3 Nr. 2
+  GwG — ein reiner FATF-Treffer ohne EU-Listung ist eine konservative
+  Haus-Einstufung (siehe [SKILL.md](../SKILL.md), Abschnitt
+  „Gewichtungs-Entscheidung").
+- **`warnungen`** — Frische-Gate der Hochrisiko-Länderliste zur Laufzeit:
+  leer bei frischer Liste, eine Warnung ab 4 Monaten seit `abgerufen_am`, eine
+  schärfer formulierte („überfällig") ab 12 Monaten. Der Report wird in beiden
+  Fällen erzeugt (Exit 0); die Warnung steht zusätzlich auf stderr. Bezugsdatum
+  ist `meta.bezugsdatum` (CLI `--heute`, Default Systemdatum) — kein freies
+  `date.today()` im Rechenpfad.
 
 - **`marker`** (3-Zustands-Marker, CONVENTIONS.md): der Executor prüft nicht
   gegen den Gesetzestext, daher stets ⚠️ „nicht prüfbar". Die §-Fundstellen
@@ -118,8 +144,14 @@ abzugleichen.
   gegen gesetze-im-internet.de zu prüfen (Reifegrad `getestet`). Die
   Hochrisiko-Länderliste ist am 2026-07-13 browser-verifiziert (Quellen in
   `hochrisiko_drittstaaten.json` → `quellen`), ändert sich aber laufend
-  (FATF-Plenum ca. Feb/Jun/Okt) — Quartals-Review Pflicht; ein CI-Test warnt
-  ab 4 Monaten Alter (`abgerufen_am`) und schlägt hart fehl ab 12 Monaten.
+  (FATF-Plenum ca. Feb/Jun/Okt) — Quartals-Review Pflicht. Der Executor prüft
+  das Alter (`abgerufen_am`) bei jedem Lauf und schreibt ab 4 bzw. 12 Monaten
+  eine Warnung in `warnungen`; der CI-Test schlägt ab 12 Monaten hart fehl.
+- **Länderrisiko nur, soweit Länder angegeben sind.** Geprüft werden
+  Mandantensitz und die (optionalen) Länder der wirtschaftlich Berechtigten —
+  nicht ermittelt werden Beteiligungsketten, Kontroll-Verhältnisse oder
+  Zwischengesellschaften. Wer die Länderangabe des wirtschaftlich Berechtigten
+  weglässt, bekommt eine Lücke, keine Schätzung.
 - **FATF-Grauliste-Treffer ohne EU-Listung begründen keine Gesetzespflicht**
   — die Klassifikation `hoch` ist dort konservative Haus-Einstufung, kein
   Verwaltungsakt-sicherer Nachweis (siehe `laender_listen_treffer` oben).

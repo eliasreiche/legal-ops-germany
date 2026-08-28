@@ -16,18 +16,27 @@ Eingabe (JSON-Datei, Schema siehe schema/README.md):
       "sitz_land": "DE",
       "pep": "nein",
       "wirtschaftlich_berechtigter_geklaert": "ja",
+      "wirtschaftlich_berechtigte_laender": ["DE"],
       "bargeldintensiv": "nein",
       ...
     }
 
 CLI:
     python3 executor.py --mandat MANDAT.json [--output REPORT.json]
+                        [--heute JJJJ-MM-TT]
+
+`--heute` ist das Bezugsdatum des Frische-Gates der Hochrisiko-Länderliste
+(Default: Systemdatum) — dieselbe Mechanik wie in gwg-live-screening, damit im
+Rechenpfad kein freies `date.today()` steht und Tests reproduzierbar bleiben.
+Ist die Liste älter als 4 bzw. 12 Monate, steht das als Warnung im Report
+(`warnungen`) und zusätzlich auf stderr; der Report wird trotzdem erzeugt.
 
 Exit-Codes: 0 = Report erzeugt, 2 = Eingabefehler.
 """
 from __future__ import annotations
 
 import argparse
+import datetime as _dt
 import json
 import sys
 from pathlib import Path
@@ -42,12 +51,14 @@ from cli import CliFehler, schreibe_report  # noqa: E402
 from gwg.rechner import GwGEingabeFehler, klassifiziere  # noqa: E402
 
 
-def baue_report(mandat: dict[str, Any], quelle_datei: str) -> dict[str, Any]:
-    rumpf = klassifiziere(mandat)
+def baue_report(mandat: dict[str, Any], quelle_datei: str,
+                heute: _dt.date) -> dict[str, Any]:
+    rumpf = klassifiziere(mandat, heute=heute)
     return {
         "meta": {
             "erzeugt_von": "plugins/legal-ops/skills/gwg-risiko-check/executor.py",
             "quelle_datei": quelle_datei,
+            "bezugsdatum": heute.isoformat(),
             "deterministik": ("Alle Status-, Faktoren- und Fundstellenwerte in "
                               "diesem Report sind regelbasierte "
                               "Executor-Ergebnisse (P3), nicht modellgeneriert."),
@@ -68,7 +79,20 @@ def main(argv: list[str] | None = None) -> int:
                         help="JSON-Eingabedatei (Fragebogen zum Mandat)")
     parser.add_argument("--output",
                         help="Zieldatei für den JSON-Report (Default: stdout)")
+    parser.add_argument("--heute", help="Bezugsdatum JJJJ-MM-TT fürs "
+                                        "Frische-Gate der Hochrisiko-"
+                                        "Länderliste (Default: heute)")
     args = parser.parse_args(argv)
+
+    if args.heute:
+        try:
+            heute = _dt.datetime.strptime(args.heute, "%Y-%m-%d").date()
+        except ValueError:
+            print(f"Fehler: --heute ('{args.heute}') ist kein JJJJ-MM-TT-Datum",
+                  file=sys.stderr)
+            return 2
+    else:
+        heute = _dt.date.today()
 
     mandat_pfad = Path(args.mandat)
     if not mandat_pfad.is_file():
@@ -93,7 +117,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     try:
-        report = baue_report(mandat, quelle_datei=str(mandat_pfad))
+        report = baue_report(mandat, quelle_datei=str(mandat_pfad), heute=heute)
     except (GwGEingabeFehler, ValueError) as exc:
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2
@@ -103,6 +127,8 @@ def main(argv: list[str] | None = None) -> int:
     except CliFehler as exc:
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2
+    for w in report["warnungen"]:
+        print(f"Warnung: {w}", file=sys.stderr)
     return 0
 
 

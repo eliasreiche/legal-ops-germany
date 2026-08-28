@@ -304,6 +304,100 @@ def test_bulgarien_eu_mitgliedstaat_sonderfall():
                for v in r["vorbehalte"])
 
 
+# --------------------------------------------------------------------------
+# Länder-Gate deckt auch den wirtschaftlich Berechtigten ab
+# (§ 10 Abs. 1 Nr. 2 GwG, geografische Faktoren der Anlagen 1/2 GwG)
+# --------------------------------------------------------------------------
+
+# Abnahme-Fall „Cormorant Holdings Ltd." — Sitz Zypern (EU), wirtschaftlich
+# Berechtigter mit russischem Sitz/russischer Staatsangehörigkeit.
+CORMORANT = {
+    **BASIS,
+    "kataloggeschaeft": "immobilien_gewerbe_kauf",
+    "sitz_land": "CY",
+    "komplexe_eigentumsstruktur": "ja",
+    "nominee_inhaberaktien": "ja",
+    "private_vermoegensstruktur": "ja",
+    "herkunft_der_mittel_klar": "nein",
+}
+
+
+def test_cormorant_ohne_wb_laender_bleibt_wie_bisher():
+    # Rückwärtskompatibel: Eingabe ohne das neue Feld läuft unverändert durch
+    # (Befund der Abnahme: 'mittel'), weist die fehlende Angabe aber als
+    # nicht-kritische Lücke aus.
+    r = klassifiziere(copy.deepcopy(CORMORANT))
+    assert r["klassifikationsvorschlag"] == "mittel"
+    luecke = [l for l in r["luecken"]
+              if l["feld"] == "wirtschaftlich_berechtigte_laender"]
+    assert len(luecke) == 1 and luecke[0]["kritisch"] is False
+
+
+def test_cormorant_mit_ru_wirtschaftlich_berechtigtem_wird_hoch():
+    # Kern des Fixes: EU-Sitz + Hochrisiko-UBO -> 'hoch' (EU-Listung RU ist
+    # gesetzlicher Trigger nach § 15 Abs. 3 Nr. 2 GwG).
+    r = klassifiziere({**CORMORANT, "wirtschaftlich_berechtigte_laender": ["RU"]})
+    assert r["klassifikationsvorschlag"] == "hoch"
+    treffer = r["laender_listen_treffer"]
+    assert treffer["iso2"] == "RU"
+    assert "wirtschaftlich Berechtigten" in treffer["herkunft"]
+    assert any(f["fundstelle"] == "Anlage 2 Nr. 3 Buchst. a GwG"
+               for f in r["angewandte_faktoren"])
+    assert any(p["norm"] == "§ 15 GwG" for p in r["pflichten_hinweise"])
+    assert not any(l["feld"] == "wirtschaftlich_berechtigte_laender"
+                   for l in r["luecken"])
+
+
+def test_mehrere_wb_laender_risikoreichstes_entscheidet():
+    # Zwei wirtschaftlich Berechtigte (CH unauffällig, KW nur FATF-grau) —
+    # der Listen-Treffer entscheidet, beide Länder werden geprüft.
+    r = klassifiziere({**BASIS,
+                       "wirtschaftlich_berechtigte_laender": ["CH", "KW"]})
+    assert r["klassifikationsvorschlag"] == "hoch"
+    assert r["laender_listen_treffer"]["iso2"] == "KW"
+    assert any(f["id"] == "haus_fatf_listen_treffer"
+               for f in r["angewandte_faktoren"])
+
+
+def test_eu_treffer_schlaegt_reinen_fatf_treffer():
+    # RU (EU-Liste, Gesetzespflicht) und KW (nur FATF) gleichzeitig: der
+    # gesetzliche Treffer führt den Report, beide stehen als Faktor drin.
+    r = klassifiziere({**BASIS, "sitz_land": "KW",
+                       "wirtschaftlich_berechtigte_laender": ["RU"]})
+    assert r["laender_listen_treffer"]["iso2"] == "RU"
+    geo = [f for f in r["angewandte_faktoren"] if f["kategorie"] == "geografisch"]
+    assert {"KW", "RU"} <= {w for f in geo for w in f["detail"].split()}
+
+
+def test_wb_land_ausserhalb_eu_nimmt_anlage1_verguenstigung():
+    # Anlage 1 Nr. 3 Buchst. a greift nur, wenn ALLE geprüften Länder EU sind.
+    r = klassifiziere({**BASIS, "wirtschaftlich_berechtigte_laender": ["CH"]})
+    assert not any(f["fundstelle"] == "Anlage 1 Nr. 3 Buchst. a GwG"
+                   for f in r["angewandte_faktoren"])
+    r_eu = klassifiziere({**BASIS, "wirtschaftlich_berechtigte_laender": ["AT"]})
+    assert any(f["fundstelle"] == "Anlage 1 Nr. 3 Buchst. a GwG"
+               for f in r_eu["angewandte_faktoren"])
+
+
+def test_bafin_hinweis_auch_ueber_wb_land():
+    r = klassifiziere({**BASIS, "wirtschaftlich_berechtigte_laender": ["KP"]})
+    assert r["klassifikationsvorschlag"] == "hoch"
+    assert any("BaFin-Allgemeinverfügung" in p["norm"]
+               for p in r["pflichten_hinweise"])
+
+
+def test_keine_wb_luecke_bei_natuerlicher_person():
+    r = klassifiziere(_m(mandant_typ="natuerliche_person"))
+    assert not any(l["feld"] == "wirtschaftlich_berechtigte_laender"
+                   for l in r["luecken"])
+
+
+@pytest.mark.parametrize("wert", ["RU", ["Russland"], [""], [None], "unklar"])
+def test_wb_laender_ungueltige_eingabe(wert):
+    with pytest.raises(GwGEingabeFehler):
+        klassifiziere(_m(wirtschaftlich_berechtigte_laender=wert))
+
+
 def test_kein_listen_treffer_fuer_nicht_gelistetes_land():
     # (c) Nicht-Listen-Land (Frankreich) -> kein Hochrisiko-Treffer.
     r = klassifiziere(_m(sitz_land="FR"))
@@ -378,6 +472,25 @@ def test_frische_ueber_monkeypatch_heute(monkeypatch):
     monkeypatch.setattr(rechner, "_heute", lambda: date(2027, 8, 1))
     status = frische_status(hr)
     assert status["fehler"] is True
+
+
+@pytest.mark.parametrize("heute, erwartet", [
+    (date(2026, 7, 16), None),                     # 3 Tage — frisch
+    (date(2026, 12, 1), "älter als 4 Monate"),     # ~4,6 Monate — Warnstufe 1
+    (date(2027, 8, 1), "überfällig"),              # ~12,6 Monate — harte Warnung
+])
+def test_frische_warnung_steht_im_report(heute, erwartet):
+    # Die hinterlegte Liste ist am 2026-07-13 abgerufen; das Bezugsdatum
+    # kommt als Eingabe rein (kein freies date.today() im Rechenpfad).
+    r = klassifiziere(_m(), heute=heute)
+    if erwartet is None:
+        assert r["warnungen"] == []
+        assert r["stand"]["hochrisiko_warnung_veraltet"] is False
+    else:
+        assert len(r["warnungen"]) == 1
+        assert erwartet in r["warnungen"][0]
+        assert r["stand"]["hochrisiko_warnung_veraltet"] is True
+    assert r["stand"]["hochrisiko_ueberfaellig"] is (erwartet == "überfällig")
 
 
 def test_gwg_hochrisiko_liste_ist_nicht_ueberfaellig():

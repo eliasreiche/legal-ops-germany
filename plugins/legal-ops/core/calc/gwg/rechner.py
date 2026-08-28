@@ -20,6 +20,18 @@ Regelwerk (Reihenfolge ist bindend, erste greifende Regel entscheidet):
   2. PEP (§ 15 Abs. 3 Nr. 1 GwG) oder Hochrisiko-Drittstaat
      (§ 15 Abs. 3 Nr. 2 GwG, Anlage 2 Nr. 3 GwG) -> `hoch` (verstärkte
      Sorgfaltspflichten, § 15 GwG).
+
+     Das Länder-Gate (Anlage 1 Nr. 3 / Anlage 2 Nr. 3 GwG) prüft NICHT nur den
+     Mandantensitz, sondern auch jedes angegebene Sitz-/Staatsangehörigkeits-
+     land der wirtschaftlich Berechtigten (`wirtschaftlich_berechtigte_laender`;
+     § 10 Abs. 1 Nr. 2 GwG verlangt deren Identifizierung, die geografischen
+     Risikofaktoren der Anlagen 1/2 erfassen sie mit). Es entscheidet das
+     RISIKOREICHSTE Land: ein Listen-Treffer bei einem wirtschaftlich
+     Berechtigten löst `hoch` aus, auch wenn der Mandantensitz in der EU liegt;
+     die Anlage-1-Vergünstigung „EU-Sitz" greift nur, wenn Mandantensitz UND
+     alle angegebenen Länder der wirtschaftlich Berechtigten in der EU liegen.
+     Fehlt die Angabe bei juristischen Personen / trust-ähnlichen Strukturen,
+     wird sie als (nicht-kritische) Lücke ausgewiesen — nie geraten.
   3. Ausschließlich Anlage-1-Faktoren, kein Anlage-2-Faktor -> `niedrig`
      (vereinfachte Sorgfaltspflichten nach § 14 GwG *möglich* — Entscheidung
      beim Verpflichteten).
@@ -60,7 +72,7 @@ LISTEN_LABELS: dict[str, str] = {
 # 13.05.2020) — nur Nordkorea und Iran, nicht jeder Blacklist-Treffer.
 _BAFIN_ALLGEMEINVERFUEGUNG_LAENDER = frozenset({"KP", "IR"})
 
-# CI-Frische-Warnung (Aufgabe 3): FATF tagt ca. Februar/Juni/Oktober (drei
+# Frische-Warnung: FATF tagt ca. Februar/Juni/Oktober (drei
 # Plena/Jahr) — eine Warnung ab 4 Monaten deckt ein verpasstes Plenum ab, ohne
 # dass CI bei jedem Zwischenstand rot wird. Der harte Fehler erst ab 12
 # Monaten erzwingt spätestens einen Jahres-Refresh, ohne bei planmäßiger
@@ -81,8 +93,9 @@ def frische_status(hochrisiko: dict[str, Any], *,
     """Bewertet das Alter von `abgerufen_am` der Hochrisiko-Länderliste.
 
     Liefert nur Fakten (warnung/fehler-Flags) zurück — kein Assert. Ruft
-    kein Netzwerk auf; reiner Datumsvergleich. Der Aufrufer (CI-Test)
-    entscheidet, ob `fehler` einen Test scheitern lässt."""
+    kein Netzwerk auf; reiner Datumsvergleich. Der Aufrufer entscheidet:
+    der CI-Test lässt `fehler` scheitern, `klassifiziere()` schreibt beide
+    Stufen als Warnung in den Report (`warnungen`)."""
     heute = heute if heute is not None else _heute()
     roh = hochrisiko.get("abgerufen_am")
     try:
@@ -168,7 +181,13 @@ _JNU_WERTE = ("ja", "nein", "unklar")
 # Alle zulässigen Fragebogen-Felder (Kontrakt). Jedes `fragebogen_feld` im
 # Katalog muss hier enthalten sein (durch Test abgesichert).
 FRAGEBOGEN_FELDER: frozenset[str] = frozenset(
-    ("kataloggeschaeft", "mandant_typ", "sitz_land") + _JNU_FELDER)
+    ("kataloggeschaeft", "mandant_typ", "sitz_land",
+     "wirtschaftlich_berechtigte_laender") + _JNU_FELDER)
+
+# Mandantentypen, bei denen eine fehlende Länderangabe zum wirtschaftlich
+# Berechtigten als Lücke ausgewiesen wird (bei natürlichen Personen ist der
+# Mandant regelmäßig selbst der wirtschaftlich Berechtigte).
+_WB_LAENDER_PFLICHT_TYPEN = ("juristische_person", "trust_aehnlich")
 
 # Kritische Felder — ohne belastbare Antwort keine Klassifikation.
 KRITISCHE_FELDER = ("pep", "sitz_land", "wirtschaftlich_berechtigter_geklaert")
@@ -189,6 +208,12 @@ _FRAGEN = {
     "wirtschaftlich_berechtigter_geklaert":
         "Ist der wirtschaftlich Berechtigte abschließend geklärt "
         "(§ 10 Abs. 1 Nr. 2 GwG)?",
+    "wirtschaftlich_berechtigte_laender":
+        "In welchen Staaten haben die wirtschaftlich Berechtigten ihren "
+        "Sitz/Wohnsitz bzw. welche Staatsangehörigkeit(en) besitzen sie "
+        "(ISO-3166-alpha-2)? Ohne diese Angabe prüft das Länder-Gate nur den "
+        "Mandantensitz — ein Hochrisiko-Bezug über den wirtschaftlich "
+        "Berechtigten bliebe unerkannt.",
     "bargeldintensiv": "Handelt es sich um ein bargeldintensives Geschäft?",
     "komplexe_eigentumsstruktur": "Ist die Eigentums-/Beteiligungsstruktur "
                                   "ungewöhnlich oder übermäßig komplex?",
@@ -229,7 +254,20 @@ def _marker_felder() -> dict[str, str]:
             "marker_begruendung": MARKER_BEGRUENDUNG}
 
 
-def _normalisiere(mandat: dict[str, Any]) -> dict[str, str]:
+def _iso2(wert: Any, feld: str, *, oder_unklar: bool = False) -> str:
+    """Prüft einen ISO-3166-alpha-2-Code und liefert ihn in Großschreibung."""
+    if not isinstance(wert, str):
+        raise GwGEingabeFehler(f"'{feld}' muss ein String sein")
+    code = wert.strip().upper()
+    if len(code) != 2 or not code.isalpha():
+        zusatz = " oder 'unklar'" if oder_unklar else ""
+        raise GwGEingabeFehler(
+            f"'{feld}' muss ein ISO-3166-alpha-2-Code (zwei Buchstaben)"
+            f"{zusatz} sein, nicht {wert!r}")
+    return code
+
+
+def _normalisiere(mandat: dict[str, Any]) -> dict[str, Any]:
     """Prüft die Eingabe strikt und füllt fehlende Felder mit 'unklar' (nie
     raten). Unbekannte Felder sind ein Eingabefehler (Tippfehler-Diagnose)."""
     if not isinstance(mandat, dict):
@@ -241,7 +279,7 @@ def _normalisiere(mandat: dict[str, Any]) -> dict[str, str]:
                 f"unbekanntes Feld: '{feld}' (zulässig: "
                 f"{', '.join(sorted(FRAGEBOGEN_FELDER))})")
 
-    norm: dict[str, str] = {}
+    norm: dict[str, Any] = {}
 
     kg = mandat.get("kataloggeschaeft", "unklar")
     if kg is None or kg == "":
@@ -268,12 +306,25 @@ def _normalisiere(mandat: dict[str, Any]) -> dict[str, str]:
     if not isinstance(land, str):
         raise GwGEingabeFehler("'sitz_land' muss ein String sein")
     if land != "unklar":
-        land = land.strip().upper()
-        if len(land) != 2 or not land.isalpha():
-            raise GwGEingabeFehler(
-                f"'sitz_land' muss ein ISO-3166-alpha-2-Code (zwei Buchstaben) "
-                f"oder 'unklar' sein, nicht {mandat.get('sitz_land')!r}")
+        land = _iso2(land, "sitz_land", oder_unklar=True)
     norm["sitz_land"] = land
+
+    # Optional (rückwärtskompatibel): Sitz-/Staatsangehörigkeitsländer der
+    # wirtschaftlich Berechtigten. Fehlt das Feld, bleibt die Liste leer und
+    # das Länder-Gate prüft wie bisher nur den Mandantensitz — die Lücke wird
+    # im Report ausgewiesen (nie geraten).
+    wb_roh = mandat.get("wirtschaftlich_berechtigte_laender") or []
+    if not isinstance(wb_roh, list):
+        raise GwGEingabeFehler(
+            "'wirtschaftlich_berechtigte_laender' muss eine Liste von "
+            "ISO-3166-alpha-2-Codes sein (z. B. [\"CY\", \"RU\"]), nicht "
+            f"{mandat.get('wirtschaftlich_berechtigte_laender')!r}")
+    wb_laender: list[str] = []
+    for eintrag in wb_roh:
+        code = _iso2(eintrag, "wirtschaftlich_berechtigte_laender")
+        if code not in wb_laender:
+            wb_laender.append(code)
+    norm["wirtschaftlich_berechtigte_laender"] = wb_laender
 
     for feld in _JNU_FELDER:
         wert = mandat.get(feld, "unklar")
@@ -313,12 +364,16 @@ def _pflicht(norm: str, hinweis: str) -> dict[str, Any]:
             **_marker_felder()}
 
 
-def _stand_block(a1: dict, a2: dict, hr: dict) -> dict[str, Any]:
+def _stand_block(a1: dict, a2: dict, hr: dict,
+                 frische: dict[str, Any]) -> dict[str, Any]:
     return {
         "anlage1": a1.get("stand"),
         "anlage2": a2.get("stand"),
         "hochrisiko_drittstaaten": hr.get("stand"),
         "hochrisiko_abgerufen_am": hr.get("abgerufen_am"),
+        "hochrisiko_alter_tage": frische["alter_tage"],
+        "hochrisiko_warnung_veraltet": frische["warnung"],
+        "hochrisiko_ueberfaellig": frische["fehler"],
         "hinweis": ("Anlagen-Inhalte, Fundstellen und die drei Länderlisten "
                     "(EU-Hochrisiko, FATF-Schwarzliste, FATF-Grauliste) sind "
                     "vor produktiver Nutzung gegen gesetze-im-internet.de bzw. "
@@ -352,9 +407,13 @@ def _verdachtsmeldungs_hinweis() -> dict[str, Any]:
 def klassifiziere(mandat: dict[str, Any], *,
                   anlage1: dict | None = None,
                   anlage2: dict | None = None,
-                  hochrisiko: dict | None = None) -> dict[str, Any]:
+                  hochrisiko: dict | None = None,
+                  heute: date | None = None) -> dict[str, Any]:
     """Bewertet ein Mandat regelbasiert und liefert den Report-Rumpf (ohne
-    `meta`). Alle Werte sind Executor-Ergebnisse (P3)."""
+    `meta`). Alle Werte sind Executor-Ergebnisse (P3).
+
+    `heute` ist das Bezugsdatum des Frische-Gates (Default: Systemdatum über
+    `_heute()`); der Executor reicht dafür `--heute` durch."""
     if anlage1 is None or anlage2 is None or hochrisiko is None:
         _a1, _a2, _hr = lade_kataloge()
         anlage1 = anlage1 or _a1
@@ -362,7 +421,22 @@ def klassifiziere(mandat: dict[str, Any], *,
         hochrisiko = hochrisiko or _hr
 
     norm = _normalisiere(mandat)
-    stand = _stand_block(anlage1, anlage2, hochrisiko)
+    frische = frische_status(hochrisiko, heute=heute)
+    stand = _stand_block(anlage1, anlage2, hochrisiko, frische)
+
+    # --- Frische-Gate der Hochrisiko-Länderliste sichtbar machen ---
+    warnungen: list[str] = []
+    if frische["fehler"]:
+        warnungen.append(
+            f"Hochrisiko-Länderliste überfällig (Pflicht-Refresh ab "
+            f"{FRISCHE_FEHLER_MONATE} Monaten): {frische['hinweis']} Der "
+            "geografische Teil dieses Klassifikationsvorschlags ist ohne "
+            "aktuellen Listenstand nicht belastbar — Liste neu abrufen und "
+            "Prüfung wiederholen.")
+    elif frische["warnung"]:
+        warnungen.append(
+            f"Hochrisiko-Länderliste älter als {FRISCHE_WARN_MONATE} Monate: "
+            f"{frische['hinweis']}")
 
     # --- Lücken erfassen (jede unbeantwortete Pflichtfrage) ---
     luecken: list[dict[str, Any]] = []
@@ -385,6 +459,13 @@ def klassifiziere(mandat: dict[str, Any], *,
     # nicht-kritische Lücken (unbeantwortete Ja/Nein-Fragen, Mandantentyp)
     if norm["mandant_typ"] == "unklar":
         luecken.append(_luecke("mandant_typ", kritisch=False))
+    if (not norm["wirtschaftlich_berechtigte_laender"]
+            and norm["mandant_typ"] in _WB_LAENDER_PFLICHT_TYPEN):
+        # Nicht kritisch: bestehende Fragebögen ohne das Feld laufen unverändert
+        # durch — die Lücke sagt nur, dass der Länderbezug des wirtschaftlich
+        # Berechtigten ungeprüft blieb.
+        luecken.append(_luecke("wirtschaftlich_berechtigte_laender",
+                               kritisch=False))
     for feld in _JNU_FELDER:
         if feld in ("pep", "wirtschaftlich_berechtigter_geklaert"):
             continue  # oben bereits als kritisch behandelt
@@ -424,6 +505,7 @@ def klassifiziere(mandat: dict[str, Any], *,
             "pflichten_hinweise": pflichten,
             "luecken": luecken,
             "vorbehalte": vorbehalte,
+            "warnungen": warnungen,
             "stand": stand,
             "laender_listen_treffer": laender_listen_treffer,
         }
@@ -475,6 +557,18 @@ def klassifiziere(mandat: dict[str, Any], *,
     vorbehalte = [_VORBEHALT_SCORING, _VORBEHALT_FUNDSTELLEN]
     land_konsultiert = False
 
+    # Länder-Gate: Mandantensitz UND jedes angegebene Land der wirtschaftlich
+    # Berechtigten; das risikoreichste Ergebnis entscheidet (siehe Docstring).
+    _WB_HERKUNFT = "Sitz/Staatsangehörigkeit des wirtschaftlich Berechtigten"
+    pruef_laender: list[str] = []
+    herkunft: dict[str, str] = {}
+    for land, quelle in ([(norm["sitz_land"], "Sitzland")]
+                         + [(l, _WB_HERKUNFT)
+                            for l in norm["wirtschaftlich_berechtigte_laender"]]):
+        if land != "unklar" and land not in herkunft:
+            pruef_laender.append(land)
+            herkunft[land] = quelle
+
     # Anlage 1 (risikoärmer)
     anlage1_treffer = 0
     for fk in anlage1["faktoren"]:
@@ -484,10 +578,17 @@ def klassifiziere(mandat: dict[str, Any], *,
                 anlage1_treffer += 1
         elif fk["bewertung"] == "land_eu":
             land_konsultiert = True
-            if norm["sitz_land"] in EU_MITGLIEDSTAATEN:
-                faktoren.append(_faktor_eintrag(
-                    fk, anlage=1,
-                    detail=f"Sitzland {norm['sitz_land']} ist EU-Mitgliedstaat."))
+            # Nur wenn ALLE geprüften Länder EU sind — ein Nicht-EU-Land beim
+            # wirtschaftlich Berechtigten nimmt die Vergünstigung weg.
+            if pruef_laender and all(l in EU_MITGLIEDSTAATEN
+                                     for l in pruef_laender):
+                detail = f"Sitzland {norm['sitz_land']} ist EU-Mitgliedstaat."
+                weitere = [l for l in pruef_laender if l != norm["sitz_land"]]
+                if weitere:
+                    detail += (" Auch alle angegebenen Länder des wirtschaftlich "
+                               f"Berechtigten ({', '.join(weitere)}) sind "
+                               "EU-Mitgliedstaaten.")
+                faktoren.append(_faktor_eintrag(fk, anlage=1, detail=detail))
                 anlage1_treffer += 1
 
     # Anlage 2 (risikoerhöhend)
@@ -496,6 +597,7 @@ def klassifiziere(mandat: dict[str, Any], *,
     eu_hochrisiko_hit = False
     hausrichtlinie_hit = False
     laender_listen_treffer: dict[str, Any] | None = None
+    alle_laender_treffer: list[dict[str, Any]] = []
     hochrisiko_laender = {e["iso2"]: e for e in hochrisiko["laender"]}
     hochrisiko_quellen = hochrisiko.get("quellen", {})
     for fk in anlage2["faktoren"]:
@@ -505,12 +607,15 @@ def klassifiziere(mandat: dict[str, Any], *,
                 anlage2_treffer += 1
         elif fk["bewertung"] == "land_hochrisiko":
             land_konsultiert = True
-            eintrag = hochrisiko_laender.get(norm["sitz_land"])
-            if eintrag is not None:
+            for land in pruef_laender:
+                eintrag = hochrisiko_laender.get(land)
+                if eintrag is None:
+                    continue
                 hochrisiko_land_hit = True
                 listen = eintrag["listen"]
-                eu_hochrisiko_hit = "eu-hochrisiko" in listen
-                hausrichtlinie_hit = not eu_hochrisiko_hit
+                ist_eu_liste = "eu-hochrisiko" in listen
+                eu_hochrisiko_hit = eu_hochrisiko_hit or ist_eu_liste
+                hausrichtlinie_hit = hausrichtlinie_hit or not ist_eu_liste
                 listen_text = ", ".join(
                     LISTEN_LABELS.get(l, l) for l in listen)
                 je_liste = [
@@ -525,20 +630,27 @@ def klassifiziere(mandat: dict[str, Any], *,
                     }
                     for l in listen
                 ]
-                laender_listen_treffer = {
-                    "iso2": norm["sitz_land"],
+                treffer = {
+                    "iso2": land,
                     "land": eintrag["land"],
+                    "herkunft": herkunft[land],
                     "listen": listen,
                     "je_liste": je_liste,
                 }
-                if eu_hochrisiko_hit:
+                alle_laender_treffer.append(treffer)
+                # Risikoreichster Treffer führt den Report: eine EU-Listung
+                # (Gesetzespflicht) schlägt einen reinen FATF-Treffer.
+                if laender_listen_treffer is None or (
+                        ist_eu_liste
+                        and "eu-hochrisiko" not in laender_listen_treffer["listen"]):
+                    laender_listen_treffer = treffer
+                detail = (f"{herkunft[land]} {land} ({eintrag['land']}) ist "
+                          f"gelistet auf: {listen_text}. "
+                          f"{hochrisiko['vorbehalt']}")
+                if ist_eu_liste:
                     # Statutorischer Faktor — Anlage 2 Nr. 3 Buchst. a GwG
                     # gilt nur für den EU-Listen-Treffer.
-                    faktoren.append(_faktor_eintrag(
-                        fk, anlage=2,
-                        detail=f"Sitzland {norm['sitz_land']} "
-                               f"({eintrag['land']}) ist gelistet auf: "
-                               f"{listen_text}. {hochrisiko['vorbehalt']}"))
+                    faktoren.append(_faktor_eintrag(fk, anlage=2, detail=detail))
                 else:
                     # Kein EU-Listen-Treffer — § 15 Abs. 3 Nr. 2 GwG verweist
                     # nur auf die EU-Liste, daher KEIN Zitat der Anlage-2-Norm
@@ -548,7 +660,7 @@ def klassifiziere(mandat: dict[str, Any], *,
                         "anlage": None,
                         "fundstelle": "Hausrichtlinie (keine GwG-Norm)",
                         "paraphrase": (
-                            "Sitzland ist nicht auf der EU-Hochrisiko-Liste "
+                            "Land ist nicht auf der EU-Hochrisiko-Liste "
                             "gelistet, aber auf mindestens einer FATF-Liste "
                             "(Schwarz- und/oder Grauliste) — konservative "
                             "Haus-Einstufung dieses Skills als 'hoch', keine "
@@ -557,9 +669,7 @@ def klassifiziere(mandat: dict[str, Any], *,
                         "kategorie": "geografisch",
                         "quelle": "executor",
                         **_marker_felder(),
-                        "detail": f"Sitzland {norm['sitz_land']} "
-                                  f"({eintrag['land']}) ist gelistet auf: "
-                                  f"{listen_text}. {hochrisiko['vorbehalt']}",
+                        "detail": detail,
                     })
                 anlage2_treffer += 1
 
@@ -570,12 +680,15 @@ def klassifiziere(mandat: dict[str, Any], *,
             "Länder-Einordnung: " + hochrisiko["vorbehalt"] +
             " (Stand der hinterlegten Listen — " + stand_texte +
             "; abgerufen am " + str(hochrisiko.get("abgerufen_am")) + ")")
-        if hausrichtlinie_hit and norm["sitz_land"] in EU_MITGLIEDSTAATEN:
-            vorbehalte.append(
-                f"Sitzland {norm['sitz_land']} ist EU-Mitgliedstaat und kann "
-                "begrifflich schon kein 'Drittstaat mit hohem Risiko' i. S. d. "
-                "§ 15 Abs. 3 Nr. 2 GwG sein — der FATF-Grauliste-Treffer "
-                "bleibt eine reine Haus-Einstufung ohne Gesetzesgrundlage.")
+        for t in alle_laender_treffer:
+            if "eu-hochrisiko" in t["listen"]:
+                continue
+            if t["iso2"] in EU_MITGLIEDSTAATEN:
+                vorbehalte.append(
+                    f"{t['herkunft']} {t['iso2']} ist EU-Mitgliedstaat und kann "
+                    "begrifflich schon kein 'Drittstaat mit hohem Risiko' i. S. d. "
+                    "§ 15 Abs. 3 Nr. 2 GwG sein — der FATF-Grauliste-Treffer "
+                    "bleibt eine reine Haus-Einstufung ohne Gesetzesgrundlage.")
 
     # PEP als eigener § 15-Tatbestand (nicht Teil der Anlage-2-Katalogfaktoren)
     pep_hit = norm["pep"] == "ja"
@@ -637,7 +750,7 @@ def klassifiziere(mandat: dict[str, Any], *,
                 "§ 10 GwG",
                 "Die allgemeinen Sorgfaltspflichten sind unabhängig von der "
                 "Haus-Einstufung anzuwenden."))
-        if norm["sitz_land"] in _BAFIN_ALLGEMEINVERFUEGUNG_LAENDER:
+        if any(l in _BAFIN_ALLGEMEINVERFUEGUNG_LAENDER for l in pruef_laender):
             pflichten.append(_pflicht(
                 "BaFin-Allgemeinverfügung vom 13.05.2020",
                 "Zusätzliche Anzeigepflicht für Geschäftsbeziehungen und "
@@ -648,15 +761,22 @@ def klassifiziere(mandat: dict[str, Any], *,
         begr_teile = []
         if pep_hit:
             begr_teile.append("PEP-Status (§ 15 Abs. 3 Nr. 1 GwG)")
-        if eu_hochrisiko_hit:
+        eu_treffer = [t for t in alle_laender_treffer
+                      if "eu-hochrisiko" in t["listen"]]
+        haus_treffer = [t for t in alle_laender_treffer
+                        if "eu-hochrisiko" not in t["listen"]]
+        if eu_treffer:
             begr_teile.append(
-                "Sitz in EU-Hochrisiko-Drittstaat (Anlage 2 Nr. 3 Buchst. a "
-                "GwG, § 15 Abs. 3 Nr. 2 GwG)")
-        if hausrichtlinie_hit and not eu_hochrisiko_hit:
+                "Länderbezug zu EU-Hochrisiko-Drittstaat ("
+                + "; ".join(f"{t['iso2']} — {t['herkunft']}" for t in eu_treffer)
+                + "; Anlage 2 Nr. 3 Buchst. a GwG, § 15 Abs. 3 Nr. 2 GwG)")
+        if haus_treffer:
             begr_teile.append(
-                "Sitz in einem nur auf FATF-Listen (schwarz/grau) geführten "
-                "Land ohne EU-Listung — konservative Haus-Einstufung, keine "
-                "Gesetzespflicht")
+                "Länderbezug zu einem nur auf FATF-Listen (schwarz/grau) "
+                "geführten Land ohne EU-Listung ("
+                + "; ".join(f"{t['iso2']} — {t['herkunft']}"
+                            for t in haus_treffer)
+                + ") — konservative Haus-Einstufung, keine Gesetzespflicht")
         return report(
             "verpflichtet", "hoch",
             "Mindestens ein Tatbestand für die Klassifikation 'hoch' liegt "
