@@ -51,6 +51,16 @@
       "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html, KV 1232: Beendigung des gesamten Verfahrens (Rücknahme nach Begründung, Anerkenntnis-/Verzichtsurteil, Vergleich, übereinstimmende Erledigung), 'Die Gebühr 1230 ermäßigt sich auf' 3,0."
     }
   },
+  "anrechnung_mahnverfahren_auf_verfahrensgebuehr": {
+    "norm": "Anmerkung Abs. 1 zu KV 1210 GKG",
+    "fundstelle": "Anlage 1 zum GKG (Kostenverzeichnis), Teil 1 Hauptabschnitt 2 Abschnitt 1 Unterabschnitt 1, Anmerkung Absatz 1 zu Nummer 1210",
+    "wortlaut": "Soweit wegen desselben Streitgegenstands ein Mahnverfahren vorausgegangen ist, entsteht die Gebühr mit dem Eingang der Akten bei dem Gericht, an das der Rechtsstreit nach Erhebung des Widerspruchs oder Einlegung des Einspruchs abgegeben wird; in diesem Fall wird eine Gebühr 1100 nach dem Wert des Streitgegenstands angerechnet, der in das Prozessverfahren übergegangen ist.",
+    "quelle_hinweis": "Web-verifiziert am 2026-08-28 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html (aktuelle Fassung), Anmerkung Abs. 1 zu Nr. 1210 — Wortlaut oben zeichengetreu übernommen.",
+    "regel": "ANRECHNUNG, keine Ermäßigung: der Gebührensatz von KV 1210 (3,0) bleibt unverändert; angerechnet wird der Betrag einer Gebühr 1100 nach dem in das Prozessverfahren übergegangenen Wert. Wirtschaftlich verbleibt bei vollständigem Übergang die 3,0-Gebühr als Gesamtbetrag beider Positionen.",
+    "formel": "anrechnungsbetrag = Betrag der Gebühr KV 1100 (0,5 x Einfachgebühr, mit dem versionierten Mindestbetrag) nach dem übergegangenen Wert; KV 1210 nach Anrechnung = Betrag KV 1210 - anrechnungsbetrag, nicht unter 0,00 €.",
+    "voraussetzung": "KV 1100 und KV 1210 in derselben Anfrage und derselbe Wert — d. h. der gesamte Streitgegenstand des Mahnverfahrens ist in das Prozessverfahren übergegangen. Ist nur ein Teil übergegangen, weichen die Werte voneinander ab: dann zwei getrennte Executor-Aufrufe mit dem jeweils zutreffenden Wert (der Rechner kennt je Anfrage nur einen Streitwert).",
+    "hinweis": "Nur als explizit angeforderter Rechenschritt (anrechnung_1100_auf_1210: true) — nie automatisch: ob wegen desselben Streitgegenstands ein Mahnverfahren vorausgegangen und welcher Wert übergegangen ist, ist keine Rechenfrage. KV 1211 (Ermäßigung) ist von dieser Mechanik nicht erfasst."
+  },
   "hinweis_allgemeine_mindestgebuehr": {
     "norm": "§ 34 Abs. 2 Satz 1 GKG",
     "betrag": "15.00",

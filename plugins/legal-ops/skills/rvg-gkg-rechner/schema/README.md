@@ -143,11 +143,49 @@ Begründung — nie zu einem geratenen Betrag.
 }
 ```
 
+Mahnbescheid → Widerspruch → streitiges Verfahren (mit Anrechnung):
+
+```json
+{
+  "verfahrenseinleitungsdatum": "2026-03-01",
+  "streitwert": "10000.00",
+  "positionen": [{"nr": "1100"}, {"nr": "1210"}],
+  "anrechnung_1100_auf_1210": true
+}
+```
+
 | Feld | Pflicht | Format | Bedeutung |
 |---|---|---|---|
 | `verfahrenseinleitungsdatum` | **ja** | ISO-Datum `JJJJ-MM-TT` | Stichtag für die Tabellenstand-Wahl: Zeitpunkt, zu dem die Rechtsstreitigkeit anhängig geworden ist (§ 71 Abs. 1 GKG) — **nicht** das Auftragsdatum wie beim RVG-Block. |
 | `streitwert` | **ja** | Dezimalstring oder ganze Zahl | Streitwert. Werte über 30.000.000 € werden nach § 39 Abs. 2 GKG **gekappt** (Kappungsgrenze, keine Zulässigkeitsgrenze) — mit Rechenketten-Zeile, Warnung und `wertkappung`-Block im Report. |
 | `positionen` | **ja** | Liste von Objekten `{"nr": "1210"}` | Siehe [KV-GKG-Katalog](#gebührentatbestands-katalog-gkg-kv-katalogjson) unten. |
+| `anrechnung_1100_auf_1210` | nein (Default `false`) | `true`/`false` | Anrechnung der Mahnverfahrensgebühr auf die Gebühr für das Verfahren im Allgemeinen beim Übergang in das streitige Verfahren (Anmerkung Abs. 1 zu KV 1210 GKG) — verlangt `1100` **und** `1210` in `positionen`. |
+
+**Anrechnung KV 1100 → KV 1210 (Übergang aus dem Mahnverfahren):** Nach der
+Anmerkung Abs. 1 zu KV 1210 GKG (Anlage 1 GKG, Teil 1 Hauptabschnitt 2
+Abschnitt 1 Unterabschnitt 1) gilt: „Soweit wegen desselben Streitgegenstands
+ein Mahnverfahren vorausgegangen ist, entsteht die Gebühr mit dem Eingang der
+Akten bei dem Gericht, an das der Rechtsstreit nach Erhebung des Widerspruchs
+oder Einlegung des Einspruchs abgegeben wird; in diesem Fall wird eine Gebühr
+1100 nach dem Wert des Streitgegenstands angerechnet, der in das
+Prozessverfahren übergegangen ist." Die Norm ordnet eine **Anrechnung** an,
+keine Ermäßigung des Gebührensatzes: der Satz 3,0 von KV 1210 bleibt
+unverändert, abgezogen wird der **Betrag** der Gebühr KV 1100 (inklusive
+deren Mindestbetrags-Floor). Bei vollständigem Übergang bleibt damit
+wirtschaftlich genau die 3,0-Gebühr als Summe beider Positionen stehen.
+Der Executor rechnet das nur auf ausdrückliche Anforderung
+(`anrechnung_1100_auf_1210: true`), nie automatisch — ob derselbe
+Streitgegenstand vorausgegangen ist, ist keine Rechenfrage. Fehlt eine der
+beiden Positionen, ist das ein Eingabefehler (Exit 2). Ist nur ein **Teil**
+des Streitgegenstands übergegangen, rechnet der Executor die Anrechnung
+**nicht** (siehe „Bewusste Grenzen"). KV 1211 (Ermäßigung) ist von der
+Mechanik nicht erfasst.
+
+**Strikte Key-Prüfung (beide Blöcke):** Ein in `rvg` oder `gkg` nicht
+vorgesehener Key ist ein Eingabefehler mit Exit 2 und Nennung des Keys — nie
+ein stilles Ignorieren. Sonst liefe ein Tippfehler wie
+`"anrechnung_1100_1210"` als *nicht* angeforderte Anrechnung durch und der
+Report wiese einen zu hohen Betrag aus.
 
 #### Gebührentatbestands-Katalog (GKG, `kv-katalog.json`)
 
@@ -156,7 +194,7 @@ Katalog liegt bei
 
 | Nr. | Bezeichnung | Satz | Hinweis |
 |---|---|---|---|
-| `1100` | Mahnverfahren (Antrag auf Mahnbescheid/Europ. Zahlungsbefehl) | 0,5 | Eigener, versionierter Mindestbetrag (36 € / 38 €, siehe unten) statt der allgemeinen 15-€-Mindestgebühr. |
+| `1100` | Mahnverfahren (Antrag auf Mahnbescheid/Europ. Zahlungsbefehl) | 0,5 | Eigener, versionierter Mindestbetrag (36 € / 38 €, siehe unten) statt der allgemeinen 15-€-Mindestgebühr. Wird bei Übergang ins streitige Verfahren auf `1210` angerechnet (`anrechnung_1100_auf_1210`). |
 | `1210` | Verfahren im Allgemeinen, 1. Rechtszug | 3,0 | Schließt sich mit `1211` aus. |
 | `1211` | Ermäßigung von `1210` (früher Verfahrensabschluss) | 1,0 | — |
 | `1220` | Berufung, Verfahren im Allgemeinen | 4,0 | Schließt sich mit `1222` aus. |
@@ -237,7 +275,7 @@ Struktur je Block (`rvg`/`gkg`, sofern angefragt):
                   "quelle": "executor" },
     "warnungen": []
   },
-  "gkg": { "…analog: positionen flach, ergebnis.gesamt, wertkappung, ohne Auslagenpauschale/USt…": "…" }
+  "gkg": { "…analog: positionen flach, anrechnung (KV 1100 -> KV 1210, sonst null), ergebnis.gesamt, wertkappung, ohne Auslagenpauschale/USt…": "…" }
 }
 ```
 
@@ -278,6 +316,26 @@ Struktur je Block (`rvg`/`gkg`, sofern angefragt):
   Gegenstandswerte von Geschäfts- und Verfahrensgebühr voneinander ab (z. B.
   nur teilweise identischer Gegenstand), rechnet dieser Executor nicht —
   anwaltliche Schätzung nach § 14 Abs. 1 RVG bleibt Kanzleisache.
+- **Ein Wert je Anfrage**: `streitwert` gilt für den gesamten Block. Zwei
+  Angelegenheiten mit **unterschiedlichem** Gegenstandswert (typisch:
+  vorgerichtliche Tätigkeit über die Restforderung, gerichtliches Verfahren
+  über den vollen Betrag nach Teilerledigung) brauchen **zwei getrennte
+  Executor-Aufrufe** mit je eigenem Wert; der Report summiert nur innerhalb
+  einer Anfrage.
+- **Kein Teilübergang aus dem Mahnverfahren**: `anrechnung_1100_auf_1210`
+  setzt den **vollständigen** Übergang voraus. Angerechnet wird nach der
+  Anmerkung Abs. 1 zu KV 1210 GKG „eine Gebühr 1100 nach dem Wert des
+  Streitgegenstands …, der in das Prozessverfahren übergegangen ist" — bei
+  einem Teilübergang ist das ein **anderer (kleinerer) Wert** als der
+  Streitwert des Prozessverfahrens, und eine Anfrage kennt nur **einen**
+  `streitwert`. Zwei getrennte Aufrufe lösen das nicht: das Flag verlangt
+  KV 1100 und KV 1210 in **derselben** Anfrage, und ein in einem zweiten
+  Aufruf ermittelter Anrechnungsbetrag lässt sich nicht in den ersten
+  übertragen. Der Executor rechnet diesen Fall deshalb **nicht** — die
+  Anrechnung beim Teilübergang bleibt händisch/anwaltlich zu ermitteln.
+- **KV 1211 ohne Mahnverfahrens-Anrechnung**: `anrechnung_1100_auf_1210`
+  verlangt KV 1210; die Ermäßigung KV 1211 ist von der Anmerkung nicht
+  erfasst und wird als Eingabefehler abgelehnt statt geraten.
 - **§ 14 RVG-Ermessen für die Geschäftsgebühr** (Nr. 2300, Satz zwischen 0,5
   und 2,5): Der Executor verlangt den Satz als Eingabe und weist bei Satz
   > 1,3 nur auf die Begründungspflicht hin — er trifft die

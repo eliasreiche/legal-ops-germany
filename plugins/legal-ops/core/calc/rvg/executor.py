@@ -41,9 +41,13 @@ in derselben Angelegenheit sind ein Eingabefehler):
       "gkg": {
         "verfahrenseinleitungsdatum": "2026-03-01",
         "streitwert": "10000.00",
-        "positionen": [{"nr": "1210"}]
+        "positionen": [{"nr": "1100"}, {"nr": "1210"}],
+        "anrechnung_1100_auf_1210": true
       }
     }
+
+Beide Blöcke werden strikt validiert: ein unbekannter Key (Tippfehler) ist
+ein Eingabefehler mit Exit 2 und Nennung des Keys, nie ein stilles Ignorieren.
 
 CLI:
     python3 core/calc/rvg/executor.py --input ANFRAGE.json [--output REPORT.json]
@@ -76,6 +80,24 @@ from gkg.rechner import GKGEingabeFehler, berechne as gkg_berechne  # noqa: E402
 
 _pflichtfeld = functools.partial(pflichtfeld, fehler=WertgebuehrFehler)
 
+# Strikte Eingabe-Validierung (Geldpfad): ein unbekannter Key ist ein
+# Eingabefehler mit Exit 2 und Nennung des Keys — nie stilles Ignorieren.
+# Ein Tippfehler wie "anrechnung_1100_1210" würde sonst als *nicht*
+# angeforderte Anrechnung durchlaufen und einen zu hohen Betrag ausweisen.
+_RVG_FELDER = ("auftragsdatum", "streitwert", "angelegenheiten", "tatbestaende",
+               "anrechnung_2300_auf_3100", "auslagenpauschale", "umsatzsteuer")
+_GKG_FELDER = ("verfahrenseinleitungsdatum", "streitwert", "positionen",
+               "anrechnung_1100_auf_1210")
+
+
+def _nur_erlaubte_felder(block: dict[str, Any], erlaubt: tuple[str, ...],
+                         kontext: str) -> None:
+    for feld in block:
+        if feld not in erlaubt:
+            raise WertgebuehrFehler(
+                f"unbekanntes Feld {kontext}: '{feld}' (erlaubt: "
+                f"{', '.join(repr(f) for f in erlaubt)})")
+
 
 def _tabellenstand_kurz(stand: dict[str, Any]) -> dict[str, Any]:
     """Trimmt den vollen Tabellenstand (inkl. Stufen/Prüfpunkte) auf die für
@@ -91,6 +113,7 @@ def _tabellenstand_kurz(stand: dict[str, Any]) -> dict[str, Any]:
 
 
 def _baue_rvg_block(anfrage: dict[str, Any]) -> dict[str, Any]:
+    _nur_erlaubte_felder(anfrage, _RVG_FELDER, "im Block 'rvg'")
     stichtag = parse_datum_strikt(_pflichtfeld(anfrage, "auftragsdatum"), "rvg.auftragsdatum")
     streitwert = _pflichtfeld(anfrage, "streitwert")
 
@@ -162,19 +185,23 @@ def _baue_rvg_block(anfrage: dict[str, Any]) -> dict[str, Any]:
 
 
 def _baue_gkg_block(anfrage: dict[str, Any]) -> dict[str, Any]:
+    _nur_erlaubte_felder(anfrage, _GKG_FELDER, "im Block 'gkg'")
     stichtag = parse_datum_strikt(
         _pflichtfeld(anfrage, "verfahrenseinleitungsdatum"),
         "gkg.verfahrenseinleitungsdatum")
     streitwert = _pflichtfeld(anfrage, "streitwert")
     positionen = _pflichtfeld(anfrage, "positionen")
+    anrechnung = anfrage.get("anrechnung_1100_auf_1210", False)
 
-    ergebnis = gkg_berechne(streitwert, stichtag, positionen)
+    ergebnis = gkg_berechne(streitwert, stichtag, positionen,
+                            anrechnung_1100_auf_1210=anrechnung)
 
     return {
         "eingabe": {
             "verfahrenseinleitungsdatum": stichtag.isoformat(),
             "streitwert": str(ergebnis.streitwert_eingabe),
             "positionen": positionen,
+            "anrechnung_1100_auf_1210": bool(anrechnung),
         },
         "tabellenstand": _tabellenstand_kurz(ergebnis.tabellenstand),
         "wertkappung": {
@@ -185,6 +212,7 @@ def _baue_gkg_block(anfrage: dict[str, Any]) -> dict[str, Any]:
         } if ergebnis.wert_gekappt else None,
         "einfachgebuehr": str(ergebnis.einfachgebuehr),
         "positionen": [p.as_dict() for p in ergebnis.positionen],
+        "anrechnung": ergebnis.anrechnung,
         "rechenkette": [s.as_dict() for s in ergebnis.rechenkette],
         "ergebnis": {
             "gesamt": str(ergebnis.gesamt),
@@ -198,11 +226,7 @@ def _baue_gkg_block(anfrage: dict[str, Any]) -> dict[str, Any]:
 def baue_report(eingabe: dict[str, Any], quelle_datei: str) -> dict[str, Any]:
     # Erst auf unbekannte Felder prüfen — ein Tippfehler wie {"rgv": ...}
     # soll als solcher gemeldet werden, nicht als "kein Block vorhanden".
-    for feld in eingabe:
-        if feld not in ("rvg", "gkg"):
-            raise WertgebuehrFehler(
-                f"unbekanntes Feld auf oberster Ebene: '{feld}' (erlaubt: "
-                f"'rvg', 'gkg')")
+    _nur_erlaubte_felder(eingabe, ("rvg", "gkg"), "auf oberster Ebene")
     hat_rvg = "rvg" in eingabe and eingabe["rvg"] is not None
     hat_gkg = "gkg" in eingabe and eingabe["gkg"] is not None
     if not hat_rvg and not hat_gkg:

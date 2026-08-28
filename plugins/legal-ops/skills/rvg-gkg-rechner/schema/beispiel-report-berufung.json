@@ -253,7 +253,8 @@
         {
           "nr": "1220"
         }
-      ]
+      ],
+      "anrechnung_1100_auf_1210": false
     },
     "tabellenstand": {
       "id": "kostbraeg_2025",
@@ -276,6 +277,7 @@
         "quelle": "executor"
       }
     ],
+    "anrechnung": null,
     "rechenkette": [
       {
         "schritt": 1,

@@ -26,7 +26,9 @@ nachvollziehbarer **Rechenkette**: Tabellenstand-Wahl nach Stichtag,
 1,0-Gebühr nach der gesetzlichen Stufenformel (§ 13 Abs. 1 RVG / § 34 Abs. 1
 GKG), je Gebührenposition Satz × 1,0-Gebühr (mit Mindestbetrags-Floor),
 optionale Anrechnung der Geschäftsgebühr auf die Verfahrensgebühr (Vorbem. 3
-Abs. 4 VV RVG), Auslagenpauschale und Umsatzsteuer.
+Abs. 4 VV RVG), optionale Anrechnung der Mahnverfahrensgebühr auf die
+Gerichtsgebühr des Streitverfahrens (Anmerkung Abs. 1 zu KV 1210 GKG),
+Auslagenpauschale und Umsatzsteuer.
 
 Die Gebührentabellen liegen als **Formel + versionierte Parameterdaten** vor
 (`core/calc/rvg/gebuehrentabelle.json`, `core/calc/gkg/gebuehrentabelle.json`)
@@ -67,6 +69,37 @@ Berufungs-/Revisions-Tatbestand zulässig (sonst Nr. 1000/1003). Die Anrechnung
 Anrechnungs-Anforderung ohne Nr. 3100, aber mit höherinstanzlicher
 Verfahrensgebühr, wird als Eingabefehler abgelehnt.
 
+**Mahnverfahren → streitiges Verfahren (GKG):** Geht der Sache ein
+Mahnbescheid voraus und wird nach Widerspruch/Einspruch streitig verhandelt,
+wird die Gerichtsgebühr KV 1100 (0,5) auf die Gebühr KV 1210 (3,0)
+**angerechnet** — Anmerkung Abs. 1 zu KV 1210 GKG: „… in diesem Fall wird
+eine Gebühr 1100 nach dem Wert des Streitgegenstands angerechnet, der in das
+Prozessverfahren übergegangen ist." Die Norm ordnet eine Anrechnung an, keine
+Ermäßigung: der Satz 3,0 bleibt unverändert, abgezogen wird der Betrag der
+Gebühr KV 1100 (inklusive deren Mindestbetrag). Angefordert wird das über
+`gkg.anrechnung_1100_auf_1210: true` — nie automatisch, weil die Frage, ob
+derselbe Streitgegenstand vorausgegangen und welcher Wert übergegangen ist,
+keine Rechenfrage ist. Fehlt eine der beiden Positionen, ist das ein
+Eingabefehler (Exit 2). **Bewusste Grenze — kein Teilübergang:** Die
+Anrechnung setzt den vollständigen Übergang voraus. Ist nur ein Teil des
+Mahnverfahrens-Streitgegenstands übergegangen, wäre die Anrechnungsbasis der
+kleinere übergegangene Wert; eine Anfrage kennt aber nur **einen**
+`streitwert`, und das Flag verlangt KV 1100 und KV 1210 in **derselben**
+Anfrage — zwei getrennte Aufrufe können den Anrechnungsbetrag nicht
+ineinander tragen. Diesen Fall rechnet der Executor deshalb nicht; er bleibt
+händisch/anwaltlich zu ermitteln.
+
+**Ein Gegenstandswert je Anfrage — sonst zwei Aufrufe:** `streitwert` gilt
+für den gesamten Block. Haben zwei Angelegenheiten **unterschiedliche**
+Gegenstandswerte — der Alltagsfall, wenn ein Teil der Forderung vor Klage
+erledigt wird und die vorgerichtliche Tätigkeit deshalb einen anderen Wert
+hat als das gerichtliche Verfahren —, muss Claude die Anfrage in **zwei
+getrennte Executor-Aufrufe** mit je eigenem `streitwert` aufteilen und die
+beiden Gesamtbeträge selbst ausweisen; der Report summiert nur *innerhalb*
+einer Anfrage. Nie beide Werte in eine Anfrage pressen und nie einen
+Mischwert bilden. (Der GKG-Teilübergang ist damit **nicht** lösbar — siehe
+oben: dieser Fall wird gar nicht gerechnet.)
+
 **Wert-Obergrenzen (Kappung, sichtbar):** Gegenstandswerte über 30 Mio. €
 werden nach § 22 Abs. 2 Satz 1 RVG bzw. § 39 Abs. 2 GKG auf 30 Mio. €
 **gekappt** — als eigene Rechenketten-Zeile mit Warnung und
@@ -101,7 +134,14 @@ Kurzfassung der Pflichtfelder:
 - **`gkg`**: `verfahrenseinleitungsdatum` (ISO-Datum, **nicht** dasselbe wie
   `auftragsdatum`), `streitwert`, `positionen` (Liste von KV-GKG-Positionen
   aus dem [Katalog](../../core/calc/gkg/kv-katalog.json): `1100`,
-  `1210`, `1211`, `1220`, `1222`, `1230`, `1232`).
+  `1210`, `1211`, `1220`, `1222`, `1230`, `1232`); optional
+  `anrechnung_1100_auf_1210` (Anrechnung der Mahnverfahrensgebühr, verlangt
+  `1100` und `1210`).
+
+Beide Blöcke werden **strikt** validiert: ein nicht vorgesehener Key (z. B.
+ein Tippfehler `anrechnung_1100_1210`) führt zu Exit 2 mit Nennung des Keys —
+er wird nie stillschweigend ignoriert, sonst rechnete der Report im Geldpfad
+ohne die gewollte Anrechnung weiter.
 
 Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
 `float` — der Executor lehnt `float`-Eingaben strikt ab (Rundungsfehler wie
@@ -139,15 +179,18 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
      (`mindestbetrag_gegriffen`),
    - **Kappung der Erhöhungsgebühr** (Nr. 1008) auf Gebührensatz 2,0, wenn
      eingetreten,
-   - **Anrechnung**, wenn angefordert: beteiligte Angelegenheiten, Satz,
-     Betrag, Verfahrensgebühr vor/nach Anrechnung,
+   - **Anrechnung**, wenn angefordert: beim RVG beteiligte Angelegenheiten,
+     Satz, Betrag, Verfahrensgebühr vor/nach Anrechnung; beim GKG
+     (`gkg.anrechnung`) Anrechnungsbetrag und Gebühr KV 1210 vor/nach
+     Anrechnung mit der Norm (Anmerkung Abs. 1 zu KV 1210 GKG),
    - **RVG und GKG werden nie automatisch addiert** —
      `meta.hinweis_getrennte_kostenarten` immer erwähnen,
    - den Zweitkontroll-Hinweis aus `haftung` (immer, bei jeder Antwort).
 5. Bei Exit-Code 2 (Eingabefehler, u. a. Scope-Ablehnung bei
    Betragsrahmengebühren/PKH/Beratungshilfe, Teil-2-/Teil-3-Tatbestände in
    derselben Angelegenheit, Nr. 1008 kombiniert mit Wert über 30 Mio. €,
-   Stichtag außerhalb der unterstützten Tabellenstände) gibt Claude die
+   Stichtag außerhalb der unterstützten Tabellenstände, unbekannter Key in
+   `rvg`/`gkg`, angeforderte GKG-Anrechnung ohne KV 1100 bzw. KV 1210) gibt Claude die
    Fehlermeldung wieder und korrigiert die Eingabe bzw. fragt nach — er rät
    kein Ergebnis.
 
@@ -160,8 +203,8 @@ JSON-Report nach [`schema/README.md`](schema/README.md), Beispiel:
 `mindestbetrag_gegriffen`, `quelle: "executor"` sowie eigenes `ergebnis` mit
 Zwischensumme/7002/Netto/USt/Gesamt), `anrechnung`, `rechenkette`,
 `ergebnis.gesamt_verguetung`. Im `gkg`-Block: `tabellenstand`,
-`wertkappung`, `einfachgebuehr`, `positionen`, `rechenkette`,
-`ergebnis.gesamt`.
+`wertkappung`, `einfachgebuehr`, `positionen`, `anrechnung` (KV 1100 auf
+KV 1210, sonst `null`), `rechenkette`, `ergebnis.gesamt`.
 
 Jeder Geldbetrag im Report stammt aus dem jeweiligen `rechner.py`, nie vom
 Modell (P3). Alle Beträge sind Dezimalstrings (z. B. `"847.60"`).
@@ -260,7 +303,29 @@ und zweite Instanz dürfen deshalb **nicht** in dieselbe Angelegenheit gelegt
 werden — der Executor lehnt das ab (Instanz-Kollisionsregel). RVG-Vergütung
 und GKG-Gerichtskosten bleiben getrennt.
 
-### Beispiel 4 — Scope-Ablehnung: Betragsrahmengebühr
+### Beispiel 4 — Inkasso: Mahnbescheid → Widerspruch → streitiges Verfahren (GKG)
+
+Anfrage im `gkg`-Block: Streitwert 10.000 €, Verfahrenseinleitung 01.03.2026
+(KostBRÄG 2025), Positionen KV 1100 und KV 1210, `anrechnung_1100_auf_1210:
+true`.
+
+| Position | Satz | Betrag |
+|---|---|---|
+| 1,0-Gebühr GKG (Streitwert 10.000 €, KostBRÄG 2025) | — | 283,00 € |
+| Mahnverfahren (KV 1100 GKG) | 0,5 | 141,50 € |
+| Verfahren im Allgemeinen, 1. Rechtszug (KV 1210 GKG), vor Anrechnung | 3,0 | 849,00 € |
+| ./. Anrechnung KV 1100 (Anmerkung Abs. 1 zu KV 1210 GKG) | — | − 141,50 € |
+| **Gerichtskosten gesamt** | | **849,00 €** |
+
+Der Gebührensatz von KV 1210 bleibt 3,0 — angerechnet wird der **Betrag** der
+Gebühr KV 1100 (bei kleinen Werten inklusive deren Mindestbetrag, z. B.
+38,00 € statt rechnerischer 30,50 €). Claude weist den `anrechnung`-Block des
+Reports mit aus (Anrechnungsbetrag, KV 1210 vor/nach Anrechnung) und nennt die
+Norm. Ist nur ein Teil des Streitgegenstands übergegangen, rechnet der
+Executor die Anrechnung nicht (bewusste Grenze, siehe oben) — Claude weist
+das als Lücke aus und schätzt keinen Anrechnungsbetrag.
+
+### Beispiel 5 — Scope-Ablehnung: Betragsrahmengebühr
 
 Anfrage mit `{"nr": "3102"}` (Verfahrensgebühr Sozialgericht,
 Betragsrahmengebühr) liefert Exit 2: „Nr. 3102 VV RVG ist nicht unterstützt
