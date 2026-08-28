@@ -383,10 +383,19 @@ def main(argv: list[str] | None = None) -> int:
         if not qp.is_file():
             print(f"Fehler: Quelldatei nicht gefunden: {qp}", file=sys.stderr)
             return 2
-        quellen.append((str(qp), qp.read_text(encoding="utf-8").splitlines()))
+        try:
+            quellen.append((str(qp), qp.read_text(encoding="utf-8").splitlines()))
+        except UnicodeDecodeError as exc:
+            print(f"Fehler: {qp}: keine gültige UTF-8-Datei ({exc})", file=sys.stderr)
+            return 2
 
     try:
-        aktenkopf = json.loads(aktenkopf_pfad.read_text(encoding="utf-8"))
+        aktenkopf_text = aktenkopf_pfad.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        print(f"Fehler: {aktenkopf_pfad}: keine gültige UTF-8-Datei ({exc})", file=sys.stderr)
+        return 2
+    try:
+        aktenkopf = json.loads(aktenkopf_text)
     except json.JSONDecodeError as exc:
         print(f"Fehler: Aktenkopf-Datei ist kein gültiges JSON: {exc}", file=sys.stderr)
         return 2

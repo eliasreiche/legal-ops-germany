@@ -77,7 +77,13 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     try:
-        mandat = json.loads(mandat_pfad.read_text(encoding="utf-8"))
+        mandat_text = mandat_pfad.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        print(f"Fehler: {mandat_pfad}: keine gültige UTF-8-Datei ({exc})",
+              file=sys.stderr)
+        return 2
+    try:
+        mandat = json.loads(mandat_text)
     except json.JSONDecodeError as exc:
         print(f"Fehler: Mandatsdatei ist kein gültiges JSON: {exc}",
               file=sys.stderr)

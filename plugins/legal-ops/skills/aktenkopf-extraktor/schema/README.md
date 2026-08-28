@@ -178,3 +178,9 @@ aus [`beispiel-aktenkopf.json`](beispiel-aktenkopf.json) +
 - **Geld-Heuristik**: der numerische Abgleich ignoriert die Währung; ein Betrag,
   der zufällig einer Jahreszahl entspricht, kann formal als belegt gelten — die
   inhaltliche Zuordnung bleibt anwaltlich zu prüfen.
+- **Datums-Normalisierung** (`core/calc/datum.py`) erkennt ISO, deutsches
+  Ziffernformat, ausgeschriebene deutsche Monatsnamen (nur vierstelliges Jahr,
+  nur die neun unzweideutigen Abkürzungen `Jan.`–`Dez.` ohne Jun./Jul.; `Mai`
+  hat keine kürzere Abkürzung und wird als voller Monatsname erkannt) und
+  vollständige RFC-2822-Header. Ohne Uhrzeit/Zone kein RFC-2822-Treffer —
+  bewusst, kein Raten.

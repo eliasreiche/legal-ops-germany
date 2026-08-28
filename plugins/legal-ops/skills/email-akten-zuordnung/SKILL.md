@@ -20,7 +20,8 @@ kontext_writes:
 > **Status: `beta`** — automatisierte Tests laufen grün in CI (`tests/`):
 > EML-Parsing (RFC-2047-Umlaut-Header, fehlende Felder), Az-Stufe Z0,
 > Parteien-Stufen Z1–Z4 inkl. eines echten False-Positive-/Mehrdeutigkeits-
-> Grenzfalls, `kein_treffer`-Lücke, Fristverdacht-Wortliste, Slug-/
+> Grenzfalls, Nachname-Stufe Z2N (Korroboration, Enthaltung bei
+> Mehrdeutigkeit), `kein_treffer`-Lücke, Fristverdacht-Wortliste, Slug-/
 > Dateinamen-Regel, Kommunikations-Zeilen-Format, PII-Grenze
 > (Body-Truncation), CLI-Fehler (Exit 2), Beispiel-Sync. Noch **nicht**
 > händisch abgenommen — `status: getestet` vergibt erst der Maintainer nach
@@ -77,7 +78,8 @@ Persistierung durch den Executor selbst.
    ```
 
 3. **Der Executor entscheidet deterministisch** (P3, Deterministik-Grenze):
-   Zuordnungs-Kandidaten je Mandat (Stufen Z0–Z4), `fristverdacht`,
+   Zuordnungs-Kandidaten je Mandat (Stufen Z0–Z4 sowie Z2N, Nachname +
+   Korroboration), `fristverdacht`,
    `prioritaet` und den `ablage_vorschlag` (Dateiname + Kommunikations-Zeile)
    — vollständige Definition in [`schema/README.md`](schema/README.md). Claude
    liest ausschließlich den JSON-Report und übernimmt alle Felder
@@ -93,6 +95,11 @@ Persistierung durch den Executor selbst.
      Mehrdeutigkeits-Beispiel in [`schema/README.md`](schema/README.md#beispiel-emls-in-diesem-ordner-fiktiv-exampledomains));
    - bei `kein_treffer`: explizit als Lücke ausweisen und nach dem
      zuständigen Mandat fragen — nie raten;
+   - jeden Eintrag aus `zuordnung_hinweise[]` wiedergeben: dort steht, dass
+     ein Nachname-Signal (Stufe Z2N) auf mehrere Mandate passte und deshalb
+     bewusst **keine** Zuordnung erfolgt ist — das ist eine Rückfrage an die
+     Kanzlei ("welches der genannten Mandate ist gemeint?"), keine Lücke im
+     Material;
    - `prioritaet` (hoch/normal); bei `fristverdacht: true` **immer** den
      Hinweis wiedergeben, dass diese Post gesondert der Fristenkontrolle
      (`fristenrechner`, Zweitkontrolle) zuzuführen ist — ohne selbst eine
@@ -152,10 +159,26 @@ automatisch eines der beiden zu wählen.
   Namensbestandteilen mehrdeutig treffen (siehe Mehrdeutigkeits-Beispiel
   oben) — deshalb ist **mehr als ein Kandidat immer eine Rückfrage**, nie
   eine automatische Wahl.
+- **Z1/Z2 brauchen den vollständigen Parteinamen** (inkl. Vorname). Eigene
+  ausgehende Post mit der Anrede "Sehr geehrte/r Herr/Frau <Nachname>"
+  erfüllt das nicht — bis zur Pilot-Abnahme 2026-08 war das eine
+  undokumentierte Falsch-Negativ-Klasse. Stufe **Z2N** fängt sie ab, aber
+  nur mit Korroboration: der Nachname der `gegenseite` desselben Mandats
+  muss ebenfalls wörtlich und in Personen-Position vorkommen — entweder mit
+  Anrede davor ("Herrn Köhn") oder über einen expliziten Rubrum-Trenner aus
+  einer geschlossenen Menge ("./.", " gegen ") unmittelbar neben dem
+  Nachnamen der anderen Partei ("Merkel ./. Köhn"). Bloße Wort-Nachbarschaft
+  ohne einen der beiden Belege korroboriert NICHT (D12-Nachreview: sonst
+  träfe "Rechtsanwalt Frank, Köln" fälschlich gegen ein Mandat "Frank" ./.
+  "Köln") — ebenso wenig das letzte Token einer Organisations-Gegenseite
+  ("Stadtwerke Berlin" → `berlin`). Ein Nachname allein bleibt `kein_treffer`,
+  ebenso Mandate ohne `gegenseite`; Z2N ist immer nur `moeglicher_treffer`
+  (nie so stark wie Z0/Z1/Z2). Details:
+  [`schema/README.md`](schema/README.md#z2n--nachname--korroboration-warum-und-wie-eng).
 - Kein Abgleich gegen die Absender-**Adresse** (nur Namensfelder), kein
   Az-Abgleich im Absendernamen (nur Betreff/Textauszug).
 - Kölner Phonetik ist für deutsche Lautung entwickelt.
 - `kein_treffer` ist kein Freibrief: Schreibweisen-/Bezugslücken jenseits
-  der Z0–Z4-Stufen bleiben möglich.
+  der Stufen Z0–Z4/Z2N bleiben möglich.
 - `kontakte.md` fließt aktuell nicht in die Zuordnung ein — nur
   `mandant`/`gegenseite` aus den Mandats-Frontmatters.

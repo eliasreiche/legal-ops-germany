@@ -67,7 +67,7 @@ sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
                 if str(p) not in sys.path]
 
 from cli import CliFehler, schreibe_report  # noqa: E402
-from context.schema import lese_kontext_mandate  # noqa: E402
+from context.schema import KontextEingabeFehler, lese_kontext_mandate  # noqa: E402
 from slug import slug as _slug  # noqa: E402
 from verify.provenienz import (  # noqa: E402
     STATUS_BELEGT,
@@ -436,7 +436,11 @@ def main(argv: list[str] | None = None) -> int:
         if not qp.is_file():
             print(f"Fehler: Quelldatei nicht gefunden: {qp}", file=sys.stderr)
             return 2
-        quellen.append((str(qp), qp.read_text(encoding="utf-8").splitlines()))
+        try:
+            quellen.append((str(qp), qp.read_text(encoding="utf-8").splitlines()))
+        except UnicodeDecodeError as exc:
+            print(f"Fehler: {qp}: keine gültige UTF-8-Datei ({exc})", file=sys.stderr)
+            return 2
 
     scan_dateien: list[Path] = []
     for s in args.scan_datei:
@@ -447,7 +451,12 @@ def main(argv: list[str] | None = None) -> int:
         scan_dateien.append(sp)
 
     try:
-        eingang = json.loads(eingang_pfad.read_text(encoding="utf-8"))
+        eingang_text = eingang_pfad.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        print(f"Fehler: {eingang_pfad}: keine gültige UTF-8-Datei ({exc})", file=sys.stderr)
+        return 2
+    try:
+        eingang = json.loads(eingang_text)
     except json.JSONDecodeError as exc:
         print(f"Fehler: Eingang-Datei ist kein gültiges JSON: {exc}", file=sys.stderr)
         return 2
@@ -456,6 +465,9 @@ def main(argv: list[str] | None = None) -> int:
         report = baue_report(eingang, quellen, eingang_datei=str(eingang_pfad),
                              kontext_dir=kontext_dir, scan_dateien=scan_dateien,
                              schwelle=args.schwelle_moeglich, ausfuehren=args.ausfuehren)
+    except KontextEingabeFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
     except OSError as exc:
         print(f"Fehler: Routing konnte nicht ausgeführt werden: {exc}", file=sys.stderr)
         return 2

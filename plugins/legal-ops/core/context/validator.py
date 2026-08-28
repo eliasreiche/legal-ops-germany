@@ -34,7 +34,8 @@ _SKILL_DIR = Path(__file__).resolve().parent  # core/context
 if str(_SKILL_DIR.parent) not in sys.path:
     sys.path.insert(0, str(_SKILL_DIR.parent))
 
-from context.schema import pruefe_kontext_verzeichnis, pruefe_mandat_datei  # noqa: E402
+from context.schema import (  # noqa: E402
+    KontextEingabeFehler, pruefe_kontext_verzeichnis, pruefe_mandat_datei)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -47,21 +48,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", help="Zieldatei für den JSON-Report (Default: stdout)")
     args = parser.parse_args(argv)
 
-    if args.kontext:
-        ziel = Path(args.kontext)
-        if not ziel.is_dir():
-            print(f"Fehler: --kontext ist kein Verzeichnis: {ziel}", file=sys.stderr)
-            return 2
-        fehler, warnungen, anzahl = pruefe_kontext_verzeichnis(ziel)
-        geprueft = str(ziel)
-    else:
-        ziel = Path(args.datei)
-        if not ziel.is_file():
-            print(f"Fehler: --datei nicht gefunden: {ziel}", file=sys.stderr)
-            return 2
-        fehler, warnungen = pruefe_mandat_datei(ziel)
-        anzahl = 1
-        geprueft = str(ziel)
+    try:
+        if args.kontext:
+            ziel = Path(args.kontext)
+            if not ziel.is_dir():
+                print(f"Fehler: --kontext ist kein Verzeichnis: {ziel}", file=sys.stderr)
+                return 2
+            fehler, warnungen, anzahl = pruefe_kontext_verzeichnis(ziel)
+            geprueft = str(ziel)
+        else:
+            ziel = Path(args.datei)
+            if not ziel.is_file():
+                print(f"Fehler: --datei nicht gefunden: {ziel}", file=sys.stderr)
+                return 2
+            fehler, warnungen = pruefe_mandat_datei(ziel)
+            anzahl = 1
+            geprueft = str(ziel)
+    except KontextEingabeFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
 
     report = {
         "meta": {

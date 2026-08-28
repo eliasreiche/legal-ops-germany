@@ -48,7 +48,8 @@ erzwungen):
 - **Fristrelevanz**: `fristrelevant` ist niemals eine Modell-Behauptung,
   sondern `true` nur, wenn mindestens ein Frist-Indikator provenienzgeprüft
   belegt ist,
-- **Mandats-Zuordnung**: Kandidaten (Stufen Z0–Z4) gegen
+- **Mandats-Zuordnung**: Kandidaten (Stufen Z0–Z4 sowie Z2N, Nachname +
+  Korroboration) gegen
   `kontext/mandate/*.md`; Mehrdeutigkeit oder kein Treffer ⇒ `unzugeordnet`,
   nie geraten,
 - **Routing-Plan**: Ziel-Pfad nach der dokumentierten Konvention; Default ist
@@ -124,7 +125,7 @@ bei `--ausfuehren` schreibt er (kopierend) nach `kontext/posteingang/`.
 
 4. **Der Executor prüft/entscheidet deterministisch** (P3): Schema,
    Provenienz jedes kritischen Werts, das `fristrelevant`-Flag, die
-   Mandats-Zuordnung (Kandidaten Z0–Z4) und den Zielordner-Namen des
+   Mandats-Zuordnung (Kandidaten Z0–Z4 sowie Z2N) und den Zielordner-Namen des
    Routing-Plans — vollständige Definition in
    [`schema/README.md`](schema/README.md). Claude liest ausschließlich den
    JSON-Report und übernimmt alle Felder unverändert.
@@ -231,8 +232,9 @@ Routing-Plan zeigt in diesem Fall vorläufig `unzugeordnet` als Zielordner.
   nur, dass der Wert (nach Normalisierung) im Text vorkommt — nicht, dass er
   rechtlich zutrifft.
 - **Mandats-Zuordnung erbt die Grenzen von `core/calc/zuordnung/`** (Z1–Z4
-  können bei kurzen/häufigen Namens-Token mehrdeutig treffen) — deshalb ist
-  mehr als ein Kandidat immer eine Rückfrage, nie eine automatische Wahl.
+  sowie Z2N können bei kurzen/häufigen Namens-Token mehrdeutig treffen) —
+  deshalb ist mehr als ein Kandidat immer eine Rückfrage, nie eine
+  automatische Wahl.
 - **Routing kopiert, löscht nie** — das Original bleibt an seinem Ort;
   Kollision (Zielordner existiert bereits) ist ein Fehler, kein
   automatisches Zusammenführen oder Überschreiben. Ein nachträgliches

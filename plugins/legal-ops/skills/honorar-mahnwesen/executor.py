@@ -76,8 +76,8 @@ def main(argv: list[str] | None = None) -> int:
         try:
             cfg = json.loads(cfg_pfad.read_text(encoding="utf-8"))
             mahnstufen = lade_mahnstufen_config(cfg)
-        except json.JSONDecodeError as exc:
-            print(f"Fehler: Mahnstufen-Konfiguration ist kein gültiges JSON: {exc}", file=sys.stderr)
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            print(f"Fehler: Mahnstufen-Konfiguration ist kein gültiges JSON/UTF-8: {exc}", file=sys.stderr)
             return 2
         except OposEingabeFehler as exc:
             print(f"Fehler: {exc}", file=sys.stderr)
@@ -103,6 +103,9 @@ def main(argv: list[str] | None = None) -> int:
             }
         report = bewerte(posten, stichtag, mahnstufen,
                          nicht_zuordenbar=nicht_zuordenbar, quelle_meta=quelle_meta)
+    except UnicodeDecodeError as exc:
+        print(f"Fehler: {pfad}: keine gültige UTF-8-Datei ({exc})", file=sys.stderr)
+        return 2
     except (OposEingabeFehler, ExtfParseFehler, WertgebuehrFehler, ValueError) as exc:
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2

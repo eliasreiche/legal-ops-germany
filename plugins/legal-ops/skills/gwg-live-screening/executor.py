@@ -173,8 +173,8 @@ def lade_listen_verzeichnis(pfad: Path, heute: _dt.date) -> list[GeladeneListe]:
             f"(Frische-Gate). Erst core/adapters/sanktionslisten/abruf.py laufen lassen.")
     try:
         meta = json.loads(meta_pfad.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise EingabeFehler(f"{meta_pfad}: kein gültiges JSON: {exc}") from exc
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise EingabeFehler(f"{meta_pfad}: kein gültiges JSON/UTF-8: {exc}") from exc
     if not isinstance(meta, dict):
         raise EingabeFehler(f"{meta_pfad}: muss ein JSON-Objekt sein")
 

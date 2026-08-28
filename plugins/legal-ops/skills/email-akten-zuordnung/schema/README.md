@@ -69,7 +69,7 @@ höchstens `TEXTAUSZUG_MAX_LEN = 500` Zeichen des `text/plain`-Teils.
 volle Mail-Text bleibt im Ursprungssystem (Mailserver/EML-Archiv/M365) —
 der Executor liest ihn nur zum Kürzen, speichert ihn nie vollständig.
 
-## Zuordnungs-Stufen (Z0-Z4)
+## Zuordnungs-Stufen (Z0-Z4, Z2N)
 
 Vollständig implementiert in
 [`core/calc/zuordnung/`](../../../core/calc/zuordnung/) (siehe dortige
@@ -80,6 +80,7 @@ Docstrings für Herleitung/Grenzen). Kurzfassung, je (E-Mail × Mandat)-Paar:
 | Z0 | eigenes Aktenzeichen wörtlich (nach Whitespace-Normalisierung) | Betreff, Textauszug | `treffer` |
 | Z1 | Parteiname (`mandant`/`gegenseite`) als zusammenhängende Phrase nach Normalisierung | Betreff, Textauszug, Absendername | `treffer` |
 | Z2 | alle normalisierten Namens-Tokens im Text (Wortreihenfolge unerheblich) | Betreff, Textauszug, Absendername | `treffer` |
+| Z2N | **Nachname + Korroboration**: die Nachnamen von `mandant` **und** `gegenseite` desselben Mandats stehen je **wörtlich** und in **Personen-Position** (Anrede davor oder expliziter Rubrum-Trenner "./."/" gegen " neben der anderen Partei — bloße Wort-Nachbarschaft reicht nicht) im Dokument | Betreff, Textauszug, Absendername | `moeglicher_treffer` |
 | Z3 | alle Namens-Tokens phonetisch (Kölner Phonetik) im Text wiedergefunden | Betreff, Textauszug, Absendername | `moeglicher_treffer` |
 | Z4 | Ø beste Zeichenketten-Ähnlichkeit je Namens-Token ≥ `--schwelle-moeglich` (Default `0.85`, wie `interessenkollision-check`) | Betreff, Textauszug, Absendername | `moeglicher_treffer` |
 
@@ -90,6 +91,68 @@ gefundene Stufe über Az, `mandant` und `gegenseite`) — ein Mandat erscheint
 nie doppelt für dieselbe E-Mail. Trifft **keine** Stufe für ein Mandat zu,
 erscheint es nicht in `kandidaten[]` (kein `kein_treffer`-Eintrag pro
 Mandat — nur die leere Liste insgesamt bedeutet `kein_treffer`).
+
+### Z2N — Nachname + Korroboration (warum, und wie eng)
+
+Z1/Z2 verlangen den **vollständigen** `mandant`/`gegenseite`-String. Eigene
+Kanzleikorrespondenz schreibt aber "Sehr geehrte Frau Dr. Merkel" — der
+Vorname fehlt, Z2 scheitert an einem einzigen Token, und sachlich eindeutige
+Post wurde als `kein_treffer` ausgewiesen (Pilot-Abnahme 2026-08: 2 von 6
+Mails, ohne Aktenzeichen im Text, also auch ohne Z0). Z2N schließt diese
+Lücke bewusst eng:
+
+- **Ein Nachname allein ist nie ein Kandidat.** Es braucht ein zweites,
+  wörtlich belegtes Nachname-Signal aus **demselben** Mandat — konkret den
+  Nachnamen der `gegenseite`. Beide Signale müssen über dieselbe
+  Normalisierung (Umlaut-/Titel-/Rechtsform-Stripping, Wortgrenzen)
+  literal auffindbar sein; **phonetische oder fuzzy Fundstellen (Z3/Z4)
+  zählen für Z2N nicht** — die schwächere Namens-Evidenz darf nicht
+  zusätzlich auf geratenen Schreibweisen aufsetzen.
+- **Nachname = letztes normalisiertes Token** des Mandatsfeldes
+  (`nachname()` in `core/calc/zuordnung/parteisuche.py`); Titel/Rechtsform
+  sind vorher gestrippt. Keine neue Datenpflege: Z2N nutzt ausschließlich
+  `mandant`/`gegenseite`, die ohnehin im Mandats-Frontmatter stehen.
+- **Das bloße Vorkommen dieses Tokens genügt nicht** — es muss im Text in
+  **Personen-Position** stehen (`nachname_in_personen_position()`), und zwar
+  auf genau einem von zwei Wegen:
+  1. **Anrede unmittelbar davor** — "Sehr geehrte Frau Dr. Merkel", "mit
+     Herrn Köhn".
+  2. **Expliziter Rubrum-Trenner** aus einer geschlossenen Menge ("./.",
+     " gegen ") unmittelbar zwischen dem Nachnamen und dem Nachnamen der
+     anderen Partei desselben Mandats — "Merkel ./. Köhn", "Frank gegen
+     Köln".
+
+  **Bloße Wort-Nachbarschaft ohne einen der beiden Belege korroboriert
+  NICHT** (D12-Nachreview, Regression behoben): eine frühere Fassung
+  akzeptierte jedes unmittelbare Nachbar-Token der anderen Partei als
+  "Rubrum" — dadurch korroborierte z. B. "Rechtsanwalt Frank, Köln" (Komma,
+  kein Trenner) fälschlich gegen ein Mandat `mandant: "Peter Frank"` /
+  `gegenseite: "Sparkasse Köln"`. Grund für die Personen-Position-Prüfung
+  insgesamt: bei einer Organisation ist das letzte Token kein Nachname,
+  sondern oft ein Orts-/Gattungswort — Gegenseite "Stadtwerke Berlin" würde
+  sonst über `berlin` durch die Zeile "… vor dem Arbeitsgericht Berlin …"
+  korroboriert. Ob ein Mandatsfeld eine natürliche Person meint, steht nicht
+  im Mandats-Schema (`az`/`mandant`/`gegenseite` — kein `typ`-Feld wie bei
+  `interessenkollision-check`), und eine Wortliste der Orts-, Behörden- und
+  Branchenwörter wäre nie vollständig; geprüft wird deshalb die **Fundstelle**
+  statt des Namens. Bewusste Folge: Z2N greift seltener (z. B. bei
+  "Sehr geehrte Frau Rechtsanwältin Merkel" nicht, oder wenn zwei Nachnamen
+  nur durch ein Komma statt einen Rubrum-Trenner getrennt stehen) —
+  Enthaltung ist besser als ein falscher Kandidat.
+- **Ein Mandat ohne `gegenseite` erreicht Z2N nie** — Post, die nur einen
+  Einzelnamen nennt, bleibt `kein_treffer` statt geraten zu werden.
+- **Kategorie immer `moeglicher_treffer`** — ein Nachname ist schwächere
+  Evidenz als ein Vollname (Z1/Z2) und weit schwächer als ein Az (Z0). Z2N
+  hebt deshalb auch die `prioritaet` nicht auf `hoch` und ist nie ein
+  Freibrief fürs Ablegen (Bestätigung durch die Kanzlei bleibt Pflicht).
+- **Mehrdeutigkeit = Enthaltung.** Passt dasselbe Nachname-Signal auf
+  mehrere Z2N-fähige Mandate (z. B. zwei Mandate "Merkel"), entsteht für
+  **keines** von ihnen ein Kandidat; der Grund steht je E-Mail in
+  `zuordnung_hinweise[]` (siehe Report-Struktur), damit die Enthaltung
+  sichtbar ist statt als stilles `kein_treffer` unterzugehen. Eindeutig
+  bleibt eine **Kombination**: teilt ein anderes Mandat nur den
+  Mandanten-Nachnamen, ohne dass dessen Gegenseite im Text vorkommt, ist es
+  nicht Z2N-fähig und löst keine Enthaltung aus.
 
 **Az-Normalisierung:** Mehrfach-Whitespace wird kollabiert, Groß-/
 Kleinschreibung bleibt erhalten (Details:
@@ -169,11 +232,12 @@ Executor erzeugt** aus den vier Beispiel-EMLs in diesem Ordner gegen
       "betreff": "…", "textauszug": "… (max. 500 Zeichen)",
       "textauszug_gekuerzt": false, "datum": "JJJJ-MM-TT oder null",
       "kandidaten": [
-        {"az": "…", "datei": "mandate/….md", "stufe": "Z0…Z4",
+        {"az": "…", "datei": "mandate/….md", "stufe": "Z0…Z4 | Z2N",
          "kategorie": "treffer|moeglicher_treffer", "score": 0.0,
          "begruendung": "…"}
       ],
       "kein_treffer": false,
+      "zuordnung_hinweise": ["Mandat …: Nachname-Signal … trifft auf mehrere Mandate zu — keine Zuordnung über Stufe Z2N (Enthaltung, Rückfrage an die Kanzlei)."],
       "fristverdacht": false, "fristverdacht_hinweis": null,
       "prioritaet": "hoch|normal",
       "ablage_vorschlag": {
@@ -202,6 +266,21 @@ Executor erzeugt** aus den vier Beispiel-EMLs in diesem Ordner gegen
   `treffer`). Eine `treffer`-Kategorie ist deshalb **kein** Freibrief für
   automatisches Ablegen — Konflikt-/Mehrdeutigkeitsfälle (mehr als ein
   Kandidat) gehen laut `SKILL.md` immer als Rückfrage an die Kanzlei.
+- **Z1/Z2 verlangen den vollständigen `mandant`/`gegenseite`-String** —
+  fehlt im Dokument auch nur ein Namens-Token (typisch: die Anrede "Sehr
+  geehrte/r Herr/Frau <Nachname>" ohne Vorname, der Normalfall eigener
+  ausgehender Kanzleipost), greifen sie nicht. Diese Falsch-Negativ-Klasse
+  war bis zur Pilot-Abnahme 2026-08 undokumentiert; seither fängt Stufe Z2N
+  sie **nur** ab, wenn ein zweites Nachname-Signal desselben Mandats
+  korroboriert. Nicht abgedeckt bleibt damit: Post mit nur einem Nachnamen
+  ohne Gegenseite im Mandat, ohne Aktenzeichen im Text — sie ist und bleibt
+  `kein_treffer` und braucht die Zuordnung durch die Kanzlei.
+- **Z2N erbt die Nachname-Heuristik** "letztes normalisiertes Token"
+  (`nachname()`): bei Namenspräfixen ("van der Berg") ist das nur der Kern
+  des Nachnamens, bei Firmen ohne Rechtsform-Zusatz das letzte Firmenwort.
+  Für einen Kandidaten muss dieses Token wörtlich im Text stehen **und**
+  korroboriert sein — der Fehler wirkt also in Richtung Enthaltung, nicht in
+  Richtung falscher Zuordnung.
 - **Kein Abgleich gegen `absender_adresse`** für den Parteiname-Abgleich —
   eine E-Mail-Adresse ist kein Namens-Fließtext (siehe
   `core/calc/zuordnung/zuordnung.py`, `FELD_REIHENFOLGE`).
@@ -211,7 +290,8 @@ Executor erzeugt** aus den vier Beispiel-EMLs in diesem Ordner gegen
   fremdsprachigen Namen ist die Trefferqualität nicht belastbar (geerbt von
   `core/calc/matching`).
 - **`kein_treffer` ist kein Freibrief** — Spitznamen, Umfirmierungen oder
-  völlig andere Schreibweisen jenseits der Z0-Z4-Stufen bleiben unentdeckt.
+  völlig andere Schreibweisen jenseits der Stufen Z0-Z4/Z2N bleiben
+  unentdeckt.
 - **Kontakte (`kontakte.md`) fließen aktuell nicht in die Zuordnung ein** —
   nur `mandant`/`gegenseite` aus den Mandats-Frontmatters. Eine Erweiterung
   auf z. B. gegnerische Prozessbevollmächtigte aus `kontakte.md` ist denkbar,

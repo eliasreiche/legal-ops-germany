@@ -401,7 +401,12 @@ def _modus_rechnen(args: argparse.Namespace) -> int:
         print(f"Fehler: Eingabedatei nicht gefunden: {pfad}", file=sys.stderr)
         return 2
     try:
-        daten = json.loads(pfad.read_text(encoding="utf-8"))
+        input_text = pfad.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        print(f"Fehler: {pfad}: keine gültige UTF-8-Datei ({exc})", file=sys.stderr)
+        return 2
+    try:
+        daten = json.loads(input_text)
     except json.JSONDecodeError as exc:
         print(f"Fehler: Eingabedatei ist kein gültiges JSON: {exc}", file=sys.stderr)
         return 2
@@ -423,7 +428,12 @@ def _modus_pruefe(args: argparse.Namespace) -> int:
         print(f"Fehler: Report-Datei nicht gefunden: {report_pfad}", file=sys.stderr)
         return 2
     try:
-        report = json.loads(report_pfad.read_text(encoding="utf-8"))
+        report_text = report_pfad.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        print(f"Fehler: {report_pfad}: keine gültige UTF-8-Datei ({exc})", file=sys.stderr)
+        return 2
+    try:
+        report = json.loads(report_text)
     except json.JSONDecodeError as exc:
         print(f"Fehler: Report-Datei ist kein gültiges JSON: {exc}", file=sys.stderr)
         return 2
@@ -434,7 +444,11 @@ def _modus_pruefe(args: argparse.Namespace) -> int:
               "abgelehnt (P3)", file=sys.stderr)
         return 2
 
-    text = text_pfad.read_text(encoding="utf-8")
+    try:
+        text = text_pfad.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        print(f"Fehler: {text_pfad}: keine gültige UTF-8-Datei ({exc})", file=sys.stderr)
+        return 2
     pruef_report = pruefe_text(text, report, text_datei=str(text_pfad),
                                report_datei=str(report_pfad))
     if not _ausgabe(pruef_report, args.output):

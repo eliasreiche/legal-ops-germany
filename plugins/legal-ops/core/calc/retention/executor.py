@@ -40,7 +40,7 @@ _CORE_DIR = _SKILL_DIR.parents[1]              # core
 if str(_CORE_DIR) not in sys.path:
     sys.path.insert(0, str(_CORE_DIR))
 
-from context.schema import STATUS_WERTE, lese_mandate  # noqa: E402
+from context.schema import KontextEingabeFehler, STATUS_WERTE, lese_mandate  # noqa: E402
 
 NORM_HINWEIS = (
     "✅ § 50 Abs. 1 BRAO — Aufbewahrungsfrist Handakten: 6 Jahre, Fristbeginn "
@@ -244,7 +244,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2
 
-    report = baue_report(kontext_dir, stichtag)
+    try:
+        report = baue_report(kontext_dir, stichtag)
+    except KontextEingabeFehler as exc:
+        print(f"Fehler: {exc}", file=sys.stderr)
+        return 2
 
     ausgabe = json.dumps(report, ensure_ascii=False, indent=2)
     if args.output_json:

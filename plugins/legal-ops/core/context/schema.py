@@ -47,6 +47,15 @@ KONTEXT_BEREICHE = ("kanzlei.md", "mandate/", "kontakte.md", "posteingang/", "ex
 ISO_DATUM_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _NULL_WERTE = ("", "null", "~", "None")
 
+
+class KontextEingabeFehler(Exception):
+    """`kontext/`-Datei nicht lesbar (z. B. Binärdatei statt Markdown/Text).
+
+    Wird von den drei Lesestellen dieses Moduls geworfen, die Dateiinhalte
+    öffnen (`pruefe_mandat_datei`, `pruefe_kanzlei_datei`, `lese_mandate`).
+    Aufrufende CLIs fangen sie für den dokumentierten Eingabefehler-Exit (2).
+    """
+
 _FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)
 _FELD_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$")
 _LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
@@ -156,7 +165,10 @@ def pruefe_mandat_datei(pfad: Path, ref: str | None = None) -> tuple[list[str], 
     ref = ref or str(pfad)
     if not pfad.is_file():
         return [f"{ref}: Datei nicht gefunden"], []
-    text = pfad.read_text(encoding="utf-8")
+    try:
+        text = pfad.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise KontextEingabeFehler(f"{ref}: keine gültige UTF-8-Datei ({exc})") from exc
     fehler, warnungen = pruefe_mandat_text(text, ref)
 
     for m in _LINK_RE.finditer(text):
@@ -182,7 +194,10 @@ def pruefe_kanzlei_datei(pfad: Path) -> tuple[list[str], list[str]]:
     ref = str(pfad)
     if not pfad.is_file():
         return [f"{ref}: Pflichtdatei fehlt"], []
-    text = pfad.read_text(encoding="utf-8")
+    try:
+        text = pfad.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise KontextEingabeFehler(f"{ref}: keine gültige UTF-8-Datei ({exc})") from exc
     warnungen: list[str] = []
     if not re.search(r"^#\s+\S", text, re.MULTILINE):
         warnungen.append(f"{ref}: keine H1-Überschrift (Kanzleiname) gefunden")
@@ -230,7 +245,12 @@ def lese_mandate(kontext: Path) -> list[tuple[Path, dict[str, tuple[str | None, 
     if not mandate_dir.is_dir():
         return ergebnis
     for datei in sorted(mandate_dir.glob("*.md")):
-        fm = lade_frontmatter(datei.read_text(encoding="utf-8"))
+        try:
+            text = datei.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            raise KontextEingabeFehler(
+                f"{datei}: keine gültige UTF-8-Datei ({exc})") from exc
+        fm = lade_frontmatter(text)
         if fm is not None:
             ergebnis.append((datei, fm))
     return ergebnis

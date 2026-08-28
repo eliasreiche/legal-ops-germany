@@ -57,7 +57,7 @@ Die Metadaten-Dateien entstehen über [`kontext-sync`](../kontext-sync/SKILL.md)
    ```
 
    Er berechnet Termin-Dauern, ordnet jeden Termin/jede Mail einer Akte zu
-   (Z0–Z4) und verteilt die Ergebnisse auf `vorschlaege`, `mehrdeutig`,
+   (Z0–Z4 sowie Z2N) und verteilt die Ergebnisse auf `vorschlaege`, `mehrdeutig`,
    `nicht_zuordenbar`, `ohne_zeitwert` und `warnungen` (Termin-Überlappungen).
 3. **Claude präsentiert die Vorschläge je Akte tabellarisch** zum
    **Bestätigen / Verwerfen** — je Vorschlag: Datum, Akte (`az`), Dauer,
@@ -101,11 +101,18 @@ Einträge durch den echten `taetigkeitstext-rvg`-Executor laufen.
 
 ## Grenzen
 
-- **Zuordnung ist eine Heuristik** (Z0–Z4, siehe
+- **Zuordnung ist eine Heuristik** (Z0–Z4 sowie Z2N, siehe
   [`core/calc/zuordnung`](../../core/calc/zuordnung/)): Az-Treffer (Z0) sind
   sicher, Parteiname-Treffer (Z1–Z4) können bei kurzen/ähnlichen Namen falsch
   anschlagen — deshalb landet jede Unsicherheit in `mehrdeutig`/
-  `nicht_zuordenbar`, nie in einem stillen Vorschlag.
+  `nicht_zuordenbar`, nie in einem stillen Vorschlag. **Z2N** (Nachname beider
+  Beteiligter + Korroboration) ist immer nur `moeglicher_treffer` und wird
+  deshalb hier nie zu einem Vorschlag — ein Z2N-Kandidat landet in
+  `mehrdeutig[]`, sofern er der einzige Kandidat für sein Mandat bleibt.
+  Steht daneben aber genau ein `treffer` eines anderen Mandats (Status
+  `eindeutig`), schreibt der Report für diesen nur `zuordnung: <treffer>` —
+  der Z2N-Kandidat erscheint dort nirgends (Details:
+  [`schema/README.md`](schema/README.md)).
 - **Mail-Zeitwerte sind eine Pauschale**, kein gemessener Aufwand — die
   Kanzlei setzt sie als Konvention und korrigiert je Mail bei Bedarf.
 - **Der Skill entscheidet nie über Abrechnung** — er liefert Vorschläge; jede

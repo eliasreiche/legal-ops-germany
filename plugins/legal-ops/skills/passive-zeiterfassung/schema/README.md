@@ -8,7 +8,7 @@ Kanzlei zu bestätigender Entwurf (siehe [`SKILL.md`](../SKILL.md), Ablauf).
 
 Die Zulieferer-Bibliotheken sind [`core/calc/zeit`](../../../core/calc/zeit/)
 (Termin-Dauer) und [`core/calc/zuordnung`](../../../core/calc/zuordnung/)
-(Akten-Zuordnung Z0–Z4); der Abnehmer ist
+(Akten-Zuordnung Z0–Z4 sowie Z2N); der Abnehmer ist
 [`taetigkeitstext-rvg`](../../taetigkeitstext-rvg/schema/README.md) — jeder
 eindeutige Vorschlag trägt bereits einen fertigen `leistungen.json`-Eintrag.
 
@@ -127,17 +127,28 @@ Vollständiges Beispiel: [`beispiel-report.json`](beispiel-report.json)
 }
 ```
 
-### Zuordnung (Stufen Z0–Z4)
+### Zuordnung (Stufen Z0–Z4 sowie Z2N)
 
 Delegiert vollständig an [`core/calc/zuordnung`](../../../core/calc/zuordnung/)
 (dort Stufen-Definition und Schwellenwert-Begründung):
 
 - **genau ein `treffer`** (Z0 Az wörtlich, Z1/Z2 Parteiname) → `vorschlaege[]`
   mit diesem `az`.
-- **mehrere `treffer`** ODER **nur `moeglicher_treffer`** (Z3 phonetisch, Z4
-  fuzzy) → `mehrdeutig[]` (Kandidatenliste; die Kanzlei entscheidet, nie
-  automatisch).
+- **mehrere `treffer`** ODER **nur `moeglicher_treffer`** (Z2N Nachname +
+  Korroboration, Z3 phonetisch, Z4 fuzzy) → `mehrdeutig[]` (Kandidatenliste;
+  die Kanzlei entscheidet, nie automatisch).
 - **kein Kandidat** → `nicht_zuordenbar[]` (Lücke, nie geraten).
+
+**Z2N** (Nachnamen von `mandant` und `gegenseite` desselben Mandats, je
+wörtlich und in Personen-Position) trägt hier nie einen Vorschlag: die Stufe
+ist konstruktiv `moeglicher_treffer`. Ein Z2N-Kandidat neben genau einem
+`treffer` ändert den Status `eindeutig` **nicht** (gegatet wird auf die
+`treffer`-Menge) — im Vorschlag selbst (`vorschlaege[]`) schreibt `_route()`
+im `eindeutig`-Pfad aber nur `zuordnung: <treffer[0]>`, kein
+`kandidaten`-Feld: der Z2N-Kandidat des anderen Mandats verschwindet dort
+ersatzlos, statt sichtbar zu bleiben. Nur bei Mails ohne Pauschale
+(`ohne_zeitwert[]`) führt der Report die volle Kandidatenliste unabhängig
+vom Status mit — dort bleibt der Z2N-Kandidat sichtbar.
 
 ### `leistung` = fertiger `taetigkeitstext-rvg`-Eintrag
 

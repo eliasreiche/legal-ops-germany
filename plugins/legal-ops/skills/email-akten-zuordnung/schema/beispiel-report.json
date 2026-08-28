@@ -33,6 +33,7 @@
         }
       ],
       "kein_treffer": false,
+      "zuordnung_hinweise": [],
       "fristverdacht": true,
       "fristverdacht_hinweis": "Signalwort für eine mögliche Frist erkannt — diese Post gesondert der Fristenkontrolle zuführen (Skill 'fristenrechner' als Zweitkontrolle). Dies ist KEINE Fristberechnung und KEIN Normzitat.",
       "prioritaet": "hoch",
@@ -74,6 +75,7 @@
         }
       ],
       "kein_treffer": false,
+      "zuordnung_hinweise": [],
       "fristverdacht": true,
       "fristverdacht_hinweis": "Signalwort für eine mögliche Frist erkannt — diese Post gesondert der Fristenkontrolle zuführen (Skill 'fristenrechner' als Zweitkontrolle). Dies ist KEINE Fristberechnung und KEIN Normzitat.",
       "prioritaet": "hoch",
@@ -98,6 +100,7 @@
       "datum": "2026-06-22",
       "kandidaten": [],
       "kein_treffer": true,
+      "zuordnung_hinweise": [],
       "fristverdacht": false,
       "fristverdacht_hinweis": null,
       "prioritaet": "normal",
@@ -131,6 +134,7 @@
         }
       ],
       "kein_treffer": false,
+      "zuordnung_hinweise": [],
       "fristverdacht": false,
       "fristverdacht_hinweis": null,
       "prioritaet": "hoch",

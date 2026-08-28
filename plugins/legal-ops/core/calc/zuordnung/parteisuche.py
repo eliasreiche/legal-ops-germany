@@ -43,6 +43,7 @@ zutreffende Stufe gewinnt (Deterministik-Grenze, P3):
 """
 from __future__ import annotations
 
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -63,6 +64,27 @@ STUFE_TREFFER = "treffer"
 STUFE_MOEGLICH = "moeglicher_treffer"
 
 SCHWELLE_MOEGLICH_DEFAULT = 0.85
+
+# Anreden, die im Fließtext eine natürliche Person markieren (Stufe Z2N,
+# siehe `nachname_in_personen_position()`). Geschlossener grammatischer
+# Satz — keine pflegebedürftige Datenliste (eine solche bräuchte es für die
+# Gegenprobe "ist dieses Token überhaupt ein Nachname?": Orts-, Behörden-
+# und Branchenwörter sind nicht aufzählbar). Werte in der Form nach
+# `normalisiere()` (klein, transliteriert).
+ANREDEN: frozenset[str] = frozenset({"herr", "herrn", "frau"})
+
+# Rubrum-Trenner, die zwei Nachnamen im Fließtext explizit als Parteien
+# desselben Rechtsstreits verbinden (Stufe Z2N, siehe
+# `nachname_in_personen_position()`). Geschlossene Menge wie ANREDEN oben —
+# bloße Wort-Nachbarschaft (Komma, Zeilenumbruch, ...) ist KEIN Rubrum-Beleg
+# (D12-Nachreview: sonst korroboriert "Rechtsanwalt Frank, Köln" fälschlich
+# gegen ein Mandat "Frank ./. Köln"). Muster arbeiten auf dem Roh-Text (vor
+# `tokenisiere()`), weil die Normalisierung Interpunktion wie "./." bereits
+# entfernt.
+_RUBRUM_MUSTER: tuple[re.Pattern[str], ...] = (
+    re.compile(r"(\S+)\s*\./\.\s*(\S+)"),
+    re.compile(r"(\S+)\s+gegen\s+(\S+)", re.IGNORECASE),
+)
 
 
 @dataclass
@@ -120,6 +142,92 @@ def _z4_fuzzy(tokens_name: list[str], tokens_text: list[str],
         return None
     return ParteiTreffer("Z4", STUFE_MOEGLICH, round(score, 4),
         f"durchschnittliche Token-Ähnlichkeit {score:.2f} ≥ Schwelle {schwelle:.2f}")
+
+
+def nachname(name: str) -> str:
+    """Letztes normalisiertes Token eines Parteinamens = Nachname-Signal.
+
+    Titel und Rechtsform-Zusätze sind durch `tokenisiere()` bereits
+    gestrippt ("Dr. Petra Merkel" -> ["petra", "merkel"]). Einteilige Namen
+    ergeben sich selbst. Leere Eingabe -> leerer String.
+
+    Genutzt von `zuordnung.py` für die Stufe Z2N (Nachname + Korroboration);
+    hier, weil dieses Modul die Normalisierungs-Bausteine ohnehin hält.
+
+    # ponytail: nimmt die deutsche Reihenfolge "Vorname(n) Nachname" an —
+    # bei "van der Berg"/"de Vries" ist das letzte Token nur der Kern des
+    # Nachnamens. Für Z2N unschädlich (Kern-Token muss wörtlich im Text
+    # stehen, ein zweites Signal korroboriert); bei Bedarf: Namensteil-Liste.
+    """
+    tokens = tokenisiere(name)
+    return tokens[-1] if tokens else ""
+
+
+def _rubrum_trenner_verbindet(text: str, nachname_token: str,
+                               andere_nachnamen: set[str]) -> bool:
+    """Steht `nachname_token` in `text` über einen expliziten Rubrum-Trenner
+    (`_RUBRUM_MUSTER`, geschlossene Menge) unmittelbar neben einem der
+    `andere_nachnamen`? Prüft auf dem Roh-Text, nicht auf Tokens — bloße
+    Nachbarschaft ohne Trenner (Komma, Zeilenumbruch, ...) zählt nicht.
+
+    # ponytail: geprüft wird nur das WORT direkt vor/nach dem Trenner, nicht
+    # die volle (ggf. mehrwortige) Partei-Bezeichnung — "Merkel ./. Köhn"
+    # trifft, "Frank ./. Sparkasse Köln" träfe nur, wenn `nachname_token`
+    # zufällig "sparkasse" wäre. Für Z2N unschädlich: die schwächere
+    # Nicht-Erkennung ist hier die sichere Richtung (Enthaltung statt
+    # falschem Kandidaten). Bei Bedarf: Segment bis zum nächsten Trenner/
+    # Satzende statt Einzelwort.
+    """
+    for muster in _RUBRUM_MUSTER:
+        for m in muster.finditer(text):
+            vor = tokenisiere(m.group(1))
+            nach = tokenisiere(m.group(2))
+            vor_nn = vor[-1] if vor else ""
+            nach_nn = nach[0] if nach else ""
+            if ((vor_nn == nachname_token and nach_nn in andere_nachnamen)
+                    or (nach_nn == nachname_token and vor_nn in andere_nachnamen)):
+                return True
+    return False
+
+
+def nachname_in_personen_position(nachname_token: str, text: str,
+                                   andere_nachnamen: set[str]) -> bool:
+    """Steht `nachname_token` in `text` an einer **Personen-Position**?
+
+    Ein bloßes Vorkommen des letzten Namens-Tokens reicht für die Stufe Z2N
+    nicht (siehe `zuordnung.py`): bei Organisationen ist das letzte Token
+    kein Nachname, sondern oft ein Orts-/Gattungswort ("Stadtwerke Berlin"
+    -> `berlin`), das im Text aus einem ganz anderen Grund steht
+    ("Arbeitsgericht Berlin"). Ob ein Mandatsfeld eine natürliche Person
+    meint, steht nirgends im Mandats-Schema — deshalb wird nicht der **Name**
+    klassifiziert, sondern die **Fundstelle**: als Nachname zählt sie nur,
+    wenn der Text sie wie eine Person adressiert. Zwei Muster:
+
+      1. **Anrede davor**, wortgrenzen-genau — "Sehr geehrte Frau Dr.
+         Merkel", "mit Herrn Köhn".
+      2. **Rubrum** — durch einen expliziten Trenner aus der geschlossenen
+         Menge `_RUBRUM_MUSTER` ("./.", " gegen ") mit dem Nachnamen der
+         anderen Partei desselben Mandats verbunden ("Merkel ./. Köhn",
+         "Frank gegen Köln").
+
+    Bloße Wort-**Nachbarschaft** ohne einen dieser beiden Belege reicht
+    NICHT (D12-Nachreview): "Rechtsanwalt Frank, Köln" korroboriert nicht
+    gegen ein Mandat "Peter Frank" ./. "Sparkasse Köln" — hier steht "Köln"
+    nur durch ein Komma getrennt neben "Frank", ohne Anrede und ohne
+    Rubrum-Trenner. Alles andere zählt ebenfalls nicht (Enthaltung vor
+    falschem Kandidaten): "… vor dem Arbeitsgericht Berlin …" belegt keinen
+    Nachnamen.
+    """
+    if not nachname_token:
+        return False
+    tokens = tokenisiere(text)
+    for i, token in enumerate(tokens):
+        if token != nachname_token:
+            continue
+        davor = tokens[i - 1] if i else ""
+        if davor in ANREDEN:
+            return True
+    return _rubrum_trenner_verbindet(text, nachname_token, andere_nachnamen)
 
 
 def suche_name_in_text(name: str, text: str,

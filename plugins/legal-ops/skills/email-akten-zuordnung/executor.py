@@ -8,18 +8,24 @@ inhaltliche Entscheidung (welche Zuordnung stimmt, ob und wohin abgelegt
 wird) bleibt immer bei der Kanzlei/Claude — dieser Executor liefert nur
 deterministische Kandidaten, nie eine automatische Ablage.
 
-## Zuordnung (Stufen Z0-Z4)
+## Zuordnung (Stufen Z0-Z4, Z2N)
 
 Delegiert vollständig an `core/calc/zuordnung/` (siehe dort für die
 Stufen-Definition und Schwellenwert-Begründung):
 
-    Z0  eigenes Aktenzeichen wörtlich in Betreff/Textauszug   -> treffer
-    Z1  Parteiname als Phrase im Text                          -> treffer
-    Z2  alle Namens-Tokens im Text (Reihenfolge egal)          -> treffer
-    Z3  Namens-Tokens phonetisch (Kölner Phonetik) im Text     -> moeglicher_treffer
-    Z4  Namens-Tokens fuzzy-ähnlich im Text (Schwelle 0.85)    -> moeglicher_treffer
+    Z0   eigenes Aktenzeichen wörtlich in Betreff/Textauszug  -> treffer
+    Z1   Parteiname als Phrase im Text                         -> treffer
+    Z2   alle Namens-Tokens im Text (Reihenfolge egal)         -> treffer
+    Z2N  Nachnamen ZWEIER Beteiligter desselben Mandats
+         (mandant UND gegenseite) je wörtlich und in
+         Personen-Position (Anrede/Rubrum) im Text             -> moeglicher_treffer
+    Z3   Namens-Tokens phonetisch (Kölner Phonetik) im Text    -> moeglicher_treffer
+    Z4   Namens-Tokens fuzzy-ähnlich im Text (Schwelle 0.85)   -> moeglicher_treffer
 
 Kein Kandidat für eine E-Mail -> `kein_treffer` (Lücke, nie geraten).
+Verzichtet Z2N wegen eines mehrdeutigen Nachname-Signals bewusst auf eine
+Zuordnung, steht der Grund je E-Mail in `zuordnung_hinweise[]` — die
+Enthaltung wird ausgewiesen, nicht stillschweigend zu `kein_treffer`.
 
 ## Fristverdacht (regelbasiert, dokumentierte Wortliste)
 
@@ -79,9 +85,10 @@ sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
                 if str(p) not in sys.path]
 
 from cli import CliFehler, schreibe_report  # noqa: E402
-from context.schema import lese_kontext_mandate  # noqa: E402
+from context.schema import KontextEingabeFehler, lese_kontext_mandate  # noqa: E402
 from slug import SLUG_MAX_LEN, slug  # noqa: E402
-from zuordnung import Dokument, Kandidat, Mandat, finde_kandidaten  # noqa: E402
+from zuordnung import Dokument, Kandidat, Mandat  # noqa: E402
+from zuordnung import finde_kandidaten_mit_hinweisen  # noqa: E402
 from zuordnung import SCHWELLE_MOEGLICH_DEFAULT, STUFE_TREFFER  # noqa: E402
 
 ERZEUGT_VON = "email-akten-zuordnung/executor.py"
@@ -220,6 +227,8 @@ def lese_metadaten_json(pfad: Path) -> list[dict[str, Any]]:
         raise EingabeFehler(f"{pfad}: Datei nicht gefunden")
     try:
         text = pfad.read_text(encoding="utf-8-sig")
+    except UnicodeDecodeError as exc:
+        raise EingabeFehler(f"{pfad}: keine gültige UTF-8-Datei ({exc})") from exc
     except OSError as exc:
         raise EingabeFehler(f"{pfad}: Datei nicht lesbar ({exc})") from exc
     try:
@@ -326,7 +335,8 @@ def baue_dokument_eintrag(doc_meta: dict[str, Any], mandate: list[Mandat],
         betreff=doc_meta["betreff"],
         textauszug=doc_meta["textauszug"],
     )
-    kandidaten = finde_kandidaten(dokument, mandate, schwelle)
+    kandidaten, zuordnung_hinweise = finde_kandidaten_mit_hinweisen(
+        dokument, mandate, schwelle)
     hat_fristverdacht = fristverdacht(dokument.betreff, dokument.textauszug)
 
     return {
@@ -341,6 +351,7 @@ def baue_dokument_eintrag(doc_meta: dict[str, Any], mandate: list[Mandat],
         "datum": doc_meta.get("datum"),
         "kandidaten": [asdict(k) for k in kandidaten],
         "kein_treffer": not kandidaten,
+        "zuordnung_hinweise": zuordnung_hinweise,
         "fristverdacht": hat_fristverdacht,
         "fristverdacht_hinweis": FRISTVERDACHT_HINWEIS if hat_fristverdacht else None,
         "prioritaet": prioritaet(hat_fristverdacht, kandidaten),
@@ -400,7 +411,7 @@ def main(argv: list[str] | None = None) -> int:
             dokumente_meta = lese_metadaten_json(Path(args.input))
             quelle_typ = "input"
         mandate, mandat_warnungen = lese_kontext_mandate(kontext_dir)
-    except EingabeFehler as exc:
+    except (EingabeFehler, KontextEingabeFehler) as exc:
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2
 

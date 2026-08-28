@@ -132,8 +132,8 @@ Arbeitsanweisung vor (kein Ersatz für die anwaltliche Durchsicht).
 Delegiert vollständig an
 [`core/calc/zuordnung/`](../../../core/calc/zuordnung/) — dieselbe
 Bibliothek wie [`email-akten-zuordnung`](../../email-akten-zuordnung/SKILL.md)
-(Stufen Z0–Z4, siehe dortiges `schema/README.md` für die vollständige
-Herleitung). `absender` und `betreff` aus dem Eingang sowie der
+(Stufen Z0–Z4 sowie Z2N — Nachname + Korroboration, siehe dortiges
+`schema/README.md` für die vollständige Herleitung). `absender` und `betreff` aus dem Eingang sowie der
 **gesamte** extrahierte Scan-Text bilden das `Dokument` für den
 Zuordnungs-Abgleich (Az-Suche über Z0 findet damit jedes im Text erwähnte
 Aktenzeichen, nicht nur die separat extrahierten Felder).
@@ -145,6 +145,16 @@ Aktenzeichen, nicht nur die separat extrahierten Felder).
   — **immer** eine Rückfrage an die Kanzlei, nie eine automatische Wahl
   (identische Regel wie `email-akten-zuordnung`). Der Eingang routet in
   diesem Fall vorläufig nach `unzugeordnet`.
+
+**Wirkung der Stufe Z2N hier:** Z2N liefert immer `moeglicher_treffer`, wird
+also nie allein zu `eindeutig: true`. Ein Z2N-Kandidat kann aber ein *anderes*
+Mandat betreffen als ein vorhandener `treffer` — dann sind es **zwei**
+Kandidaten und `eindeutig` kippt von `true` auf `false`
+(`erfordert_rueckfrage: true`, `az_fuer_routing: null`). Das ist gewollt und
+fail-safe: ein zweiter, plausibler Mandatsbezug ist eine Rückfrage wert; es
+wird nichts automatisch kopiert oder vorgeschlagen. Die Begründung des
+Z2N-Kandidaten nennt die belegten Nachnamen, sodass die Kanzlei die Rückfrage
+in einem Blick entscheiden kann.
 
 ## Routing-Plan (Dry-Run per Default)
 
@@ -196,9 +206,15 @@ read-only genutzt). Kernfelder: `schema_ok`, `schema_fehler[]`,
   [`fristenrechner`](../../fristenrechner/SKILL.md).
 - **Provenienz = Beleg, nicht Richtigkeit** (wie `aktenkopf-extraktor`).
 - **Fristindikator-Vollständigkeit** nicht maschinell erzwingbar (siehe oben).
-- **Z1–Z4 der Mandats-Zuordnung erben die Grenzen von
+- **Z1–Z4 sowie Z2N der Mandats-Zuordnung erben die Grenzen von
   `core/calc/zuordnung/`** (kurze/häufige Namens-Token können mehrdeutig
   treffen) — deshalb ist mehr als ein Kandidat immer eine Rückfrage.
 - **Kopieren, nie Löschen**: das Original bleibt an seinem Ort. Ein
   nachträgliches Entfernen des Originals ist eine bewusste, separate
   Kanzlei-Entscheidung außerhalb dieses Skills.
+- **Datums-Normalisierung** (`core/calc/datum.py`) erkennt ISO, deutsches
+  Ziffernformat, ausgeschriebene deutsche Monatsnamen (nur vierstelliges Jahr,
+  nur die neun unzweideutigen Abkürzungen `Jan.`–`Dez.` ohne Jun./Jul.; `Mai`
+  hat keine kürzere Abkürzung und wird als voller Monatsname erkannt) und
+  vollständige RFC-2822-`Date:`-Header. Ohne Uhrzeit/Zone kein RFC-2822-Treffer
+  — bewusst, kein Raten.

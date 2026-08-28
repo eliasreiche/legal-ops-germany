@@ -17,7 +17,8 @@ verwirft ihn, Claude schreibt die bestätigten Einträge und übergibt an
   **keinen** Zeitwert (landet in `ohne_zeitwert[]`, Lücke) — es wird nie eine
   Minutenzahl erfunden.
 - **Akten-Zuordnung** je Termin/Mail über `core/calc/zuordnung` (Stufen
-  Z0–Z4) gegen `kontext/mandate/*.md`. Genau ein `treffer` → Vorschlag mit
+  Z0–Z4 sowie Z2N, Nachname + Korroboration — immer nur
+  `moeglicher_treffer`) gegen `kontext/mandate/*.md`. Genau ein `treffer` → Vorschlag mit
   diesem `az`; mehrere/nur mögliche → `mehrdeutig[]`; keiner →
   `nicht_zuordenbar[]` (Lücke, nie geraten).
 
@@ -53,7 +54,7 @@ sys.path[:0] = [str(p) for p in (_CORE, _CORE / "calc", _CORE / "adapters")
                 if str(p) not in sys.path]
 
 from cli import CliFehler, schreibe_report  # noqa: E402
-from context.schema import lese_kontext_mandate  # noqa: E402
+from context.schema import KontextEingabeFehler, lese_kontext_mandate  # noqa: E402
 from zeit.rechner import (  # noqa: E402
     ZeitEingabeFehler,
     ZeitEintrag,
@@ -234,6 +235,8 @@ def _lade_json(pfad: Path) -> Any:
         raise EingabeFehler(f"{pfad}: Datei nicht gefunden")
     try:
         text = pfad.read_text(encoding="utf-8-sig")
+    except UnicodeDecodeError as exc:
+        raise EingabeFehler(f"{pfad}: keine gültige UTF-8-Datei ({exc})") from exc
     except OSError as exc:
         raise EingabeFehler(f"{pfad}: Datei nicht lesbar ({exc})") from exc
     try:
@@ -439,7 +442,7 @@ def main(argv: list[str] | None = None) -> int:
         mails = lese_mails(Path(args.mails)) if args.mails else []
         pauschale = lese_config(Path(args.config) if args.config else None)
         mandate, mandat_warnungen = lese_kontext_mandate(kontext_dir)
-    except EingabeFehler as exc:
+    except (EingabeFehler, KontextEingabeFehler) as exc:
         print(f"Fehler: {exc}", file=sys.stderr)
         return 2
 
