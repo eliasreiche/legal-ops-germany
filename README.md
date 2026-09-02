@@ -143,18 +143,20 @@ kein Hosting und keine Datenhaltung durch die Library.
 
 Aktualisieren später mit `claude plugin marketplace update legal-ops-germany`.
 
-**Weg 2 — per ZIP (ohne Git):** auf der
+**Weg 2 — per ZIP in der Claude-Desktop-App (ohne Git, ohne Terminal):** auf der
 [Releases-Seite](https://github.com/eliasreiche/legal-ops-germany/releases)
-beim aktuellen Release „Source code (zip)" laden, entpacken, dann in Claude Code:
-
-```
-/plugin marketplace add /pfad/zum/entpackten/ordner
-/plugin install legal-ops@legal-ops-germany
-```
+beim aktuellen Release die Datei **`legal-ops-vX.Y.Z.zip`** laden (nicht
+„Source code"), dann in der Claude-App unter **Anpassen** das ZIP hochladen.
+Das ZIP enthält das Plugin direkt (`.claude-plugin/plugin.json` an der Wurzel,
+`core/` und `skills/`), fertig zum Hochladen.
 
 > Die ZIP-Installation ist ein **eingefrorener Stand** — sie aktualisiert sich
-> nicht. Für einen neuen Stand das ZIP des neuesten Release laden und den
-> Marketplace-Eintrag auf den neuen Ordner zeigen lassen.
+> nicht. Für einen neuen Stand das ZIP des neuesten Release laden und erneut
+> hochladen.
+
+**Weg 3 — Quell-ZIP für Claude Code ohne Git:** „Source code (zip)" laden,
+entpacken, dann `/plugin marketplace add /pfad/zum/entpackten/ordner` und
+`/plugin install legal-ops@legal-ops-germany`.
 
 Details je Skill im jeweiligen `SKILL.md`; Manifest:
 [`marketplace.json`](.claude-plugin/marketplace.json).
