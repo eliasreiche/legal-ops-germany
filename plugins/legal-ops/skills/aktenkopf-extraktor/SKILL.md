@@ -86,22 +86,32 @@ Freihand-Entwurf und kein One-Shot**:
    kommen als `fristen_hinweise` mit wörtlichem `quelle_zitat` in den Aktenkopf,
    nie als berechnete Frist.
 
-   **Bei langen Dokumenten (mehrseitige Akten statt eines einzelnen
-   Anspruchsschreibens) gilt zusätzlich (Audit 2026-09-02):** Das Dokument
-   **vollständig** durchsuchen, nicht nur den ersten Abschnitt — ein Wert gilt
-   erst als vollständig erfasst, wenn auf spätere, abweichende Nennungen
-   geprüft wurde.
-   - **Gerichtswechsel/Verweisung**: Wird der Rechtsstreit im Dokument von
-     einem Gericht an ein anderes verwiesen, sind **beide** Gerichte als
-     eigene Einträge in `aktenzeichen_fremd[]` zu erfassen (`stelle` z. B.
-     „Amtsgericht Neubrandenburg (vor Verweisung)" /
-     „Amtsgericht Neukölln (nach Verweisung)"), nicht nur das zuerst
-     angerufene Gericht.
-   - **Prozessbevollmächtigte**: Wird ein Vertreter einer Partei im Dokument
-     mehrfach genannt (auch erst später, z. B. im Rubrum eines späteren
-     Schriftsatzes), ist er namentlich in `vertreten_durch` der betreffenden
-     Partei einzutragen — nicht nur dann, wenn er bereits im ersten
-     Abschnitt auftaucht.
+   **Verfahrensverlauf (Audit 2026-09-02, 200-Seiten-Akte):** Angaben, die
+   sich im Lauf eines Verfahrens ändern können — Gericht, Aktenzeichen,
+   Prozessbevollmächtigte, Anschriften — werden **nie aus der ersten Nennung**
+   übernommen. Es gilt der **zeitlich letzte dokumentierte Stand** als
+   aktuell; frühere Stände bleiben als Historie erhalten. Zeitlich heißt
+   **nach Datum des jeweiligen Schriftsatzes/Beschlusses**, nicht nach
+   Position im Dokument — Akten sind häufig rückwärts chronologisch sortiert.
+   Dafür das gesamte Dokument nach Wechsel-Signalen durchsuchen, mindestens:
+   „verwiesen", „Verweisung", „abgegeben", „Abgabe", „nunmehr zuständig",
+   „neues Aktenzeichen", „bisheriges Aktenzeichen", „bestelle ich mich",
+   „zeige ich an, dass", „Prozessbevollmächtigte", „Mandat niedergelegt",
+   „Vertretung beendet", „neue Anschrift".
+   - **Gericht und Aktenzeichen**: Jedes gerichtliche Aktenzeichen, das der
+     Akte je zugeordnet war, wird ein eigener Eintrag in `aktenzeichen_fremd[]`
+     — bei Verweisung an ein anderes Gericht **und** bei Az-Wechsel innerhalb
+     derselben Instanz (Abgabe an andere Abteilung/Kammer, Trennung,
+     Wiederaufnahme). `stelle` nennt Gericht **und** Status, genau **ein**
+     Eintrag trägt „(aktuell)": z. B. „Amtsgericht Neubrandenburg (bis
+     Verweisung an AG Neukölln)" / „Amtsgericht Neukölln (aktuell)". Der
+     Eintrag mit „(aktuell)" ist der geltende Gerichtsstand.
+   - **Prozessbevollmächtigte** (`vertreten_durch`): der **zuletzt** bestellte
+     Vertreter der Partei — auch wenn die Partei anfangs unvertreten war.
+     Bei Anwaltswechsel: „RA Neu (seit Schriftsatz vom TT.MM.JJJJ; zuvor RA
+     Alt)". Nach Niederlegung ohne Nachfolger: `null` und die Niederlegung in
+     `sachverhalt_kurz` vermerken.
+   - **Anschrift**: die zuletzt mitgeteilte.
 2. **Claude ruft den Executor auf** (kein eigenes Prüfen durch das Modell):
 
    ```bash
@@ -123,6 +133,8 @@ Freihand-Entwurf und kein One-Shot**:
    korrigieren → erneut prüfen), keinen Einmal-Check. Wiederholen, bis der
    Executor mit Exit-Code `0` sauber durchläuft.
 5. **Claude stellt das Ergebnis in Markdown dar**: Aktenkopf, Parteien-Tabelle,
+   bei gerichtlichen Aktenzeichen eine Zeile **Gericht/Az (aktuell)** mit der
+   Historie darunter (frühere Gerichte/Az aus `aktenzeichen_fremd[]`),
    Frist-Hinweise **mit deutlichem Haftungshinweis** (erkannte Datumsnennungen,
    keine Fristenkontrolle; Fristberechnung nur über `fristenrechner`) und die
    Lückenliste. Jeder als `nicht_belegt` gemeldete Wert wird nie stillschweigend
