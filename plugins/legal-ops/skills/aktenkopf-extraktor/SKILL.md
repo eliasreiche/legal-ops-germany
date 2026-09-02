@@ -85,6 +85,23 @@ Freihand-Entwurf und kein One-Shot**:
    Begründung, warum die Angabe für die Aktenanlage nötig ist). Datumsnennungen
    kommen als `fristen_hinweise` mit wörtlichem `quelle_zitat` in den Aktenkopf,
    nie als berechnete Frist.
+
+   **Bei langen Dokumenten (mehrseitige Akten statt eines einzelnen
+   Anspruchsschreibens) gilt zusätzlich (Audit 2026-09-02):** Das Dokument
+   **vollständig** durchsuchen, nicht nur den ersten Abschnitt — ein Wert gilt
+   erst als vollständig erfasst, wenn auf spätere, abweichende Nennungen
+   geprüft wurde.
+   - **Gerichtswechsel/Verweisung**: Wird der Rechtsstreit im Dokument von
+     einem Gericht an ein anderes verwiesen, sind **beide** Gerichte als
+     eigene Einträge in `aktenzeichen_fremd[]` zu erfassen (`stelle` z. B.
+     „Amtsgericht Neubrandenburg (vor Verweisung)" /
+     „Amtsgericht Neukölln (nach Verweisung)"), nicht nur das zuerst
+     angerufene Gericht.
+   - **Prozessbevollmächtigte**: Wird ein Vertreter einer Partei im Dokument
+     mehrfach genannt (auch erst später, z. B. im Rubrum eines späteren
+     Schriftsatzes), ist er namentlich in `vertreten_durch` der betreffenden
+     Partei einzutragen — nicht nur dann, wenn er bereits im ersten
+     Abschnitt auftaucht.
 2. **Claude ruft den Executor auf** (kein eigenes Prüfen durch das Modell):
 
    ```bash
