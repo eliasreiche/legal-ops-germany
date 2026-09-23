@@ -1,7 +1,8 @@
 ---
 name: rvg-gkg-rechner
 description: "Berechnet RVG-Anwaltsvergütung und GKG-Gerichtskosten (Wertgebühren, Zivilsachen) deterministisch mit nachvollziehbarer Rechenkette — Tabellenstand nach Stichtag (KostRÄG 2021 / KostBRÄG 2025), Gebührensätze, Anrechnung, Auslagen, USt. Triggert bei RVG berechnen, Gerichtskosten/GKG, Anwaltsvergütung, Streitwert zu Gebühren, Kostennote, Vergütungsberechnung."
-status: beta
+status: getestet
+haendisch_getestet: 2026-09-22
 welle: 1
 bereich: zeit-abrechnung
 rdg_einordnung: "Rechnerische Gebührenermittlung nach den gesetzlichen Wertgebührentabellen (§ 13 RVG / Anlage 2 RVG, § 34 GKG / Anlage 2 GKG) und einem festen Katalog von VV-RVG-/KV-GKG-Positionen — keine Beratung zur Gebührenstrategie, keine Billigkeitsentscheidung nach § 14 RVG (z. B. Satz der Geschäftsgebühr) und keine Kostenverteilungsentscheidung (§ 91 ff. ZPO)."

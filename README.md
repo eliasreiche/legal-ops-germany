@@ -109,7 +109,7 @@ Tabelle wird generiert von [`plugins/legal-ops/core/verify/struktur_lint.py`](pl
 | Skill | Bereich | Welle | Status |
 |---|---|---|---|
 | [`fristenrechner`](plugins/legal-ops/skills/fristenrechner/SKILL.md) | `fristen-termine` | 1 | ✅ `getestet` |
-| [`rvg-gkg-rechner`](plugins/legal-ops/skills/rvg-gkg-rechner/SKILL.md) | `zeit-abrechnung` | 1 | 🧪 `beta` |
+| [`rvg-gkg-rechner`](plugins/legal-ops/skills/rvg-gkg-rechner/SKILL.md) | `zeit-abrechnung` | 1 | ✅ `getestet` |
 | [`gwg-risiko-check`](plugins/legal-ops/skills/gwg-risiko-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
 | [`interessenkollision-check`](plugins/legal-ops/skills/interessenkollision-check/SKILL.md) | `compliance` | 2 | 🧪 `beta` |
 | [`aktenkopf-extraktor`](plugins/legal-ops/skills/aktenkopf-extraktor/SKILL.md) | `intake` | 2 | 🧪 `beta` |
