@@ -65,9 +65,10 @@ Kurzform für genau **eine** Angelegenheit (`tatbestaende` flach statt
 | Feld | Pflicht | Format | Bedeutung |
 |---|---|---|---|
 | `auftragsdatum` | **ja** | ISO-Datum `JJJJ-MM-TT` | Stichtag für die Tabellenstand-Wahl: Zeitpunkt der Erteilung des unbedingten Auftrags (§ 60 Abs. 1 RVG). |
-| `streitwert` | **ja** | Dezimalstring, z. B. `"5000.00"`, oder ganze Zahl | Gegenstandswert (gilt für alle Angelegenheiten der Anfrage). **Kein JSON-`float`** — float-Rundungsfehler (0,1+0,2-Falle) sind bei Geldbeträgen ein Haftungsrisiko, der Executor lehnt float strikt ab. Werte über 30 Mio. € werden nach § 22 Abs. 2 Satz 1 RVG **gekappt** (Rechenketten-Zeile + Warnung + `wertkappung`-Block im Report); in Kombination mit Nr. 1008 wird stattdessen abgelehnt (§ 22 Abs. 2 Satz 2 RVG nicht modelliert, siehe „Bewusste Grenzen"). |
+| `streitwert` | **ja** | Dezimalstring, z. B. `"5000.00"`, oder ganze Zahl | Gegenstandswert (gilt für jeden Tatbestand ohne eigenen `gegenstandswert`). **Kein JSON-`float`** — float-Rundungsfehler (0,1+0,2-Falle) sind bei Geldbeträgen ein Haftungsrisiko, der Executor lehnt float strikt ab. Werte über 30 Mio. € werden nach § 22 Abs. 2 Satz 1 RVG **gekappt** (Rechenketten-Zeile + Warnung + `wertkappung`-Block im Report); in Kombination mit Nr. 1008 wird stattdessen abgelehnt (§ 22 Abs. 2 Satz 2 RVG nicht modelliert, siehe „Bewusste Grenzen"). |
 | `angelegenheiten` | entweder dies … | Liste von Objekten `{"bezeichnung", "tatbestaende", optional "auslagenpauschale"/"umsatzsteuer"}` | Volle Form; je Angelegenheit eigene Gebühren, eigene 7002-Pauschale (je 20 %, max. je 20 €), eigene USt. |
 | `tatbestaende` | … oder dies | Liste von Objekten | Kurzform für genau eine Angelegenheit. **Teil-2- und Teil-3-Tatbestände zusammen sind hier ein Eingabefehler** — dann `angelegenheiten` verwenden. |
+| `tatbestaende[].gegenstandswert` | nein | Dezimalstring | **Teilwert** dieses Tatbestands (z. B. Mehrwert eines Vergleichs); ohne Angabe gilt `streitwert`. Nicht bei `1008` (folgt der Basis-Position). Erlaubte Keys je Tatbestand: `nr`, `satz`, `gegenstandswert`, `erhoeht_position`, `weitere_auftraggeber` — jeder andere ist Exit 2. |
 | `anrechnung_2300_auf_3100` | nein (Default `false`) | `true`/`false` | Anrechnung der Geschäftsgebühr auf die Verfahrensgebühr (Vorbem. 3 Abs. 4 VV RVG) — verbindet zwei Angelegenheiten; verlangt genau eine `2300` und genau eine `3100` über alle Angelegenheiten hinweg. |
 | `auslagenpauschale` | nein (Default `true`) | `true`/`false` | Nr. 7002 VV RVG (20 % der Gebühren, höchstens 20 € — **je Angelegenheit**). Pro Angelegenheit überschreibbar. |
 | `umsatzsteuer` | nein (Default `true`) | `true`/`false` | Nr. 7008 VV RVG (19 % — Basis **je Angelegenheit**). Pro Angelegenheit überschreibbar. |
@@ -81,6 +82,7 @@ Nur Wertgebühren in Zivilsachen — Katalog liegt als Datendatei bei
 |---|---|---|---|---|---|---|
 | `2300` | 2 (außergerichtlich) | — | Geschäftsgebühr | Satzrahmen 0,5–2,5 | **Pflichtangabe** `satz` (keine stille Annahme des Regelsatzes 1,3) | `"satz": "1.3"` |
 | `3100` | 3 (gerichtlich) | 1 | Verfahrensgebühr (erster Rechtszug) | Festsatz | 1,3 | — (gesetzlich fix, `satz` darf nicht überschrieben werden) |
+| `3101` | 3 (gerichtlich) | 1 | Verfahrensgebühr (erster Rechtszug), ermäßigt — u. a. Nr. 2: Einigung/Verhandlung über nicht rechtshängige Ansprüche | Festsatz | 0,8 | `gegenstandswert` (Wertteil); neben `3100` in derselben Angelegenheit → § 15 Abs. 3 RVG |
 | `3104` | 3 (gerichtlich) | 1 | Terminsgebühr (erster Rechtszug) | Festsatz | 1,2 | — |
 | `3200` | 3 (gerichtlich) | berufung | Verfahrensgebühr (Berufung) | Festsatz | 1,6 | — |
 | `3201` | 3 (gerichtlich) | berufung | Verfahrensgebühr (Berufung), ermäßigt bei vorzeitiger Beendigung | Festsatz | 1,1 | — (alternativ zu 3200, nie kumulativ) |
@@ -98,6 +100,16 @@ Nur Wertgebühren in Zivilsachen — Katalog liegt als Datendatei bei
 Alle Sätze der Berufungs-/Revisions-Positionen sowie Nr. 1004 sind am
 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html web-verifiziert
 (Fundstelle je Eintrag im Katalog `vv-katalog.json`, Feld `quelle_hinweis`).
+
+**§ 15 Abs. 3 RVG (verschiedene Sätze für Teile des Gegenstands):** Positionen
+mit derselben `gruppe_15_abs_3` im Katalog — Verfahrensgebühr `3100`/`3101`,
+Einigungsgebühr `1000`/`1003`/`1004` — dürfen in einer Angelegenheit
+zusammen stehen, wenn **jede** ihren Wertteil als `gegenstandswert` trägt
+(sonst Exit 2). Der Executor rechnet die Einzelgebühren und kappt ihre Summe
+auf höchster Satz × 1,0-Gebühr aus der Summe der Wertteile — als eigene
+Rechenketten-Zeile und im Block `kappungen_15_abs_3` der Angelegenheit, auch
+wenn die Kappung nicht greift. Nr. `1008` auf eine so zusammengefasste
+Position ist nicht modelliert (Exit 2).
 
 **Teil-Kollisionsregel:** Teil-2- (`2300`) und Teil-3-Tatbestände
 (`3100`/`3104`/`3200` ff.) in **derselben** Angelegenheit sind ein
@@ -158,7 +170,7 @@ Mahnbescheid → Widerspruch → streitiges Verfahren (mit Anrechnung):
 |---|---|---|---|
 | `verfahrenseinleitungsdatum` | **ja** | ISO-Datum `JJJJ-MM-TT` | Stichtag für die Tabellenstand-Wahl: Zeitpunkt, zu dem die Rechtsstreitigkeit anhängig geworden ist (§ 71 Abs. 1 GKG) — **nicht** das Auftragsdatum wie beim RVG-Block. |
 | `streitwert` | **ja** | Dezimalstring oder ganze Zahl | Streitwert. Werte über 30.000.000 € werden nach § 39 Abs. 2 GKG **gekappt** (Kappungsgrenze, keine Zulässigkeitsgrenze) — mit Rechenketten-Zeile, Warnung und `wertkappung`-Block im Report. |
-| `positionen` | **ja** | Liste von Objekten `{"nr": "1210"}` | Siehe [KV-GKG-Katalog](#gebührentatbestands-katalog-gkg-kv-katalogjson) unten. |
+| `positionen` | **ja** | Liste von Objekten `{"nr": "1210"}`, optional `"gegenstandswert"` (Teilwert; Pflicht bei `1900`) | Siehe [KV-GKG-Katalog](#gebührentatbestands-katalog-gkg-kv-katalogjson) unten. Andere Keys: Exit 2. |
 | `anrechnung_1100_auf_1210` | nein (Default `false`) | `true`/`false` | Anrechnung der Mahnverfahrensgebühr auf die Gebühr für das Verfahren im Allgemeinen beim Übergang in das streitige Verfahren (Anmerkung Abs. 1 zu KV 1210 GKG) — verlangt `1100` **und** `1210` in `positionen`. |
 
 **Anrechnung KV 1100 → KV 1210 (Übergang aus dem Mahnverfahren):** Nach der
@@ -201,6 +213,7 @@ Katalog liegt bei
 | `1222` | Ermäßigung von `1220` | 2,0 | — |
 | `1230` | Revision, Verfahren im Allgemeinen | 5,0 | Schließt sich mit `1232` aus. |
 | `1232` | Ermäßigung von `1230` | 3,0 | — |
+| `1900` | Vergleich über nicht gerichtlich anhängige Gegenstände | 0,25 | `gegenstandswert` = Mehrwert (Pflicht). Mit der Gebühr für das Verfahren im Allgemeinen (`1210`/`1211`/`1220`/`1222`/`1230`/`1232`) gilt § 36 Abs. 3 GKG entsprechend (Anm. zu KV 1900): Summe höchstens höchster Satz × 1,0-Gebühr aus der Summe der Wertteile — Rechenketten-Zeile + Block `kappung_36_abs_3`, auch wenn sie nicht greift. Mit mehr als einer solchen Verfahrensgebühr in der Anfrage: Exit 2 (Rechtszug unklar). |
 
 `1230`/`1232` am 2026-07-17 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html
 web-verifiziert (Fundstelle je Eintrag im Katalog `kv-katalog.json`).
@@ -288,6 +301,13 @@ Struktur je Block (`rvg`/`gkg`, sofern angefragt):
   § 39 Abs. 2 GKG auf 30 Mio. € gekappt wurde (`streitwert_eingabe`,
   `streitwert_angewendet`, `norm`) — zusätzlich als Rechenketten-Zeile und
   Warnung ausgewiesen; sonst `null`.
+- **Teilwerte**: nutzt die Anfrage `gegenstandswert`, trägt jede Position
+  ihren Wert (`positionen[].gegenstandswert`), jede Rechenketten-Zeile nennt
+  ihn, und jede weitere Wertstufe bekommt eine eigene 1,0-Gebühr-Zeile.
+  `kappungen_15_abs_3` (RVG, je Angelegenheit) bzw. `kappung_36_abs_3`
+  (GKG) weisen Summe der Einzelgebühren, Gesamtwert der Wertteile, höchsten
+  Satz, Höchstbetrag, `gekappt` und `kuerzung` aus; die Kürzung ist in
+  Zwischensumme bzw. `ergebnis.gesamt` bereits abgezogen.
 - **`rechenkette`** ist die nachvollziehbare Herleitung: ggf. Wert-Kappung,
   Tabellenstand-Wahl, 1,0-Gebühr, je Position ein Schritt, ggf. Anrechnung,
   je Angelegenheit Zwischensumme/7002/Netto/USt/Gesamt, ggf.
@@ -312,26 +332,25 @@ Struktur je Block (`rvg`/`gkg`, sofern angefragt):
   Kostenschuldner, siehe `meta.hinweis_getrennte_kostenarten`.
 - **Keine Kostenverteilung** (§ 91 ff. ZPO, Kostenquote): der Rechner
   ermittelt die Höhe der Gebühren, nicht, wer sie im Ergebnis trägt.
-- **Anrechnung nur bei identischem Streitwert**: Weichen die
-  Gegenstandswerte von Geschäfts- und Verfahrensgebühr voneinander ab (z. B.
-  nur teilweise identischer Gegenstand), rechnet dieser Executor nicht —
-  anwaltliche Schätzung nach § 14 Abs. 1 RVG bleibt Kanzleisache.
-- **Ein Wert je Anfrage**: `streitwert` gilt für den gesamten Block. Zwei
-  Angelegenheiten mit **unterschiedlichem** Gegenstandswert (typisch:
-  vorgerichtliche Tätigkeit über die Restforderung, gerichtliches Verfahren
-  über den vollen Betrag nach Teilerledigung) brauchen **zwei getrennte
-  Executor-Aufrufe** mit je eigenem Wert; der Report summiert nur innerhalb
-  einer Anfrage.
+- **Anrechnung nur bei identischem Wert**: Tragen `2300` und `3100` (bzw.
+  KV `1100` und `1210`) verschiedene Werte, ist die angeforderte Anrechnung
+  ein Eingabefehler (Exit 2) — keine Teilanrechnung.
+- **Wert-Höchstgrenze mit Teilwerten**: Nutzt die Anfrage `gegenstandswert`,
+  wird jeder Wert über 30 Mio. € (Streitwert, Teilwert oder Summe der
+  Wertteile nach § 15 Abs. 3 RVG / § 36 Abs. 3 GKG) abgelehnt statt je
+  Position gekappt — § 22 Abs. 2 RVG / § 39 Abs. 2 GKG sind dafür nicht
+  modelliert.
+- **Anm. Abs. 1 zu Nr. 3101 VV RVG** (Anrechnung des über die Gebühr 3100
+  hinausgehenden Betrags in einer anderen Angelegenheit) ist nicht
+  modelliert — Hinweis an der Position.
 - **Kein Teilübergang aus dem Mahnverfahren**: `anrechnung_1100_auf_1210`
   setzt den **vollständigen** Übergang voraus. Angerechnet wird nach der
   Anmerkung Abs. 1 zu KV 1210 GKG „eine Gebühr 1100 nach dem Wert des
   Streitgegenstands …, der in das Prozessverfahren übergegangen ist" — bei
   einem Teilübergang ist das ein **anderer (kleinerer) Wert** als der
-  Streitwert des Prozessverfahrens, und eine Anfrage kennt nur **einen**
-  `streitwert`. Zwei getrennte Aufrufe lösen das nicht: das Flag verlangt
-  KV 1100 und KV 1210 in **derselben** Anfrage, und ein in einem zweiten
-  Aufruf ermittelter Anrechnungsbetrag lässt sich nicht in den ersten
-  übertragen. Der Executor rechnet diesen Fall deshalb **nicht** — die
+  Streitwert des Prozessverfahrens. Verschiedene Teilwerte an KV 1100 und
+  KV 1210 bei angeforderter Anrechnung sind deshalb ein Eingabefehler.
+  Der Executor rechnet diesen Fall **nicht** — die
   Anrechnung beim Teilübergang bleibt händisch/anwaltlich zu ermitteln.
 - **KV 1211 ohne Mahnverfahrens-Anrechnung**: `anrechnung_1100_auf_1210`
   verlangt KV 1210; die Ermäßigung KV 1211 ist von der Anmerkung nicht

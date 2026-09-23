@@ -49,6 +49,15 @@
       "ermaessigt_position": "1230",
       "hinweis": "Schließt sich mit KV 1230 gegenseitig aus — der Executor lehnt die gleichzeitige Angabe beider ab.",
       "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html, KV 1232: Beendigung des gesamten Verfahrens (Rücknahme nach Begründung, Anerkenntnis-/Verzichtsurteil, Vergleich, übereinstimmende Erledigung), 'Die Gebühr 1230 ermäßigt sich auf' 3,0."
+    },
+    "1900": {
+      "bezeichnung": "Abschluss eines gerichtlichen Vergleichs, soweit ein Vergleich über nicht gerichtlich anhängige Gegenstände geschlossen wird",
+      "norm": "KV 1900 GKG",
+      "satz": "0.25",
+      "wert_pflicht": true,
+      "kappung_36_abs_3_mit": ["1210", "1211", "1220", "1222", "1230", "1232"],
+      "hinweis": "Wert = Wert der nicht gerichtlich anhängigen Gegenstände ('gegenstandswert' Pflicht). Im Verhältnis zur Gebühr für das Verfahren im Allgemeinen gilt § 36 Abs. 3 GKG entsprechend (Anm. zu KV 1900) — der Executor begrenzt die Summe und weist das als eigene Rechenketten-Zeile aus. Die Gebühr entsteht nicht im Verfahren über die Prozesskostenhilfe.",
+      "quelle_hinweis": "Web-verifiziert am 2026-09-23 gegen gesetze-im-internet.de/gkg_2004/anlage_1.html, Teil 1 Hauptabschnitt 9 (Besondere Gebühren), KV 1900: 'Abschluss eines gerichtlichen Vergleichs: Soweit ein Vergleich über nicht gerichtlich anhängige Gegenstände geschlossen wird' 0,25; Anmerkung: 'Die Gebühr entsteht nicht im Verfahren über die Prozesskostenhilfe. Im Verhältnis zur Gebühr für das Verfahren im Allgemeinen ist § 36 Abs. 3 GKG entsprechend anzuwenden.' § 36 Abs. 3 GKG (gesetze-im-internet.de/gkg_2004/__36.html): 'Sind für Teile des Gegenstands verschiedene Gebührensätze anzuwenden, sind die Gebühren für die Teile gesondert zu berechnen; die aus dem Gesamtbetrag der Wertteile nach dem höchsten Gebührensatz berechnete Gebühr darf jedoch nicht überschritten werden.'"
     }
   },
   "anrechnung_mahnverfahren_auf_verfahrensgebuehr": {

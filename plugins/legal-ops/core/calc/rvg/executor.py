@@ -46,6 +46,10 @@ in derselben Angelegenheit sind ein Eingabefehler):
       }
     }
 
+Optional trägt jeder RVG-Tatbestand bzw. jede GKG-Position einen eigenen
+"gegenstandswert" (Teilwert, z. B. Mehrwert eines Vergleichs; KV 1900:
+Pflicht) — Default ist der "streitwert" des Blocks.
+
 Beide Blöcke werden strikt validiert: ein unbekannter Key (Tippfehler) ist
 ein Eingabefehler mit Exit 2 und Nennung des Keys, nie ein stilles Ignorieren.
 
@@ -196,7 +200,7 @@ def _baue_gkg_block(anfrage: dict[str, Any]) -> dict[str, Any]:
     ergebnis = gkg_berechne(streitwert, stichtag, positionen,
                             anrechnung_1100_auf_1210=anrechnung)
 
-    return {
+    block = {
         "eingabe": {
             "verfahrenseinleitungsdatum": stichtag.isoformat(),
             "streitwert": str(ergebnis.streitwert_eingabe),
@@ -221,6 +225,9 @@ def _baue_gkg_block(anfrage: dict[str, Any]) -> dict[str, Any]:
         },
         "warnungen": ergebnis.warnungen,
     }
+    if ergebnis.kappung:
+        block["kappung_36_abs_3"] = ergebnis.kappung
+    return block
 
 
 def baue_report(eingabe: dict[str, Any], quelle_datei: str) -> dict[str, Any]:

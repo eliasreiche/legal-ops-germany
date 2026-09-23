@@ -19,7 +19,20 @@
       "art": "festsatz",
       "satz": "1.3",
       "vv_teil": 3,
-      "instanz": "1"
+      "instanz": "1",
+      "gruppe_15_abs_3": "verfahrensgebuehr"
+    },
+    "3101": {
+      "bezeichnung": "Verfahrensgebühr (erster Rechtszug), ermäßigt",
+      "norm": "Nr. 3101 VV RVG",
+      "art": "festsatz",
+      "satz": "0.8",
+      "vv_teil": 3,
+      "instanz": "1",
+      "gruppe_15_abs_3": "verfahrensgebuehr",
+      "hinweis": "Nr. 2 (Mehrvergleich): 0,8 aus dem Wert der in diesem Verfahren nicht rechtshängigen Ansprüche, in DERSELBEN Angelegenheit neben Nr. 3100 aus dem anhängigen Wert — beide mit 'gegenstandswert' (Wertteil) angeben; der Executor begrenzt die Summe nach § 15 Abs. 3 RVG. Welche der Nummern 1–3 vorliegt, prüft der Executor nicht.",
+      "report_hinweis": "Anm. Abs. 1 zu Nr. 3101 VV RVG (Anrechnung des über die Gebühr 3100 hinausgehenden Betrags auf eine Verfahrensgebühr wegen desselben Gegenstands in einer anderen Angelegenheit) ist nicht modelliert — anwaltlich prüfen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-09-23 gegen gesetze-im-internet.de/rvg/anlage_1.html, Teil 3 Abschnitt 1, Nr. 3101: '2. soweit Verhandlungen vor Gericht zur Einigung der Parteien oder der Beteiligten oder mit Dritten über in diesem Verfahren nicht rechtshängige Ansprüche geführt werden; …' — 'beträgt die Gebühr 3100' 0,8; Anm. Abs. 1 verweist auf § 15 Abs. 3 RVG."
     },
     "3104": {
       "bezeichnung": "Terminsgebühr (erster Rechtszug)",
@@ -111,7 +124,8 @@
       "norm": "Nr. 1000 VV RVG",
       "art": "festsatz",
       "satz": "1.5",
-      "vv_teil": 1
+      "vv_teil": 1,
+      "gruppe_15_abs_3": "einigungsgebuehr"
     },
     "1003": {
       "bezeichnung": "Einigungsgebühr bei anhängiger Sache",
@@ -119,7 +133,8 @@
       "art": "festsatz",
       "satz": "1.0",
       "hinweis": "Gilt anstelle von Nr. 1000, wenn über den Gegenstand bereits ein anderes gerichtliches Verfahren (außer selbständigem Beweisverfahren) anhängig ist.",
-      "vv_teil": 1
+      "vv_teil": 1,
+      "gruppe_15_abs_3": "einigungsgebuehr"
     },
     "1004": {
       "bezeichnung": "Einigungsgebühr im Berufungs-/Revisionsverfahren (erhöhter Satz)",
@@ -129,7 +144,8 @@
       "vv_teil": 1,
       "nur_bei_instanz": ["berufung", "revision"],
       "hinweis": "Erhöhte Einigungsgebühr, wenn über den Gegenstand ein Berufungs- oder Revisionsverfahren anhängig ist. Nur in einer Angelegenheit mit einem Berufungs-/Revisions-Tatbestand (Nr. 3200 ff. / 3206 ff.) zulässig — der Executor lehnt Nr. 1004 in erster Instanz/außergerichtlich ab und verweist auf Nr. 1000 (1,5) bzw. Nr. 1003 (1,0).",
-      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 1004: 'Über den Gegenstand ist ein Berufungs- oder Revisionsverfahren anhängig' — Einigungsgebühr 1,3."
+      "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 1004: 'Über den Gegenstand ist ein Berufungs- oder Revisionsverfahren anhängig' — Einigungsgebühr 1,3.",
+      "gruppe_15_abs_3": "einigungsgebuehr"
     },
     "1008": {
       "bezeichnung": "Erhöhungsgebühr für weitere Auftraggeber",
@@ -174,5 +190,6 @@
   },
   "teil_hinweis": "`vv_teil` = Teil der Anlage 1 RVG (Gliederung web-verifiziert). Teil-2- und Teil-3-Tatbestände in DERSELBEN Angelegenheit sind ein Eingabefehler: außergerichtliche Vertretung und gerichtliches Verfahren sind verschiedene Angelegenheiten (§§ 16 ff. RVG; die Anrechnung nach Vorbem. 3 Abs. 4 VV RVG setzt zwei Angelegenheiten gerade voraus) — mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis. Teil-1-Gebühren entstehen neben den Gebühren der anderen Teile (Vorbem. 1 VV RVG) und lösen keine Kollisionsprüfung aus.",
   "instanz_hinweis": "`instanz` (nur bei Teil-3-Positionen) = Rechtszug: '1' (erste Instanz, Nr. 3100/3104), 'berufung' (Nr. 3200/3201/3202), 'revision' (Nr. 3206–3210). Teil-3-Tatbestände VERSCHIEDENER Instanzen in DERSELBEN Angelegenheit sind ein Eingabefehler: jeder Rechtszug ist eine eigene Angelegenheit (§ 17 Nr. 1 RVG) mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis — über 'angelegenheiten' in getrennte Angelegenheiten je Instanz aufteilen. `nur_bei_instanz` (bei Nr. 1004) = die Position ist nur in einer Angelegenheit mit einer der genannten Instanzen zulässig.",
-  "anrechnung_instanz_hinweis": "Die Anrechnung der Geschäftsgebühr (Vorbem. 3 Abs. 4 VV RVG) erfolgt ausschließlich auf die Verfahrensgebühr des ERSTEN Rechtszugs (Nr. 3100), nicht auf die Berufungs-/Revisions-Verfahrensgebühr (Nr. 3200/3206/3208) — der Executor lehnt eine Anrechnungs-Anforderung ohne Nr. 3100, aber mit einer höherinstanzlichen Verfahrensgebühr, als Eingabefehler ab. Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html (Vorbem. 3 Abs. 4: Anrechnung auf 'die Verfahrensgebühr des gerichtlichen Verfahrens' — nach BGH die des ersten Rechtszugs)."
+  "anrechnung_instanz_hinweis": "Die Anrechnung der Geschäftsgebühr (Vorbem. 3 Abs. 4 VV RVG) erfolgt ausschließlich auf die Verfahrensgebühr des ERSTEN Rechtszugs (Nr. 3100), nicht auf die Berufungs-/Revisions-Verfahrensgebühr (Nr. 3200/3206/3208) — der Executor lehnt eine Anrechnungs-Anforderung ohne Nr. 3100, aber mit einer höherinstanzlichen Verfahrensgebühr, als Eingabefehler ab. Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html (Vorbem. 3 Abs. 4: Anrechnung auf 'die Verfahrensgebühr des gerichtlichen Verfahrens' — nach BGH die des ersten Rechtszugs).",
+  "gruppe_15_abs_3_hinweis": "`gruppe_15_abs_3` = Gebührenart für § 15 Abs. 3 RVG (web-verifiziert am 2026-09-23 gegen gesetze-im-internet.de/rvg/__15.html: 'Sind für Teile des Gegenstands verschiedene Gebührensätze anzuwenden, entstehen für die Teile gesondert berechnete Gebühren, jedoch nicht mehr als die aus dem Gesamtbetrag der Wertteile nach dem höchsten Gebührensatz berechnete Gebühr.'). Stehen in EINER Angelegenheit mehrere Positionen derselben Gruppe, muss jede ihren Wertteil als 'gegenstandswert' tragen; der Executor rechnet die Einzelgebühren und kappt ihre Summe auf höchster Satz x 1,0-Gebühr aus der Summe der Wertteile — als eigene Rechenketten-Zeile, auch wenn die Kappung nicht greift."
 }

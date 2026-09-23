@@ -7,7 +7,10 @@ Tabellenstand-Auswahl, 1,0-Gebühr, je Position Satz × 1,0-Gebühr (mit
 Mindestbetrags-Floor, § 34 Abs. 2 GKG bzw. positionsspezifischem
 Mindestbetrag wie bei KV 1100), optional die Anrechnung der
 Mahnverfahrensgebühr KV 1100 auf KV 1210 beim Übergang in das streitige
-Verfahren (Anmerkung Abs. 1 zu KV 1210 GKG).
+Verfahren (Anmerkung Abs. 1 zu KV 1210 GKG). Optional je Position ein
+eigener `gegenstandswert` (Pflicht bei KV 1900, Vergleich über nicht
+anhängige Gegenstände); KV 1900 und die Gebühr für das Verfahren im
+Allgemeinen werden nach § 36 Abs. 3 GKG (Anm. zu KV 1900) gekappt.
 
 Gerichtsgebühren sind nicht umsatzsteuerpflichtig — anders als beim RVG gibt
 es hier keine Auslagenpauschale/USt-Position.
@@ -36,7 +39,9 @@ from wertgebuehr_formel import (  # noqa: E402
     D,
     Position,
     WertgebuehrFehler,
+    kappung_beschreibung,
     rundung_cent,
+    teilwert_kappung,
 )
 from rechenschritt import RechenSchritt  # noqa: E402
 from gkg.tabelle import (  # noqa: E402
@@ -77,6 +82,7 @@ class GKGErgebnis:
     positionen: list[Position]
     gesamt: Decimal
     anrechnung: dict[str, Any] | None = None
+    kappung: dict[str, Any] | None = None     # § 36 Abs. 3 GKG (KV 1900)
     rechenkette: list[RechenSchritt] = field(default_factory=list)
     warnungen: list[str] = field(default_factory=list)
 
@@ -91,7 +97,7 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
     Anfrage (Anmerkung Abs. 1 zu KV 1210 GKG): die Mahnverfahrensgebühr wird
     auf die Gebühr für das Verfahren im Allgemeinen angerechnet — der
     identische Wert (vollständiger Übergang des Streitgegenstands) ist
-    konstruktiv sichergestellt, weil eine Anfrage nur einen Streitwert kennt.
+    Pflicht — verschiedene Teilwerte sind ein Eingabefehler.
     """
     kat = katalog or lade_katalog()
     positionen_katalog = kat["positionen"]
@@ -104,6 +110,12 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
     if wert_eingabe <= 0:
         raise GKGEingabeFehler(f"Streitwert muss > 0 sein, ist {wert_eingabe}")
 
+    # Teilwerte ('gegenstandswert' je Position): kein einheitlicher Wert, auf
+    # den § 39 Abs. 2 GKG sicher gekappt werden könnte — jeder Wert über der
+    # Höchstgrenze wird abgelehnt statt womöglich falsch gekappt.
+    teilwerte = any(isinstance(e, dict) and "gegenstandswert" in e
+                    for e in positionen)
+
     kette: list[RechenSchritt] = []
     warnungen: list[str] = []
 
@@ -114,6 +126,17 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
     # --- § 39 Abs. 2 GKG: Höchstgrenze ist eine KAPPUNGS-, keine
     #     Zulässigkeitsgrenze — kappen und sichtbar ausweisen, nie ablehnen.
     hoechstgrenze = streitwert_hoechstgrenze()
+
+    def _grenze_teilwerte(w: Decimal) -> None:
+        if teilwerte and w > hoechstgrenze:
+            raise GKGEingabeFehler(
+                f"Wert {w} € über {hoechstgrenze} € in einer Anfrage mit "
+                f"Teilwerten ('gegenstandswert' je Position): die Höchstgrenze "
+                f"des § 39 Abs. 2 GKG ist für diese Konstellation nicht "
+                f"modelliert und wird nicht stillschweigend je Position "
+                f"gekappt. Anwaltlich prüfen.")
+
+    _grenze_teilwerte(wert_eingabe)
     wert = wert_eingabe
     if wert_eingabe > hoechstgrenze:
         wert = hoechstgrenze
@@ -138,6 +161,17 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
             f"1,0-Gebühr (Einfachgebühr) für Streitwert {wert} €.",
             str(einfachgebuehr))
 
+    eg_je_wert: dict[Decimal, Decimal] = {wert: einfachgebuehr}
+
+    def eg(w: Decimal) -> Decimal:
+        if w not in eg_je_wert:
+            _grenze_teilwerte(w)
+            eg_je_wert[w] = _einfachgebuehr_stichtag(w, stichtag)[0].einfachgebuehr
+            schritt("§ 34 Abs. 1 GKG",
+                    f"1,0-Gebühr (Einfachgebühr) für Wert {w} €.",
+                    str(eg_je_wert[w]))
+        return eg_je_wert[w]
+
     gesehene_nrn: set[str] = set()
     ergebnis_positionen: list[Position] = []
     nach_nr: dict[str, Position] = {}
@@ -148,6 +182,12 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
                 f"jeder Eintrag in 'positionen' muss ein Objekt mit 'nr' sein, "
                 f"nicht {eintrag!r}")
         nr = str(eintrag["nr"])
+        unbekannt = sorted(set(eintrag) - {"nr", "gegenstandswert"})
+        if unbekannt:
+            raise GKGEingabeFehler(
+                f"unbekanntes Feld in KV {nr}: "
+                f"{', '.join(repr(f) for f in unbekannt)} (erlaubt: 'nr', "
+                f"'gegenstandswert')")
         if nr not in positionen_katalog:
             bekannt = ", ".join(sorted(positionen_katalog))
             raise GKGEingabeFehler(
@@ -159,8 +199,19 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
         gesehene_nrn.add(nr)
 
         katalog_eintrag = positionen_katalog[nr]
+        pos_wert = wert
+        if "gegenstandswert" in eintrag:
+            pos_wert = D(eintrag["gegenstandswert"])
+            if pos_wert <= 0:
+                raise GKGEingabeFehler(
+                    f"'gegenstandswert' von KV {nr} muss > 0 sein, ist {pos_wert}")
+        elif katalog_eintrag.get("wert_pflicht"):
+            raise GKGEingabeFehler(
+                f"KV {nr} GKG verlangt 'gegenstandswert' — den Wert der nicht "
+                f"gerichtlich anhängigen Gegenstände, nicht den Streitwert "
+                f"des Verfahrens")
         satz = D(katalog_eintrag["satz"])
-        betrag = rundung_cent(satz * einfachgebuehr)
+        betrag = rundung_cent(satz * eg(pos_wert))
 
         mindestbetrag = allg_mindest
         if "mindestbetrag" in katalog_eintrag:
@@ -179,12 +230,14 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
 
         pos = Position(nr=nr, bezeichnung=katalog_eintrag["bezeichnung"],
                        norm=katalog_eintrag["norm"], satz=satz, betrag=betrag,
-                       mindestbetrag_gegriffen=mindest_gegriffen, hinweise=hinweise)
+                       mindestbetrag_gegriffen=mindest_gegriffen, hinweise=hinweise,
+                       gegenstandswert=pos_wert if teilwerte else None)
         ergebnis_positionen.append(pos)
         nach_nr[nr] = pos
         schritt(katalog_eintrag["norm"],
-                f"{katalog_eintrag['bezeichnung']} (KV {nr} GKG): "
-                f"Satz {satz} x {einfachgebuehr} € = {betrag} €"
+                f"{katalog_eintrag['bezeichnung']} (KV {nr} GKG)"
+                + (f" aus Wert {pos_wert} €" if teilwerte else "")
+                + f": Satz {satz} x {eg(pos_wert)} € = {betrag} €"
                 + (" (Mindestbetrag angewendet)" if mindest_gegriffen else ""),
                 str(betrag))
 
@@ -194,6 +247,28 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
                 f"KV {a} GKG (Regelfall) und KV {b} GKG (Ermäßigung) schließen "
                 f"sich gegenseitig aus — nur eine der beiden Positionen für "
                 f"dieselbe Instanz angeben")
+
+    # --- § 36 Abs. 3 GKG entsprechend (Anmerkung zu KV 1900): Vergleichs-
+    #     gebühr und Gebühr für das Verfahren im Allgemeinen zusammen höchstens
+    #     höchster Satz x 1,0-Gebühr aus der Summe der Wertteile. Vor einer
+    #     Anrechnung gerechnet (am Ergebnis ändert die Reihenfolge nichts). ---
+    kappung: dict[str, Any] | None = None
+    for nr, pos in nach_nr.items():
+        partner_nrn = positionen_katalog[nr].get("kappung_36_abs_3_mit")
+        if not partner_nrn:
+            continue
+        partner = [nach_nr[p] for p in partner_nrn if p in nach_nr]
+        if len(partner) > 1:
+            raise GKGEingabeFehler(
+                f"KV {nr} GKG zusammen mit mehreren Gebühren für das Verfahren "
+                f"im Allgemeinen ({', '.join('KV ' + p.nr for p in partner)}) "
+                f"— nicht eindeutig, auf welchen Rechtszug sich § 36 Abs. 3 "
+                f"GKG bezieht; je Rechtszug eine eigene Anfrage stellen.")
+        if partner:
+            kappung = teilwert_kappung("§ 36 Abs. 3 GKG i. V. m. Anm. zu KV 1900",
+                                       [partner[0], pos], eg, allg_mindest)
+            schritt(kappung["norm"], kappung_beschreibung(kappung, "KV "),
+                    kappung["betrag_nach_kappung"])
 
     # --- Anrechnung der Mahnverfahrensgebühr auf die Gebühr für das
     #     Verfahren im Allgemeinen (Anmerkung Abs. 1 zu KV 1210 GKG:
@@ -221,6 +296,12 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
                 f"{', '.join('KV ' + nr for nr in fehlend)}).{zusatz}")
         mahn = nach_nr["1100"]
         verfahren = nach_nr["1210"]
+        if mahn.gegenstandswert != verfahren.gegenstandswert:
+            raise GKGEingabeFehler(
+                f"'anrechnung_1100_auf_1210' mit verschiedenen Werten (KV 1100: "
+                f"{mahn.gegenstandswert} €, KV 1210: {verfahren.gegenstandswert} "
+                f"€) — ein Teilübergang aus dem Mahnverfahren wird nicht "
+                f"gerechnet. Anwaltlich prüfen.")
         anr_betrag = mahn.betrag
         vor_anrechnung = verfahren.betrag
         # Kein Negativ-Fall: beide Positionen laufen über dieselbe
@@ -244,6 +325,11 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
             "gebuehr_1210_nach_anrechnung": str(neuer_betrag),
             "quelle": "executor",
         }
+        if kappung:
+            kappung["hinweis"] = (
+                f"Kappung vor der Anrechnung gerechnet: 'betrag_nach_kappung' "
+                f"enthält KV 1210 ohne den Abzug der KV 1100 ({anr_betrag} €). "
+                f"Das Gesamt enthält beide Abzüge.")
         schritt(anr_regel["norm"],
                 f"Übergang Mahnverfahren -> streitiges Verfahren: die Gebühr "
                 f"KV 1100 GKG ({anr_betrag} €) wird nach dem übergegangenen "
@@ -252,14 +338,18 @@ def berechne(streitwert: Any, stichtag: _dt.date, positionen: list[dict[str, Any
                 f"(Gebührensatz 3,0 unverändert, Anrechnung statt Ermäßigung).",
                 str(neuer_betrag))
 
-    gesamt = rundung_cent(sum((p.betrag for p in ergebnis_positionen), Decimal("0.00")))
-    schritt("Gesamt", "Summe aller Gerichtskosten-Positionen (nicht "
-            "umsatzsteuerpflichtig).", str(gesamt))
+    gesamt = rundung_cent(
+        sum((p.betrag for p in ergebnis_positionen), Decimal("0.00"))
+        - (D(kappung["kuerzung"]) if kappung else Decimal("0.00")))
+    schritt("Gesamt", "Summe aller Gerichtskosten-Positionen"
+            + (" abzüglich Kürzung nach § 36 Abs. 3 GKG"
+               if kappung and kappung["gekappt"] else "")
+            + " (nicht umsatzsteuerpflichtig).", str(gesamt))
 
     return GKGErgebnis(
         streitwert=wert, streitwert_eingabe=wert_eingabe,
         wert_gekappt=wert != wert_eingabe, stichtag=stichtag,
         tabellenstand=stand, einfachgebuehr=einfachgebuehr,
         positionen=ergebnis_positionen, gesamt=gesamt,
-        anrechnung=anrechnung_result, rechenkette=kette,
+        anrechnung=anrechnung_result, kappung=kappung, rechenkette=kette,
         warnungen=warnungen)

@@ -14,7 +14,14 @@ eine vollständige, nachvollziehbare Rechenkette:
 * optionale Anrechnung der Geschäftsgebühr auf die Verfahrensgebühr
   (Vorbem. 3 Abs. 4 VV RVG) — verbindet zwei Angelegenheiten,
 * Gesamtvergütung als Summe über die Angelegenheiten (gleicher Gläubiger,
-  als solche beschriftet).
+  als solche beschriftet),
+* optionale Teilwerte: `gegenstandswert` je Tatbestand (Default: der
+  Streitwert der Anfrage), 1,0-Gebühr je Wert; mehrere Positionen derselben
+  `gruppe_15_abs_3` (Katalog) in einer Angelegenheit werden nach § 15 Abs. 3
+  RVG gekappt (z. B. Nr. 3100 + 3101 beim Mehrvergleich) — eigene
+  Rechenketten-Zeile, auch wenn die Kappung nicht greift. Mit Teilwerten wird
+  jeder Wert über 30 Mio. € abgelehnt (§ 22 Abs. 2 RVG nicht je Position
+  modelliert).
 
 **Angelegenheits-Grenze:** Außergerichtliche Vertretung (Teil 2 VV RVG,
 Nr. 2300) und gerichtliches Verfahren (Teil 3 VV RVG, Nr. 3100/3104) sind
@@ -71,7 +78,9 @@ from wertgebuehr_formel import (  # noqa: E402
     D,
     Position,
     WertgebuehrFehler,
+    kappung_beschreibung,
     rundung_cent,
+    teilwert_kappung,
 )
 from rechenschritt import RechenSchritt  # noqa: E402
 from rvg.tabelle import einfachgebuehr as _einfachgebuehr_stichtag  # noqa: E402
@@ -90,6 +99,8 @@ WERT_HOECHSTGRENZE = Decimal("30000000.00")   # § 22 Abs. 2 Satz 1 RVG
 # Positionen, die NICHT als "tatbestaende"-Eintrag angegeben werden — sie
 # werden über eigene Anfrage-Flags gesteuert (auslagenpauschale, umsatzsteuer).
 _UEBER_FLAG_GESTEUERT = {"7002", "7008"}
+_TATBESTAND_FELDER = {"nr", "satz", "gegenstandswert", "erhoeht_position",
+                      "weitere_auftraggeber"}
 
 
 class RVGEingabeFehler(WertgebuehrFehler):
@@ -112,9 +123,10 @@ class AngelegenheitErgebnis:
     ust_satz: Decimal
     ust: Decimal
     gesamt: Decimal
+    kappungen: list[dict[str, Any]] = field(default_factory=list)  # § 15 Abs. 3
 
     def as_dict(self) -> dict[str, Any]:
-        return {
+        d = {
             "bezeichnung": self.bezeichnung,
             "positionen": [p.as_dict() for p in self.positionen],
             "ergebnis": {
@@ -127,6 +139,9 @@ class AngelegenheitErgebnis:
                 "quelle": "executor",
             },
         }
+        if self.kappungen:
+            d["kappungen_15_abs_3"] = self.kappungen
+        return d
 
 
 @dataclass
@@ -165,20 +180,24 @@ def _bekannte_tatbestaende(positionen_katalog: dict[str, Any]) -> str:
 
 
 def _berechne_positionen(tatbestaende: list[dict[str, Any]],
-                         einfachgebuehr: Decimal, mindestbetrag: Decimal,
+                         eg, grundwert: Decimal, teilwerte: bool,
+                         mindestbetrag: Decimal,
                          positionen_katalog: dict[str, Any],
                          angelegenheit_label: str,
                          schritt, warnungen: list[str]
-                         ) -> dict[str, Position]:
+                         ) -> tuple[dict[str, Position], list[dict[str, Any]]]:
     """Berechnet die Gebührenpositionen EINER Angelegenheit (inkl. Nr. 1008),
-    prüft die Teil-2/Teil-3-Kollision und liefert {nr: Position}
-    (Nr.-1008-Einträge unter Schlüssel "1008:<basis_nr>")."""
+    prüft die Teil-2/Teil-3-Kollision, wendet § 15 Abs. 3 RVG an und liefert
+    ({nr: Position}, [Kappungen]) (Nr.-1008-Einträge unter Schlüssel
+    "1008:<basis_nr>"). `eg(wert)` liefert die 1,0-Gebühr; ohne
+    'gegenstandswert' im Eintrag gilt `grundwert`."""
     if not isinstance(tatbestaende, list) or not tatbestaende:
         raise RVGEingabeFehler(
             f"{angelegenheit_label}: 'tatbestaende' muss eine nichtleere "
             f"Liste sein")
 
     gesehene_nrn: set[str] = set()
+    mit_eigenem_wert: set[str] = set()
     basis_positionen: dict[str, Position] = {}
     erhoehungs_eintraege: list[dict[str, Any]] = []
     teile_vertreten: dict[int, str] = {}   # vv_teil -> erste Nr. dieses Teils
@@ -190,6 +209,14 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
                 f"{angelegenheit_label}: jeder Eintrag in 'tatbestaende' muss "
                 f"ein Objekt mit 'nr' sein, nicht {eintrag!r}")
         nr = str(eintrag["nr"])
+        # Strikt wie die Blöcke im Executor: ein Tippfehler in
+        # 'gegenstandswert' fiele sonst still auf den Streitwert zurück.
+        unbekannt = sorted(set(eintrag) - _TATBESTAND_FELDER)
+        if unbekannt:
+            raise RVGEingabeFehler(
+                f"{angelegenheit_label}: unbekanntes Feld in Nr. {nr}: "
+                f"{', '.join(repr(f) for f in unbekannt)} (erlaubt: "
+                f"{', '.join(repr(f) for f in sorted(_TATBESTAND_FELDER))})")
         if nr in _UEBER_FLAG_GESTEUERT:
             raise RVGEingabeFehler(
                 f"Nr. {nr} VV RVG wird nicht als Tatbestand angegeben, sondern "
@@ -216,6 +243,15 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
         gesehene_nrn.add(nr)
 
         katalog_eintrag = positionen_katalog[nr]
+        pos_wert = grundwert
+        if "gegenstandswert" in eintrag:
+            mit_eigenem_wert.add(nr)
+            pos_wert = D(eintrag["gegenstandswert"])
+            if pos_wert <= 0:
+                raise RVGEingabeFehler(
+                    f"{angelegenheit_label}: 'gegenstandswert' von Nr. {nr} "
+                    f"muss > 0 sein, ist {pos_wert}")
+        einfachgebuehr = eg(pos_wert)
 
         # Teil-2/Teil-3-Kollision: außergerichtliche Vertretung (Teil 2 VV)
         # und gerichtliches Verfahren (Teil 3 VV) sind verschiedene
@@ -298,13 +334,19 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
         if art == "satzrahmen" and satz > D(katalog_eintrag["regelsatz"]):
             hinweise.append(katalog_eintrag["regelsatz_hinweis"])
 
+        if "report_hinweis" in katalog_eintrag:
+            hinweise.append(katalog_eintrag["report_hinweis"])
+
         pos = Position(nr=nr, bezeichnung=katalog_eintrag["bezeichnung"],
                        norm=katalog_eintrag["norm"], satz=satz, betrag=betrag,
-                       mindestbetrag_gegriffen=mindest_gegriffen, hinweise=hinweise)
+                       mindestbetrag_gegriffen=mindest_gegriffen, hinweise=hinweise,
+                       gegenstandswert=pos_wert if teilwerte else None)
         basis_positionen[nr] = pos
         schritt(katalog_eintrag["norm"],
                 f"{angelegenheit_label}: {katalog_eintrag['bezeichnung']} "
-                f"(Nr. {nr} VV RVG): Satz {satz} x {einfachgebuehr} € = {betrag} €"
+                f"(Nr. {nr} VV RVG)"
+                + (f" aus Gegenstandswert {pos_wert} €" if teilwerte else "")
+                + f": Satz {satz} x {einfachgebuehr} € = {betrag} €"
                 + (" (Mindestbetrag angewendet)" if mindest_gegriffen else ""),
                 str(betrag))
 
@@ -322,6 +364,27 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
                 f"erster Instanz oder außergerichtlich gilt Nr. 1000 (1,5) "
                 f"bzw. Nr. 1003 (1,0).")
 
+    # --- § 15 Abs. 3 RVG: Gruppen (Katalogfeld gruppe_15_abs_3) mit mehr als
+    #     einer Position in dieser Angelegenheit = verschiedene Sätze für
+    #     Teile des Gegenstands. Jede Position braucht ihren Wertteil. ---
+    gruppen: dict[str, list[str]] = {}
+    for nr in basis_positionen:
+        g = positionen_katalog[nr].get("gruppe_15_abs_3")
+        if g:
+            gruppen.setdefault(g, []).append(nr)
+    gruppen = {g: nrn for g, nrn in gruppen.items() if len(nrn) > 1}
+    for nrn in gruppen.values():
+        ohne_wert = [nr for nr in nrn if nr not in mit_eigenem_wert]
+        if ohne_wert:
+            raise RVGEingabeFehler(
+                f"{angelegenheit_label}: Nr. {', '.join(nrn)} VV RVG in "
+                f"derselben Angelegenheit — verschiedene Gebührensätze für "
+                f"Teile des Gegenstands (§ 15 Abs. 3 RVG). Jede dieser "
+                f"Positionen braucht ihren Wertteil als 'gegenstandswert' "
+                f"(fehlt bei Nr. {', '.join(ohne_wert)}); nie beide aus dem "
+                f"vollen Wert.")
+    in_gruppe = {nr for nrn in gruppen.values() for nr in nrn}
+
     # --- Erhöhungsgebühr Nr. 1008 ---
     erhoehungs_katalog = positionen_katalog["1008"]
     for eintrag in erhoehungs_eintraege:
@@ -332,6 +395,20 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
                 f"verlangt 'erhoeht_position' mit der Nr. einer in derselben "
                 f"Angelegenheit angeforderten Basis-Position (3100 oder 2300)")
         basis_nr = str(basis_nr)
+        if "gegenstandswert" in eintrag:
+            raise RVGEingabeFehler(
+                f"{angelegenheit_label}: Nr. 1008 VV RVG trägt keinen eigenen "
+                f"'gegenstandswert' — die Erhöhung folgt dem Wert der "
+                f"Basis-Position Nr. {basis_nr}")
+        if basis_nr in in_gruppe:
+            raise RVGEingabeFehler(
+                f"{angelegenheit_label}: Nr. 1008 VV RVG auf Nr. {basis_nr}, "
+                f"die nach § 15 Abs. 3 RVG mit anderen Wertteilen "
+                f"zusammengefasst wird — diese Kombination ist nicht "
+                f"modelliert (welcher Wertteil ist derselbe Gegenstand, "
+                f"Anm. Abs. 1 zu Nr. 1008?). Anwaltlich prüfen.")
+        basis_wert = basis_positionen[basis_nr].gegenstandswert or grundwert
+        einfachgebuehr = eg(basis_wert)
         schluessel = f"1008:{basis_nr}"
         if schluessel in basis_positionen:
             raise RVGEingabeFehler(
@@ -358,7 +435,8 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
                        bezeichnung=f"Erhöhung für weitere Auftraggeber "
                                    f"({weitere} weitere, bezogen auf Nr. {basis_nr})",
                        norm=erhoehungs_katalog["norm"], satz=satz, betrag=betrag,
-                       hinweise=hinweise)
+                       hinweise=hinweise,
+                       gegenstandswert=basis_wert if teilwerte else None)
         basis_positionen[schluessel] = pos
         schritt(erhoehungs_katalog["norm"],
                 f"{angelegenheit_label}: Erhöhung für {weitere} weitere "
@@ -369,7 +447,19 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
         if gekappt:
             warnungen.append(hinweise[0])
 
-    return basis_positionen
+    # --- § 15 Abs. 3 RVG: Kappung je Gruppe, immer als eigene Zeile ---
+    kappungen: list[dict[str, Any]] = []
+    for g, nrn in gruppen.items():
+        k = teilwert_kappung("§ 15 Abs. 3 RVG",
+                             [basis_positionen[nr] for nr in nrn], eg,
+                             mindestbetrag)
+        k["gebuehrenart"] = g
+        kappungen.append(k)
+        schritt("§ 15 Abs. 3 RVG",
+                f"{angelegenheit_label}: " + kappung_beschreibung(k, "Nr. "),
+                k["betrag_nach_kappung"])
+
+    return basis_positionen, kappungen
 
 
 def berechne(streitwert: Any, stichtag: _dt.date,
@@ -386,15 +476,16 @@ def berechne(streitwert: Any, stichtag: _dt.date,
     Flags)}. Jede Angelegenheit wird separat gerechnet: eigene Gebühren,
     eigene 7002-Pauschale (20 %, max. 20 €), eigene USt.
 
-    tatbestaende je Angelegenheit: Liste von {"nr": "3100", ...}:
-      - Festsatz (3100, 3104, 1000, 1003): kein 'satz' — gesetzlich fix.
+    tatbestaende je Angelegenheit: Liste von {"nr": "3100", ...}, je
+    optional mit 'gegenstandswert' (Teilwert, Default: streitwert):
+      - Festsatz (3100, 3101, 3104, 1000, 1003): kein 'satz' — gesetzlich fix.
       - Satzrahmen (2300): 'satz' (Pflicht, im Rahmen 0,5-2,5).
       - Erhöhung (1008): 'erhoeht_position' + 'weitere_auftraggeber'.
 
     anrechnung_2300_auf_3100 verbindet zwei Angelegenheiten (Vorbem. 3
     Abs. 4 VV RVG): verlangt genau eine Nr. 2300 und genau eine Nr. 3100
-    über alle Angelegenheiten hinweg; der identische Gegenstandswert ist
-    konstruktiv sichergestellt (ein Streitwert für die gesamte Anfrage).
+    über alle Angelegenheiten hinweg, beide mit demselben Gegenstandswert
+    (sonst Eingabefehler — keine Teilanrechnung).
     """
     kat = katalog or lade_katalog()
     positionen_katalog = kat["positionen"]
@@ -407,6 +498,16 @@ def berechne(streitwert: Any, stichtag: _dt.date,
     if not isinstance(angelegenheiten, list) or not angelegenheiten:
         raise RVGEingabeFehler("'angelegenheiten' muss eine nichtleere Liste sein")
 
+    # Teilwerte: mindestens ein Tatbestand trägt einen eigenen
+    # 'gegenstandswert'. Dann gibt es keinen einheitlichen Wert der
+    # Angelegenheit, auf den § 22 Abs. 2 RVG sicher gekappt werden könnte —
+    # jeder Wert über 30 Mio. € wird abgelehnt statt womöglich falsch gekappt.
+    teilwerte = any(
+        isinstance(e, dict) and "gegenstandswert" in e
+        for a in angelegenheiten if isinstance(a, dict)
+        and isinstance(a.get("tatbestaende"), list)
+        for e in a["tatbestaende"])
+
     kette: list[RechenSchritt] = []
     warnungen: list[str] = []
 
@@ -415,6 +516,16 @@ def berechne(streitwert: Any, stichtag: _dt.date,
                                    beschreibung=beschreibung, ergebnis=ergebnis))
 
     # --- § 22 Abs. 2 RVG: Wert-Höchstgrenze (Kappung, keine Ablehnung) ---
+    def _grenze_teilwerte(w: Decimal) -> None:
+        if teilwerte and w > WERT_HOECHSTGRENZE:
+            raise RVGEingabeFehler(
+                f"Wert {w} € über 30 Mio. € in einer Anfrage mit Teilwerten "
+                f"('gegenstandswert' je Tatbestand): die Höchstgrenze des "
+                f"§ 22 Abs. 2 RVG gilt je Angelegenheit, nicht je Position "
+                f"oder Wertteil — diese Konstellation ist nicht modelliert "
+                f"und wird nicht stillschweigend gekappt. Anwaltlich prüfen.")
+
+    _grenze_teilwerte(wert_eingabe)
     wert = wert_eingabe
     wert_gekappt = False
     if wert_eingabe > WERT_HOECHSTGRENZE:
@@ -463,6 +574,19 @@ def berechne(streitwert: Any, stichtag: _dt.date,
             f"1,0-Gebühr (Einfachgebühr) für Gegenstandswert {wert} €.",
             str(einfachgebuehr))
 
+    # 1,0-Gebühr je weiterem Wert (Teilwerte, § 15 Abs. 3-Gesamtwerte) —
+    # jede neue Wertstufe als eigene Rechenketten-Zeile.
+    eg_je_wert: dict[Decimal, Decimal] = {wert: einfachgebuehr}
+
+    def eg(w: Decimal) -> Decimal:
+        if w not in eg_je_wert:
+            _grenze_teilwerte(w)
+            eg_je_wert[w] = _einfachgebuehr_stichtag(w, stichtag)[0].einfachgebuehr
+            schritt("§ 13 Abs. 1 RVG",
+                    f"1,0-Gebühr (Einfachgebühr) für Gegenstandswert {w} €.",
+                    str(eg_je_wert[w]))
+        return eg_je_wert[w]
+
     auslagen_default = _pruefe_bool(auslagenpauschale, "auslagenpauschale")
     ust_default = _pruefe_bool(umsatzsteuer, "umsatzsteuer")
 
@@ -475,14 +599,14 @@ def berechne(streitwert: Any, stichtag: _dt.date,
                 f"sein, nicht {a!r}")
         bezeichnung = str(a.get("bezeichnung") or f"Angelegenheit {i + 1}")
         label = f"Angelegenheit '{bezeichnung}'"
-        positionen = _berechne_positionen(
-            a["tatbestaende"], einfachgebuehr, mindestbetrag,
+        positionen, kappungen = _berechne_positionen(
+            a["tatbestaende"], eg, wert, teilwerte, mindestbetrag,
             positionen_katalog, label, schritt, warnungen)
         a_auslagen = a.get("auslagenpauschale", auslagen_default)
         a_ust = a.get("umsatzsteuer", ust_default)
         angelegenheit_daten.append({
             "bezeichnung": bezeichnung, "label": label,
-            "positionen": positionen,
+            "positionen": positionen, "kappungen": kappungen,
             "auslagenpauschale": _pruefe_bool(a_auslagen, "auslagenpauschale"),
             "umsatzsteuer": _pruefe_bool(a_ust, "umsatzsteuer"),
         })
@@ -522,6 +646,16 @@ def berechne(streitwert: Any, stichtag: _dt.date,
                 f"(gefunden: {len(fund_2300)} x 2300, {len(fund_3100)} x 3100)")
         geschaeft_daten, geschaeft = fund_2300[0]
         verfahren_daten, verfahren = fund_3100[0]
+        anr_wert = verfahren.gegenstandswert or wert
+        if (geschaeft.gegenstandswert or wert) != anr_wert:
+            raise RVGEingabeFehler(
+                f"'anrechnung_2300_auf_3100' mit verschiedenen "
+                f"Gegenstandswerten (Nr. 2300: "
+                f"{geschaeft.gegenstandswert or wert} €, Nr. 3100: "
+                f"{anr_wert} €) — die Anrechnung nach Vorbem. 3 Abs. 4 VV RVG "
+                f"erfasst nur denselben Gegenstand; eine Teilanrechnung "
+                f"rechnet dieser Executor nicht. Anwaltlich prüfen.")
+        einfachgebuehr = eg(anr_wert)
         anr_regel = kat["anrechnung_geschaeftsgebuehr_auf_verfahrensgebuehr"]
         halbe_satz = geschaeft.satz * ANRECHNUNG_FAKTOR
         anr_satz = min(halbe_satz, ANRECHNUNG_MAX_SATZ)
@@ -561,10 +695,14 @@ def berechne(streitwert: Any, stichtag: _dt.date,
     for d in angelegenheit_daten:
         positionen = list(d["positionen"].values())
         zwischensumme = rundung_cent(
-            sum((p.betrag for p in positionen), Decimal("0.00")))
+            sum((p.betrag for p in positionen), Decimal("0.00"))
+            - sum((D(k["kuerzung"]) for k in d["kappungen"]), Decimal("0.00")))
         schritt("Zwischensumme",
                 f"{d['label']}: Summe der Gebührenpositionen (nach Anrechnung, "
-                f"sofern angefordert).", str(zwischensumme))
+                f"sofern angefordert"
+                + ("; abzüglich Kürzung nach § 15 Abs. 3 RVG"
+                   if any(k["gekappt"] for k in d["kappungen"]) else "")
+                + ").", str(zwischensumme))
 
         pauschale = Decimal("0.00")
         if d["auslagenpauschale"]:
@@ -595,7 +733,7 @@ def berechne(streitwert: Any, stichtag: _dt.date,
             bezeichnung=d["bezeichnung"], positionen=positionen,
             zwischensumme_gebuehren=zwischensumme, auslagenpauschale=pauschale,
             netto=netto, ust_satz=UST_SATZ if d["umsatzsteuer"] else Decimal("0"),
-            ust=ust, gesamt=gesamt))
+            ust=ust, gesamt=gesamt, kappungen=d["kappungen"]))
 
     gesamt_verguetung = rundung_cent(
         sum((e.gesamt for e in ergebnisse), Decimal("0.00")))

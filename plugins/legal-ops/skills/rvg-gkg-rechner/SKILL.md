@@ -83,22 +83,30 @@ keine Rechenfrage ist. Fehlt eine der beiden Positionen, ist das ein
 Eingabefehler (Exit 2). **Bewusste Grenze — kein Teilübergang:** Die
 Anrechnung setzt den vollständigen Übergang voraus. Ist nur ein Teil des
 Mahnverfahrens-Streitgegenstands übergegangen, wäre die Anrechnungsbasis der
-kleinere übergegangene Wert; eine Anfrage kennt aber nur **einen**
-`streitwert`, und das Flag verlangt KV 1100 und KV 1210 in **derselben**
-Anfrage — zwei getrennte Aufrufe können den Anrechnungsbetrag nicht
-ineinander tragen. Diesen Fall rechnet der Executor deshalb nicht; er bleibt
-händisch/anwaltlich zu ermitteln.
+kleinere übergegangene Wert; verschiedene Werte an KV 1100 und KV 1210 bei
+angeforderter Anrechnung sind ein Eingabefehler. Diesen Fall rechnet der
+Executor nicht; er bleibt händisch/anwaltlich zu ermitteln.
 
-**Ein Gegenstandswert je Anfrage — sonst zwei Aufrufe:** `streitwert` gilt
-für den gesamten Block. Haben zwei Angelegenheiten **unterschiedliche**
-Gegenstandswerte — der Alltagsfall, wenn ein Teil der Forderung vor Klage
-erledigt wird und die vorgerichtliche Tätigkeit deshalb einen anderen Wert
-hat als das gerichtliche Verfahren —, muss Claude die Anfrage in **zwei
-getrennte Executor-Aufrufe** mit je eigenem `streitwert` aufteilen und die
-beiden Gesamtbeträge selbst ausweisen; der Report summiert nur *innerhalb*
-einer Anfrage. Nie beide Werte in eine Anfrage pressen und nie einen
-Mischwert bilden. (Der GKG-Teilübergang ist damit **nicht** lösbar — siehe
-oben: dieser Fall wird gar nicht gerechnet.)
+**Teilwerte je Position:** `streitwert` ist der Default. Hat ein Tatbestand
+bzw. eine GKG-Position einen **anderen** Wert (Mehrwert eines Vergleichs,
+Terminsgebühr aus anhängigem Wert + Mehrwert, vorgerichtliche Tätigkeit über
+eine Restforderung), bekommt er ein eigenes `gegenstandswert` — nie einen
+Mischwert bilden, nie Werte in zwei Aufrufe aufteilen, die in eine
+Angelegenheit gehören. Die Rechenkette nennt je Zeile den verwendeten Wert.
+Anrechnung (2300 → 3100, KV 1100 → 1210) bei verschiedenen Werten ist ein
+Eingabefehler (keine Teilanrechnung); mit Teilwerten wird jeder Wert über
+30 Mio. € abgelehnt statt gekappt.
+
+**Vergleich mit Mehrwert** (Vergleich im Prozess erledigt auch nicht
+rechtshängige Ansprüche): **eine** Angelegenheit, kein Nr. 2300, keine
+Aufteilung. Verfahrensgebühr Nr. 3100 aus dem anhängigen Wert **plus**
+Nr. 3101 (0,8) aus dem Mehrwert; Terminsgebühr Nr. 3104 aus anhängigem Wert
++ Mehrwert; Einigungsgebühr Nr. 1003 aus dem anhängigen, Nr. 1000 aus dem
+nicht anhängigen Teil — jede Position mit `gegenstandswert`. Der Executor
+kappt Verfahrens- und Einigungsgebühren nach **§ 15 Abs. 3 RVG** und zeigt
+die Kappung als eigene Zeile, auch wenn sie nicht greift. GKG: zusätzlich
+KV 1900 (0,25) mit dem Mehrwert als `gegenstandswert`; die Grenze nach § 36
+Abs. 3 GKG (Anm. zu KV 1900) rechnet der Executor mit.
 
 **Wert-Obergrenzen (Kappung, sichtbar):** Gegenstandswerte über 30 Mio. €
 werden nach § 22 Abs. 2 Satz 1 RVG bzw. § 39 Abs. 2 GKG auf 30 Mio. €
@@ -127,16 +135,19 @@ Kurzfassung der Pflichtfelder:
   `tatbestaende`) **oder** `tatbestaende` flach (Kurzform für genau eine
   Angelegenheit). VV-RVG-Positionen aus dem
   [Katalog](../../core/calc/rvg/vv-katalog.json): `2300` (Teil 2),
-  Teil 3 nach Instanz — erste Instanz `3100`/`3104`, Berufung
+  Teil 3 nach Instanz — erste Instanz `3100`/`3101`/`3104`, Berufung
   `3200`/`3201`/`3202`, Revision `3206`–`3210` (`3208`/`3209` bei
   BGH-Vertretungszwang), `1000`, `1003`, `1004`, `1008` (Teil 1, in jeder
   Angelegenheit zulässig; `1004` nur mit Berufungs-/Revisions-Tatbestand).
 - **`gkg`**: `verfahrenseinleitungsdatum` (ISO-Datum, **nicht** dasselbe wie
   `auftragsdatum`), `streitwert`, `positionen` (Liste von KV-GKG-Positionen
   aus dem [Katalog](../../core/calc/gkg/kv-katalog.json): `1100`,
-  `1210`, `1211`, `1220`, `1222`, `1230`, `1232`); optional
+  `1210`, `1211`, `1220`, `1222`, `1230`, `1232`, `1900`); optional
   `anrechnung_1100_auf_1210` (Anrechnung der Mahnverfahrensgebühr, verlangt
   `1100` und `1210`).
+- **Teilwerte** (beide Blöcke, optional): `gegenstandswert` je Tatbestand
+  bzw. Position; Pflicht bei `3100`/`3101` bzw. `1000`/`1003`/`1004`, wenn
+  sie zusammen in einer Angelegenheit stehen, und bei KV `1900`.
 
 Beide Blöcke werden **strikt** validiert: ein nicht vorgesehener Key (z. B.
 ein Tippfehler `anrechnung_1100_1210`) führt zu Exit 2 mit Nennung des Keys —
@@ -179,6 +190,9 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
      (`mindestbetrag_gegriffen`),
    - **Kappung der Erhöhungsgebühr** (Nr. 1008) auf Gebührensatz 2,0, wenn
      eingetreten,
+   - **§ 15 Abs. 3 RVG / § 36 Abs. 3 GKG** (`kappungen_15_abs_3`,
+     `kappung_36_abs_3`): Summe der Einzelgebühren, Höchstbetrag, ob die
+     Kappung greift — und bei Teilwerten den Wert jeder Position,
    - **Anrechnung**, wenn angefordert: beim RVG beteiligte Angelegenheiten,
      Satz, Betrag, Verfahrensgebühr vor/nach Anrechnung; beim GKG
      (`gkg.anrechnung`) Anrechnungsbetrag und Gebühr KV 1210 vor/nach
@@ -190,7 +204,10 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
    Betragsrahmengebühren/PKH/Beratungshilfe, Teil-2-/Teil-3-Tatbestände in
    derselben Angelegenheit, Nr. 1008 kombiniert mit Wert über 30 Mio. €,
    Stichtag außerhalb der unterstützten Tabellenstände, unbekannter Key in
-   `rvg`/`gkg`, angeforderte GKG-Anrechnung ohne KV 1100 bzw. KV 1210) gibt Claude die
+   `rvg`/`gkg` oder in einem Tatbestand/einer Position, angeforderte
+   GKG-Anrechnung ohne KV 1100 bzw. KV 1210, Anrechnung bei verschiedenen
+   Teilwerten, § 15 Abs. 3-Gruppe ohne Teilwerte, KV 1900 ohne
+   `gegenstandswert`, Teilwert über 30 Mio. €) gibt Claude die
    Fehlermeldung wieder und korrigiert die Eingabe bzw. fragt nach — er rät
    kein Ergebnis.
 

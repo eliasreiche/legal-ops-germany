@@ -132,12 +132,56 @@ class Position:
     betrag: Decimal
     mindestbetrag_gegriffen: bool = False
     hinweise: list[str] = field(default_factory=list)
+    # Nur gesetzt, wenn die Anfrage Teilwerte ('gegenstandswert' je
+    # Position) nutzt — sonst gilt der Streitwert der Anfrage.
+    gegenstandswert: Decimal | None = None
 
     def as_dict(self) -> dict[str, Any]:
-        return {"nr": self.nr, "bezeichnung": self.bezeichnung, "norm": self.norm,
-                "satz": str(self.satz), "betrag": str(self.betrag),
-                "mindestbetrag_gegriffen": self.mindestbetrag_gegriffen,
-                "hinweise": list(self.hinweise), "quelle": "executor"}
+        d = {"nr": self.nr, "bezeichnung": self.bezeichnung, "norm": self.norm,
+             "satz": str(self.satz), "betrag": str(self.betrag),
+             "mindestbetrag_gegriffen": self.mindestbetrag_gegriffen,
+             "hinweise": list(self.hinweise), "quelle": "executor"}
+        if self.gegenstandswert is not None:
+            d["gegenstandswert"] = str(self.gegenstandswert)
+        return d
+
+
+def teilwert_kappung(norm: str, teile: list[Position], einfachgebuehr_fuer,
+                     mindestbetrag: Decimal = Decimal("0")) -> dict[str, Any]:
+    """Kappung bei verschiedenen Gebührensätzen für Teile des Gegenstands
+    (§ 15 Abs. 3 RVG / § 36 Abs. 3 GKG, gleicher Wortlaut): die Einzel-
+    gebühren der Teile, höchstens die aus dem Gesamtbetrag der Wertteile nach
+    dem höchsten Satz berechnete Gebühr. `teile` brauchen `gegenstandswert`;
+    `einfachgebuehr_fuer(wert)` liefert die 1,0-Gebühr. Report-Dict (Strings),
+    `kuerzung` ist 0.00, wenn die Kappung nicht greift."""
+    roh = rundung_cent(sum((p.betrag for p in teile), Decimal("0")))
+    wertsumme = sum((p.gegenstandswert for p in teile), Decimal("0"))
+    hoechster_satz = max(p.satz for p in teile)
+    einfach = einfachgebuehr_fuer(wertsumme)
+    grenze = max(rundung_cent(hoechster_satz * einfach), mindestbetrag)
+    nach = min(roh, grenze)
+    return {"norm": norm, "positionen": [p.nr for p in teile],
+            "summe_einzelgebuehren": str(roh),
+            "gesamtwert_wertteile": str(wertsumme),
+            "hoechster_satz": str(hoechster_satz),
+            "einfachgebuehr_gesamtwert": str(einfach),
+            "hoechstbetrag": str(grenze), "gekappt": roh > grenze,
+            "kuerzung": str(roh - nach), "betrag_nach_kappung": str(nach),
+            "quelle": "executor"}
+
+
+def kappung_beschreibung(k: dict[str, Any], nr_praefix: str) -> str:
+    """Rechenketten-Text zu `teilwert_kappung` — auch wenn sie nicht greift."""
+    return (f"Verschiedene Gebührensätze für Teile des Gegenstands "
+            f"({', '.join(nr_praefix + nr for nr in k['positionen'])}): Summe "
+            f"der Einzelgebühren {k['summe_einzelgebuehren']} €; Höchstbetrag "
+            f"= Satz {k['hoechster_satz']} x 1,0-Gebühr aus dem Gesamtbetrag "
+            f"der Wertteile {k['gesamtwert_wertteile']} € "
+            f"({k['einfachgebuehr_gesamtwert']} €) = {k['hoechstbetrag']} € — "
+            + (f"Kappung greift, Kürzung um {k['kuerzung']} € auf "
+               f"{k['betrag_nach_kappung']} €." if k["gekappt"] else
+               "Kappung greift nicht, es bleibt bei der Summe der "
+               "Einzelgebühren."))
 
 
 @dataclass
