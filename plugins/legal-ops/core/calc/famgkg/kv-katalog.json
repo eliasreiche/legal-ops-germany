@@ -1,0 +1,198 @@
+{
+  "bezeichnung": "Gebührentatbestands-Katalog Kostenverzeichnis (Anlage 1 FamGKG) — Auswahl für Kostenvoranschläge einer Familienrechtskanzlei",
+  "quelle_hinweis": "Jeder Satz web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung, Stand KostBRÄG 2025) und gegen Wayback-Machine-Schnappschüsse derselben Seite vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021): die Sätze aller Positionen dieses Katalogs sind in beiden Ständen identisch, deshalb nicht versioniert. Fundstelle (Teil/Hauptabschnitt/Abschnitt/Unterabschnitt) je Positions-Eintrag. Nicht im Katalog (Exit 2): Rechtsbeschwerde und Sprungrechtsbeschwerde (KV 1130 ff., 1213 ff., 1225 ff., 1316 ff., 1325 ff.), vereinfachtes Verfahren über den Unterhalt Minderjähriger (KV 1210–1216), Vormundschaft/Pflegschaft (KV 1311–1313), Beschwerden im einstweiligen Rechtsschutz (KV 1411 ff., 1422 ff.), Festgebühren ohne Wertbezug, Vollstreckung, Verfahrenskostenhilfe und Auslagen (Teil 2).",
+  "positionen": {
+    "1110": {
+      "bezeichnung": "Ehesache einschließlich aller Folgesachen, erster Rechtszug — Verfahren im Allgemeinen",
+      "norm": "KV 1110 FamGKG",
+      "satz": "2.0",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 1 Abschnitt 1, KV 1110: 'Verfahren im Allgemeinen' 2,0."
+    },
+    "1111": {
+      "bezeichnung": "Ermäßigung von KV 1110 bei Beendigung des Verfahrens hinsichtlich der Ehesache oder einer Folgesache (u. a. Antragsrücknahme vor Schluss der mündlichen Verhandlung, Anerkenntnis-/Verzichtsentscheidung, gerichtlicher Vergleich, Erledigung ohne Kostenentscheidung)",
+      "norm": "KV 1111 FamGKG",
+      "satz": "0.5",
+      "ermaessigt_position": "1110",
+      "hinweis": "Schließt sich mit KV 1110 gegenseitig aus — der Executor lehnt die gleichzeitige Angabe ab. Die nur teilweise Ermäßigung im Verbund (Anm. Abs. 1 zu KV 1111: nur die beendete Ehesache/Folgesache) ist nicht modelliert.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 1 Abschnitt 1, KV 1111: 'Die Gebühr 1110 ermäßigt sich auf' 0,5; Anm. Abs. 1: Wird im Verbund nicht das gesamte Verfahren beendet, ist § 44 FamGKG anzuwenden und die Gebühr nur insoweit zu ermäßigen."
+    },
+    "1120": {
+      "bezeichnung": "Ehesache einschließlich aller Folgesachen, Beschwerde gegen die Endentscheidung — Verfahren im Allgemeinen",
+      "norm": "KV 1120 FamGKG",
+      "satz": "3.0",
+      "hinweis": "Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 1 Abschnitt 2, KV 1120: 'Verfahren im Allgemeinen' 3,0 (Vorbem. 1.1.2: auch bei Beschränkung auf eine Folgesache)."
+    },
+    "1121": {
+      "bezeichnung": "Ermäßigung von KV 1120 bei Beendigung des gesamten Verfahrens durch Zurücknahme der Beschwerde oder des Antrags vor Eingang der Beschwerdebegründung",
+      "norm": "KV 1121 FamGKG",
+      "satz": "0.5",
+      "ermaessigt_position": "1120",
+      "hinweis": "Schließt sich mit KV 1120 und KV 1122 gegenseitig aus. Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 1 Abschnitt 2, KV 1121: 'Die Gebühr 1120 ermäßigt sich auf' 0,5."
+    },
+    "1122": {
+      "bezeichnung": "Ermäßigung von KV 1120 bei Beendigung des Verfahrens hinsichtlich der Ehesache oder einer Folgesache, wenn nicht KV 1121 erfüllt ist (u. a. Rücknahme vor Schluss der mündlichen Verhandlung, Anerkenntnis-/Verzichtsentscheidung, Vergleich)",
+      "norm": "KV 1122 FamGKG",
+      "satz": "1.0",
+      "ermaessigt_position": "1120",
+      "hinweis": "Schließt sich mit KV 1120 und KV 1121 gegenseitig aus. Die nur teilweise Ermäßigung im Verbund (Anm. Abs. 1 zu KV 1122) ist nicht modelliert. Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 1 Abschnitt 2, KV 1122: 'Die Gebühr 1120 ermäßigt sich auf' 1,0."
+    },
+    "1220": {
+      "bezeichnung": "Selbständige Familienstreitsache (u. a. Unterhalts-, Güterrechts- und sonstige Familienstreitsachen), erster Rechtszug — Verfahren im Allgemeinen",
+      "norm": "KV 1220 FamGKG",
+      "satz": "3.0",
+      "hinweis": "Nicht für das vereinfachte Verfahren über den Unterhalt Minderjähriger (KV 1210 ff., nicht im Katalog). Die Anrechnung einer vorausgegangenen Mahnverfahrensgebühr KV 1100 GKG (Anm. zu KV 1220) ist nicht modelliert.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 2 Abschnitt 2 Unterabschnitt 1, KV 1220: 'Verfahren im Allgemeinen' 3,0."
+    },
+    "1221": {
+      "bezeichnung": "Ermäßigung von KV 1220 bei Beendigung des gesamten Verfahrens (u. a. Antragsrücknahme, Anerkenntnis-/Verzichtsentscheidung, gerichtlicher Vergleich, Erledigung ohne Kostenentscheidung)",
+      "norm": "KV 1221 FamGKG",
+      "satz": "1.0",
+      "ermaessigt_position": "1220",
+      "hinweis": "Schließt sich mit KV 1220 gegenseitig aus.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 2 Abschnitt 2 Unterabschnitt 1, KV 1221: 'Die Gebühr 1220 ermäßigt sich auf' 1,0."
+    },
+    "1222": {
+      "bezeichnung": "Selbständige Familienstreitsache, Beschwerde gegen die Endentscheidung — Verfahren im Allgemeinen",
+      "norm": "KV 1222 FamGKG",
+      "satz": "4.0",
+      "hinweis": "Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 2 Abschnitt 2 Unterabschnitt 2, KV 1222: 'Verfahren im Allgemeinen' 4,0."
+    },
+    "1223": {
+      "bezeichnung": "Ermäßigung von KV 1222 bei Beendigung des gesamten Verfahrens durch Zurücknahme der Beschwerde oder des Antrags vor Eingang der Beschwerdebegründung",
+      "norm": "KV 1223 FamGKG",
+      "satz": "1.0",
+      "ermaessigt_position": "1222",
+      "hinweis": "Schließt sich mit KV 1222 und KV 1224 gegenseitig aus. Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 2 Abschnitt 2 Unterabschnitt 2, KV 1223: 'Die Gebühr 1222 ermäßigt sich auf' 1,0."
+    },
+    "1224": {
+      "bezeichnung": "Ermäßigung von KV 1222 bei Beendigung des gesamten Verfahrens, wenn nicht KV 1223 erfüllt ist (u. a. Rücknahme vor Schluss der mündlichen Verhandlung, Anerkenntnis-/Verzichtsentscheidung, Vergleich)",
+      "norm": "KV 1224 FamGKG",
+      "satz": "2.0",
+      "ermaessigt_position": "1222",
+      "hinweis": "Schließt sich mit KV 1222 und KV 1223 gegenseitig aus. Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 2 Abschnitt 2 Unterabschnitt 2, KV 1224: 'Die Gebühr 1222 ermäßigt sich auf' 2,0."
+    },
+    "1310": {
+      "bezeichnung": "Selbständige Kindschaftssache, Verfahren vor dem Familiengericht — Verfahren im Allgemeinen",
+      "norm": "KV 1310 FamGKG",
+      "satz": "0.5",
+      "hinweis": "Für KV 1310 sieht das Kostenverzeichnis keinen Ermäßigungstatbestand vor. Die Gebühr entsteht u. a. nicht für Verfahren im Rahmen einer Vormundschaft oder Pflegschaft (Anm. Abs. 1 zu KV 1310); Vormundschaft/Pflegschaft (KV 1311–1313) ist nicht im Katalog.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 3 Abschnitt 1 Unterabschnitt 1, KV 1310: 'Verfahren im Allgemeinen' 0,5."
+    },
+    "1314": {
+      "bezeichnung": "Selbständige Kindschaftssache, Beschwerde gegen die Endentscheidung — Verfahren im Allgemeinen",
+      "norm": "KV 1314 FamGKG",
+      "satz": "1.0",
+      "hinweis": "Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 3 Abschnitt 1 Unterabschnitt 2, KV 1314: 'Verfahren im Allgemeinen' 1,0."
+    },
+    "1315": {
+      "bezeichnung": "Ermäßigung von KV 1314 bei Beendigung des gesamten Verfahrens ohne Endentscheidung",
+      "norm": "KV 1315 FamGKG",
+      "satz": "0.5",
+      "ermaessigt_position": "1314",
+      "hinweis": "Schließt sich mit KV 1314 gegenseitig aus. Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 3 Abschnitt 1 Unterabschnitt 2, KV 1315: 'Die Gebühr 1314 ermäßigt sich auf' 0,5."
+    },
+    "1320": {
+      "bezeichnung": "Übrige selbständige Familiensache der freiwilligen Gerichtsbarkeit (u. a. Abstammungs-, Ehewohnungs- und Haushalts-, Gewaltschutz-, Versorgungsausgleichssachen; Unterhalts-/Güterrechts-/sonstige Familiensachen, die nicht Familienstreitsachen sind), erster Rechtszug — Verfahren im Allgemeinen",
+      "norm": "KV 1320 FamGKG",
+      "satz": "2.0",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 3 Abschnitt 2 Unterabschnitt 1, KV 1320: 'Verfahren im Allgemeinen' 2,0 (Anwendungsbereich: Vorbem. 1.3.2 Abs. 1)."
+    },
+    "1321": {
+      "bezeichnung": "Ermäßigung von KV 1320 bei Beendigung des gesamten Verfahrens ohne Endentscheidung, durch Antragsrücknahme vor Übermittlung der Endentscheidung an die Geschäftsstelle oder bei Endentscheidung ohne Begründung",
+      "norm": "KV 1321 FamGKG",
+      "satz": "0.5",
+      "ermaessigt_position": "1320",
+      "hinweis": "Schließt sich mit KV 1320 gegenseitig aus.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 3 Abschnitt 2 Unterabschnitt 1, KV 1321: 'Die Gebühr 1320 ermäßigt sich auf' 0,5."
+    },
+    "1322": {
+      "bezeichnung": "Übrige selbständige Familiensache der freiwilligen Gerichtsbarkeit, Beschwerde gegen die Endentscheidung — Verfahren im Allgemeinen",
+      "norm": "KV 1322 FamGKG",
+      "satz": "3.0",
+      "hinweis": "Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 3 Abschnitt 2 Unterabschnitt 2, KV 1322: 'Verfahren im Allgemeinen' 3,0."
+    },
+    "1323": {
+      "bezeichnung": "Ermäßigung von KV 1322 bei Beendigung des gesamten Verfahrens durch Zurücknahme der Beschwerde oder des Antrags vor Eingang der Beschwerdebegründung",
+      "norm": "KV 1323 FamGKG",
+      "satz": "0.5",
+      "ermaessigt_position": "1322",
+      "hinweis": "Schließt sich mit KV 1322 und KV 1324 gegenseitig aus. Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 3 Abschnitt 2 Unterabschnitt 2, KV 1323: 'Die Gebühr 1322 ermäßigt sich auf' 0,5."
+    },
+    "1324": {
+      "bezeichnung": "Ermäßigung von KV 1322 bei Beendigung des gesamten Verfahrens ohne Endentscheidung, wenn nicht KV 1323 erfüllt ist",
+      "norm": "KV 1324 FamGKG",
+      "satz": "1.0",
+      "ermaessigt_position": "1322",
+      "hinweis": "Schließt sich mit KV 1322 und KV 1323 gegenseitig aus. Stichtag für den Tabellenstand ist bei einem Rechtsmittel dessen Einlegung (§ 63 Abs. 1 Satz 2 FamGKG) — liegt sie in einem anderen Tabellenstand als die erste Instanz, Beschwerde in einer eigenen Anfrage mit dem Einlegungsdatum rechnen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 3 Abschnitt 2 Unterabschnitt 2, KV 1324: 'Die Gebühr 1322 ermäßigt sich auf' 1,0."
+    },
+    "1410": {
+      "bezeichnung": "Einstweilige Anordnung in Kindschaftssachen, erster Rechtszug — Verfahren im Allgemeinen",
+      "norm": "KV 1410 FamGKG",
+      "satz": "0.3",
+      "hinweis": "Wert der einstweiligen Anordnung: § 41 FamGKG (in der Regel ermäßigt, Ausgangspunkt die Hälfte des Hauptsachewerts) ist eine Regel mit Ermessen und wird nicht ermittelt — den Wert als 'verfahrenswert' eingeben. Für KV 1410 sieht das Kostenverzeichnis keinen Ermäßigungstatbestand vor.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 4 Abschnitt 1 Unterabschnitt 1, KV 1410: 'Verfahren im Allgemeinen' 0,3."
+    },
+    "1420": {
+      "bezeichnung": "Einstweilige Anordnung in den übrigen Familiensachen (Familienstreitsachen und Verfahren nach Vorbem. 1.3.2), erster Rechtszug — Verfahren im Allgemeinen",
+      "norm": "KV 1420 FamGKG",
+      "satz": "1.5",
+      "hinweis": "Wert der einstweiligen Anordnung: § 41 FamGKG (in der Regel ermäßigt, Ausgangspunkt die Hälfte des Hauptsachewerts) ist eine Regel mit Ermessen und wird nicht ermittelt — den Wert als 'verfahrenswert' eingeben.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 4 Abschnitt 2 Unterabschnitt 1, KV 1420: 'Verfahren im Allgemeinen' 1,5."
+    },
+    "1421": {
+      "bezeichnung": "Ermäßigung von KV 1420 bei Beendigung des gesamten Verfahrens ohne Endentscheidung",
+      "norm": "KV 1421 FamGKG",
+      "satz": "0.5",
+      "ermaessigt_position": "1420",
+      "hinweis": "Schließt sich mit KV 1420 gegenseitig aus.",
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 4 Abschnitt 2 Unterabschnitt 1, KV 1421: 'Die Gebühr 1420 ermäßigt sich auf' 0,5."
+    },
+    "1500": {
+      "bezeichnung": "Abschluss eines gerichtlichen Vergleichs, soweit ein Vergleich über nicht gerichtlich anhängige Gegenstände geschlossen wird",
+      "norm": "KV 1500 FamGKG",
+      "satz": "0.25",
+      "hinweis": "Wert = Wert der nicht gerichtlich anhängigen Gegenstände ('gegenstandswert' Pflicht). Im Verhältnis zur Gebühr für das Verfahren im Allgemeinen gilt § 30 Abs. 3 FamGKG entsprechend (Anm. zu KV 1500) — der Executor begrenzt die Summe und weist das als eigene Rechenketten-Zeile aus. Die Gebühr entsteht nicht im Verfahren über die Verfahrenskostenhilfe.",
+      "wert_pflicht": true,
+      "kappung_30_abs_3_mit": [
+        "1110",
+        "1111",
+        "1120",
+        "1121",
+        "1122",
+        "1220",
+        "1221",
+        "1222",
+        "1223",
+        "1224",
+        "1310",
+        "1314",
+        "1315",
+        "1320",
+        "1321",
+        "1322",
+        "1323",
+        "1324",
+        "1410",
+        "1420",
+        "1421"
+      ],
+      "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 5 (Besondere Gebühren), KV 1500: 'Abschluss eines gerichtlichen Vergleichs: Soweit ein Vergleich über nicht gerichtlich anhängige Gegenstände geschlossen wird' 0,25; Anmerkung: 'Die Gebühr entsteht nicht im Verfahren über die Verfahrenskostenhilfe. Im Verhältnis zur Gebühr für das Verfahren im Allgemeinen ist § 30 Abs. 3 FamGKG entsprechend anzuwenden.' § 30 Abs. 3 FamGKG (gesetze-im-internet.de/famgkg/__30.html): 'Sind für Teile des Gegenstands verschiedene Gebührensätze anzuwenden, sind die Gebühren für die Teile gesondert zu berechnen; die aus dem Gesamtbetrag der Wertteile nach dem höchsten Gebührensatz berechnete Gebühr darf jedoch nicht überschritten werden.'"
+    }
+  },
+  "hinweis_allgemeine_mindestgebuehr": {
+    "norm": "§ 28 Abs. 2 Satz 1 FamGKG",
+    "betrag": "15.00",
+    "regel": "Gilt für jede Wertgebühr dieses Katalogs ('Der Mindestbetrag einer Gebühr ist 15 Euro.'), in beiden Tabellenständen; web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/__28.html und den Wayback-Schnappschuss vom 2024-05-28."
+  }
+}

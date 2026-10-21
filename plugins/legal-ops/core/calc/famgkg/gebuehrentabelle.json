@@ -1,0 +1,78 @@
+{
+  "bezeichnung": "Wertgebührentabelle § 28 Abs. 1 FamGKG (Anlage 2 FamGKG)",
+  "hinweis": "Grundbetrag + Stufenzuschläge, wörtlich aus § 28 Abs. 1 FamGKG übernommen (nicht aus Anlage 2 abgetippt) — die Formel reproduziert Anlage 2 FamGKG exakt, gegen die Stützpunkte in `pruefpunkte_anlage_2` gegengetestet. Geprüft am 2026-10-22: Grundbetrag, Stufen und Zuschläge sind in beiden Ständen identisch mit § 34 Abs. 1 GKG (core/calc/gkg/gebuehrentabelle.json) — trotzdem eigene Datei, weil es eine eigene Norm mit eigener Änderungshistorie ist.",
+  "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/__28.html und /anlage_2.html (aktuelle Fassung) sowie Wayback-Machine-Schnappschüsse für die Vorfassung (__28.html vom 2024-05-28, anlage_2.html vom 2024-03-06); Geltungszeiträume gegengeprüft gegen den Fassungsvergleich auf buzer.de/28_FamGKG.htm und buzer.de/Anlage_2_FamGKG.htm (mWv-Daten 01.01.2021 = Art. 2 KostRÄG 2021 und 01.06.2025 = Art. 6 KostBRÄG 2025).",
+  "verfahrenswert_hoechstgrenze": "30000000.00",
+  "verfahrenswert_hoechstgrenze_norm": "§ 33 Abs. 2 FamGKG",
+  "verfahrenswert_hoechstgrenze_hinweis": "Kappungsgrenze, keine Zulässigkeitsgrenze: Verfahrenswerte über 30 Mio. € werden für die Gebührenberechnung auf 30 Mio. € gekappt und die Kappung wird in Rechenkette und Warnungen ausgewiesen (§ 33 Abs. 2 FamGKG: 'Der Verfahrenswert beträgt höchstens 30 Millionen Euro, soweit kein niedrigerer Höchstwert bestimmt ist.'). Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/__33.html; Wortlaut identisch im Wayback-Schnappschuss vom 2025-01-22.",
+  "staende": [
+    {
+      "id": "kostraeg_2021",
+      "bezeichnung": "KostRÄG 2021 (Kostenrechtsänderungsgesetz 2021)",
+      "gueltig_ab": "2021-01-01",
+      "gueltig_bis": "2025-05-31",
+      "fundstelle": "Art. 2 KostRÄG 2021, G. v. 21.12.2020, BGBl. I S. 3229; Anlage 2 FamGKG in dieser Fassung: BGBl. I 2020, 3235",
+      "grundbetrag": "38.00",
+      "grundbetrag_bis_wert": "500.00",
+      "stufen": [
+        {"bis_wert": "2000.00", "schritt": "500.00", "zuschlag": "20.00"},
+        {"bis_wert": "10000.00", "schritt": "1000.00", "zuschlag": "21.00"},
+        {"bis_wert": "25000.00", "schritt": "3000.00", "zuschlag": "29.00"},
+        {"bis_wert": "50000.00", "schritt": "5000.00", "zuschlag": "38.00"},
+        {"bis_wert": "200000.00", "schritt": "15000.00", "zuschlag": "132.00"},
+        {"bis_wert": "500000.00", "schritt": "30000.00", "zuschlag": "198.00"}
+      ],
+      "ueber_hoechstwert": {"schritt": "50000.00", "zuschlag": "198.00"},
+      "mindestbetrag": "15.00",
+      "rundungsregel_hinweis": "§ 28 Abs. 2 FamGKG lautete in dieser Fassung nur 'Der Mindestbetrag einer Gebühr ist 15 Euro.' (Wayback 2024-05-28) — die ausdrückliche Rundungsregel kam erst mit KostBRÄG 2025. Der Executor rechnet einheitlich kaufmännisch (ROUND_HALF_UP), Haus-Konvention wie beim GKG (CONVENTIONS.md), inhaltlich deckungsgleich mit der späteren Gesetzesformulierung.",
+      "pruefpunkte_anlage_2": {
+        "hinweis": "Vollständige Anlage 2 FamGKG in der Fassung KostRÄG 2021 (Fundstelle BGBl. I 2020, 3235), gelesen aus dem Wayback-Machine-Schnappschuss vom 2024-03-06 von gesetze-im-internet.de/famgkg/anlage_2.html.",
+        "500.00": "38.00", "1000.00": "58.00", "1500.00": "78.00", "2000.00": "98.00",
+        "3000.00": "119.00", "4000.00": "140.00", "5000.00": "161.00", "6000.00": "182.00",
+        "7000.00": "203.00", "8000.00": "224.00", "9000.00": "245.00", "10000.00": "266.00",
+        "13000.00": "295.00", "16000.00": "324.00", "19000.00": "353.00", "22000.00": "382.00",
+        "25000.00": "411.00", "30000.00": "449.00", "35000.00": "487.00", "40000.00": "525.00",
+        "45000.00": "563.00", "50000.00": "601.00", "65000.00": "733.00", "80000.00": "865.00",
+        "95000.00": "997.00", "110000.00": "1129.00", "125000.00": "1261.00", "140000.00": "1393.00",
+        "155000.00": "1525.00", "170000.00": "1657.00", "185000.00": "1789.00", "200000.00": "1921.00",
+        "230000.00": "2119.00", "260000.00": "2317.00", "290000.00": "2515.00", "320000.00": "2713.00",
+        "350000.00": "2911.00", "380000.00": "3109.00", "410000.00": "3307.00", "440000.00": "3505.00",
+        "470000.00": "3703.00", "500000.00": "3901.00"
+      }
+    },
+    {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 6 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109; Anlage 2 FamGKG Fundstelle BGBl. 2025 I Nr. 109, S. 14",
+      "grundbetrag": "40.00",
+      "grundbetrag_bis_wert": "500.00",
+      "stufen": [
+        {"bis_wert": "2000.00", "schritt": "500.00", "zuschlag": "21.00"},
+        {"bis_wert": "10000.00", "schritt": "1000.00", "zuschlag": "22.50"},
+        {"bis_wert": "25000.00", "schritt": "3000.00", "zuschlag": "30.50"},
+        {"bis_wert": "50000.00", "schritt": "5000.00", "zuschlag": "40.50"},
+        {"bis_wert": "200000.00", "schritt": "15000.00", "zuschlag": "140.00"},
+        {"bis_wert": "500000.00", "schritt": "30000.00", "zuschlag": "210.00"}
+      ],
+      "ueber_hoechstwert": {"schritt": "50000.00", "zuschlag": "210.00"},
+      "mindestbetrag": "15.00",
+      "rundungsregel_hinweis": "§ 28 Abs. 2 Satz 2 FamGKG (seit KostBRÄG 2025): 'Gebühren werden auf den nächstliegenden Cent auf- oder abgerundet; 0,5 Cent werden aufgerundet.' — entspricht ROUND_HALF_UP.",
+      "pruefpunkte_anlage_2": {
+        "hinweis": "Vollständige Anlage 2 FamGKG, live gelesen am 2026-10-22 von gesetze-im-internet.de/famgkg/anlage_2.html (Fundstelle BGBl. 2025 I Nr. 109, S. 14).",
+        "500.00": "40.00", "1000.00": "61.00", "1500.00": "82.00", "2000.00": "103.00",
+        "3000.00": "125.50", "4000.00": "148.00", "5000.00": "170.50", "6000.00": "193.00",
+        "7000.00": "215.50", "8000.00": "238.00", "9000.00": "260.50", "10000.00": "283.00",
+        "13000.00": "313.50", "16000.00": "344.00", "19000.00": "374.50", "22000.00": "405.00",
+        "25000.00": "435.50", "30000.00": "476.00", "35000.00": "516.50", "40000.00": "557.00",
+        "45000.00": "597.50", "50000.00": "638.00", "65000.00": "778.00", "80000.00": "918.00",
+        "95000.00": "1058.00", "110000.00": "1198.00", "125000.00": "1338.00", "140000.00": "1478.00",
+        "155000.00": "1618.00", "170000.00": "1758.00", "185000.00": "1898.00", "200000.00": "2038.00",
+        "230000.00": "2248.00", "260000.00": "2458.00", "290000.00": "2668.00", "320000.00": "2878.00",
+        "350000.00": "3088.00", "380000.00": "3298.00", "410000.00": "3508.00", "440000.00": "3718.00",
+        "470000.00": "3928.00", "500000.00": "4138.00"
+      }
+    }
+  ]
+}

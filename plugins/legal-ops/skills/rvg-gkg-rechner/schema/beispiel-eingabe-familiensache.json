@@ -1,0 +1,32 @@
+{
+  "rvg": {
+    "auftragsdatum": "2026-03-01",
+    "streitwert": "famgkg.verfahrenswert",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Scheidungsverbund erster Instanz",
+        "tatbestaende": [
+          {"nr": "3100"},
+          {"nr": "3104"}
+        ]
+      }
+    ],
+    "auslagenpauschale": true,
+    "umsatzsteuer": true
+  },
+  "famgkg": {
+    "verfahrenseinleitungsdatum": "2026-03-01",
+    "verfahrenswert_ermittlung": {
+      "ehesache": {
+        "nettoeinkommen_monatlich": ["2800.00", "1700.00"]
+      },
+      "folgesachen": [
+        {"art": "versorgungsausgleich", "anzahl_anrechte": 3},
+        {"art": "kindesunterhalt", "monatsbetrag": "480.00"}
+      ]
+    },
+    "positionen": [
+      {"nr": "1110"}
+    ]
+  }
+}

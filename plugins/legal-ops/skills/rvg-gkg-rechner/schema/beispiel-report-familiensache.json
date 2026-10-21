@@ -1,0 +1,337 @@
+{
+  "meta": {
+    "erzeugt_von": "core/calc/rvg/executor.py",
+    "quelle_datei": "beispiel-eingabe-familiensache.json",
+    "deterministik": "Alle Geldbeträge in diesem Report sind Executor-Ergebnisse (P3), nicht modellgeneriert.",
+    "hinweis_getrennte_kostenarten": "RVG-Anwaltsvergütung und GKG- bzw. FamGKG-Gerichtskosten werden absichtlich NICHT zu einer Gesamtsumme addiert — unterschiedliche Forderungen mit unterschiedlichen Kostenschuldnern."
+  },
+  "rvg": {
+    "eingabe": {
+      "auftragsdatum": "2026-03-01",
+      "streitwert": "23310.00",
+      "streitwert_herkunft": "famgkg.verfahrenswert",
+      "angelegenheiten": [
+        {
+          "bezeichnung": "Scheidungsverbund erster Instanz",
+          "tatbestaende": [
+            {
+              "nr": "3100"
+            },
+            {
+              "nr": "3104"
+            }
+          ]
+        }
+      ],
+      "anrechnung_2300_auf_3100": false,
+      "auslagenpauschale": true,
+      "umsatzsteuer": true
+    },
+    "tabellenstand": {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 11 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109, 139; Anlage 2 RVG Fundstelle BGBl. 2025 I Nr. 109, S. 30"
+    },
+    "wertkappung": null,
+    "einfachgebuehr": "927.00",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Scheidungsverbund erster Instanz",
+        "positionen": [
+          {
+            "nr": "3100",
+            "bezeichnung": "Verfahrensgebühr (erster Rechtszug)",
+            "norm": "Nr. 3100 VV RVG",
+            "satz": "1.3",
+            "betrag": "1205.10",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [],
+            "quelle": "executor"
+          },
+          {
+            "nr": "3104",
+            "bezeichnung": "Terminsgebühr (erster Rechtszug)",
+            "norm": "Nr. 3104 VV RVG",
+            "satz": "1.2",
+            "betrag": "1112.40",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [],
+            "quelle": "executor"
+          }
+        ],
+        "ergebnis": {
+          "zwischensumme_gebuehren": "2317.50",
+          "auslagenpauschale": "20.00",
+          "netto": "2337.50",
+          "ust_satz": "0.19",
+          "ust": "444.13",
+          "gesamt": "2781.63",
+          "quelle": "executor"
+        }
+      }
+    ],
+    "anrechnung": null,
+    "rechenkette": [
+      {
+        "schritt": 1,
+        "norm": "§ 23 Abs. 1 Satz 1 RVG",
+        "beschreibung": "Gegenstandswert aus 'famgkg.verfahrenswert' übernommen (im gerichtlichen Verfahren bestimmt sich der Gegenstandswert nach den für die Gerichtsgebühren geltenden Wertvorschriften, hier FamGKG): 23310.00 €.",
+        "ergebnis": "23310.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 2,
+        "norm": "§ 60 Abs. 1 RVG",
+        "beschreibung": "Stichtag (Auftragserteilung) 2026-03-01 -> Tabellenstand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)' (gültig 2025-06-01 bis heute).",
+        "ergebnis": "kostbraeg_2025",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 3,
+        "norm": "§ 13 Abs. 1 RVG",
+        "beschreibung": "1,0-Gebühr (Einfachgebühr) für Gegenstandswert 23310.00 €.",
+        "ergebnis": "927.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 4,
+        "norm": "Nr. 3100 VV RVG",
+        "beschreibung": "Angelegenheit 'Scheidungsverbund erster Instanz': Verfahrensgebühr (erster Rechtszug) (Nr. 3100 VV RVG): Satz 1.3 x 927.00 € = 1205.10 €",
+        "ergebnis": "1205.10",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 5,
+        "norm": "Nr. 3104 VV RVG",
+        "beschreibung": "Angelegenheit 'Scheidungsverbund erster Instanz': Terminsgebühr (erster Rechtszug) (Nr. 3104 VV RVG): Satz 1.2 x 927.00 € = 1112.40 €",
+        "ergebnis": "1112.40",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 6,
+        "norm": "Zwischensumme",
+        "beschreibung": "Angelegenheit 'Scheidungsverbund erster Instanz': Summe der Gebührenpositionen (nach Anrechnung, sofern angefordert).",
+        "ergebnis": "2317.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 7,
+        "norm": "Nr. 7002 VV RVG",
+        "beschreibung": "Angelegenheit 'Scheidungsverbund erster Instanz': Auslagenpauschale — 20 % von 2317.50 € = 463.50 €, gedeckelt auf höchstens 20.00 € (je Angelegenheit).",
+        "ergebnis": "20.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 8,
+        "norm": "Netto",
+        "beschreibung": "Angelegenheit 'Scheidungsverbund erster Instanz': Zwischensumme zzgl. Auslagenpauschale.",
+        "ergebnis": "2337.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 9,
+        "norm": "Nr. 7008 VV RVG",
+        "beschreibung": "Angelegenheit 'Scheidungsverbund erster Instanz': Umsatzsteuer — 19 % von 2337.50 € = 444.13 €.",
+        "ergebnis": "444.13",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 10,
+        "norm": "Gesamt (Angelegenheit)",
+        "beschreibung": "Angelegenheit 'Scheidungsverbund erster Instanz': Netto zzgl. Umsatzsteuer.",
+        "ergebnis": "2781.63",
+        "quelle": "executor"
+      }
+    ],
+    "ergebnis": {
+      "gesamt_verguetung": "2781.63",
+      "gesamt_hinweis": "Summe über alle Angelegenheiten (gleicher Gläubiger) — die Angelegenheiten bleiben gebührenrechtlich getrennt (je eigene Auslagenpauschale Nr. 7002 und eigene USt-Basis Nr. 7008).",
+      "quelle": "executor"
+    },
+    "warnungen": []
+  },
+  "famgkg": {
+    "eingabe": {
+      "verfahrenseinleitungsdatum": "2026-03-01",
+      "verfahrenswert": "23310.0000",
+      "verfahrenswert_herkunft": "verfahrenswert_ermittlung",
+      "positionen": [
+        {
+          "nr": "1110"
+        }
+      ]
+    },
+    "verfahrenswert": {
+      "gesamt": "23310.00",
+      "quelle": "executor",
+      "form": "verbund",
+      "wertvorschriften_stand": "kostbraeg_2025",
+      "gegenstaende": [
+        {
+          "art": "ehesache",
+          "bezeichnung": "Ehesache (Scheidungssache)",
+          "norm": "§ 43 FamGKG",
+          "wert": "13500.00",
+          "quelle": "executor",
+          "rechenschritte": [
+            {
+              "schritt": 1,
+              "norm": "§ 43 Abs. 2 FamGKG",
+              "beschreibung": "In 3 Monaten erzieltes Nettoeinkommen der Ehegatten (Eingabe, bereinigt): 3 x (2800.00 € + 1700.00 €) = 13500.00 €.",
+              "ergebnis": "13500.00",
+              "quelle": "executor"
+            },
+            {
+              "schritt": 2,
+              "norm": "§ 43 Abs. 1 Satz 2 FamGKG",
+              "beschreibung": "13500.00 € liegt zwischen Mindestwert 3000.00 € und Höchstwert 1000000.00 € — keine Anpassung.",
+              "ergebnis": "13500.00",
+              "quelle": "executor"
+            }
+          ],
+          "nutzereingaben": [],
+          "hinweise": [
+            "§ 43 Abs. 1 Satz 1 FamGKG ist eine Ermessensnorm: der Executor rechnet nur die Einkommenskomponente (Abs. 2) und die Grenzen (Abs. 1 Satz 2). Abzüge vom Nettoeinkommen (z. B. für Kinder) sind Gerichtspraxis, kein Gesetz — einzugeben ist das bereinigte Netto. Das Gericht kann anders festsetzen."
+          ]
+        },
+        {
+          "art": "versorgungsausgleich",
+          "bezeichnung": "Versorgungsausgleichssache",
+          "norm": "§ 50 Abs. 1 FamGKG",
+          "wert": "4050.00",
+          "quelle": "executor",
+          "rechenschritte": [
+            {
+              "schritt": 1,
+              "norm": "§ 50 Abs. 1 Satz 1 FamGKG",
+              "beschreibung": "Basis: in drei Monaten erzieltes Nettoeinkommen der Ehegatten aus der Ehesache = 13500.00 €.",
+              "ergebnis": "13500.00",
+              "quelle": "executor"
+            },
+            {
+              "schritt": 2,
+              "norm": "§ 50 Abs. 1 Satz 1 FamGKG",
+              "beschreibung": "3 Anrecht(e) x 10 % (je Anrecht) x 13500.00 € = 4050.00 €.",
+              "ergebnis": "4050.00",
+              "quelle": "executor"
+            },
+            {
+              "schritt": 3,
+              "norm": "§ 50 Abs. 1 Satz 2 FamGKG",
+              "beschreibung": "Mindestwert 1000.00 € überschritten — keine Anpassung.",
+              "ergebnis": "4050.00",
+              "quelle": "executor"
+            }
+          ],
+          "nutzereingaben": [],
+          "hinweise": [
+            "Auskunfts-/Abtretungsverfahren (§ 50 Abs. 2 FamGKG) und Billigkeitskorrektur (§ 50 Abs. 3 FamGKG) sind nicht modelliert."
+          ]
+        },
+        {
+          "art": "kindesunterhalt",
+          "bezeichnung": "Unterhaltssache (Kindesunterhalt)",
+          "norm": "§ 51 FamGKG",
+          "wert": "5760.00",
+          "quelle": "executor",
+          "rechenschritte": [
+            {
+              "schritt": 1,
+              "norm": "§ 51 Abs. 1 Satz 1 FamGKG",
+              "beschreibung": "Für die ersten 12 Monate nach Einreichung geforderter Betrag: 12 x 480.00 € = 5760.00 €.",
+              "ergebnis": "5760.00",
+              "quelle": "executor"
+            }
+          ],
+          "nutzereingaben": [],
+          "hinweise": [
+            "Nur Unterhaltssachen, die Familienstreitsachen sind und wiederkehrende Leistungen betreffen (§ 51 Abs. 1 FamGKG); § 51 Abs. 3 FamGKG ist nicht modelliert. Bei dynamisiertem Unterhalt (§§ 1612a–1612c BGB) ist als 'monatsbetrag' der Monatsbetrag nach dem bei Einreichung geltenden Mindestunterhalt der maßgebenden Altersstufe einzugeben (§ 51 Abs. 1 Satz 2 FamGKG) — der Executor kennt die Mindestunterhaltstabelle nicht. Innerhalb der zwölf Monate wechselnde Monatsbeträge sind nicht modelliert."
+          ]
+        }
+      ],
+      "rechenkette": [
+        {
+          "schritt": 1,
+          "norm": "§ 63 Abs. 1 FamGKG",
+          "beschreibung": "Stichtag 2026-03-01 -> Wertvorschriften im Stand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)'.",
+          "ergebnis": "kostbraeg_2025",
+          "quelle": "executor"
+        },
+        {
+          "schritt": 2,
+          "norm": "§ 44 Abs. 1, 2 FamGKG",
+          "beschreibung": "Verbund — Scheidungssache und Folgesachen gelten als ein Verfahren; Werte der Folgesachen hinzugerechnet (§ 33 Abs. 1 Satz 2 FamGKG nicht anzuwenden): Ehesache 13500.00 € + Versorgungsausgleichssache 4050.00 € + Unterhaltssache (Kindesunterhalt) 5760.00 € = 23310.00 €.",
+          "ergebnis": "23310.00",
+          "quelle": "executor"
+        }
+      ],
+      "hinweise": []
+    },
+    "tabellenstand": {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 6 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109; Anlage 2 FamGKG Fundstelle BGBl. 2025 I Nr. 109, S. 14"
+    },
+    "wertkappung": null,
+    "einfachgebuehr": "435.50",
+    "positionen": [
+      {
+        "nr": "1110",
+        "bezeichnung": "Ehesache einschließlich aller Folgesachen, erster Rechtszug — Verfahren im Allgemeinen",
+        "norm": "KV 1110 FamGKG",
+        "satz": "2.0",
+        "betrag": "871.00",
+        "mindestbetrag_gegriffen": false,
+        "hinweise": [],
+        "quelle": "executor"
+      }
+    ],
+    "rechenkette": [
+      {
+        "schritt": 1,
+        "norm": "§§ 33 ff. FamGKG",
+        "beschreibung": "Verfahrenswert aus der Verfahrenswert-Ermittlung (Block 'verfahrenswert'): 23310.00 €.",
+        "ergebnis": "23310.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 2,
+        "norm": "§ 63 Abs. 1 FamGKG",
+        "beschreibung": "Stichtag (Anhängigkeit/Einleitung des Verfahrens, beim Rechtsmittel dessen Einlegung) 2026-03-01 -> Tabellenstand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)' (gültig 2025-06-01 bis heute).",
+        "ergebnis": "kostbraeg_2025",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 3,
+        "norm": "§ 28 Abs. 1 FamGKG",
+        "beschreibung": "1,0-Gebühr (Einfachgebühr) für Verfahrenswert 23310.0000 €.",
+        "ergebnis": "435.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 4,
+        "norm": "KV 1110 FamGKG",
+        "beschreibung": "Ehesache einschließlich aller Folgesachen, erster Rechtszug — Verfahren im Allgemeinen (KV 1110 FamGKG): Satz 2.0 x 435.50 € = 871.00 €",
+        "ergebnis": "871.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 5,
+        "norm": "Gesamt",
+        "beschreibung": "Summe aller Gerichtskosten-Positionen (FamGKG) (nicht umsatzsteuerpflichtig).",
+        "ergebnis": "871.00",
+        "quelle": "executor"
+      }
+    ],
+    "ergebnis": {
+      "gesamt": "871.00",
+      "umsatzsteuerpflichtig": false,
+      "quelle": "executor"
+    },
+    "warnungen": []
+  }
+}

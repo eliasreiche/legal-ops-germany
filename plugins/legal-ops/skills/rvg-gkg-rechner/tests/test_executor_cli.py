@@ -105,6 +105,22 @@ def test_beispiel_report_berufung_synchron():
     assert erzeugt["gkg"]["ergebnis"]["gesamt"] == "1132.00"
 
 
+def test_beispiel_report_familiensache_synchron():
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-familiensache.json")
+    assert ergebnis.returncode == 0, ergebnis.stderr
+    erzeugt = json.loads(ergebnis.stdout)
+    gespeichert = json.loads(
+        (SCHEMA / "beispiel-report-familiensache.json").read_text(encoding="utf-8"))
+    erzeugt["meta"].pop("quelle_datei")
+    gespeichert["meta"].pop("quelle_datei")
+    assert erzeugt == gespeichert
+    # Verbund (Ehesache + VA + Kindesunterhalt), KV 1110, RVG per Querverweis.
+    assert erzeugt["famgkg"]["verfahrenswert"]["gesamt"] == "23310.00"
+    assert erzeugt["famgkg"]["ergebnis"]["gesamt"] == "871.00"
+    assert erzeugt["rvg"]["eingabe"]["streitwert_herkunft"] == "famgkg.verfahrenswert"
+    assert erzeugt["rvg"]["ergebnis"]["gesamt_verguetung"] == "2781.63"
+
+
 def test_beispiel_eingabe_anrechnung_laeuft():
     ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-anrechnung.json")
     assert ergebnis.returncode == 0, ergebnis.stderr

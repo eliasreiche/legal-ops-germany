@@ -3,7 +3,7 @@
     "erzeugt_von": "core/calc/rvg/executor.py",
     "quelle_datei": "beispiel-eingabe.json",
     "deterministik": "Alle Geldbeträge in diesem Report sind Executor-Ergebnisse (P3), nicht modellgeneriert.",
-    "hinweis_getrennte_kostenarten": "RVG-Anwaltsvergütung und GKG-Gerichtskosten werden absichtlich NICHT zu einer Gesamtsumme addiert — unterschiedliche Forderungen mit unterschiedlichen Kostenschuldnern."
+    "hinweis_getrennte_kostenarten": "RVG-Anwaltsvergütung und GKG- bzw. FamGKG-Gerichtskosten werden absichtlich NICHT zu einer Gesamtsumme addiert — unterschiedliche Forderungen mit unterschiedlichen Kostenschuldnern."
   },
   "rvg": {
     "eingabe": {

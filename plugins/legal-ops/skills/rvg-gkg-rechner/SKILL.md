@@ -1,28 +1,32 @@
 ---
 name: rvg-gkg-rechner
-description: "Berechnet RVG-Anwaltsvergütung und GKG-Gerichtskosten (Wertgebühren, Zivilsachen) deterministisch mit nachvollziehbarer Rechenkette — Tabellenstand nach Stichtag (KostRÄG 2021 / KostBRÄG 2025), Gebührensätze, Anrechnung, Auslagen, USt. Triggert bei RVG berechnen, Gerichtskosten/GKG, Anwaltsvergütung, Streitwert zu Gebühren, Kostennote, Vergütungsberechnung."
-status: getestet
-haendisch_getestet: 2026-09-22
+description: "Berechnet RVG-Anwaltsvergütung, GKG-Gerichtskosten (Wertgebühren, Zivilsachen) und FamGKG-Gerichtskosten in Familiensachen samt Verfahrenswert-Ermittlung (§§ 33 ff. FamGKG) deterministisch mit nachvollziehbarer Rechenkette — Tabellenstand nach Stichtag (KostRÄG 2021 / KostBRÄG 2025), Gebührensätze, Anrechnung, Auslagen, USt. Triggert bei RVG berechnen, Gerichtskosten/GKG, FamGKG, Familiensache, Verfahrenswert, Scheidungskosten, Kostenvoranschlag Scheidung/Versorgungsausgleich/Unterhalt/Sorgerecht, Anwaltsvergütung, Streitwert zu Gebühren, Kostennote, Vergütungsberechnung."
+status: beta
 welle: 1
 bereich: zeit-abrechnung
-rdg_einordnung: "Rechnerische Gebührenermittlung nach den gesetzlichen Wertgebührentabellen (§ 13 RVG / Anlage 2 RVG, § 34 GKG / Anlage 2 GKG) und einem festen Katalog von VV-RVG-/KV-GKG-Positionen — keine Beratung zur Gebührenstrategie, keine Billigkeitsentscheidung nach § 14 RVG (z. B. Satz der Geschäftsgebühr) und keine Kostenverteilungsentscheidung (§ 91 ff. ZPO)."
-daten_hinweis: "Benötigt nur Streitwert, Stichtag und Gebührentatbestände — keine Mandantendaten erforderlich. Der Executor arbeitet rein lokal, ohne Netzwerkzugriff."
+rdg_einordnung: "Rechnerische Gebührenermittlung nach den gesetzlichen Wertgebührentabellen (§ 13 RVG / Anlage 2 RVG, § 34 GKG / Anlage 2 GKG, § 28 FamGKG / Anlage 2 FamGKG) und einem festen Katalog von VV-RVG-/KV-GKG-/KV-FamGKG-Positionen — keine Beratung zur Gebührenstrategie, keine Billigkeitsentscheidung nach § 14 RVG (z. B. Satz der Geschäftsgebühr) und keine Kostenverteilungsentscheidung (§ 91 ff. ZPO; in Familiensachen die Kostenentscheidung des Gerichts). Verfahrenswerte nach dem FamGKG nur aus gesetzlich festen Regeln (Einkommenskomponente und Grenzen § 43, Prozentsätze § 50, Zwölfmonatsbetrag § 51, Festwerte §§ 42 Abs. 3, 45, Verbund § 44); Ermessens- und Billigkeitsentscheidungen des Gerichts (§ 43 Abs. 1 Satz 1, § 41, §§ 44 Abs. 3, 45 Abs. 3, 50 Abs. 3 FamGKG) trifft der Rechner nie — sie kommen nur als ausdrücklich markierte Nutzereingabe hinein."
+daten_hinweis: "Benötigt nur Streitwert bzw. Verfahrenswert, Stichtag und Gebührentatbestände; für die FamGKG-Verfahrenswert-Ermittlung zusätzlich reine Beträge (bereinigtes Nettoeinkommen der Ehegatten, Unterhaltsbeträge, Anzahl der Versorgungsanrechte) — keine Namen oder sonstigen Mandantendaten erforderlich, nur die Zahlen eingeben. Der Executor arbeitet rein lokal, ohne Netzwerkzugriff."
 haftung: "Zweitkontrolle, zwingend: Der Rechner ersetzt keine anwaltliche Prüfung der Kostenrechnung. Es geht um Geld (Anwalts- und Gerichtskosten) — jeder Betrag ist vor Versand/Festsetzung von der Kanzlei gegenzuprüfen, insbesondere Satzwahl bei Rahmengebühren, Anrechnung und Tabellenstand."
 ---
 
 # rvg-gkg-rechner
 
-> **Status: `beta`** — automatisierte Tests laufen grün in CI (`tests/`,
-> inkl. Orakel-Fälle gegen borghei `legal_calc`). Noch **nicht** händisch
-> abgenommen — `status: getestet` vergibt erst der Maintainer nach eigener
-> Prüfung (siehe [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
+> **Status: `beta`** — der **RVG-/GKG-Teil** ist vom Maintainer am
+> 2026-09-22 händisch abgenommen. Der **FamGKG-Teil** (Block `famgkg`,
+> Verfahrenswert-Ermittlung) ist neu: automatisierte Tests laufen grün
+> (`tests/test_famgkg_*.py`, Orakel = die Zahlen des Gesetzes, siehe dort),
+> die händische Abnahme durch den Maintainer steht aus. Weil der Reifegrad je
+> Skill gilt, steht der Skill bis dahin insgesamt auf `beta` (siehe
+> [CONVENTIONS.md](https://github.com/eliasreiche/legal-ops-germany/blob/main/CONVENTIONS.md), Reifegrad-Leiter).
 
 ## Zweck
 
 Berechnet RVG-Anwaltsvergütung und GKG-Gerichtskosten (jeweils nur
-**Wertgebühren, Zivilsachen**) deterministisch über die Executoren
-[`core/calc/rvg/`](../../core/calc/rvg/) und
-[`core/calc/gkg/`](../../core/calc/gkg/) — mit vollständiger,
+**Wertgebühren, Zivilsachen**) sowie FamGKG-Gerichtskosten in Familiensachen
+samt Verfahrenswert-Ermittlung (siehe unten) deterministisch über die
+Executoren [`core/calc/rvg/`](../../core/calc/rvg/),
+[`core/calc/gkg/`](../../core/calc/gkg/) und
+[`core/calc/famgkg/`](../../core/calc/famgkg/) — mit vollständiger,
 nachvollziehbarer **Rechenkette**: Tabellenstand-Wahl nach Stichtag,
 1,0-Gebühr nach der gesetzlichen Stufenformel (§ 13 Abs. 1 RVG / § 34 Abs. 1
 GKG), je Gebührenposition Satz × 1,0-Gebühr (mit Mindestbetrags-Floor),
@@ -117,17 +121,61 @@ in Kombination mit einem Wert über 30 Mio. € wird abgelehnt, weil § 22
 Abs. 2 Satz 2 RVG (je Auftraggeber 30 Mio. €, insgesamt höchstens
 100 Mio. €) nicht modelliert ist — anwaltlich prüfen.
 
-**Scope-Grenze (bewusst und geprüft):** Nur Wertgebühren in Zivilsachen.
-Betragsrahmengebühren (Straf-/Sozialrecht), PKH-Vergütung (§ 49 RVG) und
-Beratungshilfe sind **nicht unterstützt** — eine entsprechende Anfrage
-liefert einen sauberen Eingabefehler mit Begründung, nie einen geratenen
-Betrag.
+**Familiensachen (FamGKG, Block `famgkg`):** In Familiensachen richten sich
+die Gerichtskosten nach dem FamGKG, nicht nach dem GKG — `gkg` und `famgkg`
+in derselben Anfrage sind ein Eingabefehler. Der Executor
+[`core/calc/famgkg/`](../../core/calc/famgkg/) rechnet die 1,0-Gebühr nach
+§ 28 Abs. 1 FamGKG (Grundbetrag und Stufen in beiden Ständen identisch mit
+§ 34 GKG, trotzdem eigene, eigens verifizierte Daten), Mindestbetrag 15 €
+(§ 28 Abs. 2 Satz 1 FamGKG), Höchstwert 30 Mio. € als sichtbare Kappung
+(§ 33 Abs. 2 FamGKG) und die Positionen eines festen KV-FamGKG-Katalogs
+(Ehesache im Verbund KV 1110/1111, Beschwerde KV 1120–1122, selbständige
+Familienstreitsachen KV 1220–1224, Kindschaftssachen KV 1310/1314/1315,
+übrige FG-Familiensachen KV 1320–1324, einstweilige Anordnung KV 1410/1420/
+1421, Mehrvergleich KV 1500 mit Kappung nach § 30 Abs. 3 FamGKG). Stichtag
+ist der Tag, an dem das Verfahren anhängig geworden oder eingeleitet worden
+ist (§ 63 Abs. 1 Satz 1 FamGKG), bei einem Rechtsmittel dessen Einlegung
+(Satz 2).
+
+**Verfahrenswert-Ermittlung (§§ 33 ff. FamGKG):** Statt eines direkt
+eingegebenen `verfahrenswert` kann der Block den Wert aus
+`verfahrenswert_ermittlung` herleiten — **nur aus gesetzlich festen Regeln**:
+Ehesache § 43 (drei Monatsnettoeinkommen beider Ehegatten, mindestens
+3.000 €, höchstens 1 Mio. €), Versorgungsausgleich § 50 Abs. 1 (je Anrecht
+10 %, bei Ausgleichsansprüchen nach der Scheidung 20 % des
+Drei-Monats-Netto, mindestens 1.000 €), Unterhalt § 51 Abs. 1, 2
+(Zwölfmonatsbetrag plus bei Einreichung fällige Beträge), Kindschaftssache
+§ 45 (Festwert 4.000 € / ab 01.06.2025 5.000 €), bezifferte Geldforderung
+§ 35, Auffangwert § 42 Abs. 3 (5.000 €) und der Verbund § 44 (Ehesache +
+Folgesachen, je Kindschafts-Folgesache 20 % des Ehesachenwerts, höchstens
+4.000 € / ab 01.06.2025 5.000 €). Billigkeit und Ermessen sind **keine
+Rechenfrage**: Vermögen bei der Ehesache geht nur als ausdrücklicher
+`zuschlag` mit Pflicht-`begruendung` ein, ein abweichend festgesetzter Wert
+nur als `verfahrenswert_festgesetzt` — beides im Report als `quelle:
+"eingabe"`, nie als Executor-Ergebnis. Das Nettoeinkommen gibt die Kanzlei
+**bereinigt** ein (Abzüge, z. B. für Kinder, sind Gerichtspraxis, nicht
+Gesetz).
+
+**Querverweis RVG ← FamGKG:** Trägt `rvg.streitwert` den Text
+`"famgkg.verfahrenswert"`, übernimmt der RVG-Block den Verfahrenswert des
+`famgkg`-Blocks (§ 23 Abs. 1 Satz 1 RVG: der Gegenstandswert im gerichtlichen
+Verfahren richtet sich nach den Wertvorschriften für die Gerichtsgebühren)
+und weist das als eigenen Rechenketten-Schritt aus — kein Abtippen, keine
+Tippfehler zwischen den Blöcken.
+
+**Scope-Grenze (bewusst und geprüft):** RVG/GKG nur Wertgebühren in
+Zivilsachen, FamGKG nur der Katalog oben. Betragsrahmengebühren
+(Straf-/Sozialrecht), PKH-/VKH-Vergütung (§ 49 RVG) und Beratungshilfe,
+FamGKG-Rechtsbeschwerde, vereinfachtes Unterhaltsverfahren,
+Vormundschaft/Pflegschaft, Festgebühren und Auslagen sind **nicht
+unterstützt** — eine entsprechende Anfrage liefert einen sauberen
+Eingabefehler mit Begründung, nie einen geratenen Betrag.
 
 ## Eingaben (Datei-Kontrakt, P2)
 
 | Eingabe | Pflicht | Format | Beschreibung |
 |---|---|---|---|
-| RVG-/GKG-Anfrage | ja (mind. ein Block) | `.json` | Blöcke `rvg` und/oder `gkg`. Vollständiges Schema: [`schema/README.md`](schema/README.md), Beispiele: [`schema/beispiel-eingabe.json`](schema/beispiel-eingabe.json) (Grundfall, eine Angelegenheit), [`schema/beispiel-eingabe-anrechnung.json`](schema/beispiel-eingabe-anrechnung.json) (zwei Angelegenheiten, Anrechnung + Erhöhungsgebühr), [`schema/beispiel-eingabe-berufung.json`](schema/beispiel-eingabe-berufung.json) (Instanzenzug: erste Instanz + Berufung, GKG-Berufung). |
+| RVG-/GKG-/FamGKG-Anfrage | ja (mind. ein Block) | `.json` | Blöcke `rvg`, `gkg` und/oder `famgkg` (`gkg` und `famgkg` nie zusammen). Vollständiges Schema: [`schema/README.md`](schema/README.md), Beispiele: [`schema/beispiel-eingabe.json`](schema/beispiel-eingabe.json) (Grundfall, eine Angelegenheit), [`schema/beispiel-eingabe-anrechnung.json`](schema/beispiel-eingabe-anrechnung.json) (zwei Angelegenheiten, Anrechnung + Erhöhungsgebühr), [`schema/beispiel-eingabe-berufung.json`](schema/beispiel-eingabe-berufung.json) (Instanzenzug: erste Instanz + Berufung, GKG-Berufung), [`schema/beispiel-eingabe-familiensache.json`](schema/beispiel-eingabe-familiensache.json) (Scheidung im Verbund mit Verfahrenswert-Ermittlung und RVG-Querverweis). |
 
 Kurzfassung der Pflichtfelder:
 
@@ -146,11 +194,22 @@ Kurzfassung der Pflichtfelder:
   `1210`, `1211`, `1220`, `1222`, `1230`, `1232`, `1900`); optional
   `anrechnung_1100_auf_1210` (Anrechnung der Mahnverfahrensgebühr, verlangt
   `1100` und `1210`).
-- **Teilwerte** (beide Blöcke, optional): `gegenstandswert` je Tatbestand
+- **`famgkg`**: `verfahrenseinleitungsdatum` (ISO-Datum; § 63 Abs. 1
+  FamGKG — bei einem Rechtsmittel das Datum der Einlegung), **entweder**
+  `verfahrenswert` (Dezimalstring) **oder** `verfahrenswert_ermittlung`
+  (Objekt: `ehesache` + optional `folgesachen` für den Verbund, oder
+  `gegenstaende` für selbständige Familiensachen; optional
+  `verfahrenswert_festgesetzt`), `positionen` (KV-FamGKG-Positionen aus dem
+  [Katalog](../../core/calc/famgkg/kv-katalog.json): `1110`, `1111`,
+  `1120`–`1122`, `1220`–`1224`, `1310`, `1314`, `1315`, `1320`–`1324`,
+  `1410`, `1420`, `1421`, `1500`).
+- **Teilwerte** (alle Blöcke, optional): `gegenstandswert` je Tatbestand
   bzw. Position; Pflicht bei `3100`/`3101` bzw. `1000`/`1003`/`1004`, wenn
-  sie zusammen in einer Angelegenheit stehen, und bei KV `1900`.
+  sie zusammen in einer Angelegenheit stehen, und bei KV `1900` (GKG) bzw.
+  KV `1500` (FamGKG).
 
-Beide Blöcke werden **strikt** validiert: ein nicht vorgesehener Key (z. B.
+Alle Blöcke werden **strikt** validiert (auch jedes Objekt in
+`verfahrenswert_ermittlung`): ein nicht vorgesehener Key (z. B.
 ein Tippfehler `anrechnung_1100_1210`) führt zu Exit 2 mit Nennung des Keys —
 er wird nie stillschweigend ignoriert, sonst rechnete der Report im Geldpfad
 ohne die gewollte Anrechnung weiter.
@@ -163,8 +222,12 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
 
 1. **Claude schreibt die Anfrage als JSON-Datei** (nach
    [`schema/README.md`](schema/README.md)). Fehlende Pflichtangaben
-   (Streitwert, Stichtag, Gebührentatbestände, bei `2300` der Satz) werden
-   beim Nutzer erfragt, nie ergänzt oder geschätzt (Anti-Halluzination).
+   (Streitwert, Stichtag, Gebührentatbestände, bei `2300` der Satz; in
+   Familiensachen Nettoeinkommen beider Ehegatten, Zahl der Anrechte,
+   Unterhaltsbeträge) werden beim Nutzer erfragt, nie ergänzt oder geschätzt
+   (Anti-Halluzination). Einen Ermessens-Zuschlag (Vermögen, § 43 Abs. 1
+   Satz 1 FamGKG) setzt Claude nur, wenn der Nutzer Betrag **und**
+   Begründung nennt.
 2. **Claude ruft den Executor auf** (kein eigenes Rechnen durch das Modell):
 
    ```bash
@@ -198,8 +261,25 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
      Satz, Betrag, Verfahrensgebühr vor/nach Anrechnung; beim GKG
      (`gkg.anrechnung`) Anrechnungsbetrag und Gebühr KV 1210 vor/nach
      Anrechnung mit der Norm (Anmerkung Abs. 1 zu KV 1210 GKG),
-   - **RVG und GKG werden nie automatisch addiert** —
+   - **bei FamGKG** (`famgkg`-Block): die **Verfahrenswert-Herleitung je
+     Gegenstand** (`famgkg.verfahrenswert.gegenstaende[]` mit Norm, Wert und
+     Rechenschritten) und die Zusammenrechnung (§ 44 bzw. § 33 Abs. 1
+     FamGKG), **Mindest-/Höchstwerte**, wenn sie gegriffen haben (§ 43 Abs. 1
+     Satz 2, § 50 Abs. 1 Satz 2, § 44 Abs. 2 Satz 1, § 33 Abs. 2 FamGKG),
+     und **Nutzereingaben als solche** — jeden Schritt und Gegenstand mit
+     `quelle: "eingabe"` (Ermessens-Zuschlag, festgesetzter Wert, direkt
+     eingegebener Verfahrenswert) ausdrücklich als Eingabe der Kanzlei
+     kennzeichnen, nie als gesetzlich berechnet; die `hinweise` zur
+     Ermessensnorm § 43 Abs. 1 Satz 1 FamGKG immer mitgeben,
+   - **Querverweis**: trägt `rvg.eingabe.streitwert_herkunft` den Wert
+     `famgkg.verfahrenswert`, sagen, dass der RVG-Gegenstandswert aus dem
+     FamGKG-Block übernommen wurde (§ 23 Abs. 1 Satz 1 RVG),
+   - **RVG und GKG/FamGKG werden nie automatisch addiert** —
      `meta.hinweis_getrennte_kostenarten` immer erwähnen,
+   - jede Normangabe aus dem Report mit dem Zitiermarker **✅ verifiziert**
+     (Quelle: Executor-Datendateien mit `quelle_hinweis`); Normen, die
+     nicht aus dem Report stammen, als **⚠️ nicht prüfbar** kennzeichnen
+     (Zitierdisziplin, CONVENTIONS.md),
    - den Zweitkontroll-Hinweis aus `haftung` (immer, bei jeder Antwort).
 5. Bei Exit-Code 2 (Eingabefehler, u. a. Scope-Ablehnung bei
    Betragsrahmengebühren/PKH/Beratungshilfe, Teil-2-/Teil-3-Tatbestände in
@@ -208,9 +288,13 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
    `rvg`/`gkg` oder in einem Tatbestand/einer Position, angeforderte
    GKG-Anrechnung ohne KV 1100 bzw. KV 1210, Anrechnung bei verschiedenen
    Teilwerten, § 15 Abs. 3-Gruppe ohne Teilwerte, KV 1900 ohne
-   `gegenstandswert`, Teilwert über 30 Mio. €) gibt Claude die
-   Fehlermeldung wieder und korrigiert die Eingabe bzw. fragt nach — er rät
-   kein Ergebnis.
+   `gegenstandswert`, Teilwert über 30 Mio. €; beim FamGKG zusätzlich `gkg`
+   und `famgkg` zugleich, `verfahrenswert` und `verfahrenswert_ermittlung`
+   zugleich oder keines, Querverweis `famgkg.verfahrenswert` ohne
+   `famgkg`-Block, nicht unterstützte KV-FamGKG-Nummer oder `art`,
+   Ermessens-Zuschlag ohne Begründung, unbekannter Key in der
+   Verfahrenswert-Ermittlung) gibt Claude die Fehlermeldung wieder und
+   korrigiert die Eingabe bzw. fragt nach — er rät kein Ergebnis.
 
 ## Output-Format
 
@@ -222,7 +306,12 @@ JSON-Report nach [`schema/README.md`](schema/README.md), Beispiel:
 Zwischensumme/7002/Netto/USt/Gesamt), `anrechnung`, `rechenkette`,
 `ergebnis.gesamt_verguetung`. Im `gkg`-Block: `tabellenstand`,
 `wertkappung`, `einfachgebuehr`, `positionen`, `anrechnung` (KV 1100 auf
-KV 1210, sonst `null`), `rechenkette`, `ergebnis.gesamt`.
+KV 1210, sonst `null`), `rechenkette`, `ergebnis.gesamt`. Im
+`famgkg`-Block wie beim GKG (ohne `anrechnung`, Kappung als
+`kappung_30_abs_3`) **plus** `verfahrenswert` (`gesamt`, `quelle` —
+`"eingabe"`, sobald eine Nutzereingabe einfließt —, `form`, je Gegenstand `art`, `norm`, `wert`,
+`quelle`, `rechenschritte`, `nutzereingaben`, `hinweise`). Beispiel:
+[`schema/beispiel-report-familiensache.json`](schema/beispiel-report-familiensache.json).
 
 Jeder Geldbetrag im Report stammt aus dem jeweiligen `rechner.py`, nie vom
 Modell (P3). Alle Beträge sind Dezimalstrings (z. B. `"847.60"`).
@@ -351,3 +440,60 @@ Betragsrahmengebühr) liefert Exit 2: „Nr. 3102 VV RVG ist nicht unterstützt
 gebühren (Straf-/Sozialrecht), PKH-Vergütung (§ 49 RVG) und Beratungshilfe
 sind außerhalb des Scopes — keine automatische Berechnung möglich." Claude
 gibt diese Meldung wieder und schätzt keinen Ersatzbetrag.
+
+### Beispiel 6 — Scheidung im Verbund: Versorgungsausgleich + Kindesunterhalt (FamGKG + RVG)
+
+Eingabe ([`schema/beispiel-eingabe-familiensache.json`](schema/beispiel-eingabe-familiensache.json)):
+Verfahrenseinleitung und Auftrag 01.03.2026 (KostBRÄG 2025), Ehesache mit
+bereinigtem Nettoeinkommen 2.800 € und 1.700 € monatlich, Folgesachen
+Versorgungsausgleich (3 Anrechte) und Kindesunterhalt (480 € monatlich);
+FamGKG KV 1110; RVG Nr. 3100/3104 mit `"streitwert":
+"famgkg.verfahrenswert"`. Report:
+[`schema/beispiel-report-familiensache.json`](schema/beispiel-report-familiensache.json).
+
+Von Claude präsentiertes Ergebnis (aus dem Report übernommen):
+
+| Verfahrenswert-Herleitung | Norm | Wert |
+|---|---|---|
+| Ehesache: 3 × (2.800,00 € + 1.700,00 €), zwischen 3.000 € und 1 Mio. € | § 43 Abs. 2, Abs. 1 Satz 2 FamGKG | 13.500,00 € |
+| Versorgungsausgleich: 3 Anrechte × 10 % × 13.500,00 €, über dem Mindestwert 1.000 € | § 50 Abs. 1 FamGKG | 4.050,00 € |
+| Kindesunterhalt: 12 × 480,00 € | § 51 Abs. 1 Satz 1 FamGKG | 5.760,00 € |
+| **Verfahrenswert Verbund** (Ehesache + Folgesachen) | § 44 Abs. 1, 2 FamGKG | **23.310,00 €** |
+
+| Gerichtskosten (FamGKG) | Satz | Betrag |
+|---|---|---|
+| 1,0-Gebühr (Verfahrenswert 23.310 €, KostBRÄG 2025) | — | 435,50 € |
+| Ehesache inkl. Folgesachen, Verfahren im Allgemeinen (KV 1110 FamGKG) | 2,0 | **871,00 €** |
+
+| Anwaltsvergütung (RVG, Gegenstandswert übernommen nach § 23 Abs. 1 Satz 1 RVG) | Satz | Betrag |
+|---|---|---|
+| 1,0-Gebühr (Gegenstandswert 23.310 €) | — | 927,00 € |
+| Verfahrensgebühr (Nr. 3100 VV RVG) | 1,3 | 1.205,10 € |
+| Terminsgebühr (Nr. 3104 VV RVG) | 1,2 | 1.112,40 € |
+| Auslagenpauschale (Nr. 7002 VV RVG) | 20 %, gedeckelt | 20,00 € |
+| USt (Nr. 7008 VV RVG) | 19 % | 444,13 € |
+| **RVG gesamt** | | **2.781,63 €** |
+
+Claude weist darauf hin, dass § 43 Abs. 1 Satz 1 FamGKG eine Ermessensnorm
+ist (der Executor rechnet nur die Einkommenskomponente und die Grenzen; das
+Gericht kann anders festsetzen), dass das Nettoeinkommen bereinigt
+eingegeben wurde, und dass Gerichtskosten und Anwaltsvergütung nicht
+addiert werden. Hätte die Kanzlei für Vermögen einen Zuschlag angesetzt,
+stünde er als Nutzereingabe (`quelle: "eingabe"`) mit ihrer Begründung im
+Report — Claude nennt ihn dann ausdrücklich als Annahme der Kanzlei.
+
+### Beispiel 7 — Scope-Ablehnung im FamGKG
+
+Anfrage mit `{"nr": "1130"}` (Rechtsbeschwerde in Ehesachen) liefert Exit 2:
+„KV 1130 FamGKG ist nicht unterstützt (bekannt: …) — nicht im Katalog sind
+u. a. Rechtsbeschwerde, vereinfachtes Unterhaltsverfahren,
+Vormundschaft/Pflegschaft, … — keine automatische Berechnung möglich."
+
+Eine Billigkeitsabweichung (z. B. Umgangsverfahren „wegen des Aufwands mit
+8.000 € statt des Festwerts") lässt sich nicht als Rechenparameter
+übergeben: ein Feld wie `"billigkeit"` liefert Exit 2 („unbekanntes Feld in
+'gegenstaende[0]' (art 'kindschaftssache'): 'billigkeit' (erlaubt: 'art',
+'gegenstand', 'verfahrenswert_festgesetzt')"). Erst wenn das Gericht den
+Wert festgesetzt hat, gibt die Kanzlei ihn als `verfahrenswert_festgesetzt`
+ein — der Report führt ihn dann als Nutzereingabe (`quelle: "eingabe"`).
+Claude schätzt in beiden Fällen keinen Ersatzbetrag.
