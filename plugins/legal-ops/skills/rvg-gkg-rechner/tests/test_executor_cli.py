@@ -121,6 +121,24 @@ def test_beispiel_report_familiensache_synchron():
     assert erzeugt["rvg"]["ergebnis"]["gesamt_verguetung"] == "2781.63"
 
 
+def test_beispiel_report_gewaltschutz_ea_synchron():
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-gewaltschutz-ea.json")
+    assert ergebnis.returncode == 0, ergebnis.stderr
+    erzeugt = json.loads(ergebnis.stdout)
+    gespeichert = json.loads(
+        (SCHEMA / "beispiel-report-gewaltschutz-ea.json").read_text(encoding="utf-8"))
+    erzeugt["meta"].pop("quelle_datei")
+    gespeichert["meta"].pop("quelle_datei")
+    assert erzeugt == gespeichert
+    # Gewaltschutz § 1 GewSchG (§ 49 Abs. 1 FamGKG, 3.000 €) im Verfahren der
+    # einstweiligen Anordnung: Ausgangswert § 41 Satz 2 FamGKG 1.500 €, KV 1420.
+    g = erzeugt["famgkg"]["verfahrenswert"]["gegenstaende"][0]
+    assert g["hauptsachewert"] == "3000.00" and g["wert"] == "1500.00"
+    assert erzeugt["famgkg"]["ergebnis"]["gesamt"] == "123.00"
+    assert any("§ 41 Satz 1" in w for w in erzeugt["famgkg"]["warnungen"])
+    assert erzeugt["rvg"]["ergebnis"]["gesamt_verguetung"] == "231.87"
+
+
 def test_beispiel_eingabe_anrechnung_laeuft():
     ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-anrechnung.json")
     assert ergebnis.returncode == 0, ergebnis.stderr

@@ -1,0 +1,27 @@
+{
+  "rvg": {
+    "auftragsdatum": "2026-03-01",
+    "streitwert": "famgkg.verfahrenswert",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Einstweilige Anordnung Gewaltschutz",
+        "tatbestaende": [
+          {"nr": "3100"}
+        ]
+      }
+    ],
+    "auslagenpauschale": true,
+    "umsatzsteuer": true
+  },
+  "famgkg": {
+    "verfahrenseinleitungsdatum": "2026-03-01",
+    "verfahrenswert_ermittlung": {
+      "gegenstaende": [
+        {"art": "gewaltschutzsache", "fallgruppe": "1_gewschg", "einstweilige_anordnung": true}
+      ]
+    },
+    "positionen": [
+      {"nr": "1420"}
+    ]
+  }
+}

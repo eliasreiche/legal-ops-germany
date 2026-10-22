@@ -140,14 +140,14 @@
       "bezeichnung": "Einstweilige Anordnung in Kindschaftssachen, erster Rechtszug — Verfahren im Allgemeinen",
       "norm": "KV 1410 FamGKG",
       "satz": "0.3",
-      "hinweis": "Wert der einstweiligen Anordnung: § 41 FamGKG (in der Regel ermäßigt, Ausgangspunkt die Hälfte des Hauptsachewerts) ist eine Regel mit Ermessen und wird nicht ermittelt — den Wert als 'verfahrenswert' eingeben. Für KV 1410 sieht das Kostenverzeichnis keinen Ermäßigungstatbestand vor.",
+      "hinweis": "Wert der einstweiligen Anordnung: § 41 FamGKG — Ausgangswert die Hälfte des Hauptsachewerts (Satz 2); auf Angabe 'einstweilige_anordnung: true' am Gegenstand rechnet die Verfahrenswert-Ermittlung diesen Ausgangswert. Die weitere Ermäßigung nach Satz 1 ist Ermessen des Gerichts und wird nicht ermittelt — einen festgesetzten Wert als 'verfahrenswert_festgesetzt' bzw. 'verfahrenswert' eingeben. Für KV 1410 sieht das Kostenverzeichnis keinen Ermäßigungstatbestand vor.",
       "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 4 Abschnitt 1 Unterabschnitt 1, KV 1410: 'Verfahren im Allgemeinen' 0,3."
     },
     "1420": {
       "bezeichnung": "Einstweilige Anordnung in den übrigen Familiensachen (Familienstreitsachen und Verfahren nach Vorbem. 1.3.2), erster Rechtszug — Verfahren im Allgemeinen",
       "norm": "KV 1420 FamGKG",
       "satz": "1.5",
-      "hinweis": "Wert der einstweiligen Anordnung: § 41 FamGKG (in der Regel ermäßigt, Ausgangspunkt die Hälfte des Hauptsachewerts) ist eine Regel mit Ermessen und wird nicht ermittelt — den Wert als 'verfahrenswert' eingeben.",
+      "hinweis": "Wert der einstweiligen Anordnung: § 41 FamGKG — Ausgangswert die Hälfte des Hauptsachewerts (Satz 2); auf Angabe 'einstweilige_anordnung: true' am Gegenstand rechnet die Verfahrenswert-Ermittlung diesen Ausgangswert. Die weitere Ermäßigung nach Satz 1 ist Ermessen des Gerichts und wird nicht ermittelt — einen festgesetzten Wert als 'verfahrenswert_festgesetzt' bzw. 'verfahrenswert' eingeben.",
       "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/anlage_1.html (aktuelle Fassung) und die Wayback-Machine-Schnappschüsse vom 2021-06-12 und 2025-05-13 (Fassung KostRÄG 2021, Satz unverändert), Teil 1 Hauptabschnitt 4 Abschnitt 2 Unterabschnitt 1, KV 1420: 'Verfahren im Allgemeinen' 1,5."
     },
     "1421": {

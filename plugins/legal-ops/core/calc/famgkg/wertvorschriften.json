@@ -1,6 +1,6 @@
 {
-  "bezeichnung": "Gesetzliche Wertvorschriften FamGKG (§§ 35, 42–45, 50, 51) — nur feste Regelwerte, keine Billigkeits-/Ermessensentscheidungen",
-  "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/__35.html, __42.html, __43.html, __44.html, __45.html, __50.html, __51.html (aktuelle Fassung) und Wayback-Machine-Schnappschüsse für die Fassung KostRÄG 2021 (__44.html 2021-04-18 und 2024-12-10, __45.html 2021-04-14 und 2025-01-29, __43.html 2024-04-25, __50.html 2023-12-23, __51.html 2025-05-13, __42.html 2025-01-22). Ergebnis des Fassungsvergleichs: KostBRÄG 2025 (Art. 6, mWv 01.06.2025) hat nur § 44 Abs. 2 Satz 1 (Höchstbetrag der Erhöhung je Kindschaftsfolgesache 4.000 -> 5.000 €) und § 45 Abs. 1 (Festwert 4.000 -> 5.000 €) geändert; §§ 35, 42, 43, 50, 51 sind in beiden Ständen wortgleich (gegengeprüft gegen den Fassungsvergleich auf buzer.de/44_FamGKG.htm, /45_FamGKG.htm, /43_FamGKG.htm, /50_FamGKG.htm, /51_FamGKG.htm, /42_FamGKG.htm). Die Stand-ids und Geltungszeiträume sind die der gebuehrentabelle.json (Auswahl nach § 63 Abs. 1 FamGKG).",
+  "bezeichnung": "Gesetzliche Wertvorschriften FamGKG (§§ 35, 41 Satz 2, 42–45, 47–51) — nur feste Regelwerte, keine Billigkeits-/Ermessensentscheidungen",
+  "quelle_hinweis": "Web-verifiziert am 2026-10-22 gegen gesetze-im-internet.de/famgkg/__35.html, __42.html, __43.html, __44.html, __45.html, __50.html, __51.html (aktuelle Fassung) und Wayback-Machine-Schnappschüsse für die Fassung KostRÄG 2021 (__44.html 2021-04-18 und 2024-12-10, __45.html 2021-04-14 und 2025-01-29, __43.html 2024-04-25, __50.html 2023-12-23, __51.html 2025-05-13, __42.html 2025-01-22). Ergebnis des Fassungsvergleichs: KostBRÄG 2025 (Art. 6, mWv 01.06.2025) hat nur § 44 Abs. 2 Satz 1 (Höchstbetrag der Erhöhung je Kindschaftsfolgesache 4.000 -> 5.000 €) und § 45 Abs. 1 (Festwert 4.000 -> 5.000 €) geändert; §§ 35, 42, 43, 50, 51 sind in beiden Ständen wortgleich (gegengeprüft gegen den Fassungsvergleich auf buzer.de/44_FamGKG.htm, /45_FamGKG.htm, /43_FamGKG.htm, /50_FamGKG.htm, /51_FamGKG.htm, /42_FamGKG.htm). Die Stand-ids und Geltungszeiträume sind die der gebuehrentabelle.json (Auswahl nach § 63 Abs. 1 FamGKG). Ergänzt am 2026-10-22: §§ 41, 47, 48, 49 FamGKG web-verifiziert gegen gesetze-im-internet.de/famgkg/__41.html, __47.html, __48.html, __49.html (aktuelle Fassung) und Wayback-Machine-Schnappschüsse der Fassung KostRÄG 2021 (__47.html 2025-03-19, __48.html 2025-05-03, __49.html 2023-10-04, __41.html 2025-05-03); Fassungsvergleich auf buzer.de/47_FamGKG.htm, /48_FamGKG.htm, /49_FamGKG.htm, /41_FamGKG.htm: §§ 47, 48, 49 zuletzt geändert durch KostBRÄG 2025 Art. 6 (mWv 01.06.2025; davor § 48 zuletzt 01.09.2009, § 49 zuletzt 11.01.2015, § 47 Urfassung), § 41 seit der Urfassung unverändert. Geändert hat KostBRÄG 2025: § 47 Abs. 1 (§ 169 Nr. 1 und 4 FamFG 2.000 -> 3.000 €; übrige 1.000 € unverändert), § 48 Abs. 1 (§ 200 Abs. 1 Nr. 1 FamFG 3.000 -> 4.000 €, Nr. 2 4.000 -> 5.000 €), § 49 Abs. 1 (§ 1 GewSchG/EU-GewSchVG 2.000 -> 3.000 €, § 2 GewSchG 3.000 -> 4.000 €); § 48 Abs. 2 (2.000 / 3.000 €) und § 41 sind in beiden Ständen wortgleich. Fallgruppen: § 169 FamFG, § 200 FamFG (gesetze-im-internet.de/famfg/__169.html, __200.html), §§ 1, 2 GewSchG (gesetze-im-internet.de/gewschg/__1.html, __2.html); Folgesachen-Fähigkeit nach § 137 Abs. 2, 3 FamFG (gesetze-im-internet.de/famfg/__137.html); einstweilige Anordnung als selbständiges Verfahren: § 51 Abs. 3 Satz 1 FamFG (gesetze-im-internet.de/famfg/__51.html).",
   "staende": {
     "kostraeg_2021": {
       "ehesache_einkommensmonate": 3,
@@ -13,7 +13,27 @@
       "verbund_kindschaft_prozentsatz": "0.20",
       "auffangwert": "5000.00",
       "kindschaftssache_festwert": "4000.00",
-      "verbund_kindschaft_hoechstbetrag": "4000.00"
+      "verbund_kindschaft_hoechstbetrag": "4000.00",
+      "einstweilige_anordnung_ausgangsanteil": "0.5",
+      "festwerte_47_49": {
+        "abstammungssache": {
+          "169_nr_1_4": "2000.00",
+          "169_nr_2_3": "1000.00"
+        },
+        "ehewohnungssache": {
+          "200_abs_1_nr_1": "3000.00",
+          "200_abs_1_nr_2": "4000.00"
+        },
+        "haushaltssache": {
+          "200_abs_2_nr_1": "2000.00",
+          "200_abs_2_nr_2": "3000.00"
+        },
+        "gewaltschutzsache": {
+          "1_gewschg": "2000.00",
+          "eu_gewschvg": "2000.00",
+          "2_gewschg": "3000.00"
+        }
+      }
     },
     "kostbraeg_2025": {
       "ehesache_einkommensmonate": 3,
@@ -26,15 +46,39 @@
       "verbund_kindschaft_prozentsatz": "0.20",
       "auffangwert": "5000.00",
       "kindschaftssache_festwert": "5000.00",
-      "verbund_kindschaft_hoechstbetrag": "5000.00"
+      "verbund_kindschaft_hoechstbetrag": "5000.00",
+      "einstweilige_anordnung_ausgangsanteil": "0.5",
+      "festwerte_47_49": {
+        "abstammungssache": {
+          "169_nr_1_4": "3000.00",
+          "169_nr_2_3": "1000.00"
+        },
+        "ehewohnungssache": {
+          "200_abs_1_nr_1": "4000.00",
+          "200_abs_1_nr_2": "5000.00"
+        },
+        "haushaltssache": {
+          "200_abs_2_nr_1": "2000.00",
+          "200_abs_2_nr_2": "3000.00"
+        },
+        "gewaltschutzsache": {
+          "1_gewschg": "3000.00",
+          "eu_gewschvg": "3000.00",
+          "2_gewschg": "4000.00"
+        }
+      }
     }
   },
   "wortlaut": {
     "§ 35 FamGKG": "Ist Gegenstand des Verfahrens eine bezifferte Geldforderung, bemisst sich der Verfahrenswert nach deren Höhe, soweit nichts anderes bestimmt ist.",
+    "§ 41 FamGKG": "Im Verfahren der einstweiligen Anordnung ist der Wert in der Regel unter Berücksichtigung der geringeren Bedeutung gegenüber der Hauptsache zu ermäßigen. Dabei ist von der Hälfte des für die Hauptsache bestimmten Werts auszugehen.",
     "§ 42 Abs. 3 FamGKG": "Bestehen in den Fällen der Absätze 1 und 2 keine genügenden Anhaltspunkte, ist von einem Wert von 5 000 Euro auszugehen.",
     "§ 43 FamGKG": "(1) In Ehesachen ist der Verfahrenswert unter Berücksichtigung aller Umstände des Einzelfalls, insbesondere des Umfangs und der Bedeutung der Sache und der Vermögens- und Einkommensverhältnisse der Ehegatten, nach Ermessen zu bestimmen. Der Wert darf nicht unter 3 000 Euro und nicht über 1 Million Euro angenommen werden. (2) Für die Einkommensverhältnisse ist das in drei Monaten erzielte Nettoeinkommen der Ehegatten einzusetzen.",
     "§ 44 Abs. 2 FamGKG": "Sind in § 137 Abs. 3 FamFG genannte Kindschaftssachen Folgesachen, erhöht sich der Verfahrenswert nach § 43 für jede Kindschaftssache um 20 Prozent, höchstens um jeweils 5 000 Euro [KostRÄG 2021: 4 000 Euro]; eine Kindschaftssache ist auch dann als ein Gegenstand zu bewerten, wenn sie mehrere Kinder betrifft. Die Werte der übrigen Folgesachen werden hinzugerechnet. § 33 Abs. 1 Satz 2 ist nicht anzuwenden.",
     "§ 45 Abs. 1, 2 FamGKG": "(1) In einer Kindschaftssache, die 1. die Übertragung oder Entziehung der elterlichen Sorge oder eines Teils der elterlichen Sorge, 2. das Umgangsrecht einschließlich der Umgangspflegschaft, 3. das Recht auf Auskunft über die persönlichen Verhältnisse des Kindes, 4. die Kindesherausgabe oder 5. [seit 22.05.2021, nicht modelliert] ... betrifft, beträgt der Verfahrenswert 5 000 Euro [KostRÄG 2021: 4 000 Euro]. (2) Eine Kindschaftssache nach Absatz 1 ist auch dann als ein Gegenstand zu bewerten, wenn sie mehrere Kinder betrifft.",
+    "§ 47 FamGKG": "(1) In Abstammungssachen nach § 169 Nr. 1 und 4 des Gesetzes über das Verfahren in Familiensachen und in den Angelegenheiten der freiwilligen Gerichtsbarkeit beträgt der Verfahrenswert 3 000 Euro [KostRÄG 2021: 2 000 Euro], in den übrigen Abstammungssachen 1 000 Euro. (2) Ist der nach Absatz 1 bestimmte Wert nach den besonderen Umständen des Einzelfalls unbillig, kann das Gericht einen höheren oder einen niedrigeren Wert festsetzen.",
+    "§ 48 FamGKG": "(1) In Ehewohnungssachen nach § 200 Absatz 1 Nummer 1 des Gesetzes über das Verfahren in Familiensachen und in den Angelegenheiten der freiwilligen Gerichtsbarkeit beträgt der Verfahrenswert 4 000 Euro [KostRÄG 2021: 3 000 Euro], in Ehewohnungssachen nach § 200 Absatz 1 Nummer 2 des Gesetzes über das Verfahren in Familiensachen und in den Angelegenheiten der freiwilligen Gerichtsbarkeit 5 000 Euro [KostRÄG 2021: 4 000 Euro]. (2) In Haushaltssachen nach § 200 Absatz 2 Nummer 1 des Gesetzes über das Verfahren in Familiensachen und in den Angelegenheiten der freiwilligen Gerichtsbarkeit beträgt der Wert 2 000 Euro, in Haushaltssachen nach § 200 Absatz 2 Nummer 2 des Gesetzes über das Verfahren in Familiensachen und in den Angelegenheiten der freiwilligen Gerichtsbarkeit 3 000 Euro. (3) Ist der nach den Absätzen 1 und 2 bestimmte Wert nach den besonderen Umständen des Einzelfalls unbillig, kann das Gericht einen höheren oder einen niedrigeren Wert festsetzen.",
+    "§ 49 FamGKG": "(1) In Gewaltschutzsachen nach § 1 des Gewaltschutzgesetzes und in Verfahren nach dem EU-Gewaltschutzverfahrensgesetz beträgt der Verfahrenswert 3 000 Euro [KostRÄG 2021: 2 000 Euro], in Gewaltschutzsachen nach § 2 des Gewaltschutzgesetzes 4 000 Euro [KostRÄG 2021: 3 000 Euro]. (2) Ist der nach Absatz 1 bestimmte Wert nach den besonderen Umständen des Einzelfalls unbillig, kann das Gericht einen höheren oder einen niedrigeren Wert festsetzen.",
     "§ 50 Abs. 1 FamGKG": "In Versorgungsausgleichssachen beträgt der Verfahrenswert für jedes Anrecht 10 Prozent, bei Ausgleichsansprüchen nach der Scheidung für jedes Anrecht 20 Prozent des in drei Monaten erzielten Nettoeinkommens der Ehegatten. Der Wert nach Satz 1 beträgt insgesamt mindestens 1 000 Euro.",
     "§ 51 Abs. 1 Satz 1, Abs. 2 Satz 1 FamGKG": "(1) In Unterhaltssachen ..., soweit diese jeweils Familienstreitsachen sind und wiederkehrende Leistungen betreffen, ist der für die ersten zwölf Monate nach Einreichung des Antrags geforderte Betrag maßgeblich, höchstens jedoch der Gesamtbetrag der geforderten Leistung. (2) Die bei Einreichung des Antrags fälligen Beträge werden dem Wert hinzugerechnet."
   }

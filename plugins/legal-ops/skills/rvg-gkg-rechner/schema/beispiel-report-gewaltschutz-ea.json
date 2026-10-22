@@ -1,0 +1,270 @@
+{
+  "meta": {
+    "erzeugt_von": "core/calc/rvg/executor.py",
+    "quelle_datei": "beispiel-eingabe-gewaltschutz-ea.json",
+    "deterministik": "Alle Geldbeträge in diesem Report sind Executor-Ergebnisse (P3), nicht modellgeneriert.",
+    "hinweis_getrennte_kostenarten": "RVG-Anwaltsvergütung und GKG- bzw. FamGKG-Gerichtskosten werden absichtlich NICHT zu einer Gesamtsumme addiert — unterschiedliche Forderungen mit unterschiedlichen Kostenschuldnern."
+  },
+  "rvg": {
+    "eingabe": {
+      "auftragsdatum": "2026-03-01",
+      "streitwert": "1500.00",
+      "streitwert_herkunft": "famgkg.verfahrenswert",
+      "angelegenheiten": [
+        {
+          "bezeichnung": "Einstweilige Anordnung Gewaltschutz",
+          "tatbestaende": [
+            {
+              "nr": "3100"
+            }
+          ]
+        }
+      ],
+      "anrechnung_2300_auf_3100": false,
+      "auslagenpauschale": true,
+      "umsatzsteuer": true
+    },
+    "tabellenstand": {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 11 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109, 139; Anlage 2 RVG Fundstelle BGBl. 2025 I Nr. 109, S. 30"
+    },
+    "wertkappung": null,
+    "einfachgebuehr": "134.50",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Einstweilige Anordnung Gewaltschutz",
+        "positionen": [
+          {
+            "nr": "3100",
+            "bezeichnung": "Verfahrensgebühr (erster Rechtszug)",
+            "norm": "Nr. 3100 VV RVG",
+            "satz": "1.3",
+            "betrag": "174.85",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [],
+            "quelle": "executor"
+          }
+        ],
+        "ergebnis": {
+          "zwischensumme_gebuehren": "174.85",
+          "auslagenpauschale": "20.00",
+          "netto": "194.85",
+          "ust_satz": "0.19",
+          "ust": "37.02",
+          "gesamt": "231.87",
+          "quelle": "executor"
+        }
+      }
+    ],
+    "anrechnung": null,
+    "rechenkette": [
+      {
+        "schritt": 1,
+        "norm": "§ 23 Abs. 1 Satz 1 RVG",
+        "beschreibung": "Gegenstandswert aus 'famgkg.verfahrenswert' übernommen (im gerichtlichen Verfahren bestimmt sich der Gegenstandswert nach den für die Gerichtsgebühren geltenden Wertvorschriften, hier FamGKG): 1500.00 €.",
+        "ergebnis": "1500.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 2,
+        "norm": "§ 60 Abs. 1 RVG",
+        "beschreibung": "Stichtag (Auftragserteilung) 2026-03-01 -> Tabellenstand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)' (gültig 2025-06-01 bis heute).",
+        "ergebnis": "kostbraeg_2025",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 3,
+        "norm": "§ 13 Abs. 1 RVG",
+        "beschreibung": "1,0-Gebühr (Einfachgebühr) für Gegenstandswert 1500.00 €.",
+        "ergebnis": "134.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 4,
+        "norm": "Nr. 3100 VV RVG",
+        "beschreibung": "Angelegenheit 'Einstweilige Anordnung Gewaltschutz': Verfahrensgebühr (erster Rechtszug) (Nr. 3100 VV RVG): Satz 1.3 x 134.50 € = 174.85 €",
+        "ergebnis": "174.85",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 5,
+        "norm": "Zwischensumme",
+        "beschreibung": "Angelegenheit 'Einstweilige Anordnung Gewaltschutz': Summe der Gebührenpositionen (nach Anrechnung, sofern angefordert).",
+        "ergebnis": "174.85",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 6,
+        "norm": "Nr. 7002 VV RVG",
+        "beschreibung": "Angelegenheit 'Einstweilige Anordnung Gewaltschutz': Auslagenpauschale — 20 % von 174.85 € = 34.97 €, gedeckelt auf höchstens 20.00 € (je Angelegenheit).",
+        "ergebnis": "20.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 7,
+        "norm": "Netto",
+        "beschreibung": "Angelegenheit 'Einstweilige Anordnung Gewaltschutz': Zwischensumme zzgl. Auslagenpauschale.",
+        "ergebnis": "194.85",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 8,
+        "norm": "Nr. 7008 VV RVG",
+        "beschreibung": "Angelegenheit 'Einstweilige Anordnung Gewaltschutz': Umsatzsteuer — 19 % von 194.85 € = 37.02 €.",
+        "ergebnis": "37.02",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 9,
+        "norm": "Gesamt (Angelegenheit)",
+        "beschreibung": "Angelegenheit 'Einstweilige Anordnung Gewaltschutz': Netto zzgl. Umsatzsteuer.",
+        "ergebnis": "231.87",
+        "quelle": "executor"
+      }
+    ],
+    "ergebnis": {
+      "gesamt_verguetung": "231.87",
+      "gesamt_hinweis": "Summe über alle Angelegenheiten (gleicher Gläubiger) — die Angelegenheiten bleiben gebührenrechtlich getrennt (je eigene Auslagenpauschale Nr. 7002 und eigene USt-Basis Nr. 7008).",
+      "quelle": "executor"
+    },
+    "warnungen": []
+  },
+  "famgkg": {
+    "eingabe": {
+      "verfahrenseinleitungsdatum": "2026-03-01",
+      "verfahrenswert": "1500.00",
+      "verfahrenswert_herkunft": "verfahrenswert_ermittlung",
+      "positionen": [
+        {
+          "nr": "1420"
+        }
+      ]
+    },
+    "verfahrenswert": {
+      "gesamt": "1500.00",
+      "quelle": "executor",
+      "form": "selbstaendig",
+      "wertvorschriften_stand": "kostbraeg_2025",
+      "gegenstaende": [
+        {
+          "art": "gewaltschutzsache",
+          "bezeichnung": "Gewaltschutzsache (§ 1 GewSchG — gerichtliche Schutzmaßnahmen) — einstweilige Anordnung",
+          "norm": "§ 49 Abs. 1 FamGKG i. V. m. § 41 Satz 2 FamGKG",
+          "wert": "1500.00",
+          "quelle": "executor",
+          "rechenschritte": [
+            {
+              "schritt": 1,
+              "norm": "§ 49 Abs. 1 FamGKG",
+              "beschreibung": "Gesetzlicher Festwert, Fallgruppe '1_gewschg' (§ 1 GewSchG — gerichtliche Schutzmaßnahmen): 3000.00 €.",
+              "ergebnis": "3000.00",
+              "quelle": "executor"
+            },
+            {
+              "schritt": 2,
+              "norm": "§ 41 Satz 2 FamGKG",
+              "beschreibung": "Einstweilige Anordnung (Angabe der Kanzlei): Ausgangswert = Hälfte des für die Hauptsache bestimmten Werts: 3000.00 € x 0.5 = 1500.00 €.",
+              "ergebnis": "1500.00",
+              "quelle": "executor"
+            }
+          ],
+          "nutzereingaben": [],
+          "hinweise": [
+            "Die Fallgruppe '1_gewschg' ist eine Angabe der Kanzlei — der Executor nimmt sie nie an. Billigkeitsabweichung (§ 49 Abs. 2 FamGKG) nur über 'verfahrenswert_festgesetzt'.",
+            "Einstweilige Anordnung: Der Wert ist der gesetzliche Ausgangswert nach § 41 Satz 2 FamGKG (Hälfte des für die Hauptsache bestimmten Werts), keine Festsetzung. Das Gericht kann ihn nach § 41 Satz 1 FamGKG weiter ermäßigen ('in der Regel ... zu ermäßigen') — maßgeblich ist dann der festgesetzte Wert ('verfahrenswert_festgesetzt')."
+          ],
+          "einstweilige_anordnung": true,
+          "hauptsachewert": "3000.00"
+        }
+      ],
+      "rechenkette": [
+        {
+          "schritt": 1,
+          "norm": "§ 63 Abs. 1 FamGKG",
+          "beschreibung": "Stichtag 2026-03-01 -> Wertvorschriften im Stand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)'.",
+          "ergebnis": "kostbraeg_2025",
+          "quelle": "executor"
+        },
+        {
+          "schritt": 2,
+          "norm": "§ 49 Abs. 1 FamGKG i. V. m. § 41 Satz 2 FamGKG",
+          "beschreibung": "Ein Verfahrensgegenstand: Gewaltschutzsache (§ 1 GewSchG — gerichtliche Schutzmaßnahmen) — einstweilige Anordnung = 1500.00 €.",
+          "ergebnis": "1500.00",
+          "quelle": "executor"
+        }
+      ],
+      "hinweise": []
+    },
+    "tabellenstand": {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 6 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109; Anlage 2 FamGKG Fundstelle BGBl. 2025 I Nr. 109, S. 14"
+    },
+    "wertkappung": null,
+    "einfachgebuehr": "82.00",
+    "positionen": [
+      {
+        "nr": "1420",
+        "bezeichnung": "Einstweilige Anordnung in den übrigen Familiensachen (Familienstreitsachen und Verfahren nach Vorbem. 1.3.2), erster Rechtszug — Verfahren im Allgemeinen",
+        "norm": "KV 1420 FamGKG",
+        "satz": "1.5",
+        "betrag": "123.00",
+        "mindestbetrag_gegriffen": false,
+        "hinweise": [
+          "Wert der einstweiligen Anordnung: § 41 FamGKG — Ausgangswert die Hälfte des Hauptsachewerts (Satz 2); auf Angabe 'einstweilige_anordnung: true' am Gegenstand rechnet die Verfahrenswert-Ermittlung diesen Ausgangswert. Die weitere Ermäßigung nach Satz 1 ist Ermessen des Gerichts und wird nicht ermittelt — einen festgesetzten Wert als 'verfahrenswert_festgesetzt' bzw. 'verfahrenswert' eingeben."
+        ],
+        "quelle": "executor"
+      }
+    ],
+    "rechenkette": [
+      {
+        "schritt": 1,
+        "norm": "§§ 33 ff. FamGKG",
+        "beschreibung": "Verfahrenswert aus der Verfahrenswert-Ermittlung (Block 'verfahrenswert'): 1500.00 €.",
+        "ergebnis": "1500.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 2,
+        "norm": "§ 63 Abs. 1 FamGKG",
+        "beschreibung": "Stichtag (Anhängigkeit/Einleitung des Verfahrens, beim Rechtsmittel dessen Einlegung) 2026-03-01 -> Tabellenstand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)' (gültig 2025-06-01 bis heute).",
+        "ergebnis": "kostbraeg_2025",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 3,
+        "norm": "§ 28 Abs. 1 FamGKG",
+        "beschreibung": "1,0-Gebühr (Einfachgebühr) für Verfahrenswert 1500.00 €.",
+        "ergebnis": "82.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 4,
+        "norm": "KV 1420 FamGKG",
+        "beschreibung": "Einstweilige Anordnung in den übrigen Familiensachen (Familienstreitsachen und Verfahren nach Vorbem. 1.3.2), erster Rechtszug — Verfahren im Allgemeinen (KV 1420 FamGKG): Satz 1.5 x 82.00 € = 123.00 €",
+        "ergebnis": "123.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 5,
+        "norm": "Gesamt",
+        "beschreibung": "Summe aller Gerichtskosten-Positionen (FamGKG) (nicht umsatzsteuerpflichtig).",
+        "ergebnis": "123.00",
+        "quelle": "executor"
+      }
+    ],
+    "ergebnis": {
+      "gesamt": "123.00",
+      "umsatzsteuerpflichtig": false,
+      "quelle": "executor"
+    },
+    "warnungen": [
+      "Einstweilige Anordnung (§ 41 FamGKG): Der ermittelte Verfahrenswert 1500.00 € ist der gesetzliche Ausgangswert nach § 41 Satz 2 FamGKG (Hälfte des Hauptsachewerts), keine Festsetzung — das Gericht kann ihn nach § 41 Satz 1 FamGKG weiter ermäßigen."
+    ]
+  }
+}

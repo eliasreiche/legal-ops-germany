@@ -258,6 +258,12 @@ oder **ermittelt** (Scheidung im Verbund, § 44 FamGKG):
 Selbständige Familiensache(n) statt Verbund:
 `"verfahrenswert_ermittlung": {"gegenstaende": [{"art": "kindschaftssache", "gegenstand": "umgang"}]}`.
 
+Verfahren der einstweiligen Anordnung (§ 41 FamGKG, nur auf ausdrückliche
+Angabe — siehe `einstweilige_anordnung` unten; Beispielpaar
+[`beispiel-eingabe-gewaltschutz-ea.json`](beispiel-eingabe-gewaltschutz-ea.json) /
+[`beispiel-report-gewaltschutz-ea.json`](beispiel-report-gewaltschutz-ea.json)):
+`"verfahrenswert_ermittlung": {"gegenstaende": [{"art": "gewaltschutzsache", "fallgruppe": "1_gewschg", "einstweilige_anordnung": true}]}`.
+
 | Feld | Pflicht | Format | Bedeutung |
 |---|---|---|---|
 | `verfahrenseinleitungsdatum` | **ja** | ISO-Datum `JJJJ-MM-TT` | Stichtag für Tabellenstand **und** versionierte Wertvorschriften: Tag, an dem das Verfahren anhängig geworden oder eingeleitet worden ist (§ 63 Abs. 1 Satz 1 FamGKG); bei einem Rechtsmittel der Tag seiner Einlegung (Satz 2) — liegt der in einem anderen Stand als die erste Instanz, Beschwerde in einer eigenen Anfrage rechnen. |
@@ -279,7 +285,9 @@ in `ehesache` und in jedem Gegenstand — ist Exit 2 mit Nennung. Geldbeträge
 nur als Dezimalstring (oder ganze Zahl), `float` wird abgelehnt.
 
 Die Werte gelten für den Stand nach `verfahrenseinleitungsdatum`
-(KostBRÄG 2025 hat nur § 44 Abs. 2 und § 45 Abs. 1 geändert, Daten in
+(KostBRÄG 2025 hat § 44 Abs. 2, § 45 Abs. 1, § 47 Abs. 1, § 48 Abs. 1 und
+§ 49 Abs. 1 geändert; § 41, § 48 Abs. 2 und die übrigen Wertvorschriften
+sind in beiden Ständen wortgleich. Daten und Wortlaut in
 [`core/calc/famgkg/wertvorschriften.json`](../../../core/calc/famgkg/wertvorschriften.json)).
 
 | `art` / Objekt | Felder | Norm | Regel im Executor |
@@ -289,14 +297,27 @@ Die Werte gelten für den Stand nach `verfahrenseinleitungsdatum`
 | `kindesunterhalt`, `ehegattenunterhalt` | `monatsbetrag` (> 0), optional `anzahl_monate` (1–12, nur wenn insgesamt weniger als zwölf Monatsbeträge gefordert sind), optional `rueckstaende` (≥ 0) | § 51 Abs. 1 Satz 1, Abs. 2 Satz 1 FamGKG | Monate (Default 12) × Monatsbetrag + bei Einreichung fällige Beträge. Dynamisierter Unterhalt: als `monatsbetrag` den Betrag nach dem Mindestunterhalt bei Einreichung eingeben (§ 51 Abs. 1 Satz 2). |
 | `kindschaftssache` (selbständig) | `gegenstand`: `sorge`, `umgang`, `auskunft`, `herausgabe` | § 45 Abs. 1 Nr. 1–4, Abs. 2 FamGKG | Festwert 4.000 € (KostRÄG 2021) / 5.000 € (ab 01.06.2025) je Eintrag; mehrere Kinder = ein Gegenstand (Abs. 2) — derselbe `gegenstand` zweimal ist Exit 2. |
 | `kindschaftssache` (Folgesache im Verbund) | `gegenstand`: `sorge`, `umgang`, `herausgabe` (§ 137 Abs. 3 FamFG) | § 44 Abs. 2 Satz 1 FamGKG | Erhöhung um 20 % des Ehesachenwerts, höchstens 4.000 € / ab 01.06.2025 5.000 € — je Kindschaftssache; mehrere Kinder = ein Gegenstand. |
+| `abstammungssache` (nur selbständig) | `fallgruppe` (Pflicht): `169_nr_1_4` = § 169 Nr. 1 und 4 FamFG (Feststellung des Eltern-Kind-Verhältnisses, Anfechtung der Vaterschaft), `169_nr_2_3` = übrige Abstammungssachen (§ 169 Nr. 2, 3 FamFG) | § 47 Abs. 1 FamGKG | Festwert `169_nr_1_4`: 2.000 € (KostRÄG 2021) / 3.000 € (ab 01.06.2025); `169_nr_2_3`: 1.000 € (beide Stände). |
+| `ehewohnungssache` | `fallgruppe` (Pflicht): `200_abs_1_nr_1` = § 200 Abs. 1 Nr. 1 FamFG (§ 1361b BGB, Getrenntleben), `200_abs_1_nr_2` = § 200 Abs. 1 Nr. 2 FamFG (§ 1568a BGB, anlässlich der Scheidung) | § 48 Abs. 1 FamGKG | Festwert `200_abs_1_nr_1`: 3.000 € / ab 01.06.2025 4.000 €; `200_abs_1_nr_2`: 4.000 € / ab 01.06.2025 5.000 €. Als **Folgesache** im Verbund nur `200_abs_1_nr_2` (§ 137 Abs. 2 Satz 1 Nr. 3 FamFG: „wenn eine Entscheidung für den Fall der Scheidung zu treffen ist"), Wert wird hinzugerechnet (§ 44 Abs. 2 Satz 2 FamGKG); `200_abs_1_nr_1` im Verbund: Exit 2. |
+| `haushaltssache` | `fallgruppe` (Pflicht): `200_abs_2_nr_1` = § 200 Abs. 2 Nr. 1 FamFG (§ 1361a BGB, Getrenntleben), `200_abs_2_nr_2` = § 200 Abs. 2 Nr. 2 FamFG (§ 1568b BGB, anlässlich der Scheidung) | § 48 Abs. 2 FamGKG | Festwert `200_abs_2_nr_1`: 2.000 €, `200_abs_2_nr_2`: 3.000 € (beide Stände). Folgesache wie bei `ehewohnungssache`: nur `200_abs_2_nr_2`. |
+| `gewaltschutzsache` (nur selbständig) | `fallgruppe` (Pflicht): `1_gewschg` = § 1 GewSchG (Schutzmaßnahmen), `eu_gewschvg` = Verfahren nach dem EU-Gewaltschutzverfahrensgesetz (keine Gewaltschutzsache i. S. d. § 210 FamFG, von § 49 Abs. 1 FamGKG gesondert erfasst; Bescheinigungsverfahren laufen nach Vorbem. 1.3.2 Abs. 3 KV FamGKG über Hauptabschnitt 7, Positionen entsprechend prüfen), `2_gewschg` = § 2 GewSchG (Wohnungsüberlassung) | § 49 Abs. 1 FamGKG | Festwert `1_gewschg`/`eu_gewschvg`: 2.000 € / ab 01.06.2025 3.000 €; `2_gewschg`: 3.000 € / ab 01.06.2025 4.000 €. |
 | `geldforderung` | `betrag` (> 0) | § 35 FamGKG | Höhe der bezifferten Forderung (z. B. Zugewinnausgleich). |
 | `auffangwert` | — | § 42 Abs. 3 FamGKG | 5.000 € — nur wenn keine besondere Wertvorschrift greift und keine genügenden Anhaltspunkte bestehen (Einordnung trifft die Kanzlei). |
-| jede `art` | `verfahrenswert_festgesetzt` statt der Berechnungsfelder (bei `kindschaftssache` zusätzlich `gegenstand`) | gerichtliche Festsetzung | Der vom Gericht festgesetzte Wert schlägt die Berechnung (bei der Kindschafts-Folgesache = Erhöhungsbetrag, § 44 Abs. 3). Rechenschritt und Gegenstand `quelle: "eingabe"`. |
+| jede `art` | `verfahrenswert_festgesetzt` statt der Berechnungsfelder (bei `kindschaftssache` zusätzlich `gegenstand`, bei den Festwert-Arten §§ 47–49 weiterhin Pflicht-`fallgruppe`) | gerichtliche Festsetzung | Der vom Gericht festgesetzte Wert schlägt die Berechnung (bei der Kindschafts-Folgesache = Erhöhungsbetrag, § 44 Abs. 3; bei §§ 47–49 die Billigkeitsabweichung nach § 47 Abs. 2, § 48 Abs. 3, § 49 Abs. 2). Rechenschritt und Gegenstand `quelle: "eingabe"`. |
+| jede `art` in `gegenstaende` (nicht im Verbund, nicht an `ehesache`) | optional `einstweilige_anordnung` (nur JSON-Boolean, Default `false`) | § 41 Satz 2 FamGKG | **Nur auf ausdrückliche Angabe der Kanzlei** (Claude setzt das Flag nie von sich aus, siehe SKILL.md, Ablauf Schritt 1). Bei `true`: Hauptsachewert wie oben, dann **Ausgangswert = Hälfte** (kaufmännisch auf volle Cent gerundet) als eigener Rechenschritt; der Gegenstand trägt zusätzlich `einstweilige_anordnung: true` und `hauptsachewert`, dazu ein Pflicht-Hinweis und eine `warnungen`-Zeile im `famgkg`-Block: das Gericht kann nach § 41 Satz 1 weiter ermäßigen, der Wert ist keine Festsetzung. Mit `verfahrenswert_festgesetzt` gilt der festgesetzte Wert ohne Halbierung (Rechenschritt `§ 41 FamGKG`, `quelle: "eingabe"`). Exit 2: Flag an `ehesache` oder in `folgesachen` (die einstweilige Anordnung ist ein selbständiges Verfahren, § 51 Abs. 3 Satz 1 FamFG), Flag kein Boolean, `gegenstaende` mit und ohne Flag gemischt (Hauptsache und Anordnungsverfahren getrennt rechnen). |
 
 Verbund: Gesamt = Ehesache + Erhöhungen der Kindschafts-Folgesachen + Werte
 der übrigen Folgesachen (§ 44 Abs. 1, 2 FamGKG; § 33 Abs. 1 Satz 2 nicht
 anzuwenden). Die Gerichtsgebühr im Verbund ist KV `1110` aus dem Gesamtwert —
-nicht je Folgesache eine eigene Position.
+nicht je Folgesache eine eigene Position. Abstammungs- und
+Gewaltschutzsachen sind keine Folgesachen (§ 137 Abs. 2, 3 FamFG) — in
+`folgesachen`: Exit 2.
+
+**KV-Positionen bei einstweiliger Anordnung:** Positionen bleiben
+Nutzereingabe, der Executor wählt KV `1410`/`1420`/`1421` nie selbst. Steht
+`einstweilige_anordnung: true` an einem Gegenstand und enthält `positionen`
+Hauptsache-Gebühren (z. B. `1220`, `1320`), aber keine der Positionen
+`1410`/`1420`/`1421`, gibt der Report eine **Warnung** aus (kein Fehler).
 
 **Querverweis in den RVG-Block:** `"rvg": {"streitwert": "famgkg.verfahrenswert", ...}`
 übernimmt den Verfahrenswert des `famgkg`-Blocks (§ 23 Abs. 1 Satz 1 RVG).
@@ -471,7 +492,11 @@ Struktur je Block (`rvg`/`gkg`, sofern angefragt):
   festgesetzter Wert, direkte Eingabe) — die betroffenen Gegenstände und
   Rechenschritte tragen ebenfalls `quelle: "eingabe"`, `nutzereingaben`
   nennt Betrag und Begründung. `kappung_30_abs_3` entspricht
-  `kappung_36_abs_3` beim GKG.
+  `kappung_36_abs_3` beim GKG. Nur bei `einstweilige_anordnung: true`
+  trägt ein Gegenstand zusätzlich `einstweilige_anordnung` (`true`) und —
+  wenn halbiert wurde — `hauptsachewert` (Wert vor § 41 Satz 2); alle
+  anderen Gegenstände behalten das bisherige Schema. `famgkg.warnungen`
+  enthält dann den § 41-Satz-1-Hinweis und ggf. die Positions-Warnung.
 - **Alle Geldbeträge sind Dezimalstrings** (z. B. `"847.60"`), niemals
   JSON-Zahlen — vermeidet Float-Rundungsfehler beim Weiterverarbeiten.
 
@@ -513,13 +538,30 @@ Struktur je Block (`rvg`/`gkg`, sofern angefragt):
   verlangt KV 1210; die Ermäßigung KV 1211 ist von der Anmerkung nicht
   erfasst und wird als Eingabefehler abgelehnt statt geraten.
 - **FamGKG — keine Billigkeit, kein Ermessen:** § 43 Abs. 1 Satz 1
-  (Umfang, Bedeutung, Vermögen), § 41 (einstweilige Anordnung: in der Regel
-  ermäßigt, Ausgangspunkt die Hälfte — eine Regel mit Ermessen, deshalb
-  nicht ermittelt; den Wert direkt als `verfahrenswert` eingeben),
-  §§ 44 Abs. 3, 45 Abs. 3, 50 Abs. 3 (Billigkeitskorrektur) — nur über
+  (Umfang, Bedeutung, Vermögen), § 41 Satz 1 (weitere Ermäßigung im
+  Verfahren der einstweiligen Anordnung), §§ 44 Abs. 3, 45 Abs. 3, 47 Abs. 2,
+  48 Abs. 3, 49 Abs. 2, 50 Abs. 3 (Billigkeitskorrektur) — nur über
   `zuschlag` bzw. `verfahrenswert_festgesetzt` als Nutzereingabe.
-- **FamGKG — nicht modellierte Wertvorschriften:** Abstammung (§ 47),
-  Ehewohnung/Haushalt (§ 48), Gewaltschutz (§ 49), Versorgungsausgleich-
+- **FamGKG — § 41 nur Satz 2, nur auf Angabe:** Der Executor rechnet
+  ausschließlich den Ausgangswert nach § 41 Satz 2 FamGKG („Dabei ist von der
+  Hälfte des für die Hauptsache bestimmten Werts auszugehen.") und nur, wenn
+  `einstweilige_anordnung: true` gesetzt ist. Ob überhaupt ein Verfahren der
+  einstweiligen Anordnung vorliegt, ist keine Rechenfrage. **Bewusste
+  Lesart Mindestwerte:** Gesetzliche Mindestwerte der Hauptsache (z. B.
+  § 50 Abs. 1 Satz 2 FamGKG, 1.000 € beim Versorgungsausgleich) werden vor
+  der Halbierung angewendet und danach **nicht erneut** — § 41 Satz 2 setzt
+  am „für die Hauptsache bestimmten Wert" an, der die Mindestwerte bereits
+  enthält (Beispiel: 300 € -> Mindestwert 1.000 € -> Ausgangswert 500 €).
+  Die Hälfte wird kaufmännisch auf volle Cent gerundet (Rechenschritt nennt
+  den rechnerischen Wert, wenn gerundet wurde).
+- **FamGKG — Fallgruppen §§ 47–49 nie angenommen:** `fallgruppe` ist
+  Pflicht; ohne sie (oder mit unbekanntem Wert) Exit 2. Ehewohnungs- und
+  Haushaltssachen im Verbund nur mit der Fallgruppe „anlässlich der
+  Scheidung" (§ 200 Abs. 1 Nr. 2 / Abs. 2 Nr. 2 FamFG); Verfahren für die
+  Zeit des Getrenntlebens (§§ 1361a, 1361b BGB) sind keine Folgesachen
+  (§ 137 Abs. 2 Satz 1 Nr. 3 FamFG: nur „wenn eine Entscheidung für den Fall
+  der Scheidung zu treffen ist").
+- **FamGKG — nicht modellierte Wertvorschriften:** Versorgungsausgleich-
   Auskunft/Abtretung (§ 50 Abs. 2), Unterhaltssachen, die keine
   Familienstreitsachen sind (§ 51 Abs. 3), Kindschaftssache nach § 45
   Abs. 1 Nr. 5, vermögensrechtliche Kindschaftssachen (§ 46), § 33 Abs. 1

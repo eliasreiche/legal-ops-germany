@@ -1,10 +1,10 @@
 ---
 name: rvg-gkg-rechner
-description: "Berechnet RVG-Anwaltsvergütung, GKG-Gerichtskosten (Wertgebühren, Zivilsachen) und FamGKG-Gerichtskosten in Familiensachen samt Verfahrenswert-Ermittlung (§§ 33 ff. FamGKG) deterministisch mit nachvollziehbarer Rechenkette — Tabellenstand nach Stichtag (KostRÄG 2021 / KostBRÄG 2025), Gebührensätze, Anrechnung, Auslagen, USt. Triggert bei RVG berechnen, Gerichtskosten/GKG, FamGKG, Familiensache, Verfahrenswert, Scheidungskosten, Kostenvoranschlag Scheidung/Versorgungsausgleich/Unterhalt/Sorgerecht, Anwaltsvergütung, Streitwert zu Gebühren, Kostennote, Vergütungsberechnung."
+description: "Berechnet RVG-Anwaltsvergütung, GKG-Gerichtskosten (Wertgebühren, Zivilsachen) und FamGKG-Gerichtskosten in Familiensachen samt Verfahrenswert-Ermittlung (§§ 33 ff. FamGKG) deterministisch mit nachvollziehbarer Rechenkette — Tabellenstand nach Stichtag (KostRÄG 2021 / KostBRÄG 2025), Gebührensätze, Anrechnung, Auslagen, USt. Triggert bei RVG berechnen, Gerichtskosten/GKG, FamGKG, Familiensache, Verfahrenswert, Scheidungskosten, Kostenvoranschlag Scheidung/Versorgungsausgleich/Unterhalt/Sorgerecht/Gewaltschutz/Abstammung/Ehewohnung, einstweilige Anordnung Familiensache, Anwaltsvergütung, Streitwert zu Gebühren, Kostennote, Vergütungsberechnung."
 status: beta
 welle: 1
 bereich: zeit-abrechnung
-rdg_einordnung: "Rechnerische Gebührenermittlung nach den gesetzlichen Wertgebührentabellen (§ 13 RVG / Anlage 2 RVG, § 34 GKG / Anlage 2 GKG, § 28 FamGKG / Anlage 2 FamGKG) und einem festen Katalog von VV-RVG-/KV-GKG-/KV-FamGKG-Positionen — keine Beratung zur Gebührenstrategie, keine Billigkeitsentscheidung nach § 14 RVG (z. B. Satz der Geschäftsgebühr) und keine Kostenverteilungsentscheidung (§ 91 ff. ZPO; in Familiensachen die Kostenentscheidung des Gerichts). Verfahrenswerte nach dem FamGKG nur aus gesetzlich festen Regeln (Einkommenskomponente und Grenzen § 43, Prozentsätze § 50, Zwölfmonatsbetrag § 51, Festwerte §§ 42 Abs. 3, 45, Verbund § 44); Ermessens- und Billigkeitsentscheidungen des Gerichts (§ 43 Abs. 1 Satz 1, § 41, §§ 44 Abs. 3, 45 Abs. 3, 50 Abs. 3 FamGKG) trifft der Rechner nie — sie kommen nur als ausdrücklich markierte Nutzereingabe hinein."
+rdg_einordnung: "Rechnerische Gebührenermittlung nach den gesetzlichen Wertgebührentabellen (§ 13 RVG / Anlage 2 RVG, § 34 GKG / Anlage 2 GKG, § 28 FamGKG / Anlage 2 FamGKG) und einem festen Katalog von VV-RVG-/KV-GKG-/KV-FamGKG-Positionen — keine Beratung zur Gebührenstrategie, keine Billigkeitsentscheidung nach § 14 RVG (z. B. Satz der Geschäftsgebühr) und keine Kostenverteilungsentscheidung (§ 91 ff. ZPO; in Familiensachen die Kostenentscheidung des Gerichts). Verfahrenswerte nach dem FamGKG nur aus gesetzlich festen Regeln (Einkommenskomponente und Grenzen § 43, Prozentsätze § 50, Zwölfmonatsbetrag § 51, Festwerte §§ 42 Abs. 3, 45, 47–49 je vom Nutzer angegebener Fallgruppe, Verbund § 44, Ausgangswert der einstweiligen Anordnung § 41 Satz 2 nur auf ausdrückliche Angabe); Ermessens- und Billigkeitsentscheidungen des Gerichts (§ 43 Abs. 1 Satz 1, § 41 Satz 1, §§ 44 Abs. 3, 45 Abs. 3, 47 Abs. 2, 48 Abs. 3, 49 Abs. 2, 50 Abs. 3 FamGKG) trifft der Rechner nie — sie kommen nur als ausdrücklich markierte Nutzereingabe hinein."
 daten_hinweis: "Benötigt nur Streitwert bzw. Verfahrenswert, Stichtag und Gebührentatbestände; für die FamGKG-Verfahrenswert-Ermittlung zusätzlich reine Beträge (bereinigtes Nettoeinkommen der Ehegatten, Unterhaltsbeträge, Anzahl der Versorgungsanrechte) — keine Namen oder sonstigen Mandantendaten erforderlich, nur die Zahlen eingeben. Der Executor arbeitet rein lokal, ohne Netzwerkzugriff."
 haftung: "Zweitkontrolle, zwingend: Der Rechner ersetzt keine anwaltliche Prüfung der Kostenrechnung. Es geht um Geld (Anwalts- und Gerichtskosten) — jeder Betrag ist vor Versand/Festsetzung von der Kanzlei gegenzuprüfen, insbesondere Satzwahl bei Rahmengebühren, Anrechnung und Tabellenstand."
 ---
@@ -145,10 +145,19 @@ Ehesache § 43 (drei Monatsnettoeinkommen beider Ehegatten, mindestens
 10 %, bei Ausgleichsansprüchen nach der Scheidung 20 % des
 Drei-Monats-Netto, mindestens 1.000 €), Unterhalt § 51 Abs. 1, 2
 (Zwölfmonatsbetrag plus bei Einreichung fällige Beträge), Kindschaftssache
-§ 45 (Festwert 4.000 € / ab 01.06.2025 5.000 €), bezifferte Geldforderung
-§ 35, Auffangwert § 42 Abs. 3 (5.000 €) und der Verbund § 44 (Ehesache +
+§ 45 (Festwert 4.000 € / ab 01.06.2025 5.000 €), Festwerte je gesetzlicher
+Fallgruppe für Abstammung § 47, Ehewohnung/Haushalt § 48 und Gewaltschutz
+§ 49 (versioniert, die `fallgruppe` gibt die Kanzlei an — nie angenommen;
+Ehewohnung/Haushalt „anlässlich der Scheidung" auch als Folgesache,
+§ 137 Abs. 2 Satz 1 Nr. 3 FamFG), bezifferte Geldforderung § 35,
+Auffangwert § 42 Abs. 3 (5.000 €) und der Verbund § 44 (Ehesache +
 Folgesachen, je Kindschafts-Folgesache 20 % des Ehesachenwerts, höchstens
-4.000 € / ab 01.06.2025 5.000 €). Billigkeit und Ermessen sind **keine
+4.000 € / ab 01.06.2025 5.000 €). **Einstweilige Anordnung (§ 41 FamGKG):**
+nur wenn die Kanzlei es bestätigt (`einstweilige_anordnung: true` am
+Gegenstand einer selbständigen Familiensache), weist der Executor die Hälfte
+des Hauptsachewerts als gesetzlichen **Ausgangswert** nach § 41 Satz 2 aus —
+die weitere Ermäßigung nach Satz 1 ist Ermessen des Gerichts und bleibt
+draußen. Billigkeit und Ermessen sind **keine
 Rechenfrage**: Vermögen bei der Ehesache geht nur als ausdrücklicher
 `zuschlag` mit Pflicht-`begruendung` ein, ein abweichend festgesetzter Wert
 nur als `verfahrenswert_festgesetzt` — beides im Report als `quelle:
@@ -175,7 +184,7 @@ Eingabefehler mit Begründung, nie einen geratenen Betrag.
 
 | Eingabe | Pflicht | Format | Beschreibung |
 |---|---|---|---|
-| RVG-/GKG-/FamGKG-Anfrage | ja (mind. ein Block) | `.json` | Blöcke `rvg`, `gkg` und/oder `famgkg` (`gkg` und `famgkg` nie zusammen). Vollständiges Schema: [`schema/README.md`](schema/README.md), Beispiele: [`schema/beispiel-eingabe.json`](schema/beispiel-eingabe.json) (Grundfall, eine Angelegenheit), [`schema/beispiel-eingabe-anrechnung.json`](schema/beispiel-eingabe-anrechnung.json) (zwei Angelegenheiten, Anrechnung + Erhöhungsgebühr), [`schema/beispiel-eingabe-berufung.json`](schema/beispiel-eingabe-berufung.json) (Instanzenzug: erste Instanz + Berufung, GKG-Berufung), [`schema/beispiel-eingabe-familiensache.json`](schema/beispiel-eingabe-familiensache.json) (Scheidung im Verbund mit Verfahrenswert-Ermittlung und RVG-Querverweis). |
+| RVG-/GKG-/FamGKG-Anfrage | ja (mind. ein Block) | `.json` | Blöcke `rvg`, `gkg` und/oder `famgkg` (`gkg` und `famgkg` nie zusammen). Vollständiges Schema: [`schema/README.md`](schema/README.md), Beispiele: [`schema/beispiel-eingabe.json`](schema/beispiel-eingabe.json) (Grundfall, eine Angelegenheit), [`schema/beispiel-eingabe-anrechnung.json`](schema/beispiel-eingabe-anrechnung.json) (zwei Angelegenheiten, Anrechnung + Erhöhungsgebühr), [`schema/beispiel-eingabe-berufung.json`](schema/beispiel-eingabe-berufung.json) (Instanzenzug: erste Instanz + Berufung, GKG-Berufung), [`schema/beispiel-eingabe-familiensache.json`](schema/beispiel-eingabe-familiensache.json) (Scheidung im Verbund mit Verfahrenswert-Ermittlung und RVG-Querverweis), [`schema/beispiel-eingabe-gewaltschutz-ea.json`](schema/beispiel-eingabe-gewaltschutz-ea.json) (Gewaltschutz im Verfahren der einstweiligen Anordnung, § 49 + § 41 FamGKG). |
 
 Kurzfassung der Pflichtfelder:
 
@@ -199,7 +208,11 @@ Kurzfassung der Pflichtfelder:
   `verfahrenswert` (Dezimalstring) **oder** `verfahrenswert_ermittlung`
   (Objekt: `ehesache` + optional `folgesachen` für den Verbund, oder
   `gegenstaende` für selbständige Familiensachen; optional
-  `verfahrenswert_festgesetzt`), `positionen` (KV-FamGKG-Positionen aus dem
+  `verfahrenswert_festgesetzt`; bei `abstammungssache`,
+  `ehewohnungssache`, `haushaltssache`, `gewaltschutzsache` Pflicht-
+  `fallgruppe`; an Gegenständen selbständiger Familiensachen optional
+  `einstweilige_anordnung` (JSON-Boolean, nur nach Bestätigung durch den
+  Nutzer)), `positionen` (KV-FamGKG-Positionen aus dem
   [Katalog](../../core/calc/famgkg/kv-katalog.json): `1110`, `1111`,
   `1120`–`1122`, `1220`–`1224`, `1310`, `1314`, `1315`, `1320`–`1324`,
   `1410`, `1420`, `1421`, `1500`).
@@ -227,7 +240,22 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
    Unterhaltsbeträge) werden beim Nutzer erfragt, nie ergänzt oder geschätzt
    (Anti-Halluzination). Einen Ermessens-Zuschlag (Vermögen, § 43 Abs. 1
    Satz 1 FamGKG) setzt Claude nur, wenn der Nutzer Betrag **und**
-   Begründung nennt.
+   Begründung nennt. Bei Abstammungs-, Ehewohnungs-, Haushalts- und
+   Gewaltschutzsachen erfragt Claude die gesetzliche **`fallgruppe`**
+   (z. B. § 1 oder § 2 GewSchG, Getrenntleben oder anlässlich der
+   Scheidung), wenn sie sich nicht eindeutig aus den Angaben des Nutzers
+   ergibt — nie raten.
+   **Einstweilige Anordnung:** Claude setzt `einstweilige_anordnung` **nie
+   von sich aus**. Deuten die Umstände auf ein Eilverfahren hin (der Nutzer
+   spricht von einstweiliger Anordnung, Eilantrag, vorläufiger Regelung,
+   Gewaltschutz-Eilverfahren oder Unterhalt „bis zur Entscheidung in der
+   Hauptsache"), fragt Claude: „Handelt es sich um ein Verfahren der
+   einstweiligen Anordnung? Dann gehe ich nach § 41 FamGKG von der Hälfte
+   des Hauptsachewerts aus." Erst nach Bestätigung setzt Claude das Flag
+   (am Gegenstand in `gegenstaende`, nie im Verbund — die einstweilige
+   Anordnung ist ein eigenes Verfahren) und wählt die KV-Position des
+   Anordnungsverfahrens (KV 1410 Kindschaftssachen, KV 1420/1421 übrige
+   Familiensachen) nur nach den Angaben des Nutzers.
 2. **Claude ruft den Executor auf** (kein eigenes Rechnen durch das Modell):
 
    ```bash
@@ -271,6 +299,14 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
      eingegebener Verfahrenswert) ausdrücklich als Eingabe der Kanzlei
      kennzeichnen, nie als gesetzlich berechnet; die `hinweise` zur
      Ermessensnorm § 43 Abs. 1 Satz 1 FamGKG immer mitgeben,
+   - **bei Festwerten §§ 47–49 FamGKG** die Fallgruppe als Angabe der
+     Kanzlei nennen (Gegenstand `bezeichnung`, Rechenschritt),
+   - **bei einstweiliger Anordnung** (`einstweilige_anordnung: true` am
+     Gegenstand) **immer**: Hauptsachewert (`hauptsachewert`) und den
+     **Ausgangswert nach § 41 Satz 2 FamGKG** (Hälfte) ausweisen und den
+     Hinweis geben, dass das Gericht nach § 41 Satz 1 FamGKG weiter
+     ermäßigen kann — der Wert ist keine Festsetzung; die `warnungen` des
+     `famgkg`-Blocks (u. a. fehlende KV 1410/1420/1421) wiedergeben,
    - **Querverweis**: trägt `rvg.eingabe.streitwert_herkunft` den Wert
      `famgkg.verfahrenswert`, sagen, dass der RVG-Gegenstandswert aus dem
      FamGKG-Block übernommen wurde (§ 23 Abs. 1 Satz 1 RVG),
@@ -293,7 +329,10 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
    zugleich oder keines, Querverweis `famgkg.verfahrenswert` ohne
    `famgkg`-Block, nicht unterstützte KV-FamGKG-Nummer oder `art`,
    Ermessens-Zuschlag ohne Begründung, unbekannter Key in der
-   Verfahrenswert-Ermittlung) gibt Claude die Fehlermeldung wieder und
+   Verfahrenswert-Ermittlung, fehlende oder unbekannte `fallgruppe`,
+   Abstammungs-/Gewaltschutzsache oder Getrenntlebens-Fallgruppe im Verbund,
+   `einstweilige_anordnung` an der Ehesache, im Verbund, nicht als Boolean
+   oder gemischt mit Hauptsache-Gegenständen) gibt Claude die Fehlermeldung wieder und
    korrigiert die Eingabe bzw. fragt nach — er rät kein Ergebnis.
 
 ## Output-Format
@@ -493,7 +532,56 @@ Eine Billigkeitsabweichung (z. B. Umgangsverfahren „wegen des Aufwands mit
 8.000 € statt des Festwerts") lässt sich nicht als Rechenparameter
 übergeben: ein Feld wie `"billigkeit"` liefert Exit 2 („unbekanntes Feld in
 'gegenstaende[0]' (art 'kindschaftssache'): 'billigkeit' (erlaubt: 'art',
-'gegenstand', 'verfahrenswert_festgesetzt')"). Erst wenn das Gericht den
+'gegenstand', 'verfahrenswert_festgesetzt', 'einstweilige_anordnung')"). Erst wenn das Gericht den
 Wert festgesetzt hat, gibt die Kanzlei ihn als `verfahrenswert_festgesetzt`
 ein — der Report führt ihn dann als Nutzereingabe (`quelle: "eingabe"`).
 Claude schätzt in beiden Fällen keinen Ersatzbetrag.
+
+### Beispiel 8 — Gewaltschutz im Verfahren der einstweiligen Anordnung (§ 49 + § 41 FamGKG)
+
+Die Nutzerin schreibt: „Mandantin braucht kurzfristig ein Kontakt- und
+Näherungsverbot, wir stellen einen Eilantrag. Was kostet das?" Das deutet auf
+ein Eilverfahren hin — Claude setzt das Flag nicht von sich aus, sondern
+fragt: „Handelt es sich um ein Verfahren der einstweiligen Anordnung? Dann
+gehe ich nach § 41 FamGKG von der Hälfte des Hauptsachewerts aus." Erst
+nach der Bestätigung (und der Angabe, dass es um Schutzmaßnahmen nach § 1
+GewSchG geht, nicht um eine Wohnungsüberlassung nach § 2 GewSchG) schreibt
+Claude die Anfrage
+([`schema/beispiel-eingabe-gewaltschutz-ea.json`](schema/beispiel-eingabe-gewaltschutz-ea.json)):
+Verfahrenseinleitung und Auftrag 01.03.2026 (KostBRÄG 2025), Gegenstand
+`{"art": "gewaltschutzsache", "fallgruppe": "1_gewschg",
+"einstweilige_anordnung": true}`, FamGKG KV 1420, RVG Nr. 3100 mit
+`"streitwert": "famgkg.verfahrenswert"`. Report:
+[`schema/beispiel-report-gewaltschutz-ea.json`](schema/beispiel-report-gewaltschutz-ea.json).
+
+Von Claude präsentiertes Ergebnis (aus dem Report übernommen):
+
+| Verfahrenswert-Herleitung | Norm | Wert |
+|---|---|---|
+| Gewaltschutzsache, Fallgruppe § 1 GewSchG (Angabe der Kanzlei): gesetzlicher Festwert der Hauptsache | § 49 Abs. 1 FamGKG ✅ | 3.000,00 € |
+| Einstweilige Anordnung (bestätigt): Hälfte des Hauptsachewerts = **Ausgangswert** | § 41 Satz 2 FamGKG ✅ | **1.500,00 €** |
+
+| Gerichtskosten (FamGKG) | Satz | Betrag |
+|---|---|---|
+| 1,0-Gebühr (Verfahrenswert 1.500 €, KostBRÄG 2025) | — | 82,00 € |
+| Einstweilige Anordnung, übrige Familiensachen, Verfahren im Allgemeinen (KV 1420 FamGKG ✅) | 1,5 | **123,00 €** |
+
+| Anwaltsvergütung (RVG, Gegenstandswert übernommen nach § 23 Abs. 1 Satz 1 RVG ✅) | Satz | Betrag |
+|---|---|---|
+| 1,0-Gebühr (Gegenstandswert 1.500 €) | — | 134,50 € |
+| Verfahrensgebühr (Nr. 3100 VV RVG ✅) | 1,3 | 174,85 € |
+| Auslagenpauschale (Nr. 7002 VV RVG ✅) | 20 %, gedeckelt | 20,00 € |
+| USt (Nr. 7008 VV RVG ✅) | 19 % | 37,02 € |
+| **RVG gesamt** | | **231,87 €** |
+
+Claude weist ausdrücklich darauf hin (Warnung und Hinweis im Report): Die
+1.500,00 € sind der **gesetzliche Ausgangswert nach § 41 Satz 2 FamGKG ✅,
+keine Festsetzung** — das Gericht kann den Wert nach § 41 Satz 1 FamGKG ✅
+weiter ermäßigen; setzt es einen Wert fest, gibt die Kanzlei ihn als
+`verfahrenswert_festgesetzt` ein (dann keine Halbierung mehr). Die
+Fallgruppe § 1 GewSchG ist eine Angabe der Kanzlei, eine
+Billigkeitsabweichung nach § 49 Abs. 2 FamGKG ✅ rechnet der Executor nicht.
+Gerichtskosten und Anwaltsvergütung werden nicht addiert. Hätte die Anfrage
+statt KV 1420 nur eine Hauptsache-Position (z. B. KV 1320) enthalten, stünde
+im Report eine Warnung, dass die Gebühr des Anordnungsverfahrens fehlt — der
+Executor wählt die Position nie selbst.

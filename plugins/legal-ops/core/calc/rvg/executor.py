@@ -107,7 +107,10 @@ from wertgebuehr_formel import D, WertgebuehrFehler, parse_datum_strikt  # noqa:
 from rvg.rechner import RVGEingabeFehler, berechne as rvg_berechne  # noqa: E402
 from gkg.rechner import GKGEingabeFehler, berechne as gkg_berechne  # noqa: E402
 from famgkg.rechner import FamGKGEingabeFehler, berechne as famgkg_berechne  # noqa: E402
-from famgkg.verfahrenswert import ermittle as verfahrenswert_ermitteln  # noqa: E402
+from famgkg.verfahrenswert import (  # noqa: E402
+    ermittle as verfahrenswert_ermitteln,
+    report_warnungen as verfahrenswert_warnungen,
+)
 from rechenschritt import RechenSchritt  # noqa: E402
 
 
@@ -340,6 +343,8 @@ def _baue_famgkg_block(anfrage: dict[str, Any]) -> tuple[dict[str, Any], tuple[s
                            f"{verfahrenswert} €.")
 
     ergebnis = famgkg_berechne(verfahrenswert, stichtag, positionen)
+    # § 41 FamGKG (Ausgangswert, Positions-Plausibilität) — leer ohne Ermittlung.
+    vw_warnungen = verfahrenswert_warnungen(vw, positionen) if hat_ermittlung else []
     rechenkette = _renummeriere(
         [RechenSchritt(schritt=1, norm=vw_schritt_norm, beschreibung=vw_schritt_text,
                        ergebnis=vw_block["gesamt"], quelle=vw_quelle).as_dict()]
@@ -368,7 +373,7 @@ def _baue_famgkg_block(anfrage: dict[str, Any]) -> tuple[dict[str, Any], tuple[s
             "umsatzsteuerpflichtig": False,
             "quelle": "executor",
         },
-        "warnungen": ergebnis.warnungen,
+        "warnungen": vw_warnungen + ergebnis.warnungen,
     }
     if ergebnis.kappung:
         block["kappung_30_abs_3"] = ergebnis.kappung
