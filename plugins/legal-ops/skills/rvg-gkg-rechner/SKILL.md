@@ -256,6 +256,19 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
    Anordnung ist ein eigenes Verfahren) und wählt die KV-Position des
    Anordnungsverfahrens (KV 1410 Kindschaftssachen, KV 1420/1421 übrige
    Familiensachen) nur nach den Angaben des Nutzers.
+   **Umsatzsteuer bei Auslandsbezug:** `umsatzsteuer` steht per Default auf
+   `true` (19 %). Deutet etwas darauf hin, dass der Mandant Wohnsitz oder
+   Sitz außerhalb Deutschlands hat (ausländische Anschrift, Drittland,
+   Unternehmen im EU-Ausland), fragt Claude **von sich aus vor der
+   Berechnung** — nicht erst auf Nachfrage: „Der Mandant sitzt im Ausland.
+   Dann liegt der Leistungsort möglicherweise nicht in Deutschland und es
+   fällt keine deutsche USt an (§ 3a Abs. 2 bzw. Abs. 4 Satz 2 Nr. 3 UStG
+   ⚠️ nicht prüfbar). Soll ich ohne USt rechnen?" Ob die Leistung steuerbar
+   ist, entscheidet die Kanzlei, nicht Claude. `umsatzsteuer: false` setzt
+   Claude nur auf ausdrückliche Angabe und nennt es im Ergebnis als Angabe
+   der Kanzlei. Ist der Sitz unbekannt, rechnet Claude mit dem Default und
+   weist im Ergebnis darauf hin, dass bei Mandanten im Ausland die USt zu
+   prüfen ist.
 2. **Claude ruft den Executor auf** (kein eigenes Rechnen durch das Modell):
 
    ```bash
@@ -269,8 +282,28 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
    1,0-Gebühr, Positionsbeträge, Anrechnung, Zwischensummen und Gesamtbetrag
    unverändert.
 4. **Claude stellt den Report als Rechenkette dar**: jeder Schritt mit Norm
-   und Zwischenergebnis, alle `warnungen` und `hinweise` sichtbar. Dabei
-   immer ausweisen:
+   und Zwischenergebnis, alle `warnungen` und `hinweise` sichtbar.
+   **Tabellenform** — gilt für jede Vergütungs- oder Kostenaufstellung,
+   ob im Chat, in einer Kostennote, einem Festsetzungsantrag (§§ 11, 55 RVG)
+   oder einem Briefentwurf im Kanzleibriefkopf:
+   - Die Tabelle enthält **nur Positionen, die abgerechnet werden**:
+     Gebührentatbestände (Verfahrens-, Termins-, Einigungsgebühr usw.),
+     Erhöhung, Anrechnung, Auslagenpauschale und sonstige Auslagen,
+     Zwischensumme/Netto, USt, Gesamt. Beim GKG/FamGKG entsprechend nur die
+     KV-Positionen, Anrechnung und Gesamt.
+   - Die **1,0-Gebühr** (§ 13 Abs. 1 RVG, § 34 Abs. 1 GKG, § 28 Abs. 1
+     FamGKG) ist eine Rechengröße, kein Vergütungstatbestand. Sie steht
+     **nie als eigene Tabellenzeile**, sondern in der Rechenkette oder in
+     einem Satz über bzw. unter der Tabelle.
+   - **Jeder Tatbestand steht genau einmal** in der Tabelle — keine
+     zusätzliche Zeile für Berechnungsgrundlage und Ergebnis derselben
+     Gebühr.
+   - Gilt für eine Position ein **anderer Gegenstandswert** (Vergleichswert,
+     Mehrwert, Teilwert), steht er als Klammerzusatz in genau dieser Zeile,
+     z. B. „Einigungsgebühr, Nr. 1003 VV RVG (Wert: 1.000,00 €)". Die dazu
+     gehörende 1,0-Gebühr nennt Claude in der Rechenkette.
+
+   Dabei immer ausweisen:
    - **welcher Tabellenstand** angewendet wurde und weshalb (Stichtag),
    - **Wert-Kappung** (§ 22 Abs. 2 S. 1 RVG / § 39 Abs. 2 GKG), wenn der
      `wertkappung`-Block gefüllt ist — eingegebenen und angewendeten Wert
@@ -364,11 +397,11 @@ Streitwert 5.000 €, Stichtag 01.03.2026 (Tabellenstand KostBRÄG 2025),
 Verfahrensgebühr (Nr. 3100), Terminsgebühr (Nr. 3104), Einigungsgebühr
 (Nr. 1000) sowie GKG-Verfahrensgebühr 1. Instanz (KV 1210).
 
-Von Claude präsentiertes Ergebnis (aus dem Report übernommen):
+Von Claude präsentiertes Ergebnis (aus dem Report übernommen; 1,0-Gebühr
+RVG bei Streitwert 5.000 €, KostBRÄG 2025: 354,50 €):
 
 | Position | Satz | Betrag |
 |---|---|---|
-| 1,0-Gebühr (Streitwert 5.000 €, KostBRÄG 2025) | — | 354,50 € |
 | Verfahrensgebühr (Nr. 3100 VV RVG) | 1,3 | 460,85 € |
 | Terminsgebühr (Nr. 3104 VV RVG) | 1,2 | 425,40 € |
 | Einigungsgebühr (Nr. 1000 VV RVG) | 1,5 | 531,75 € |
@@ -453,11 +486,10 @@ und GKG-Gerichtskosten bleiben getrennt.
 
 Anfrage im `gkg`-Block: Streitwert 10.000 €, Verfahrenseinleitung 01.03.2026
 (KostBRÄG 2025), Positionen KV 1100 und KV 1210, `anrechnung_1100_auf_1210:
-true`.
+true`. 1,0-Gebühr GKG bei Streitwert 10.000 €, KostBRÄG 2025: 283,00 €.
 
 | Position | Satz | Betrag |
 |---|---|---|
-| 1,0-Gebühr GKG (Streitwert 10.000 €, KostBRÄG 2025) | — | 283,00 € |
 | Mahnverfahren (KV 1100 GKG) | 0,5 | 141,50 € |
 | Verfahren im Allgemeinen, 1. Rechtszug (KV 1210 GKG), vor Anrechnung | 3,0 | 849,00 € |
 | ./. Anrechnung KV 1100 (Anmerkung Abs. 1 zu KV 1210 GKG) | — | − 141,50 € |
@@ -499,14 +531,15 @@ Von Claude präsentiertes Ergebnis (aus dem Report übernommen):
 | Kindesunterhalt: 12 × 480,00 € | § 51 Abs. 1 Satz 1 FamGKG | 5.760,00 € |
 | **Verfahrenswert Verbund** (Ehesache + Folgesachen) | § 44 Abs. 1, 2 FamGKG | **23.310,00 €** |
 
+1,0-Gebühr FamGKG bei Verfahrenswert 23.310 €, KostBRÄG 2025: 435,50 €;
+1,0-Gebühr RVG bei Gegenstandswert 23.310 €: 927,00 €.
+
 | Gerichtskosten (FamGKG) | Satz | Betrag |
 |---|---|---|
-| 1,0-Gebühr (Verfahrenswert 23.310 €, KostBRÄG 2025) | — | 435,50 € |
 | Ehesache inkl. Folgesachen, Verfahren im Allgemeinen (KV 1110 FamGKG) | 2,0 | **871,00 €** |
 
 | Anwaltsvergütung (RVG, Gegenstandswert übernommen nach § 23 Abs. 1 Satz 1 RVG) | Satz | Betrag |
 |---|---|---|
-| 1,0-Gebühr (Gegenstandswert 23.310 €) | — | 927,00 € |
 | Verfahrensgebühr (Nr. 3100 VV RVG) | 1,3 | 1.205,10 € |
 | Terminsgebühr (Nr. 3104 VV RVG) | 1,2 | 1.112,40 € |
 | Auslagenpauschale (Nr. 7002 VV RVG) | 20 %, gedeckelt | 20,00 € |
@@ -561,14 +594,15 @@ Von Claude präsentiertes Ergebnis (aus dem Report übernommen):
 | Gewaltschutzsache, Fallgruppe § 1 GewSchG (Angabe der Kanzlei): gesetzlicher Festwert der Hauptsache | § 49 Abs. 1 FamGKG ✅ | 3.000,00 € |
 | Einstweilige Anordnung (bestätigt): Hälfte des Hauptsachewerts = **Ausgangswert** | § 41 Satz 2 FamGKG ✅ | **1.500,00 €** |
 
+1,0-Gebühr FamGKG bei Verfahrenswert 1.500 €, KostBRÄG 2025: 82,00 €;
+1,0-Gebühr RVG bei Gegenstandswert 1.500 €: 134,50 €.
+
 | Gerichtskosten (FamGKG) | Satz | Betrag |
 |---|---|---|
-| 1,0-Gebühr (Verfahrenswert 1.500 €, KostBRÄG 2025) | — | 82,00 € |
 | Einstweilige Anordnung, übrige Familiensachen, Verfahren im Allgemeinen (KV 1420 FamGKG ✅) | 1,5 | **123,00 €** |
 
 | Anwaltsvergütung (RVG, Gegenstandswert übernommen nach § 23 Abs. 1 Satz 1 RVG ✅) | Satz | Betrag |
 |---|---|---|
-| 1,0-Gebühr (Gegenstandswert 1.500 €) | — | 134,50 € |
 | Verfahrensgebühr (Nr. 3100 VV RVG ✅) | 1,3 | 174,85 € |
 | Auslagenpauschale (Nr. 7002 VV RVG ✅) | 20 %, gedeckelt | 20,00 € |
 | USt (Nr. 7008 VV RVG ✅) | 19 % | 37,02 € |
