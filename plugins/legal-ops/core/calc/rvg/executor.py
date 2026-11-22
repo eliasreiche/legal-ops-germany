@@ -121,7 +121,8 @@ _pflichtfeld = functools.partial(pflichtfeld, fehler=WertgebuehrFehler)
 # Ein Tippfehler wie "anrechnung_1100_1210" würde sonst als *nicht*
 # angeforderte Anrechnung durchlaufen und einen zu hohen Betrag ausweisen.
 _RVG_FELDER = ("auftragsdatum", "streitwert", "angelegenheiten", "tatbestaende",
-               "anrechnung_2300_auf_3100", "auslagenpauschale", "umsatzsteuer")
+               "anrechnung_2300_auf_3100", "anrechnung_mahnverfahren_auf_3100",
+               "auslagenpauschale", "umsatzsteuer")
 _GKG_FELDER = ("verfahrenseinleitungsdatum", "streitwert", "positionen",
                "anrechnung_1100_auf_1210")
 _FAMGKG_FELDER = ("verfahrenseinleitungsdatum", "verfahrenswert",
@@ -209,12 +210,18 @@ def _baue_rvg_block(anfrage: dict[str, Any],
         raise RVGEingabeFehler(
             f"'rvg.anrechnung_2300_auf_3100' muss ein JSON-Boolean sein, "
             f"nicht {anrechnung!r}")
+    anrechnung_mahn = anfrage.get("anrechnung_mahnverfahren_auf_3100", False)
+    if not isinstance(anrechnung_mahn, bool):
+        raise RVGEingabeFehler(
+            f"'rvg.anrechnung_mahnverfahren_auf_3100' muss ein JSON-Boolean "
+            f"sein, nicht {anrechnung_mahn!r}")
     auslagenpauschale = anfrage.get("auslagenpauschale", True)
     umsatzsteuer = anfrage.get("umsatzsteuer", True)
 
     ergebnis = rvg_berechne(
         streitwert, stichtag, angelegenheiten,
         anrechnung_2300_auf_3100=anrechnung,
+        anrechnung_mahnverfahren_auf_3100=anrechnung_mahn,
         auslagenpauschale=auslagenpauschale,
         umsatzsteuer=umsatzsteuer)
 
@@ -227,14 +234,19 @@ def _baue_rvg_block(anfrage: dict[str, Any],
     rechenkette = [s.as_dict() for s in ergebnis.rechenkette]
     if querverweis_schritt:
         rechenkette = _renummeriere([querverweis_schritt] + rechenkette)
-    return {
-        "eingabe": {
-            **eingabe_block,
-            "angelegenheiten": angelegenheiten,
-            "anrechnung_2300_auf_3100": anrechnung,
-            "auslagenpauschale": bool(auslagenpauschale),
-            "umsatzsteuer": bool(umsatzsteuer),
-        },
+    eingabe_normalisiert: dict[str, Any] = {
+        **eingabe_block,
+        "angelegenheiten": angelegenheiten,
+        "anrechnung_2300_auf_3100": anrechnung,
+    }
+    # Nur ausgewiesen, wenn in der Anfrage gesetzt — ältere Reports behalten
+    # ihr Schema unverändert (Rückwärtskompatibilität).
+    if "anrechnung_mahnverfahren_auf_3100" in anfrage:
+        eingabe_normalisiert["anrechnung_mahnverfahren_auf_3100"] = anrechnung_mahn
+    eingabe_normalisiert["auslagenpauschale"] = bool(auslagenpauschale)
+    eingabe_normalisiert["umsatzsteuer"] = bool(umsatzsteuer)
+    block: dict[str, Any] = {
+        "eingabe": eingabe_normalisiert,
         "tabellenstand": _tabellenstand_kurz(ergebnis.tabellenstand),
         "wertkappung": {
             "gekappt": ergebnis.wert_gekappt,
@@ -257,6 +269,11 @@ def _baue_rvg_block(anfrage: dict[str, Any],
         },
         "warnungen": ergebnis.warnungen,
     }
+    # Zweite Anrechnung (Anm. zu Nr. 3305/3307 VV RVG) als eigener Block neben
+    # 'anrechnung' (Geschäftsgebühr) — nur, wenn angefordert.
+    if ergebnis.anrechnung_mahnverfahren is not None:
+        block["anrechnung_mahnverfahren"] = ergebnis.anrechnung_mahnverfahren
+    return block
 
 
 def _baue_gkg_block(anfrage: dict[str, Any]) -> dict[str, Any]:

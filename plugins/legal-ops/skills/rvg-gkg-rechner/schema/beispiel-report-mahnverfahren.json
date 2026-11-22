@@ -1,0 +1,361 @@
+{
+  "meta": {
+    "erzeugt_von": "core/calc/rvg/executor.py",
+    "quelle_datei": "beispiel-eingabe-mahnverfahren.json",
+    "deterministik": "Alle Geldbeträge in diesem Report sind Executor-Ergebnisse (P3), nicht modellgeneriert.",
+    "hinweis_getrennte_kostenarten": "RVG-Anwaltsvergütung und GKG- bzw. FamGKG-Gerichtskosten werden absichtlich NICHT zu einer Gesamtsumme addiert — unterschiedliche Forderungen mit unterschiedlichen Kostenschuldnern."
+  },
+  "rvg": {
+    "eingabe": {
+      "auftragsdatum": "2026-11-22",
+      "streitwert": "40000.00",
+      "angelegenheiten": [
+        {
+          "bezeichnung": "Mahnverfahren (Antragsteller)",
+          "tatbestaende": [
+            {
+              "nr": "3305"
+            }
+          ]
+        },
+        {
+          "bezeichnung": "Rechtsstreit erster Instanz nach Widerspruch",
+          "tatbestaende": [
+            {
+              "nr": "3100"
+            },
+            {
+              "nr": "3104"
+            }
+          ]
+        }
+      ],
+      "anrechnung_2300_auf_3100": false,
+      "anrechnung_mahnverfahren_auf_3100": true,
+      "auslagenpauschale": true,
+      "umsatzsteuer": true
+    },
+    "tabellenstand": {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 11 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109, 139; Anlage 2 RVG Fundstelle BGBl. 2025 I Nr. 109, S. 30"
+    },
+    "wertkappung": null,
+    "einfachgebuehr": "1185.00",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Mahnverfahren (Antragsteller)",
+        "positionen": [
+          {
+            "nr": "3305",
+            "bezeichnung": "Verfahrensgebühr für die Vertretung des Antragstellers (Mahnverfahren)",
+            "norm": "Nr. 3305 VV RVG",
+            "satz": "1.0",
+            "betrag": "1185.00",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [
+              "Die Gebühr wird auf die Verfahrensgebühr für einen nachfolgenden Rechtsstreit angerechnet (Anm. zu Nr. 3305 VV RVG) — der Executor rechnet das nur mit 'anrechnung_mahnverfahren_auf_3100: true' (verlangt eine Nr. 3100 in einer eigenen Angelegenheit)."
+            ],
+            "quelle": "executor"
+          }
+        ],
+        "ergebnis": {
+          "zwischensumme_gebuehren": "1185.00",
+          "auslagenpauschale": "20.00",
+          "netto": "1205.00",
+          "ust_satz": "0.19",
+          "ust": "228.95",
+          "gesamt": "1433.95",
+          "quelle": "executor"
+        }
+      },
+      {
+        "bezeichnung": "Rechtsstreit erster Instanz nach Widerspruch",
+        "positionen": [
+          {
+            "nr": "3100",
+            "bezeichnung": "Verfahrensgebühr (erster Rechtszug)",
+            "norm": "Nr. 3100 VV RVG",
+            "satz": "1.3",
+            "betrag": "355.50",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [
+              "Um 1185.00 € gemindert durch Anrechnung der Mahnverfahrensgebühr Nr. 3305 aus Angelegenheit 'Mahnverfahren (Antragsteller)' (Anm. zu Nr. 3305 VV RVG)."
+            ],
+            "quelle": "executor"
+          },
+          {
+            "nr": "3104",
+            "bezeichnung": "Terminsgebühr (erster Rechtszug)",
+            "norm": "Nr. 3104 VV RVG",
+            "satz": "1.2",
+            "betrag": "1422.00",
+            "mindestbetrag_gegriffen": false,
+            "hinweise": [],
+            "quelle": "executor"
+          }
+        ],
+        "ergebnis": {
+          "zwischensumme_gebuehren": "1777.50",
+          "auslagenpauschale": "20.00",
+          "netto": "1797.50",
+          "ust_satz": "0.19",
+          "ust": "341.53",
+          "gesamt": "2139.03",
+          "quelle": "executor"
+        }
+      }
+    ],
+    "anrechnung": null,
+    "rechenkette": [
+      {
+        "schritt": 1,
+        "norm": "§ 60 Abs. 1 RVG",
+        "beschreibung": "Stichtag (Auftragserteilung) 2026-11-22 -> Tabellenstand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)' (gültig 2025-06-01 bis heute).",
+        "ergebnis": "kostbraeg_2025",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 2,
+        "norm": "§ 13 Abs. 1 RVG",
+        "beschreibung": "1,0-Gebühr (Einfachgebühr) für Gegenstandswert 40000.00 €.",
+        "ergebnis": "1185.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 3,
+        "norm": "Nr. 3305 VV RVG",
+        "beschreibung": "Angelegenheit 'Mahnverfahren (Antragsteller)': Verfahrensgebühr für die Vertretung des Antragstellers (Mahnverfahren) (Nr. 3305 VV RVG): Satz 1.0 x 1185.00 € = 1185.00 €",
+        "ergebnis": "1185.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 4,
+        "norm": "Nr. 3100 VV RVG",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz nach Widerspruch': Verfahrensgebühr (erster Rechtszug) (Nr. 3100 VV RVG): Satz 1.3 x 1185.00 € = 1540.50 €",
+        "ergebnis": "1540.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 5,
+        "norm": "Nr. 3104 VV RVG",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz nach Widerspruch': Terminsgebühr (erster Rechtszug) (Nr. 3104 VV RVG): Satz 1.2 x 1185.00 € = 1422.00 €",
+        "ergebnis": "1422.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 6,
+        "norm": "Anm. zu Nr. 3305 VV RVG",
+        "beschreibung": "Anrechnung der Mahnverfahrensgebühr Nr. 3305 (Angelegenheit 'Mahnverfahren (Antragsteller)', 1185.00 €) auf die Verfahrensgebühr Nr. 3100 (Angelegenheit 'Rechtsstreit erster Instanz nach Widerspruch'): 1540.50 € - 1185.00 € = 355.50 €.",
+        "ergebnis": "355.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 7,
+        "norm": "Zwischensumme",
+        "beschreibung": "Angelegenheit 'Mahnverfahren (Antragsteller)': Summe der Gebührenpositionen (nach Anrechnung, sofern angefordert).",
+        "ergebnis": "1185.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 8,
+        "norm": "Nr. 7002 VV RVG",
+        "beschreibung": "Angelegenheit 'Mahnverfahren (Antragsteller)': Auslagenpauschale — 20 % von 1185.00 € = 237.00 €, gedeckelt auf höchstens 20.00 € (je Angelegenheit).",
+        "ergebnis": "20.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 9,
+        "norm": "Netto",
+        "beschreibung": "Angelegenheit 'Mahnverfahren (Antragsteller)': Zwischensumme zzgl. Auslagenpauschale.",
+        "ergebnis": "1205.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 10,
+        "norm": "Nr. 7008 VV RVG",
+        "beschreibung": "Angelegenheit 'Mahnverfahren (Antragsteller)': Umsatzsteuer — 19 % von 1205.00 € = 228.95 €.",
+        "ergebnis": "228.95",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 11,
+        "norm": "Gesamt (Angelegenheit)",
+        "beschreibung": "Angelegenheit 'Mahnverfahren (Antragsteller)': Netto zzgl. Umsatzsteuer.",
+        "ergebnis": "1433.95",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 12,
+        "norm": "Zwischensumme",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz nach Widerspruch': Summe der Gebührenpositionen (nach Anrechnung, sofern angefordert).",
+        "ergebnis": "1777.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 13,
+        "norm": "Nr. 7002 VV RVG",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz nach Widerspruch': Auslagenpauschale — 20 % von 1777.50 € = 355.50 €, gedeckelt auf höchstens 20.00 € (je Angelegenheit).",
+        "ergebnis": "20.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 14,
+        "norm": "Netto",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz nach Widerspruch': Zwischensumme zzgl. Auslagenpauschale.",
+        "ergebnis": "1797.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 15,
+        "norm": "Nr. 7008 VV RVG",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz nach Widerspruch': Umsatzsteuer — 19 % von 1797.50 € = 341.53 €.",
+        "ergebnis": "341.53",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 16,
+        "norm": "Gesamt (Angelegenheit)",
+        "beschreibung": "Angelegenheit 'Rechtsstreit erster Instanz nach Widerspruch': Netto zzgl. Umsatzsteuer.",
+        "ergebnis": "2139.03",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 17,
+        "norm": "Gesamtvergütung",
+        "beschreibung": "Summe über alle Angelegenheiten (gleicher Gläubiger — die Angelegenheiten bleiben gebührenrechtlich getrennt, nur die Vergütungsforderung wird addiert).",
+        "ergebnis": "3572.98",
+        "quelle": "executor"
+      }
+    ],
+    "ergebnis": {
+      "gesamt_verguetung": "3572.98",
+      "gesamt_hinweis": "Summe über alle Angelegenheiten (gleicher Gläubiger) — die Angelegenheiten bleiben gebührenrechtlich getrennt (je eigene Auslagenpauschale Nr. 7002 und eigene USt-Basis Nr. 7008).",
+      "quelle": "executor"
+    },
+    "warnungen": [
+      "Kein Teilübergang modellierbar: angerechnet wird die volle Mahnverfahrensgebühr aus demselben Gegenstandswert. Ist nur ein Teil des Mahnverfahrens-Gegenstands in den Rechtsstreit übergegangen, anwaltlich prüfen."
+    ],
+    "anrechnung_mahnverfahren": {
+      "norm": "Anm. zu Nr. 3305 VV RVG",
+      "mahnverfahren_angelegenheit": "Mahnverfahren (Antragsteller)",
+      "verfahrensgebuehr_angelegenheit": "Rechtsstreit erster Instanz nach Widerspruch",
+      "angerechnete_nr": "3305",
+      "anrechnungsbetrag": "1185.00",
+      "verfahrensgebuehr_vor_anrechnung": "1540.50",
+      "verfahrensgebuehr_nach_anrechnung": "355.50",
+      "hinweis": "Angerechnet wird die Gebühr Nr. 3305; Nr. 3308 wird nie angerechnet. Kein Teilübergang modellierbar: angerechnet wird die volle Mahnverfahrensgebühr aus demselben Gegenstandswert. Ist nur ein Teil des Mahnverfahrens-Gegenstands in den Rechtsstreit übergegangen, anwaltlich prüfen.",
+      "quelle": "executor"
+    }
+  },
+  "gkg": {
+    "eingabe": {
+      "verfahrenseinleitungsdatum": "2026-11-22",
+      "streitwert": "40000.00",
+      "positionen": [
+        {
+          "nr": "1100"
+        },
+        {
+          "nr": "1210"
+        }
+      ],
+      "anrechnung_1100_auf_1210": true
+    },
+    "tabellenstand": {
+      "id": "kostbraeg_2025",
+      "bezeichnung": "KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)",
+      "gueltig_ab": "2025-06-01",
+      "gueltig_bis": null,
+      "fundstelle": "Art. 5 KostBRÄG 2025, G. v. 07.04.2025, BGBl. 2025 I Nr. 109, 139; Anlage 2 GKG Fundstelle BGBl. 2025 I Nr. 109, S. 11"
+    },
+    "wertkappung": null,
+    "einfachgebuehr": "557.00",
+    "positionen": [
+      {
+        "nr": "1100",
+        "bezeichnung": "Mahnverfahren — Antrag auf Erlass eines Mahnbescheids oder eines Europäischen Zahlungsbefehls",
+        "norm": "KV 1100 GKG",
+        "satz": "0.5",
+        "betrag": "278.50",
+        "mindestbetrag_gegriffen": false,
+        "hinweise": [],
+        "quelle": "executor"
+      },
+      {
+        "nr": "1210",
+        "bezeichnung": "Verfahren im Allgemeinen, erster Rechtszug (Amts-/Landgericht)",
+        "norm": "KV 1210 GKG",
+        "satz": "3.0",
+        "betrag": "1392.50",
+        "mindestbetrag_gegriffen": false,
+        "hinweise": [
+          "Um 278.50 € gemindert durch Anrechnung der Mahnverfahrensgebühr KV 1100 GKG (Anmerkung Abs. 1 zu KV 1210 GKG)."
+        ],
+        "quelle": "executor"
+      }
+    ],
+    "anrechnung": {
+      "norm": "Anmerkung Abs. 1 zu KV 1210 GKG",
+      "fundstelle": "Anlage 1 zum GKG (Kostenverzeichnis), Teil 1 Hauptabschnitt 2 Abschnitt 1 Unterabschnitt 1, Anmerkung Absatz 1 zu Nummer 1210",
+      "angerechnete_position": "1100",
+      "empfangende_position": "1210",
+      "anrechnungsbetrag": "278.50",
+      "gebuehr_1210_vor_anrechnung": "1671.00",
+      "gebuehr_1210_nach_anrechnung": "1392.50",
+      "quelle": "executor"
+    },
+    "rechenkette": [
+      {
+        "schritt": 1,
+        "norm": "§ 71 Abs. 1 GKG",
+        "beschreibung": "Stichtag (Anhängigkeit der Rechtsstreitigkeit) 2026-11-22 -> Tabellenstand 'KostBRÄG 2025 (Kosten- und Betreuervergütungsrechtsänderungsgesetz 2025)' (gültig 2025-06-01 bis heute).",
+        "ergebnis": "kostbraeg_2025",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 2,
+        "norm": "§ 34 Abs. 1 GKG",
+        "beschreibung": "1,0-Gebühr (Einfachgebühr) für Streitwert 40000.00 €.",
+        "ergebnis": "557.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 3,
+        "norm": "KV 1100 GKG",
+        "beschreibung": "Mahnverfahren — Antrag auf Erlass eines Mahnbescheids oder eines Europäischen Zahlungsbefehls (KV 1100 GKG): Satz 0.5 x 557.00 € = 278.50 €",
+        "ergebnis": "278.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 4,
+        "norm": "KV 1210 GKG",
+        "beschreibung": "Verfahren im Allgemeinen, erster Rechtszug (Amts-/Landgericht) (KV 1210 GKG): Satz 3.0 x 557.00 € = 1671.00 €",
+        "ergebnis": "1671.00",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 5,
+        "norm": "Anmerkung Abs. 1 zu KV 1210 GKG",
+        "beschreibung": "Übergang Mahnverfahren -> streitiges Verfahren: die Gebühr KV 1100 GKG (278.50 €) wird nach dem übergegangenen Wert (40000.00 €) auf die Gebühr KV 1210 GKG angerechnet — 1671.00 € - 278.50 € = 1392.50 € (Gebührensatz 3,0 unverändert, Anrechnung statt Ermäßigung).",
+        "ergebnis": "1392.50",
+        "quelle": "executor"
+      },
+      {
+        "schritt": 6,
+        "norm": "Gesamt",
+        "beschreibung": "Summe aller Gerichtskosten-Positionen (nicht umsatzsteuerpflichtig).",
+        "ergebnis": "1671.00",
+        "quelle": "executor"
+      }
+    ],
+    "ergebnis": {
+      "gesamt": "1671.00",
+      "umsatzsteuerpflichtig": false,
+      "quelle": "executor"
+    },
+    "warnungen": []
+  }
+}

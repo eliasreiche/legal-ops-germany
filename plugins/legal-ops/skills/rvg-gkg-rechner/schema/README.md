@@ -72,6 +72,7 @@ Kurzform für genau **eine** Angelegenheit (`tatbestaende` flach statt
 | `tatbestaende` | … oder dies | Liste von Objekten | Kurzform für genau eine Angelegenheit. **Teil-2- und Teil-3-Tatbestände zusammen sind hier ein Eingabefehler** — dann `angelegenheiten` verwenden. |
 | `tatbestaende[].gegenstandswert` | nein | Dezimalstring | **Teilwert** dieses Tatbestands (z. B. Mehrwert eines Vergleichs); ohne Angabe gilt `streitwert`. Nicht bei `1008` (folgt der Basis-Position). Erlaubte Keys je Tatbestand: `nr`, `satz`, `gegenstandswert`, `erhoeht_position`, `weitere_auftraggeber` — jeder andere ist Exit 2. |
 | `anrechnung_2300_auf_3100` | nein (Default `false`) | `true`/`false` | Anrechnung der Geschäftsgebühr auf die Verfahrensgebühr (Vorbem. 3 Abs. 4 VV RVG) — verbindet zwei Angelegenheiten; verlangt genau eine `2300` und genau eine `3100` über alle Angelegenheiten hinweg. |
+| `anrechnung_mahnverfahren_auf_3100` | nein (Default `false`) | `true`/`false` | Anrechnung der Mahnverfahrensgebühr auf die Verfahrensgebühr des nachfolgenden Rechtsstreits (Anm. zu Nr. 3305 bzw. Nr. 3307 VV RVG) — verlangt genau eine Angelegenheit mit `3305`, `3306` oder `3307` und genau eine `3100` (gleicher Gegenstandswert). Nie angerechnet wird `3308`; Nr. 3100 sinkt höchstens auf 0 €. Steht in der Mahnverfahrens-Angelegenheit eine `1008` auf die angerechnete Gebühr → Exit 2 (angerechnet würde die erhöhte Gebühr, nicht modelliert). Ohne Flag, aber mit Mahnverfahren und `3100`: Warnung (Anrechnung ist zwingend). |
 | `auslagenpauschale` | nein (Default `true`) | `true`/`false` | Nr. 7002 VV RVG (20 % der Gebühren, höchstens 20 € — **je Angelegenheit**). Pro Angelegenheit überschreibbar. |
 | `umsatzsteuer` | nein (Default `true`) | `true`/`false` | Nr. 7008 VV RVG (19 % — Basis **je Angelegenheit**). Pro Angelegenheit überschreibbar. |
 
@@ -94,14 +95,19 @@ Nur Wertgebühren in Zivilsachen — Katalog liegt als Datendatei bei
 | `3208` | 3 (gerichtlich) | revision | Verfahrensgebühr (Revision), BGH-Vertretungszwang (Zivilrevision, § 78 Abs. 1 S. 3 ZPO) | Festsatz | 2,3 | — (statt 3206) |
 | `3209` | 3 (gerichtlich) | revision | Verfahrensgebühr (Revision, BGH), ermäßigt | Festsatz | 1,8 | — (alternativ zu 3208) |
 | `3210` | 3 (gerichtlich) | revision | Terminsgebühr (Revision) | Festsatz | 1,5 | — |
+| `3305` | 3 (gerichtlich) | mahnverfahren | Verfahrensgebühr Antragsteller (Mahnverfahren) | Festsatz | 1,0 | — (alternativ zu 3306, nie neben 3307) |
+| `3306` | 3 (gerichtlich) | mahnverfahren | Verfahrensgebühr Antragsteller, ermäßigt bei vorzeitiger Beendigung | Festsatz | 0,5 | — (alternativ zu 3305) |
+| `3307` | 3 (gerichtlich) | mahnverfahren | Verfahrensgebühr Antragsgegner (Mahnverfahren) | Festsatz | 0,5 | — (nie neben 3305/3306/3308) |
+| `3308` | 3 (gerichtlich) | mahnverfahren | Verfahrensgebühr Antragsteller, Antrag auf Vollstreckungsbescheid | Festsatz | 0,5 | — (allein oder neben 3305/3306; wird nie angerechnet) |
 | `1000` | 1 (allgemein) | — | Einigungsgebühr | Festsatz | 1,5 | — |
 | `1003` | 1 (allgemein) | — | Einigungsgebühr bei anhängiger Sache | Festsatz | 1,0 | — |
 | `1004` | 1 (allgemein) | — | Einigungsgebühr im Berufungs-/Revisionsverfahren | Festsatz | 1,3 | — (**nur** in einer Angelegenheit mit einem Berufungs-/Revisions-Tatbestand) |
-| `1008` | 1 (allgemein) | — | Erhöhungsgebühr für weitere Auftraggeber | Erhöhung | 0,3 je weiterem Auftraggeber, gekappt auf Gebührensatz 2,0 | `"erhoeht_position": "3100"` (auch `"3200"`, `"3206"`, `"3208"` oder `"2300"`), `"weitere_auftraggeber": 1` |
+| `1008` | 1 (allgemein) | — | Erhöhungsgebühr für weitere Auftraggeber | Erhöhung | 0,3 je weiterem Auftraggeber, gekappt auf Gebührensatz 2,0 | `"erhoeht_position": "3100"` (auch `"3200"`, `"3206"`, `"3208"`, `"3305"`–`"3308"` oder `"2300"`), `"weitere_auftraggeber": 1` |
 
 Alle Sätze der Berufungs-/Revisions-Positionen sowie Nr. 1004 sind am
-2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html web-verifiziert
-(Fundstelle je Eintrag im Katalog `vv-katalog.json`, Feld `quelle_hinweis`).
+2026-07-17, die Mahnverfahrens-Positionen Nr. 3305–3308 am 2026-11-22 gegen
+gesetze-im-internet.de/rvg/anlage_1.html web-verifiziert (Fundstelle je
+Eintrag im Katalog `vv-katalog.json`, Feld `quelle_hinweis`).
 
 **§ 15 Abs. 3 RVG (verschiedene Sätze für Teile des Gegenstands):** Positionen
 mit derselben `gruppe_15_abs_3` im Katalog — Verfahrensgebühr `3100`/`3101`,
@@ -128,6 +134,24 @@ Nr. 7002 und eigener USt-Basis. Positionen **derselben** Instanz
 **getrennte** `angelegenheiten` legen. Die Einigungsgebühr **`1004`** (erhöhter
 Satz) ist nur in einer Angelegenheit mit einem Berufungs-/Revisions-Tatbestand
 zulässig — sonst greift `1000` (1,5) bzw. `1003` (1,0).
+
+**Mahnverfahren (`3305`–`3308`, Instanz `mahnverfahren`):** Mahnverfahren
+und streitiges Verfahren sind verschiedene Angelegenheiten (§ 17 Nr. 2 RVG) —
+Mahnverfahrens- und andere Teil-3-Tatbestände in derselben Angelegenheit sind
+Exit 2 (Instanz-Kollisionsregel). Weitere Exit-2-Fälle in **einer**
+Angelegenheit: `3305` und `3306` zusammen (alternativ, nie kumulativ);
+`3307` neben `3305`/`3306`/`3308`; `1008` auf `3308`, wenn dort auch `3305`
+(oder `3306`) erhöht wird (Anm. Satz 2 zu Nr. 3308); `3104` im Mahnverfahren
+(Terminsgebühr nach Vorbem. 3.3.2 nicht modelliert — eigene Meldung,
+anwaltlich prüfen). `3308` trägt einen Hinweis, dass die Voraussetzung aus
+Anm. Satz 1 (kein bzw. beschränkter Widerspruch) nicht geprüft wird.
+
+**Geschäftsgebühr + Mahnverfahren:** Enthält die Anfrage eine `2300` **und**
+eine Mahnverfahrens-Angelegenheit, ist jede angeforderte Anrechnung
+(`anrechnung_2300_auf_3100` oder `anrechnung_mahnverfahren_auf_3100`) Exit 2 —
+die Geschäftsgebühr wäre nach Vorbem. 3 Abs. 4 VV RVG auf die Gebühr 3305
+anzurechnen; diese Kettenanrechnung ist nicht modelliert. Ohne Anrechnungs-
+Flag rechnen alle Angelegenheiten ungekürzt, `warnungen` weist darauf hin.
 
 **Anrechnung nur auf den ersten Rechtszug:** `anrechnung_2300_auf_3100` rechnet
 die Geschäftsgebühr ausschließlich auf die Verfahrensgebühr des **ersten**
@@ -467,6 +491,16 @@ Struktur je Block (`rvg`/`gkg`, sofern angefragt):
   USt-Basis und eigenem `gesamt`. `ergebnis.gesamt_verguetung` ist die Summe
   über die Angelegenheiten (gleicher Gläubiger — die Angelegenheiten bleiben
   gebührenrechtlich getrennt, nur die Vergütungsforderung wird addiert).
+- **`anrechnung_mahnverfahren`** (nur RVG, **nur vorhanden**, wenn
+  `anrechnung_mahnverfahren_auf_3100: true` angefordert war — sonst fehlt der
+  Key; auch `eingabe.anrechnung_mahnverfahren_auf_3100` erscheint nur, wenn
+  in der Anfrage gesetzt): `norm` (Anm. zu Nr. 3305 bzw. 3307 VV RVG),
+  `mahnverfahren_angelegenheit`, `verfahrensgebuehr_angelegenheit`,
+  `angerechnete_nr`, `anrechnungsbetrag`, `verfahrensgebuehr_vor_anrechnung`,
+  `verfahrensgebuehr_nach_anrechnung`, `hinweis`, `quelle`. Der Block
+  `anrechnung` (Geschäftsgebühr) bleibt unverändert daneben. Beispiel:
+  [`beispiel-report-mahnverfahren.json`](beispiel-report-mahnverfahren.json)
+  (aus [`beispiel-eingabe-mahnverfahren.json`](beispiel-eingabe-mahnverfahren.json)).
 - **`wertkappung`**: gefüllt, wenn der Wert nach § 22 Abs. 2 Satz 1 RVG bzw.
   § 39 Abs. 2 GKG auf 30 Mio. € gekappt wurde (`streitwert_eingabe`,
   `streitwert_angewendet`, `norm`) — zusätzlich als Rechenketten-Zeile und
@@ -534,6 +568,12 @@ Struktur je Block (`rvg`/`gkg`, sofern angefragt):
   KV 1210 bei angeforderter Anrechnung sind deshalb ein Eingabefehler.
   Der Executor rechnet diesen Fall **nicht** — die
   Anrechnung beim Teilübergang bleibt händisch/anwaltlich zu ermitteln.
+- **RVG-Mahnverfahren — nicht modelliert:** Terminsgebühr im
+  Mahnverfahren (Vorbem. 3.3.2 VV RVG), Teilübergang in den Rechtsstreit
+  (`anrechnung_mahnverfahren_auf_3100` mit verschiedenen Werten = Exit 2),
+  Kettenanrechnung Geschäftsgebühr → Nr. 3305 → Nr. 3100, Anrechnung einer
+  nach Nr. 1008 erhöhten Mahnverfahrensgebühr (Exit 2). Die Voraussetzungen
+  von Nr. 3306 und Anm. Satz 1 zu Nr. 3308 prüft der Executor nicht.
 - **KV 1211 ohne Mahnverfahrens-Anrechnung**: `anrechnung_1100_auf_1210`
   verlangt KV 1210; die Ermäßigung KV 1211 ist von der Anmerkung nicht
   erfasst und wird als Eingabefehler abgelehnt statt geraten.

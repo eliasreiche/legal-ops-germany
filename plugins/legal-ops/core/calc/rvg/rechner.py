@@ -44,6 +44,17 @@ Tatbestand zulässig (sonst Nr. 1000/1003). Die Anrechnung nach Vorbem. 3
 Abs. 4 VV RVG erfolgt nur auf die Verfahrensgebühr des ersten Rechtszugs
 (Nr. 3100), nicht auf Nr. 3200/3206/3208.
 
+**Mahnverfahren (Nr. 3305–3308):** eigene Instanz-Kennung `mahnverfahren` —
+Mahnverfahren und streitiges Verfahren sind verschiedene Angelegenheiten
+(§ 17 Nr. 2 RVG), die Instanz-Kollisionsregel greift. Nr. 3305/3306 stehen
+alternativ; Nr. 3307 (Antragsgegner) nie neben 3305/3306/3308; Nr. 1008 auf
+Nr. 3308 nicht, wenn die Gebühr 3305 (bzw. 3306) schon erhöht ist (Anm.
+Satz 2 zu Nr. 3308); die Terminsgebühr im Mahnverfahren (Vorbem. 3.3.2) ist
+nicht modelliert. Optionale Anrechnung der Mahnverfahrensgebühr auf Nr. 3100
+(`anrechnung_mahnverfahren_auf_3100`, Anm. zu Nr. 3305/3307); mit
+Geschäftsgebühr Nr. 2300 in derselben Anfrage ist jede angeforderte
+Anrechnung ein Eingabefehler (Kettenanrechnung nicht modelliert).
+
 **Scope-Grenze (bewusst, siehe SKILL.md):** Nur Wertgebühren in Zivilsachen.
 Betragsrahmengebühren (Straf-/Sozialrecht), PKH-Vergütung (§ 49 RVG) und
 Beratungshilfe sind nicht im Katalog (`vv-katalog.json`) und werden als
@@ -95,6 +106,12 @@ ERHOEHUNG_MAX_SATZ = Decimal("2.0")
 ANRECHNUNG_MAX_SATZ = Decimal("0.75")
 ANRECHNUNG_FAKTOR = Decimal("0.5")
 WERT_HOECHSTGRENZE = Decimal("30000000.00")   # § 22 Abs. 2 Satz 1 RVG
+
+# Mahnverfahren (Teil 3 Abschnitt 3 Unterabschnitt 2 VV RVG). Angerechnet auf
+# einen nachfolgenden Rechtsstreit werden nur die Verfahrensgebühren 3305
+# (auch ermäßigt als 3306) und 3307 — nie 3308.
+MAHNVERFAHREN_NRN = {"3305", "3306", "3307", "3308"}
+MAHNVERFAHREN_ANRECHENBAR = ("3305", "3306", "3307")
 
 # Positionen, die NICHT als "tatbestaende"-Eintrag angegeben werden — sie
 # werden über eigene Anfrage-Flags gesteuert (auslagenpauschale, umsatzsteuer).
@@ -157,6 +174,10 @@ class RVGErgebnis:
     gesamt_verguetung: Decimal          # Summe über alle Angelegenheiten
     rechenkette: list[RechenSchritt] = field(default_factory=list)
     warnungen: list[str] = field(default_factory=list)
+    # Anrechnung der Mahnverfahrensgebühr auf Nr. 3100 (Anm. zu Nr. 3305/
+    # 3307 VV RVG) — nur gesetzt, wenn angefordert; `anrechnung` bleibt die
+    # Anrechnung der Geschäftsgebühr (Vorbem. 3 Abs. 4 VV RVG).
+    anrechnung_mahnverfahren: dict[str, Any] | None = None
 
 
 def _pruefe_bool(wert: Any, feld: str) -> bool:
@@ -195,6 +216,22 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
         raise RVGEingabeFehler(
             f"{angelegenheit_label}: 'tatbestaende' muss eine nichtleere "
             f"Liste sein")
+
+    # Terminsgebühr im Mahnverfahren (Vorbem. 3.3.2 VV RVG: „Die
+    # Terminsgebühr bestimmt sich nach Abschnitt 1.") ist nicht modelliert —
+    # gezielte Meldung statt der generischen Instanz-Kollision.
+    alle_nrn = {str(e["nr"]) for e in tatbestaende
+                if isinstance(e, dict) and "nr" in e}
+    if "3104" in alle_nrn and alle_nrn & MAHNVERFAHREN_NRN:
+        raise RVGEingabeFehler(
+            f"{angelegenheit_label}: Nr. 3104 VV RVG in einer Angelegenheit "
+            f"des Mahnverfahrens (Nr. "
+            f"{', '.join(sorted(alle_nrn & MAHNVERFAHREN_NRN))}) — die "
+            f"Terminsgebühr im Mahnverfahren (Vorbem. 3.3.2 VV RVG: „Die "
+            f"Terminsgebühr bestimmt sich nach Abschnitt 1.\") ist nicht "
+            f"modelliert. Anwaltlich prüfen. Gehört der Termin zum "
+            f"nachfolgenden streitigen Verfahren, Nr. 3104 in dessen "
+            f"eigene Angelegenheit legen (§ 17 Nr. 2 RVG).")
 
     gesehene_nrn: set[str] = set()
     mit_eigenem_wert: set[str] = set()
@@ -283,6 +320,18 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
         if teil == 3:
             instanz = str(katalog_eintrag["instanz"])
             for vorhandene_instanz, vorhandene_nr in instanz_vertreten.items():
+                if vorhandene_instanz != instanz and "mahnverfahren" in (
+                        instanz, vorhandene_instanz):
+                    raise RVGEingabeFehler(
+                        f"{angelegenheit_label}: Nr. {vorhandene_nr} "
+                        f"(Instanz '{vorhandene_instanz}') und Nr. {nr} "
+                        f"(Instanz '{instanz}') in derselben Angelegenheit — "
+                        f"das Mahnverfahren und das streitige Verfahren sind "
+                        f"verschiedene Angelegenheiten (§ 17 Nr. 2 RVG) mit "
+                        f"je eigener Auslagenpauschale Nr. 7002 und eigener "
+                        f"USt-Basis. Die Anfrage über 'rvg.angelegenheiten' "
+                        f"in getrennte Angelegenheiten aufteilen (siehe "
+                        f"schema/README.md).")
                 if vorhandene_instanz != instanz:
                     raise RVGEingabeFehler(
                         f"{angelegenheit_label}: Nr. {vorhandene_nr} "
@@ -364,6 +413,24 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
                 f"erster Instanz oder außergerichtlich gilt Nr. 1000 (1,5) "
                 f"bzw. Nr. 1003 (1,0).")
 
+    # --- Mahnverfahren (Nr. 3305–3308): Alternativ-/Parteirollen-Regeln ---
+    if "3305" in basis_positionen and "3306" in basis_positionen:
+        raise RVGEingabeFehler(
+            f"{angelegenheit_label}: Nr. 3305 und Nr. 3306 VV RVG in "
+            f"derselben Angelegenheit — Nr. 3306 ist die ermäßigte Gebühr "
+            f"3305 („Die Gebühr 3305 beträgt\" 0,5); beide stehen "
+            f"alternativ, nie kumulativ. Nur eine der beiden angeben.")
+    if "3307" in basis_positionen:
+        antragsteller = sorted(
+            nr for nr in ("3305", "3306", "3308") if nr in basis_positionen)
+        if antragsteller:
+            raise RVGEingabeFehler(
+                f"{angelegenheit_label}: Nr. 3307 VV RVG (Vertretung des "
+                f"Antragsgegners) zusammen mit Nr. {', '.join(antragsteller)} "
+                f"(Vertretung des Antragstellers) in derselben Angelegenheit "
+                f"— ein Rechtsanwalt vertritt im Mahnverfahren entweder den "
+                f"Antragsteller oder den Antragsgegner. Eingabe prüfen.")
+
     # --- § 15 Abs. 3 RVG: Gruppen (Katalogfeld gruppe_15_abs_3) mit mehr als
     #     einer Position in dieser Angelegenheit = verschiedene Sätze für
     #     Teile des Gegenstands. Jede Position braucht ihren Wertteil. ---
@@ -387,6 +454,19 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
 
     # --- Erhöhungsgebühr Nr. 1008 ---
     erhoehungs_katalog = positionen_katalog["1008"]
+    # Anm. Satz 2 zu Nr. 3308 VV RVG: „Nummer 1008 ist nicht anzuwenden, wenn
+    # sich bereits die Gebühr 3305 erhöht." — Nr. 3306 ist die (ermäßigte)
+    # Gebühr 3305 und wird gleich behandelt.
+    erhoehte_basen = {str(e.get("erhoeht_position"))
+                      for e in erhoehungs_eintraege}
+    if "3308" in erhoehte_basen and erhoehte_basen & {"3305", "3306"}:
+        raise RVGEingabeFehler(
+            f"{angelegenheit_label}: Nr. 1008 VV RVG auf Nr. 3308, obwohl "
+            f"sich in derselben Angelegenheit bereits die Gebühr 3305 "
+            f"erhöht (Nr. 1008 auf Nr. "
+            f"{', '.join(sorted(erhoehte_basen & {'3305', '3306'}))}) — "
+            f"nach Anm. Satz 2 zu Nr. 3308 VV RVG ist Nr. 1008 dann nicht "
+            f"anzuwenden. Den Nr.-1008-Eintrag auf Nr. 3308 entfernen.")
     for eintrag in erhoehungs_eintraege:
         basis_nr = eintrag.get("erhoeht_position")
         if not basis_nr or str(basis_nr) not in basis_positionen:
@@ -465,6 +545,7 @@ def _berechne_positionen(tatbestaende: list[dict[str, Any]],
 def berechne(streitwert: Any, stichtag: _dt.date,
              angelegenheiten: list[dict[str, Any]], *,
              anrechnung_2300_auf_3100: bool = False,
+             anrechnung_mahnverfahren_auf_3100: bool = False,
              auslagenpauschale: bool = True,
              umsatzsteuer: bool = True,
              katalog: dict[str, Any] | None = None) -> RVGErgebnis:
@@ -486,6 +567,17 @@ def berechne(streitwert: Any, stichtag: _dt.date,
     Abs. 4 VV RVG): verlangt genau eine Nr. 2300 und genau eine Nr. 3100
     über alle Angelegenheiten hinweg, beide mit demselben Gegenstandswert
     (sonst Eingabefehler — keine Teilanrechnung).
+
+    anrechnung_mahnverfahren_auf_3100 (Anm. zu Nr. 3305/3307 VV RVG):
+    verlangt genau eine Angelegenheit mit Nr. 3305, 3306 oder 3307 und genau
+    eine Nr. 3100, beide mit demselben Gegenstandswert; zieht den Betrag der
+    Mahnverfahrensgebühr von Nr. 3100 ab, höchstens bis 0 €. Ist die
+    Mahnverfahrensgebühr nach Nr. 1008 erhöht, ist das ein Eingabefehler
+    (angerechnet würde die erhöhte Gebühr — nicht modelliert). Ohne Flag, aber
+    mit Mahnverfahrens- und 3100-Angelegenheit: Warnung.
+    Enthält die Anfrage eine Nr. 2300 und eine Mahnverfahrens-Angelegenheit,
+    ist jede angeforderte Anrechnung ein Eingabefehler (Kettenanrechnung
+    nach Vorbem. 3 Abs. 4 VV RVG auf Nr. 3305 nicht modelliert).
     """
     kat = katalog or lade_katalog()
     positionen_katalog = kat["positionen"]
@@ -611,10 +703,39 @@ def berechne(streitwert: Any, stichtag: _dt.date,
             "umsatzsteuer": _pruefe_bool(a_ust, "umsatzsteuer"),
         })
 
+    anrechnung_2300 = _pruefe_bool(anrechnung_2300_auf_3100,
+                                   "anrechnung_2300_auf_3100")
+    anrechnung_mahn = _pruefe_bool(anrechnung_mahnverfahren_auf_3100,
+                                   "anrechnung_mahnverfahren_auf_3100")
+
+    # --- Geschäftsgebühr + Mahnverfahren: die Geschäftsgebühr wäre nach
+    #     Vorbem. 3 Abs. 4 VV RVG auf die Gebühr 3305 anzurechnen — die
+    #     Kettenanrechnung (2300 -> 3305 -> 3100) ist nicht modelliert. ---
+    hat_2300 = any("2300" in d["positionen"] for d in angelegenheit_daten)
+    mahn_angelegenheiten = [d for d in angelegenheit_daten
+                            if MAHNVERFAHREN_NRN & set(d["positionen"])]
+    if hat_2300 and mahn_angelegenheiten:
+        if anrechnung_2300 or anrechnung_mahn:
+            raise RVGEingabeFehler(
+                "Anrechnung angefordert in einer Anfrage mit Geschäftsgebühr "
+                "Nr. 2300 UND einer Angelegenheit des Mahnverfahrens "
+                "(Nr. 3305–3308): Die Geschäftsgebühr ist dann nach Vorbem. 3 "
+                "Abs. 4 VV RVG auf die Verfahrensgebühr des Mahnverfahrens "
+                "(Nr. 3305) anzurechnen, nicht unmittelbar auf Nr. 3100 — "
+                "diese Kettenanrechnung ist nicht modelliert. Anwaltlich "
+                "prüfen.")
+        warnungen.append(
+            "Die Anfrage enthält eine Geschäftsgebühr Nr. 2300 und eine "
+            "Angelegenheit des Mahnverfahrens; eine Anrechnung wurde nicht "
+            "angefordert — beide Angelegenheiten sind ungekürzt gerechnet. "
+            "Nach Vorbem. 3 Abs. 4 VV RVG wäre die Geschäftsgebühr auf die "
+            "Gebühr 3305 anzurechnen; das rechnet der Executor nicht. "
+            "Anwaltlich prüfen.")
+
     # --- Anrechnung Geschäftsgebühr auf Verfahrensgebühr (verbindet zwei
     #     Angelegenheiten, Vorbem. 3 Abs. 4 VV RVG) ---
     anrechnung_result: dict[str, Any] | None = None
-    if _pruefe_bool(anrechnung_2300_auf_3100, "anrechnung_2300_auf_3100"):
+    if anrechnung_2300:
         fund_2300 = [(d, d["positionen"]["2300"]) for d in angelegenheit_daten
                      if "2300" in d["positionen"]]
         fund_3100 = [(d, d["positionen"]["3100"]) for d in angelegenheit_daten
@@ -690,6 +811,98 @@ def berechne(streitwert: Any, stichtag: _dt.date,
                 f"Verfahrensgebühr danach {neuer_verfahren_betrag} €.",
                 str(neuer_verfahren_betrag))
 
+    # --- Anrechnung der Mahnverfahrensgebühr auf die Verfahrensgebühr des
+    #     nachfolgenden Rechtsstreits (Anm. zu Nr. 3305 / Nr. 3307 VV RVG) ---
+    anrechnung_mahn_result: dict[str, Any] | None = None
+    if anrechnung_mahn:
+        fund_mahn = [(d, nr, d["positionen"][nr]) for d in angelegenheit_daten
+                     for nr in MAHNVERFAHREN_ANRECHENBAR if nr in d["positionen"]]
+        fund_3100 = [(d, d["positionen"]["3100"]) for d in angelegenheit_daten
+                     if "3100" in d["positionen"]]
+        if len(fund_mahn) != 1 or len(fund_3100) != 1:
+            raise RVGEingabeFehler(
+                "'anrechnung_mahnverfahren_auf_3100' verlangt genau eine "
+                "Angelegenheit mit Nr. 3305, 3306 oder 3307 (Mahnverfahren) "
+                "und genau eine Nr. 3100 (nachfolgender Rechtsstreit) über "
+                f"alle Angelegenheiten hinweg (gefunden: {len(fund_mahn)} x "
+                f"3305/3306/3307, {len(fund_3100)} x 3100). Nr. 3308 wird "
+                f"nie angerechnet.")
+        mahn_daten, mahn_nr, mahn_pos = fund_mahn[0]
+        verfahren_daten, verfahren = fund_3100[0]
+        anr_wert = verfahren.gegenstandswert or wert
+        if (mahn_pos.gegenstandswert or wert) != anr_wert:
+            raise RVGEingabeFehler(
+                f"'anrechnung_mahnverfahren_auf_3100' mit verschiedenen "
+                f"Gegenstandswerten (Nr. {mahn_nr}: "
+                f"{mahn_pos.gegenstandswert or wert} €, Nr. 3100: "
+                f"{anr_wert} €) — ein Teilübergang in das streitige "
+                f"Verfahren ist nicht modelliert. Anwaltlich prüfen.")
+        # Nach Nr. 1008 „erhöht sich" die Verfahrensgebühr selbst; die Anm. zu
+        # Nr. 3305/3307 rechnet „die Gebühr" an, also die erhöhte. Das
+        # Zusammenspiel mit einer Erhöhung im Rechtsstreit ist nicht
+        # modelliert — ablehnen statt raten.
+        if f"1008:{mahn_nr}" in mahn_daten["positionen"]:
+            raise RVGEingabeFehler(
+                f"{mahn_daten['label']}: Anrechnung einer nach Nr. 1008 "
+                f"erhöhten Mahnverfahrensgebühr (Nr. {mahn_nr}) ist nicht "
+                f"modelliert (erhöhte Gebühr wird angerechnet; Zusammenspiel "
+                f"mit der Erhöhung im Rechtsstreit) — anwaltlich prüfen.")
+        anr_regel = kat["anrechnung_mahnverfahren_auf_verfahrensgebuehr"]
+        anr_norm = (anr_regel["norm_3307"] if mahn_nr == "3307"
+                    else anr_regel["norm_3305"])
+        anr_betrag = mahn_pos.betrag    # ohne Nr. 1008 (sonst oben Exit 2)
+        vor_anrechnung = verfahren.betrag
+        neuer_verfahren_betrag = vor_anrechnung - anr_betrag
+        if neuer_verfahren_betrag < 0:
+            warnungen.append(
+                "Anrechnungsbetrag der Mahnverfahrensgebühr übersteigt die "
+                "Verfahrensgebühr Nr. 3100 — auf 0 € begrenzt; bitte "
+                "Konstellation anwaltlich prüfen.")
+            neuer_verfahren_betrag = Decimal("0.00")
+        verfahren.betrag = neuer_verfahren_betrag
+        verfahren.hinweise.append(
+            f"Um {anr_betrag} € gemindert durch Anrechnung der "
+            f"Mahnverfahrensgebühr Nr. {mahn_nr} aus {mahn_daten['label']} "
+            f"({anr_norm}).")
+        teiluebergang_hinweis = (
+            "Kein Teilübergang modellierbar: angerechnet wird die volle "
+            "Mahnverfahrensgebühr aus demselben Gegenstandswert. Ist nur ein "
+            "Teil des Mahnverfahrens-Gegenstands in den Rechtsstreit "
+            "übergegangen, anwaltlich prüfen.")
+        anrechnung_mahn_result = {
+            "norm": anr_norm,
+            "mahnverfahren_angelegenheit": mahn_daten["bezeichnung"],
+            "verfahrensgebuehr_angelegenheit": verfahren_daten["bezeichnung"],
+            "angerechnete_nr": mahn_nr,
+            "anrechnungsbetrag": str(anr_betrag),
+            "verfahrensgebuehr_vor_anrechnung": str(vor_anrechnung),
+            "verfahrensgebuehr_nach_anrechnung": str(neuer_verfahren_betrag),
+            "hinweis": (f"Angerechnet wird die Gebühr Nr. {mahn_nr}; "
+                        "Nr. 3308 wird nie angerechnet. "
+                        + teiluebergang_hinweis),
+            "quelle": "executor",
+        }
+        warnungen.append(teiluebergang_hinweis)
+        schritt(anr_norm,
+                f"Anrechnung der Mahnverfahrensgebühr Nr. {mahn_nr} "
+                f"({mahn_daten['label']}, {anr_betrag} €) auf die "
+                f"Verfahrensgebühr Nr. 3100 ({verfahren_daten['label']}): "
+                f"{vor_anrechnung} € - {anr_betrag} € = "
+                f"{neuer_verfahren_betrag} €.",
+                str(neuer_verfahren_betrag))
+
+    elif (any(set(MAHNVERFAHREN_ANRECHENBAR) & set(d["positionen"])
+              for d in angelegenheit_daten)
+          and any("3100" in d["positionen"] for d in angelegenheit_daten)):
+        warnungen.append(
+            "Die Anfrage enthält eine Angelegenheit des Mahnverfahrens "
+            "(Nr. 3305/3306/3307) und eine Verfahrensgebühr Nr. 3100. Nach "
+            "der Anm. zu Nr. 3305 bzw. Nr. 3307 VV RVG wird die "
+            "Mahnverfahrensgebühr zwingend auf die Verfahrensgebühr eines "
+            "nachfolgenden Rechtsstreits angerechnet — die Anrechnung wurde "
+            "nicht angefordert ('anrechnung_mahnverfahren_auf_3100'), Nr. 3100 "
+            "ist ungekürzt gerechnet. Anwaltlich prüfen.")
+
     # --- je Angelegenheit: Zwischensumme, 7002, USt, Gesamt ---
     ergebnisse: list[AngelegenheitErgebnis] = []
     for d in angelegenheit_daten:
@@ -748,4 +961,5 @@ def berechne(streitwert: Any, stichtag: _dt.date,
         wert_gekappt=wert_gekappt, stichtag=stichtag, tabellenstand=stand,
         einfachgebuehr=einfachgebuehr, angelegenheiten=ergebnisse,
         anrechnung=anrechnung_result, gesamt_verguetung=gesamt_verguetung,
-        rechenkette=kette, warnungen=warnungen)
+        rechenkette=kette, warnungen=warnungen,
+        anrechnung_mahnverfahren=anrechnung_mahn_result)
