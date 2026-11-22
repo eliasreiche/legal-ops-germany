@@ -1,0 +1,23 @@
+{
+  "rvg": {
+    "auftragsdatum": "2026-11-22",
+    "streitwert": "40000.00",
+    "angelegenheiten": [
+      {
+        "bezeichnung": "Mahnverfahren (Antragsteller)",
+        "tatbestaende": [{"nr": "3305"}]
+      },
+      {
+        "bezeichnung": "Rechtsstreit erster Instanz nach Widerspruch",
+        "tatbestaende": [{"nr": "3100"}, {"nr": "3104"}]
+      }
+    ],
+    "anrechnung_mahnverfahren_auf_3100": true
+  },
+  "gkg": {
+    "verfahrenseinleitungsdatum": "2026-11-22",
+    "streitwert": "40000.00",
+    "positionen": [{"nr": "1100"}, {"nr": "1210"}],
+    "anrechnung_1100_auf_1210": true
+  }
+}

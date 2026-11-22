@@ -1,6 +1,6 @@
 {
   "bezeichnung": "Gebührentatbestands-Katalog Vergütungsverzeichnis (Anlage 1 RVG) — nur Wertgebühren (Zivil), Auswahl",
-  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/rvg/anlage_1.html (aktuelle Fassung, Stand Fundstelle BGBl. I 2022, 633-664 zzgl. spätere Einzeländerungen). Erweiterung um den Instanzenzug (Berufung Nr. 3200/3201/3202, Revision Nr. 3206–3210, Einigungsgebühr Nr. 1004) web-verifiziert am 2026-07-17 gegen dieselbe Quelle — Fundstellen je Positions-Eintrag im Feld `quelle_hinweis`.",
+  "quelle_hinweis": "Web-verifiziert am 2026-07-11 gegen gesetze-im-internet.de/rvg/anlage_1.html (aktuelle Fassung, Stand Fundstelle BGBl. I 2022, 633-664 zzgl. spätere Einzeländerungen). Erweiterung um den Instanzenzug (Berufung Nr. 3200/3201/3202, Revision Nr. 3206–3210, Einigungsgebühr Nr. 1004) web-verifiziert am 2026-07-17 gegen dieselbe Quelle — Fundstellen je Positions-Eintrag im Feld `quelle_hinweis`. Erweiterung um das Mahnverfahren (Teil 3 Abschnitt 3 Unterabschnitt 2, Nr. 3305–3308, Vorbem. 3.3.2) web-verifiziert am 2026-11-22 gegen dieselbe Quelle — Fundstellen je Positions-Eintrag im Feld `quelle_hinweis`.",
   "scope_hinweis": "Nur Wertgebühren-Tatbestände in Zivilsachen. Betragsrahmengebühren (Sozial-/Strafrecht), PKH-Vergütung (§ 49 RVG) und Beratungshilfe (Teil 2 Abschnitt 5 VV RVG) sind NICHT im Katalog und werden vom Executor als Scope-Fehler abgelehnt (siehe rechner.py).",
   "positionen": {
     "2300": {
@@ -119,6 +119,50 @@
       "instanz": "revision",
       "quelle_hinweis": "Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 3210: Terminsgebühr 1,5."
     },
+    "3305": {
+      "bezeichnung": "Verfahrensgebühr für die Vertretung des Antragstellers (Mahnverfahren)",
+      "norm": "Nr. 3305 VV RVG",
+      "art": "festsatz",
+      "satz": "1.0",
+      "vv_teil": 3,
+      "instanz": "mahnverfahren",
+      "hinweis": "Mahnverfahren und streitiges Verfahren sind verschiedene Angelegenheiten (§ 17 Nr. 2 RVG) — eigene Angelegenheit mit eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis. Steht alternativ zu Nr. 3306, nie kumulativ; nicht zusammen mit Nr. 3307 (Antragsgegner). Die Anrechnung auf die Verfahrensgebühr eines nachfolgenden Rechtsstreits (Anm. zu Nr. 3305) rechnet der Executor nur auf Anforderung ('anrechnung_mahnverfahren_auf_3100').",
+      "report_hinweis": "Die Gebühr wird auf die Verfahrensgebühr für einen nachfolgenden Rechtsstreit angerechnet (Anm. zu Nr. 3305 VV RVG) — der Executor rechnet das nur mit 'anrechnung_mahnverfahren_auf_3100: true' (verlangt eine Nr. 3100 in einer eigenen Angelegenheit).",
+      "quelle_hinweis": "Web-verifiziert am 2026-11-22 gegen gesetze-im-internet.de/rvg/anlage_1.html, Teil 3 Abschnitt 3 Unterabschnitt 2 (Mahnverfahren; Vorbem. 3.3.2: 'Die Terminsgebühr bestimmt sich nach Abschnitt 1.'), Nr. 3305: 'Verfahrensgebühr für die Vertretung des Antragstellers' 1,0; Anm.: 'Die Gebühr wird auf die Verfahrensgebühr für einen nachfolgenden Rechtsstreit angerechnet.'"
+    },
+    "3306": {
+      "bezeichnung": "Verfahrensgebühr für die Vertretung des Antragstellers (Mahnverfahren), ermäßigt bei vorzeitiger Beendigung",
+      "norm": "Nr. 3306 VV RVG",
+      "art": "festsatz",
+      "satz": "0.5",
+      "vv_teil": 3,
+      "instanz": "mahnverfahren",
+      "hinweis": "Ermäßigte Fassung der Gebühr 3305 ('Die Gebühr 3305 beträgt'), wenn der Auftrag endet, bevor der verfahrenseinleitende Antrag oder ein Schriftsatz mit Sachanträgen, Sachvortrag oder Antragsrücknahme eingereicht ist. Nr. 3305 und Nr. 3306 stehen alternativ, nie kumulativ. Als Gebühr 3305 fällt sie unter die Anrechnung (Anm. zu Nr. 3305) und unter Anm. Satz 2 zu Nr. 3308.",
+      "report_hinweis": "Die Voraussetzung der Ermäßigung (Beendigung des Auftrags vor Einreichung des verfahrenseinleitenden Antrags bzw. eines Schriftsatzes mit Sachanträgen, Sachvortrag oder Antragsrücknahme, Nr. 3306 VV RVG) prüft der Executor nicht — anwaltlich prüfen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-11-22 gegen gesetze-im-internet.de/rvg/anlage_1.html, Teil 3 Abschnitt 3 Unterabschnitt 2 (Mahnverfahren; Vorbem. 3.3.2: 'Die Terminsgebühr bestimmt sich nach Abschnitt 1.'), Nr. 3306: 'Beendigung des Auftrags, bevor der Rechtsanwalt den verfahrenseinleitenden Antrag oder einen Schriftsatz, der Sachanträge, Sachvortrag oder die Zurücknahme des Antrags enthält, eingereicht hat: Die Gebühr 3305 beträgt' 0,5."
+    },
+    "3307": {
+      "bezeichnung": "Verfahrensgebühr für die Vertretung des Antragsgegners (Mahnverfahren)",
+      "norm": "Nr. 3307 VV RVG",
+      "art": "festsatz",
+      "satz": "0.5",
+      "vv_teil": 3,
+      "instanz": "mahnverfahren",
+      "hinweis": "Vertretung des Antragsgegners — nicht in derselben Angelegenheit mit den Antragsteller-Gebühren Nr. 3305/3306/3308. Die Anrechnung auf die Verfahrensgebühr eines nachfolgenden Rechtsstreits (Anm. zu Nr. 3307) rechnet der Executor nur auf Anforderung ('anrechnung_mahnverfahren_auf_3100').",
+      "report_hinweis": "Die Gebühr wird auf die Verfahrensgebühr für einen nachfolgenden Rechtsstreit angerechnet (Anm. zu Nr. 3307 VV RVG) — der Executor rechnet das nur mit 'anrechnung_mahnverfahren_auf_3100: true' (verlangt eine Nr. 3100 in einer eigenen Angelegenheit).",
+      "quelle_hinweis": "Web-verifiziert am 2026-11-22 gegen gesetze-im-internet.de/rvg/anlage_1.html, Teil 3 Abschnitt 3 Unterabschnitt 2 (Mahnverfahren; Vorbem. 3.3.2: 'Die Terminsgebühr bestimmt sich nach Abschnitt 1.'), Nr. 3307: 'Verfahrensgebühr für die Vertretung des Antragsgegners' 0,5; Anm.: 'Die Gebühr wird auf die Verfahrensgebühr für einen nachfolgenden Rechtsstreit angerechnet.'"
+    },
+    "3308": {
+      "bezeichnung": "Verfahrensgebühr für die Vertretung des Antragstellers im Verfahren über den Antrag auf Erlass eines Vollstreckungsbescheids",
+      "norm": "Nr. 3308 VV RVG",
+      "art": "festsatz",
+      "satz": "0.5",
+      "vv_teil": 3,
+      "instanz": "mahnverfahren",
+      "hinweis": "Entsteht neben der Gebühr 3305 (allein oder neben Nr. 3305/3306 in derselben Angelegenheit zulässig, nicht neben Nr. 3307). Wird nie auf einen nachfolgenden Rechtsstreit angerechnet. Nr. 1008 auf Nr. 3308 lehnt der Executor ab, wenn sich in derselben Angelegenheit bereits die Gebühr 3305 (bzw. 3306) erhöht (Anm. Satz 2 zu Nr. 3308).",
+      "report_hinweis": "Die Voraussetzung aus Anm. Satz 1 zu Nr. 3308 VV RVG (innerhalb der Widerspruchsfrist kein Widerspruch erhoben oder Widerspruch gemäß § 703a Abs. 2 Nr. 4 ZPO beschränkt) prüft der Executor nicht — anwaltlich prüfen.",
+      "quelle_hinweis": "Web-verifiziert am 2026-11-22 gegen gesetze-im-internet.de/rvg/anlage_1.html, Teil 3 Abschnitt 3 Unterabschnitt 2 (Mahnverfahren; Vorbem. 3.3.2: 'Die Terminsgebühr bestimmt sich nach Abschnitt 1.'), Nr. 3308: 'Verfahrensgebühr für die Vertretung des Antragstellers im Verfahren über den Antrag auf Erlass eines Vollstreckungsbescheids' 0,5; Anm.: 'Die Gebühr entsteht neben der Gebühr 3305 nur, wenn innerhalb der Widerspruchsfrist kein Widerspruch erhoben oder der Widerspruch gemäß § 703a Abs. 2 Nr. 4 ZPO beschränkt worden ist. Nummer 1008 ist nicht anzuwenden, wenn sich bereits die Gebühr 3305 erhöht.'"
+    },
     "1000": {
       "bezeichnung": "Einigungsgebühr",
       "norm": "Nr. 1000 VV RVG",
@@ -158,10 +202,14 @@
         "3200",
         "3206",
         "3208",
+        "3305",
+        "3306",
+        "3307",
+        "3308",
         "2300"
       ],
-      "hinweis": "Erhöht die Verfahrens- oder Geschäftsgebühr um 0,3 je weiterem Auftraggeber, nur soweit der Gegenstand der anwaltlichen Tätigkeit derselbe ist (Anm. Abs. 1). Anwendbar auf die Verfahrensgebühr jedes Rechtszugs (Nr. 3100 erste Instanz, Nr. 3200 Berufung, Nr. 3206/3208 Revision) und die Geschäftsgebühr (Nr. 2300). Mehrere Erhöhungen dürfen einen Gebührensatz von 2,0 nicht übersteigen (Anm. Abs. 3) — der Executor kappt und weist die Kappung aus.",
-      "quelle_hinweis": "Anwendbarkeit auf die Berufungs-/Revisions-Verfahrensgebühren web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 1008: erhöht die 'Verfahrens- oder Geschäftsgebühr' — erfasst damit auch die Verfahrensgebühren der Teil-3-Abschnitte 2 (3200 ff.).",
+      "hinweis": "Erhöht die Verfahrens- oder Geschäftsgebühr um 0,3 je weiterem Auftraggeber, nur soweit der Gegenstand der anwaltlichen Tätigkeit derselbe ist (Anm. Abs. 1). Anwendbar auf die Verfahrensgebühr jedes Rechtszugs (Nr. 3100 erste Instanz, Nr. 3200 Berufung, Nr. 3206/3208 Revision, Nr. 3305–3308 Mahnverfahren) und die Geschäftsgebühr (Nr. 2300). Mehrere Erhöhungen dürfen einen Gebührensatz von 2,0 nicht übersteigen (Anm. Abs. 3) — der Executor kappt und weist die Kappung aus.",
+      "quelle_hinweis": "Anwendbarkeit auf die Berufungs-/Revisions-Verfahrensgebühren web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html, Nr. 1008: erhöht die 'Verfahrens- oder Geschäftsgebühr' — erfasst damit auch die Verfahrensgebühren der Teil-3-Abschnitte 2 (3200 ff.). Anwendbarkeit auf die Mahnverfahrens-Verfahrensgebühren Nr. 3305–3308 web-verifiziert am 2026-11-22 gegen dieselbe Quelle; Ausschluss nach Anm. Satz 2 zu Nr. 3308: 'Nummer 1008 ist nicht anzuwenden, wenn sich bereits die Gebühr 3305 erhöht.'",
       "vv_teil": 1
     },
     "7002": {
@@ -189,7 +237,15 @@
     "hinweis": "Nur als optionaler, explizit angeforderter Rechenschritt (anrechnung_2300_auf_3100: true) — nie automatisch, da die Anrechnung von der anwaltlichen Einordnung abhängt (derselbe Gegenstand?)."
   },
   "teil_hinweis": "`vv_teil` = Teil der Anlage 1 RVG (Gliederung web-verifiziert). Teil-2- und Teil-3-Tatbestände in DERSELBEN Angelegenheit sind ein Eingabefehler: außergerichtliche Vertretung und gerichtliches Verfahren sind verschiedene Angelegenheiten (§§ 16 ff. RVG; die Anrechnung nach Vorbem. 3 Abs. 4 VV RVG setzt zwei Angelegenheiten gerade voraus) — mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis. Teil-1-Gebühren entstehen neben den Gebühren der anderen Teile (Vorbem. 1 VV RVG) und lösen keine Kollisionsprüfung aus.",
-  "instanz_hinweis": "`instanz` (nur bei Teil-3-Positionen) = Rechtszug: '1' (erste Instanz, Nr. 3100/3104), 'berufung' (Nr. 3200/3201/3202), 'revision' (Nr. 3206–3210). Teil-3-Tatbestände VERSCHIEDENER Instanzen in DERSELBEN Angelegenheit sind ein Eingabefehler: jeder Rechtszug ist eine eigene Angelegenheit (§ 17 Nr. 1 RVG) mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis — über 'angelegenheiten' in getrennte Angelegenheiten je Instanz aufteilen. `nur_bei_instanz` (bei Nr. 1004) = die Position ist nur in einer Angelegenheit mit einer der genannten Instanzen zulässig.",
+  "instanz_hinweis": "`instanz` (nur bei Teil-3-Positionen) = Rechtszug: '1' (erste Instanz, Nr. 3100/3104), 'berufung' (Nr. 3200/3201/3202), 'revision' (Nr. 3206–3210), 'mahnverfahren' (Nr. 3305–3308; Mahnverfahren und streitiges Verfahren sind verschiedene Angelegenheiten, § 17 Nr. 2 RVG — Wortlaut am 2026-11-22 geprüft: 'das Mahnverfahren und das streitige Verfahren,'). Teil-3-Tatbestände VERSCHIEDENER Instanzen in DERSELBEN Angelegenheit sind ein Eingabefehler: jeder Rechtszug ist eine eigene Angelegenheit (§ 17 Nr. 1 RVG) mit je eigener Auslagenpauschale Nr. 7002 und eigener USt-Basis — über 'angelegenheiten' in getrennte Angelegenheiten je Instanz aufteilen. `nur_bei_instanz` (bei Nr. 1004) = die Position ist nur in einer Angelegenheit mit einer der genannten Instanzen zulässig.",
   "anrechnung_instanz_hinweis": "Die Anrechnung der Geschäftsgebühr (Vorbem. 3 Abs. 4 VV RVG) erfolgt ausschließlich auf die Verfahrensgebühr des ERSTEN Rechtszugs (Nr. 3100), nicht auf die Berufungs-/Revisions-Verfahrensgebühr (Nr. 3200/3206/3208) — der Executor lehnt eine Anrechnungs-Anforderung ohne Nr. 3100, aber mit einer höherinstanzlichen Verfahrensgebühr, als Eingabefehler ab. Web-verifiziert am 2026-07-17 gegen gesetze-im-internet.de/rvg/anlage_1.html (Vorbem. 3 Abs. 4: Anrechnung auf 'die Verfahrensgebühr des gerichtlichen Verfahrens' — nach BGH die des ersten Rechtszugs).",
-  "gruppe_15_abs_3_hinweis": "`gruppe_15_abs_3` = Gebührenart für § 15 Abs. 3 RVG (web-verifiziert am 2026-09-23 gegen gesetze-im-internet.de/rvg/__15.html: 'Sind für Teile des Gegenstands verschiedene Gebührensätze anzuwenden, entstehen für die Teile gesondert berechnete Gebühren, jedoch nicht mehr als die aus dem Gesamtbetrag der Wertteile nach dem höchsten Gebührensatz berechnete Gebühr.'). Stehen in EINER Angelegenheit mehrere Positionen derselben Gruppe, muss jede ihren Wertteil als 'gegenstandswert' tragen; der Executor rechnet die Einzelgebühren und kappt ihre Summe auf höchster Satz x 1,0-Gebühr aus der Summe der Wertteile — als eigene Rechenketten-Zeile, auch wenn die Kappung nicht greift."
+  "gruppe_15_abs_3_hinweis": "`gruppe_15_abs_3` = Gebührenart für § 15 Abs. 3 RVG (web-verifiziert am 2026-09-23 gegen gesetze-im-internet.de/rvg/__15.html: 'Sind für Teile des Gegenstands verschiedene Gebührensätze anzuwenden, entstehen für die Teile gesondert berechnete Gebühren, jedoch nicht mehr als die aus dem Gesamtbetrag der Wertteile nach dem höchsten Gebührensatz berechnete Gebühr.'). Stehen in EINER Angelegenheit mehrere Positionen derselben Gruppe, muss jede ihren Wertteil als 'gegenstandswert' tragen; der Executor rechnet die Einzelgebühren und kappt ihre Summe auf höchster Satz x 1,0-Gebühr aus der Summe der Wertteile — als eigene Rechenketten-Zeile, auch wenn die Kappung nicht greift.",
+  "anrechnung_mahnverfahren_auf_verfahrensgebuehr": {
+    "norm_3305": "Anm. zu Nr. 3305 VV RVG",
+    "norm_3307": "Anm. zu Nr. 3307 VV RVG",
+    "regel": "Die Verfahrensgebühr des Mahnverfahrens (Nr. 3305, auch in der ermäßigten Fassung Nr. 3306, bzw. Nr. 3307) wird auf die Verfahrensgebühr für einen nachfolgenden Rechtsstreit angerechnet. Nr. 3308 wird nicht angerechnet.",
+    "formel": "anrechnungsbetrag = Betrag der Gebühr 3305/3306/3307; Verfahrensgebühr 3100 danach = max(3100 - anrechnungsbetrag, 0). Ist die Mahnverfahrensgebühr nach Nr. 1008 erhöht, lehnt der Executor ab (angerechnet würde die erhöhte Gebühr — Zusammenspiel mit der Erhöhung im Rechtsstreit nicht modelliert).",
+    "voraussetzung": "Genau eine Angelegenheit mit Nr. 3305, 3306 oder 3307 und genau eine Nr. 3100, beide mit demselben Gegenstandswert.",
+    "hinweis": "Nur als optionaler, explizit angeforderter Rechenschritt (anrechnung_mahnverfahren_auf_3100: true) — nie automatisch. Kein Teilübergang modellierbar (ein Gegenstandswert für beide Seiten). Nach Nr. 1008 erhöht sich die Verfahrensgebühr selbst, angerechnet würde also die erhöhte Gebühr — diese Konstellation ist nicht modelliert (Exit 2 bei angeforderter Anrechnung). Fehlt das Flag, obwohl Mahnverfahren und Nr. 3100 in der Anfrage stehen, weist der Report eine Warnung aus (die Anrechnung ist nach der Anmerkung zwingend). Enthält die Anfrage zusätzlich eine Geschäftsgebühr Nr. 2300, ist diese nach Vorbem. 3 Abs. 4 VV RVG auf die Gebühr 3305 anzurechnen — diese Kettenanrechnung ist nicht modelliert (Exit 2 bei angeforderter Anrechnung)."
+  }
 }

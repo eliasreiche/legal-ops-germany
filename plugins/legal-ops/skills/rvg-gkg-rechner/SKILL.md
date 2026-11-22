@@ -31,7 +31,9 @@ nachvollziehbarer **Rechenkette**: Tabellenstand-Wahl nach Stichtag,
 1,0-Gebühr nach der gesetzlichen Stufenformel (§ 13 Abs. 1 RVG / § 34 Abs. 1
 GKG), je Gebührenposition Satz × 1,0-Gebühr (mit Mindestbetrags-Floor),
 optionale Anrechnung der Geschäftsgebühr auf die Verfahrensgebühr (Vorbem. 3
-Abs. 4 VV RVG), optionale Anrechnung der Mahnverfahrensgebühr auf die
+Abs. 4 VV RVG), optionale Anrechnung der anwaltlichen Mahnverfahrensgebühr
+auf die Verfahrensgebühr des nachfolgenden Rechtsstreits (Anm. zu Nr. 3305
+bzw. 3307 VV RVG), optionale Anrechnung der Mahnverfahrensgebühr auf die
 Gerichtsgebühr des Streitverfahrens (Anmerkung Abs. 1 zu KV 1210 GKG),
 Auslagenpauschale und Umsatzsteuer.
 
@@ -73,6 +75,35 @@ Berufungs-/Revisions-Tatbestand zulässig (sonst Nr. 1000/1003). Die Anrechnung
 **ersten** Rechtszugs (Nr. 3100), nie auf Nr. 3200/3206/3208 — eine
 Anrechnungs-Anforderung ohne Nr. 3100, aber mit höherinstanzlicher
 Verfahrensgebühr, wird als Eingabefehler abgelehnt.
+
+**Mahnverfahren (RVG, Nr. 3305–3308):** Der Katalog kennt die
+Verfahrensgebühren des Mahnverfahrens (Teil 3 Abschnitt 3 Unterabschnitt 2
+VV RVG): Nr. 3305 (Antragsteller, 1,0), Nr. 3306 (Antragsteller bei
+vorzeitiger Beendigung, 0,5), Nr. 3307 (Antragsgegner, 0,5) und Nr. 3308
+(Antrag auf Vollstreckungsbescheid, 0,5). Mahnverfahren und streitiges
+Verfahren sind **verschiedene Angelegenheiten** (§ 17 Nr. 2 RVG) — mit
+Nr. 3100/3104/3200 ff. in derselben Angelegenheit ist das ein Eingabefehler.
+In einer Angelegenheit stehen 3305 und 3306 alternativ; 3307 nie neben
+3305/3306/3308; 3308 allein oder neben 3305/3306 (ob kein bzw. ein
+beschränkter Widerspruch vorliegt, Anm. Satz 1 zu Nr. 3308, prüft der
+Executor nicht — Hinweis an der Position). Nr. 1008 auf 3308 wird abgelehnt,
+wenn sich in derselben Angelegenheit schon die Gebühr 3305 (oder 3306)
+erhöht (Anm. Satz 2 zu Nr. 3308). Die Terminsgebühr im Mahnverfahren
+(Vorbem. 3.3.2) ist nicht modelliert — Nr. 3104 in einer
+Mahnverfahrens-Angelegenheit ist Exit 2. Mit
+`rvg.anrechnung_mahnverfahren_auf_3100: true` zieht der Executor die
+Gebühr 3305/3306/3307 (nie Nr. 3308) von der Verfahrensgebühr Nr. 3100 des
+nachfolgenden Rechtsstreits ab, höchstens bis 0 € — nie automatisch, kein
+Teilübergang (verschiedene Werte = Exit 2). Ist die Mahnverfahrensgebühr nach
+Nr. 1008 erhöht, wäre die erhöhte Gebühr anzurechnen; das ist nicht
+modelliert (Exit 2, anwaltlich prüfen). Stehen Mahnverfahren und Nr. 3100 in
+der Anfrage, aber ohne Flag, warnt der Report: die Anrechnung ist nach der
+Anm. zu Nr. 3305/3307 zwingend. Enthält
+die Anfrage zusätzlich eine Geschäftsgebühr Nr. 2300, wäre diese nach
+Vorbem. 3 Abs. 4 VV RVG auf die Gebühr 3305 anzurechnen; diese
+Kettenanrechnung ist nicht modelliert — jede angeforderte Anrechnung ist dann
+Exit 2, ohne Anrechnungs-Flag rechnen alle Angelegenheiten ungekürzt (mit
+Warnung).
 
 **Mahnverfahren → streitiges Verfahren (GKG):** Geht der Sache ein
 Mahnbescheid voraus und wird nach Widerspruch/Einspruch streitig verhandelt,
@@ -184,7 +215,7 @@ Eingabefehler mit Begründung, nie einen geratenen Betrag.
 
 | Eingabe | Pflicht | Format | Beschreibung |
 |---|---|---|---|
-| RVG-/GKG-/FamGKG-Anfrage | ja (mind. ein Block) | `.json` | Blöcke `rvg`, `gkg` und/oder `famgkg` (`gkg` und `famgkg` nie zusammen). Vollständiges Schema: [`schema/README.md`](schema/README.md), Beispiele: [`schema/beispiel-eingabe.json`](schema/beispiel-eingabe.json) (Grundfall, eine Angelegenheit), [`schema/beispiel-eingabe-anrechnung.json`](schema/beispiel-eingabe-anrechnung.json) (zwei Angelegenheiten, Anrechnung + Erhöhungsgebühr), [`schema/beispiel-eingabe-berufung.json`](schema/beispiel-eingabe-berufung.json) (Instanzenzug: erste Instanz + Berufung, GKG-Berufung), [`schema/beispiel-eingabe-familiensache.json`](schema/beispiel-eingabe-familiensache.json) (Scheidung im Verbund mit Verfahrenswert-Ermittlung und RVG-Querverweis), [`schema/beispiel-eingabe-gewaltschutz-ea.json`](schema/beispiel-eingabe-gewaltschutz-ea.json) (Gewaltschutz im Verfahren der einstweiligen Anordnung, § 49 + § 41 FamGKG). |
+| RVG-/GKG-/FamGKG-Anfrage | ja (mind. ein Block) | `.json` | Blöcke `rvg`, `gkg` und/oder `famgkg` (`gkg` und `famgkg` nie zusammen). Vollständiges Schema: [`schema/README.md`](schema/README.md), Beispiele: [`schema/beispiel-eingabe.json`](schema/beispiel-eingabe.json) (Grundfall, eine Angelegenheit), [`schema/beispiel-eingabe-anrechnung.json`](schema/beispiel-eingabe-anrechnung.json) (zwei Angelegenheiten, Anrechnung + Erhöhungsgebühr), [`schema/beispiel-eingabe-berufung.json`](schema/beispiel-eingabe-berufung.json) (Instanzenzug: erste Instanz + Berufung, GKG-Berufung), [`schema/beispiel-eingabe-familiensache.json`](schema/beispiel-eingabe-familiensache.json) (Scheidung im Verbund mit Verfahrenswert-Ermittlung und RVG-Querverweis), [`schema/beispiel-eingabe-gewaltschutz-ea.json`](schema/beispiel-eingabe-gewaltschutz-ea.json) (Gewaltschutz im Verfahren der einstweiligen Anordnung, § 49 + § 41 FamGKG), [`schema/beispiel-eingabe-mahnverfahren.json`](schema/beispiel-eingabe-mahnverfahren.json) (Mahnverfahren → Rechtsstreit mit RVG- und GKG-Anrechnung). |
 
 Kurzfassung der Pflichtfelder:
 
@@ -195,8 +226,12 @@ Kurzfassung der Pflichtfelder:
   [Katalog](../../core/calc/rvg/vv-katalog.json): `2300` (Teil 2),
   Teil 3 nach Instanz — erste Instanz `3100`/`3101`/`3104`, Berufung
   `3200`/`3201`/`3202`, Revision `3206`–`3210` (`3208`/`3209` bei
-  BGH-Vertretungszwang), `1000`, `1003`, `1004`, `1008` (Teil 1, in jeder
+  BGH-Vertretungszwang), Mahnverfahren `3305`–`3308` (eigene
+  Angelegenheit), `1000`, `1003`, `1004`, `1008` (Teil 1, in jeder
   Angelegenheit zulässig; `1004` nur mit Berufungs-/Revisions-Tatbestand).
+  Optional `anrechnung_2300_auf_3100` und `anrechnung_mahnverfahren_auf_3100`
+  (Anrechnung der Mahnverfahrensgebühr, verlangt `3305`/`3306`/`3307` und
+  `3100` in getrennten Angelegenheiten).
 - **`gkg`**: `verfahrenseinleitungsdatum` (ISO-Datum, **nicht** dasselbe wie
   `auftragsdatum`), `streitwert`, `positionen` (Liste von KV-GKG-Positionen
   aus dem [Katalog](../../core/calc/gkg/kv-katalog.json): `1100`,
@@ -319,7 +354,10 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
      `kappung_36_abs_3`): Summe der Einzelgebühren, Höchstbetrag, ob die
      Kappung greift — und bei Teilwerten den Wert jeder Position,
    - **Anrechnung**, wenn angefordert: beim RVG beteiligte Angelegenheiten,
-     Satz, Betrag, Verfahrensgebühr vor/nach Anrechnung; beim GKG
+     Satz, Betrag, Verfahrensgebühr vor/nach Anrechnung; bei der
+     Mahnverfahrens-Anrechnung (`rvg.anrechnung_mahnverfahren`) angerechnete
+     Nr., Betrag, Nr. 3100 vor/nach und den Hinweis zum fehlenden
+     Teilübergang; beim GKG
      (`gkg.anrechnung`) Anrechnungsbetrag und Gebühr KV 1210 vor/nach
      Anrechnung mit der Norm (Anmerkung Abs. 1 zu KV 1210 GKG),
    - **bei FamGKG** (`famgkg`-Block): die **Verfahrenswert-Herleitung je
@@ -353,6 +391,11 @@ Geldbeträge und Sätze **immer als JSON-String** (z. B. `"5000.00"`), nie als
 5. Bei Exit-Code 2 (Eingabefehler, u. a. Scope-Ablehnung bei
    Betragsrahmengebühren/PKH/Beratungshilfe, Teil-2-/Teil-3-Tatbestände in
    derselben Angelegenheit, Nr. 1008 kombiniert mit Wert über 30 Mio. €,
+   Mahnverfahren: 3305+3306, 3307 neben Antragsteller-Gebühren, Nr. 1008 auf
+   3308 bei erhöhter 3305, Nr. 3104 im Mahnverfahren, Mahnverfahrens-
+   Anrechnung ohne 3305/3306/3307 oder 3100 bzw. mit nach Nr. 1008 erhöhter
+   Mahnverfahrensgebühr, Anrechnung mit 2300 und
+   Mahnverfahren in einer Anfrage,
    Stichtag außerhalb der unterstützten Tabellenstände, unbekannter Key in
    `rvg`/`gkg` oder in einem Tatbestand/einer Position, angeforderte
    GKG-Anrechnung ohne KV 1100 bzw. KV 1210, Anrechnung bei verschiedenen
@@ -375,7 +418,8 @@ JSON-Report nach [`schema/README.md`](schema/README.md), Beispiel:
 `rvg`-Block: `tabellenstand`, `wertkappung`, `einfachgebuehr`,
 `angelegenheiten` (je Angelegenheit `positionen` mit `satz`, `betrag`,
 `mindestbetrag_gegriffen`, `quelle: "executor"` sowie eigenes `ergebnis` mit
-Zwischensumme/7002/Netto/USt/Gesamt), `anrechnung`, `rechenkette`,
+Zwischensumme/7002/Netto/USt/Gesamt), `anrechnung` (Geschäftsgebühr),
+`anrechnung_mahnverfahren` (nur wenn angefordert), `rechenkette`,
 `ergebnis.gesamt_verguetung`. Im `gkg`-Block: `tabellenstand`,
 `wertkappung`, `einfachgebuehr`, `positionen`, `anrechnung` (KV 1100 auf
 KV 1210, sonst `null`), `rechenkette`, `ergebnis.gesamt`. Im
@@ -619,3 +663,39 @@ Gerichtskosten und Anwaltsvergütung werden nicht addiert. Hätte die Anfrage
 statt KV 1420 nur eine Hauptsache-Position (z. B. KV 1320) enthalten, stünde
 im Report eine Warnung, dass die Gebühr des Anordnungsverfahrens fehlt — der
 Executor wählt die Position nie selbst.
+
+### Beispiel 9 — Mahnverfahren → Widerspruch → Rechtsstreit (RVG + GKG)
+
+Eingabe ([`schema/beispiel-eingabe-mahnverfahren.json`](schema/beispiel-eingabe-mahnverfahren.json)):
+Streitwert 40.000 €, Auftrag und Verfahrenseinleitung 22.11.2026 (KostBRÄG
+2025), **zwei Angelegenheiten** (§ 17 Nr. 2 RVG ✅) — „Mahnverfahren
+(Antragsteller)" mit Nr. 3305 und „Rechtsstreit erster Instanz nach
+Widerspruch" mit Nr. 3100/3104 —, `anrechnung_mahnverfahren_auf_3100: true`;
+dazu GKG KV 1100 + KV 1210 mit `anrechnung_1100_auf_1210: true`. Report:
+[`schema/beispiel-report-mahnverfahren.json`](schema/beispiel-report-mahnverfahren.json).
+
+Von Claude präsentiertes Ergebnis (aus dem Report übernommen; 1,0-Gebühr RVG
+1.185,00 €, 1,0-Gebühr GKG 557,00 €):
+
+| Angelegenheit „Mahnverfahren (Antragsteller)" | Satz | Betrag |
+|---|---|---|
+| Verfahrensgebühr Antragsteller (Nr. 3305 VV RVG ✅) | 1,0 | 1.185,00 € |
+| Auslagenpauschale (Nr. 7002 VV RVG ✅) | 20 %, gedeckelt | 20,00 € |
+| USt (Nr. 7008 VV RVG ✅) | 19 % | 228,95 € |
+| **Gesamt Mahnverfahren** | | **1.433,95 €** |
+
+| Angelegenheit „Rechtsstreit erster Instanz nach Widerspruch" | Satz | Betrag |
+|---|---|---|
+| Verfahrensgebühr (Nr. 3100 VV RVG ✅), vor Anrechnung 1.540,50 €, nach Anrechnung | 1,3 | 355,50 € |
+| Terminsgebühr (Nr. 3104 VV RVG ✅) | 1,2 | 1.422,00 € |
+| Auslagenpauschale (Nr. 7002 VV RVG ✅) | 20 %, gedeckelt | 20,00 € |
+| USt (Nr. 7008 VV RVG ✅) | 19 % | 341,53 € |
+| **Gesamt Rechtsstreit** | | **2.139,03 €** |
+
+**Gesamtvergütung (Summe über die Angelegenheiten, gleicher Gläubiger):
+3.572,98 €.** Anrechnung nach Anm. zu Nr. 3305 VV RVG ✅: 1.185,00 € auf die
+Verfahrensgebühr Nr. 3100. Getrennt davon Gerichtskosten: KV 1100 278,50 €,
+KV 1210 1.671,00 € vor bzw. 1.392,50 € nach Anrechnung (Anmerkung Abs. 1 zu
+KV 1210 GKG ✅), **Gerichtskosten gesamt 1.671,00 €**. Claude gibt die
+Warnung aus dem Report wieder (kein Teilübergang modelliert) und addiert
+Anwaltsvergütung und Gerichtskosten nicht.

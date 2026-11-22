@@ -139,6 +139,24 @@ def test_beispiel_report_gewaltschutz_ea_synchron():
     assert erzeugt["rvg"]["ergebnis"]["gesamt_verguetung"] == "231.87"
 
 
+def test_beispiel_report_mahnverfahren_synchron():
+    ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-mahnverfahren.json")
+    assert ergebnis.returncode == 0, ergebnis.stderr
+    erzeugt = json.loads(ergebnis.stdout)
+    gespeichert = json.loads(
+        (SCHEMA / "beispiel-report-mahnverfahren.json").read_text(encoding="utf-8"))
+    erzeugt["meta"].pop("quelle_datei")
+    gespeichert["meta"].pop("quelle_datei")
+    assert erzeugt == gespeichert
+    # Mahnverfahren (Nr. 3305) + Rechtsstreit (3100/3104) mit Anrechnung,
+    # GKG KV 1100 -> KV 1210.
+    anr = erzeugt["rvg"]["anrechnung_mahnverfahren"]
+    assert anr["anrechnungsbetrag"] == "1185.00"
+    assert anr["verfahrensgebuehr_nach_anrechnung"] == "355.50"
+    assert erzeugt["rvg"]["ergebnis"]["gesamt_verguetung"] == "3572.98"
+    assert erzeugt["gkg"]["ergebnis"]["gesamt"] == "1671.00"
+
+
 def test_beispiel_eingabe_anrechnung_laeuft():
     ergebnis = lauf(EXECUTOR, "--input", SCHEMA / "beispiel-eingabe-anrechnung.json")
     assert ergebnis.returncode == 0, ergebnis.stderr
